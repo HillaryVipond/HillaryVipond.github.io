@@ -1,6 +1,6 @@
 main:
-  - title: "Research"
-    url: /Research/
+  - title: "research"
+    url: /research/
   - title: "CV"
     url: /assets/files/VipondHillary_CV.pdf
   - title: "About"
