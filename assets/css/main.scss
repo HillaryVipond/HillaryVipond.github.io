@@ -337,4 +337,10 @@ html body.landing-page .site-footer {
   width: 100%;
   text-align: center;
 }
+
+html body.landing-page .page__inner-wrap {
+  min-height: calc(100vh - 50px) !important;
+  padding-bottom: 10px !important; /* Adjust if needed */
+}
+
 /* ✅ Removed justify-content: center; so content stays at the top */
