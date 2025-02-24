@@ -99,6 +99,11 @@ html body.landing-page .initial-content {
   min-height: calc(100vh - 500px) !important;
 }
 
+
+html body.landing-page article.page {
+  min-height: auto !important;
+}
+
 /* =================== Sidebar Styling =================== */
 
 /* Adjust sidebar spacing */
