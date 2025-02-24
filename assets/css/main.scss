@@ -7,126 +7,90 @@
 
 /* =================== General Page Styling =================== */
 
-/* Ensure all pages are full width by default */
-.layout--single .page-content {
-font-size: 18px;
-line-height: 1.6;
-max-width: 1600px !important; /* Full width */
-width: 95% !important;
-margin: auto;
+@import "minimal-mistakes"; /* Keep the theme's existing styles */
+
+/* ================= Global Styles & Sticky Footer Setup ================= */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
-
-/* Ensure `.page__content` is not stretched */
-html body.landing-page .page__content {
-  flex-grow: 0 !important; /* Prevents unwanted vertical stretching */
-  min-height: auto !important;
-  display: block !important; /* Ensures normal text flow */
-}
-
-  /* BUT: Limit width ONLY on the landing page */
-html body.landing-page .page {
-max-width: 700px !important;
-width: 90% !important;
-margin: auto;
-}
-
-html body.landing-page .page__content {
-  min-height: auto !important; /* Prevent stretching */
-  margin-bottom: 0 !important; /* Reduce spacing */
-}
-
-
-
-@media (min-width: 80em) {
-html body .page {
-width: 100% !important; /* Expand full width for all pages */
-padding-inline-end: 0 !important;
-max-width: none !important;
-}
-
-/* Keep the landing page narrow */
-html body.landing-page .page {
-max-width: 700px !important;
-width: 90% !important;
-margin: auto;
-}
-}
-
-/* 🚀 Reduce Extra Space Below Landing Page Content */
-html body.landing-page .page__content {
-  margin-bottom: 0 !important; /* Removes unnecessary gap */
-  padding-bottom: 10px !important; /* Small controlled spacing */
-}
-
-/* 🚀 Reduce Extra Space from `.page__meta` on the Landing Page */
-html body.landing-page .page__meta {
-  margin-bottom: 0 !important; /* Remove any unnecessary bottom margin */
-  padding-bottom: 0 !important; /* Prevent extra padding from adding space */
-  display: none !important; /* If it's not needed, hide it completely */
-}
-
-// html body.landing-page .initial-content {
-//   min-height: auto !important; /* Prevents it from stretching */
-//   height: auto !important; /* Resizes to fit content */
-//   display: block !important; /* Removes unnecessary flex behavior */
-// }
-
-/* 🚀 Reduce White Space Between Text and Footer on Landing Page */
-html body.landing-page .page__inner-wrap {
-  min-height: auto !important; /* Prevent unnecessary height */
-  padding-bottom: 0 !important; /* Reduce padding */
-}
-
-
-
-html body.landing-page .page__meta {
-  display: none !important; /* Hides the empty footer metadata */
-}
-
-html body.landing-page .page__footer {
-  margin-top: 10px !important; /* Small space, not excessive */
-}
-
-// html body.landing-page .initial-content {
-//   min-height: auto !important;
-//   height: auto !important;
-//   margin: 0 !important;
-//   padding: 0 !important;
-// }
-
-
-html body.landing-page .initial-content {
-  min-height: calc(100vh - 500px) !important;
-}
-
-
-html body.landing-page article.page {
-  min-height: auto !important;
-}
-
-.initial-content {
-  flex: 1;
+body {
+  display: flex;
+  flex-direction: column;
 }
 
 .initial-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Align content at the top */
+  justify-content: flex-start;
+}
+
+/* Global layout containers */
+.wrapper, .page, .page__inner-wrap {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#footer,
+.page__footer,
+.site-footer {
+  margin-top: auto;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  background-color: #f8f8f8;
+}
+
+/* ================= General Page Styling ================= */
+/* Applies to all pages */
+.layout--single .page-content {
+  font-size: 18px;
+  line-height: 1.6;
+  max-width: 1600px !important;
+  width: 95% !important;
+  margin: auto;
+}
+
+/* ================= Landing Page Specific Overrides ================= */
+html body.landing-page .page {
+  max-width: 700px !important;
+  width: 90% !important;
+  margin: auto;
+}
+
+html body.landing-page .page__content {
+  margin-bottom: 0 !important;
+  padding-bottom: 10px !important;
+}
+
+html body.landing-page .page__meta {
+  display: none !important;
+}
+
+html body.landing-page .page__inner-wrap {
+  /* Adjust this value until the footer spacing is just right */
+  min-height: calc(100vh - 500px) !important;
+}
+
+/* ================= Responsive Adjustments ================= */
+@media (min-width: 80em) {
+  html body .page {
+    width: 100% !important;
+    padding-inline-end: 0 !important;
+    max-width: none !important;
+  }
+  /* Reapply landing page narrow rule */
+  html body.landing-page .page {
+    max-width: 700px !important;
+    width: 90% !important;
+    margin: auto;
+  }
 }
 
 
-/* =================== Sidebar Styling =================== */
-
-/* Adjust sidebar spacing */
-.sidebar {
-margin-left: -60px; /* Moves sidebar left */
-}
-
-/* Add space between sidebar and text */
-.page__content {
-margin-left: 30px;
-}
 
 /* =================== Footer Styling =================== */
 
