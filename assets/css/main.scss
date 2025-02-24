@@ -231,23 +231,36 @@ h3 {
 /* ============================= */
 /* ✅ Footer Fix: Always Stick to Bottom (Place at the End) */
 /* ============================= */
+/* Ensure footer always stays at bottom on ALL pages */
 html, body {
-  height: 100%; /* Make sure the body fills the viewport */
+  height: 100%;
 }
 
 .wrapper {
-  min-height: 100vh; /* Ensure content fills the screen */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 .page__content {
-  flex: 1; /* Expands to push the footer down */
+  flex: 1;
 }
 
-.site-footer {
-  margin-top: auto; /* Pushes footer to the bottom */
-  padding: 10px 0; /* Add some spacing inside */
-  text-align: center; /* Keep it centered */
+/* Special Fix: Ensure footer is at bottom on landing page */
+html body.landing-page .wrapper {
+  min-height: 100vh; /* Forces full viewport height */
+  display: flex;
+  flex-direction: column;
 }
+
+html body.landing-page .page__content {
+  flex-grow: 1; /* Pushes footer down */
+}
+
+html body.landing-page .site-footer {
+  margin-top: auto;
+  padding: 10px 0;
+  text-align: center;
+}
+
 
