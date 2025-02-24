@@ -51,21 +51,25 @@
 }
 
 
-// Force the sidebar profile picture to display correctly
-.author__avatar {
-    width: 200px !important;  // Force correct width
-    height: 200px !important; // Force correct height
-    max-width: 100% !important; // Prevent scaling down
-    max-height: 100% !important; // Prevent unwanted shrinking
-    object-fit: cover !important;  // Ensure full image displays
-    display: block !important;
-}
-
-// Ensure parent container does not shrink the image
-.author__avatar img {
+// Force the profile image to display at full size
+.u-photo {
     width: 200px !important;
     height: 200px !important;
     max-width: none !important;
     max-height: none !important;
+    object-fit: cover !important; // Ensures it fills the area without distortion
+    display: block !important;
 }
+
+// Also fix its container, if it's restricting size
+.author__avatar, .author__avatar img, .u-photo {
+    width: 200px !important;
+    height: 200px !important;
+    max-width: none !important;
+    max-height: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
 
