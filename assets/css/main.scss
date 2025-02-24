@@ -117,6 +117,8 @@ h3 {
 
 
 /* Research Page Styling ***************************************************/ 
+
+
 .research h2 {
   font-size: 24px;
   margin-top: 30px;
@@ -137,6 +139,14 @@ h3 {
 .research-entry {
   margin-bottom: 30px;
 }
+
+/* Make research sections expand to full width */
+.research-entry {
+  max-width: 1000px !important;
+  width: 90% !important;
+  margin: auto;
+}
+
 
 /* Ensure wider content area */
 .layout-single .page-content {
