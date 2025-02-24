@@ -141,6 +141,12 @@ h3 {
   display: block;
 }
 
+.research-entry {
+  width: 100% !important;
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+}
 
 .research h2 {
   font-size: 24px;
