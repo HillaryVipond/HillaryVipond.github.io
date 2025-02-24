@@ -11,7 +11,7 @@ permalink: /research/
 <div class="research-entry">
 
   <div class="research-image">
-    <img src="../assets/images/bootmaking_visualization.png" alt="Bootmaking Mechanization Impact">
+    <img src="../assets/images/Data.jpg" alt="Bootmaking Mechanization Impact">
   </div>
 
   <div class="research-text">
