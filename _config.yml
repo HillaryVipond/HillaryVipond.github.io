@@ -58,7 +58,7 @@ plugins:
   - jekyll-include-cache
 
 author:
-  name   : "Hillary Vipond"
+  name   : ""
   avatar : "/assets/images/Vipond-Hilary-2020.jpg"
   bio    : "Technological unemployment in 19th century Britain."
   links:
