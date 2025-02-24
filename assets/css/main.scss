@@ -4,28 +4,6 @@
 
 @import "minimal-mistakes"; // Keep the theme's existing styles
 
-/* Remove grayscale effect on profile image */
-.author__avatar img {
-filter: none !important;
-transition: none !important; /* Prevents fade-in effect */
-}
-
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Let the main content expand to fill available space */
-.initial-content {
-  flex: 1;
-}
-
 
 /* =================== General Page Styling =================== */
 
