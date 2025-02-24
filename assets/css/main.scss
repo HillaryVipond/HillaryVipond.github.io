@@ -1,0 +1,14 @@
+---
+# Needed for Jekyll to process SCSS
+---
+
+@import "minimal-mistakes"; // Keep the theme's existing styles
+
+// Custom styles to adjust sidebar spacing
+.sidebar {
+    margin-left: -20px;  // Moves sidebar left
+}
+
+.page__content {
+    margin-left: 30px;  // Adds space between sidebar and text
+}
