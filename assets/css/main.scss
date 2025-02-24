@@ -299,6 +299,13 @@ flex-direction: column;
 min-height: 100vh; /* Forces full viewport height */
 }
 
+html body.landing-page .page,
+html body.landing-page .page__inner-wrap {
+  display: block !important;
+  min-height: auto !important;
+}
+
+
 /* 3️⃣ Make the main content push the footer down */
 .page__content {
   flex-grow: unset !important; /* Prevents forced stretching */
