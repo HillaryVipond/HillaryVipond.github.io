@@ -46,6 +46,12 @@ width: 90% !important;
 margin: auto;
 }
 
+html body.landing-page .page__content {
+  min-height: auto !important; /* Prevent stretching */
+  margin-bottom: 0 !important; /* Reduce spacing */
+}
+
+
 
 @media (min-width: 80em) {
 html body .page {
