@@ -125,21 +125,28 @@ h3 {
 
 
 /* Research Page Styling ***************************************************/ 
-
 /* Research Page Styling ***************************************************/ 
 
 /* Ensure the entire page expands */
 .layout--single, .initial-content, .page__inner-wrap, .page__content {
   max-width: 1600px !important; /* Ensure full width */
-  width: 95% !important; /* Keep responsiveness */
+  width: 100% !important; /* Take full screen width */
   margin: auto;
   display: block;
 }
 
+/* Break width constraints on inner wrap */
+.page__inner-wrap {
+  max-width: 1600px !important;
+  width: 100% !important;
+  margin: auto;
+  padding: 0 20px; /* Add some spacing on sides */
+}
+
 /* Ensure research sections expand fully */
 .research-entry {
-  width: 100% !important; /* Take up full available space */
   max-width: 1600px !important;
+  width: 100% !important; /* Take up full available space */
   margin: 30px auto; /* Adds spacing between research entries */
   display: flex;
   align-items: flex-start;
