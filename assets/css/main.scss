@@ -16,16 +16,6 @@ html body.landing-page article.page {
 
 
 /* ================= Global Styles & Sticky Footer Setup ================= */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-body {
-  display: flex;
-  flex-direction: column;
-}
-
 .initial-content {
   flex: 1;
   display: flex;
@@ -37,7 +27,7 @@ body {
 .wrapper, .page, .page__inner-wrap {
   display: flex;
   flex-direction: column;
-  min-height: 80vh;
+  min-height: 60vh;
 }
 
 #footer,
