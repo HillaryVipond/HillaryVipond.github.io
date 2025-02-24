@@ -315,17 +315,17 @@ position: relative;
 background-color: #f8f8f8; /* Just for visibility */
 }
 
-/* 🚀 Special Fix: Landing Page Footer */
-html body.landing-page .wrapper {
-  min-height: auto !important; /* Ensures wrapper only grows as needed */
-  display: block !important; /* Normal page structure */
-}
+// /* 🚀 Special Fix: Landing Page Footer */
+// html body.landing-page .wrapper {
+//   min-height: auto !important; /* Ensures wrapper only grows as needed */
+//   display: block !important; /* Normal page structure */
+// }
 
-html body.landing-page .page__content {
-  flex-grow: unset !important; /* Prevents unnecessary stretching */
-  min-height: auto !important; /* Allows content to determine height */
-  display: block !important; /* Ensures normal text flow */
-}
+// html body.landing-page .page__content {
+//   flex-grow: unset !important; /* Prevents unnecessary stretching */
+//   min-height: auto !important; /* Allows content to determine height */
+//   display: block !important; /* Ensures normal text flow */
+// }
 
 
 html body.landing-page #footer,
