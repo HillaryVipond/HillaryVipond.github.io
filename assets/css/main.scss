@@ -293,6 +293,39 @@ html body.landing-page .site-footer {
   margin-top: auto;
   padding: 10px 0;
   text-align: center;
+
+
+  /*  FORCE FOOTER TO STAY INSIDE THE PAGE */
+
+/* Make sure body and html take full height */
+html, body {
+  height: 100% !important;
+}
+
+/* Make sure the whole page wrapper is stretched */
+.wrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 100vh !important; /* Forces full screen height */
+  position: relative !important;
+  border: 2px solid red !important; /* Debugging */
+}
+
+/* Make sure content expands so footer isn't floating */
+.page__content {
+  flex-grow: 1 !important; /* Forces it to take up all available space */
+  border: 2px solid blue !important; /* Debugging */
+}
+
+/* FORCE THE FOOTER TO STAY AT THE BOTTOM */
+.site-footer {
+  position: relative !important; /* Remove any absolute positioning */
+  width: 100% !important;
+  margin-top: auto !important;
+  background-color: #f8f8f8; /* Just for visibility */
+  border: 2px solid green !important; /* Debugging */
+}
+
 }
 
 
