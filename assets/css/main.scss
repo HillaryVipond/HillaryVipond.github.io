@@ -281,18 +281,16 @@ background-color: #f8f8f8; /* Just for visibility */
 
 /* 🚀 Special Fix: Landing Page Footer */
 html body.landing-page .wrapper {
-min-height: 100vh;
-display: flex;
-flex-direction: column;
+  min-height: auto !important; /* Ensures wrapper only grows as needed */
+  display: block !important; /* Normal page structure */
 }
 
 html body.landing-page .page__content {
-flex-grow: 1;
-min-height: 80vh; /* Ensures content area is tall enough to reveal footer */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-grow: unset !important; /* Prevents unnecessary stretching */
+  min-height: auto !important; /* Allows content to determine height */
+  display: block !important; /* Ensures normal text flow */
 }
+
 
 html body.landing-page #footer,
 html body.landing-page .page__footer,
