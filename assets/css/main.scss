@@ -118,7 +118,13 @@ h3 {
 
 /* Research Page Styling ***************************************************/ 
 
-/* Research Page Styling ***************************************************/ 
+
+.page__content {
+  max-width: 1400px !important;
+  width: 90% !important;
+  margin: auto;
+  display: block;
+}
 
 .research h2 {
   font-size: 24px;
@@ -136,6 +142,9 @@ h3 {
   line-height: 1.5;
 }
 
+/* Ensure the main content area is wide enough */
+
+
 /* Add spacing between entries */
 .research-entry {
   max-width: 1400px !important; /* Expanded width */
@@ -145,6 +154,7 @@ h3 {
   align-items: flex-start;
   gap: 30px; /* Space between image and text */
 }
+
 
 /* Ensure the image stays on the left */
 .research-image {
