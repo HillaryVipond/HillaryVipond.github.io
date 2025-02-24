@@ -68,6 +68,13 @@ html body.landing-page .page__content {
   padding-bottom: 10px !important; /* Small controlled spacing */
 }
 
+/* 🚀 Reduce Extra Space from `.page__meta` on the Landing Page */
+html body.landing-page .page__meta {
+  margin-bottom: 0 !important; /* Remove any unnecessary bottom margin */
+  padding-bottom: 0 !important; /* Prevent extra padding from adding space */
+  display: none !important; /* If it's not needed, hide it completely */
+}
+
 
 
 
