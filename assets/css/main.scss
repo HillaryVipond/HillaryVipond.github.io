@@ -1,9 +1,13 @@
+---
+# Needed for Jekyll to process SCSS
+---
+
 @import "minimal-mistakes"; // Keep the theme's existing styles
 
 /* Remove grayscale effect on profile image */
 .author__avatar img {
-  filter: none !important;
-  transition: none !important; /* Prevents fade-in effect */
+filter: none !important;
+transition: none !important; /* Prevents fade-in effect */
 }
 
 
@@ -11,33 +15,33 @@
 
 /* Ensure all pages are full width by default */
 .layout--single .page-content {
-  font-size: 18px;
-  line-height: 1.6;
-  max-width: 1600px !important; /* Full width */
-  width: 95% !important;
-  margin: auto;
+font-size: 18px;
+line-height: 1.6;
+max-width: 1600px !important; /* Full width */
+width: 95% !important;
+margin: auto;
 }
 
 /* BUT: Limit width ONLY on the landing page */
 html body.landing-page .page {
-  max-width: 700px !important;
-  width: 90% !important;
-  margin: auto;
+max-width: 700px !important;
+width: 90% !important;
+margin: auto;
 }
 
 @media (min-width: 80em) {
-  html body .page {
-    width: 100% !important; /* Expand full width for all pages */
-    padding-inline-end: 0 !important;
-    max-width: none !important;
-  }
+html body .page {
+width: 100% !important; /* Expand full width for all pages */
+padding-inline-end: 0 !important;
+max-width: none !important;
+}
 
-  /* Keep the landing page narrow */
-  html body.landing-page .page {
-    max-width: 700px !important;
-    width: 90% !important;
-    margin: auto;
-  }
+/* Keep the landing page narrow */
+html body.landing-page .page {
+max-width: 700px !important;
+width: 90% !important;
+margin: auto;
+}
 }
 
 
@@ -47,41 +51,41 @@ html body.landing-page .page {
 
 /* Adjust sidebar spacing */
 .sidebar {
-    margin-left: -60px; /* Moves sidebar left */
+margin-left: -60px; /* Moves sidebar left */
 }
 
 /* Add space between sidebar and text */
 .page__content {
-    margin-left: 30px;
+margin-left: 30px;
 }
 
 /* =================== Footer Styling =================== */
 
 /* Reduce extra spacing in the footer */
 .site-footer {
-    font-size: 12px;
-    padding: 5px 0 !important;
-    margin: 0 !important;
-    height: auto;
-    line-height: 1.2;
+font-size: 12px;
+padding: 5px 0 !important;
+margin: 0 !important;
+height: auto;
+line-height: 1.2;
 }
 
 /* Remove empty space in the footer */
 .footer-col-wrapper {
-    padding: 0 !important;
-    margin: 0 !important;
-    min-height: 10px;
+padding: 0 !important;
+margin: 0 !important;
+min-height: 10px;
 }
 
 /* Reduce spacing between content and footer */
 .wrapper {
-    padding-bottom: 0 !important;
-    margin-bottom: 0 !important;
+padding-bottom: 0 !important;
+margin-bottom: 0 !important;
 }
 
 /* Remove any empty space that might push the footer down */
 .page {
-    margin-bottom: 0 !important;
+margin-bottom: 0 !important;
 }
 
 /* Hide invisible elements adding extra height */
@@ -89,182 +93,196 @@ html body.landing-page .page {
 .site-footer::after, 
 .footer-col-wrapper::before, 
 .footer-col-wrapper::after {
-    height: 0 !important;
-    display: none !important;
+height: 0 !important;
+display: none !important;
 }
 
 /* =================== Profile Image Styling =================== */
 
 /* Force profile image to display at full size */
 .u-photo {
-    width: 180px !important;
-    height: 180px !important;
-    max-width: none !important;
-    max-height: none !important;
-    object-fit: cover !important;
-    display: block !important;
+width: 180px !important;
+height: 180px !important;
+max-width: none !important;
+max-height: none !important;
+object-fit: cover !important;
+display: block !important;
 }
 
 /* Also fix its container, if restricting size */
 .author__avatar, .author__avatar img, .u-photo {
-    width: 200px !important;
-    height: 200px !important;
-    max-width: none !important;
-    max-height: none !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+width: 200px !important;
+height: 200px !important;
+max-width: none !important;
+max-height: none !important;
+display: flex !important;
+align-items: center !important;
+justify-content: center !important;
 }
 
 /* Add spacing below profile image container */
 .author__avatar {
-    margin-bottom: 20px !important;
+margin-bottom: 20px !important;
 }
 
 /* Make profile image square instead of circular */
 .u-photo {
-    border-radius: 0 !important;
+border-radius: 0 !important;
 }
 
 /* =================== Typography Styling =================== */
 
 /* Standard font size */
 body {
-  font-size: 16px;
-  line-height: 1.6;
+font-size: 16px;
+line-height: 1.6;
 }
 
 /* Header sizes */
 h1 {
-  font-size: 28px;
+font-size: 28px;
 }
 
 h2 {
-  font-size: 24px;
+font-size: 24px;
 }
 
 h3 {
-  font-size: 20px;
+font-size: 20px;
 }
 
 /* Ensure paragraphs in posts look good */
 .layout-single p {
-  font-size: 18px;
-  line-height: 1.6;
+font-size: 18px;
+line-height: 1.6;
 }
 
 /* =================== Research Page Styling =================== */
 
 /* Ensure the research page expands fully */
 .layout--single, .initial-content, .page__inner-wrap, .page__content {
-  max-width: 1600px !important; /* Full width */
-  width: 100% !important; /* Take full screen width */
-  margin: auto;
-  display: block;
+max-width: 1600px !important; /* Full width */
+width: 100% !important; /* Take full screen width */
+margin: auto;
+display: block;
 }
 
 /* Break width constraints on inner wrap */
 .page__inner-wrap {
-  max-width: 1600px !important;
-  width: 100% !important;
-  margin: auto;
-  padding: 0 20px; /* Add some spacing on sides */
+max-width: 1600px !important;
+width: 100% !important;
+margin: auto;
+padding: 0 20px; /* Add some spacing on sides */
 }
 
 /* Ensure research sections expand fully */
 .research-entry {
-  max-width: 1600px !important;
-  width: 100% !important;
-  margin: 30px auto; /* Adds spacing between research entries */
-  display: flex;
-  align-items: flex-start;
-  gap: 30px; /* Space between image and text */
+max-width: 1600px !important;
+width: 100% !important;
+margin: 30px auto; /* Adds spacing between research entries */
+display: flex;
+align-items: flex-start;
+gap: 30px; /* Space between image and text */
 }
 
 /* Ensure the image stays on the left */
 .research-image {
-  flex: 0 0 35%; /* Image takes up 35% of the width */
-  max-width: 35%;
+flex: 0 0 35%; /* Image takes up 35% of the width */
+max-width: 35%;
 }
 
 .research-image img {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 5px;
+width: 100%;
+height: auto;
+display: block;
+border-radius: 5px;
 }
 
 /* Ensure the text takes up the remaining space */
 .research-text {
-  flex: 1;
-  font-size: 16px;
-  line-height: 1.6;
+flex: 1;
+font-size: 16px;
+line-height: 1.6;
 }
 
 /* Fix paragraph spacing inside .research-text */
 .research-text p {
-  margin-bottom: 15px;
+margin-bottom: 15px;
 }
 
 /* Ensure proper typography */
 .research h2 {
-  font-size: 24px;
-  margin-top: 30px;
+font-size: 24px;
+margin-top: 30px;
 }
 
 .research h3 {
-  font-size: 20px;
-  font-weight: bold;
-  margin-top: 20px;
+font-size: 20px;
+font-weight: bold;
+margin-top: 20px;
 }
 
 .research p {
-  font-size: 16px;
-  line-height: 1.5;
+font-size: 16px;
+line-height: 1.5;
 }
 
 /* 🚀 FINAL FIX: FORCE THE FOOTER TO BE AT THE PAGE BOTTOM */
-/* 1️⃣ Make sure body and wrapper stretch properly */
+
+/* 1️⃣ Ensure the entire page fills the viewport */
 html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
+height: 100%;
+margin: 0;
+padding: 0;
 }
 
 /* 2️⃣ Force the wrapper (or main container) to expand fully */
 .wrapper, .page, .page__inner-wrap {
+display: flex;
+flex-direction: column;
+min-height: 100vh; /* Forces full viewport height */
+}
+
+/* 3️⃣ Make the main content push the footer down */
+.page__content {
+flex-grow: 1; /* Expands content to fill space, pushing footer down */
+min-height: 80vh; /* Ensures content takes up enough space on short pages */
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Full viewport height */
+  justify-content: center; /* Centers content vertically */
 }
 
-/* 3️⃣ Let the content take only necessary space (NOT stretch) */
-.page__content {
-  flex-grow: 1; /* Allows it to grow only if needed */
-  min-height: auto !important; /* Removes unnecessary height */
-  display: block !important; /* Ensures natural text flow */
-}
-
-/* 4️⃣ Ensure the footer stays at the bottom */
+/* 4️⃣ Ensure the footer itself stays at the bottom */
 #footer,
 .page__footer,
 .site-footer {
-  margin-top: auto;
-  width: 100%;
-  text-align: center;
-  position: relative;
-  background-color: #f8f8f8;
+margin-top: auto;
+width: 100%;
+text-align: center;
+position: relative;
+background-color: #f8f8f8; /* Just for visibility */
 }
 
-/* 🚀 Special Fix: Landing Page */
+/* 🚀 Special Fix: Landing Page Footer */
 html body.landing-page .wrapper {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
 }
 
 html body.landing-page .page__content {
-  flex-grow: unset !important; /* Removes unwanted stretching */
-  min-height: auto !important; /* Fixes floating content */
-  display: block !important; /* Natural positioning */
+flex-grow: 1;
+min-height: 80vh; /* Ensures content area is tall enough to reveal footer */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
+
+html body.landing-page #footer,
+html body.landing-page .page__footer,
+html body.landing-page .site-footer {
+  margin-top: auto;
+  width: 100%;
+  text-align: center;
+}
+/* ✅ Removed justify-content: center; so content stays at the top */
