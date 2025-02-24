@@ -62,6 +62,27 @@ margin: auto;
 }
 }
 
+/* 🚀 Reduce Excess Space Below Landing Page Content */
+html body.landing-page .wrapper {
+  min-height: auto !important; /* Removes forced full height */
+}
+
+html body.landing-page .page__content {
+  flex-grow: 0 !important; /* Prevents stretching */
+  min-height: auto !important; /* Allows content to determine height */
+  margin-bottom: 0 !important; /* Remove unwanted gap */
+  padding-bottom: 10px !important; /* Small spacing */
+}
+
+html body.landing-page .page {
+  min-height: auto !important; /* Prevents unnecessary vertical space */
+}
+
+html body.landing-page .page__footer {
+  margin-top: 20px !important; /* Keeps a small, intentional gap */
+}
+
+
 
 
 
