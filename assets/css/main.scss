@@ -12,3 +12,10 @@
 .page__content {
     margin-left: 30px;  // Adds space between sidebar and text
 }
+
+.site-footer {
+    font-size: 12px;  // Decrease text size
+    padding: 5px 0;   // Reduce padding (top and bottom)
+    height: auto;     // Ensure it adapts to content size
+    text-align: center; // Keep it centered
+}
