@@ -118,6 +118,7 @@ h3 {
 
 /* Research Page Styling ***************************************************/ 
 
+/* Research Page Styling ***************************************************/ 
 
 .research h2 {
   font-size: 24px;
@@ -137,31 +138,12 @@ h3 {
 
 /* Add spacing between entries */
 .research-entry {
-  margin-bottom: 30px;
-}
-
-/* Make research sections expand to full width */
-.research-entry {
-  max-width: 1400px !important;
-  width: 90% !important;
-  margin: auto;
-}
-
-
-/* Ensure wider content area */
-.layout-single .page-content {
-  max-width: 1000px; /* Adjust this width as needed */
-  width: 90%;
-  margin: auto;
-}
-
-/* Make research entries display side by side */
-.research-entry {
+  max-width: 1400px !important; /* Expanded width */
+  width: 90% !important; /* Keeps responsiveness */
+  margin: 30px auto; /* Adds space between research entries */
   display: flex;
   align-items: flex-start;
-  gap: 30px; /* Adds space between image and text */
-  max-width: 1000px;
-  margin: 30px auto;
+  gap: 30px; /* Space between image and text */
 }
 
 /* Ensure the image stays on the left */
@@ -177,11 +159,15 @@ h3 {
   border-radius: 5px;
 }
 
-/* Ensure the text fills the remaining space */
+/* Ensure the text takes up the remaining space */
 .research-text {
   flex: 1;
   font-size: 16px;
   line-height: 1.6;
 }
 
+/* Fix paragraph spacing inside .research-text */
+.research-text p {
+  margin-bottom: 15px;
+}
 
