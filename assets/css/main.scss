@@ -4,44 +4,65 @@
 
 @import "minimal-mistakes"; // Keep the theme's existing styles
 
-// Custom styles to adjust sidebar spacing
+/* =================== General Page Styling =================== */
+
+/* Ensure all pages are full width by default */
+.layout-single .page-content {
+  font-size: 18px;
+  line-height: 1.6;
+  max-width: 1600px !important; /* Full width */
+  width: 95% !important;
+  margin: auto;
+}
+
+/* BUT: Limit width ONLY on the landing page */
+body.home .layout-single .page-content {
+  max-width: 700px !important; /* Narrower landing page */
+  width: 90% !important; /* Keep some responsiveness */
+}
+
+/* =================== Sidebar Styling =================== */
+
+/* Adjust sidebar spacing */
 .sidebar {
-    margin-left: -60px;  // Moves sidebar left
+    margin-left: -60px; /* Moves sidebar left */
 }
 
+/* Add space between sidebar and text */
 .page__content {
-    margin-left: 30px;  // Adds space between sidebar and text
+    margin-left: 30px;
 }
 
-// Make the footer background smaller and remove excess spacing
-// Reduce the footer height while keeping the background color
+/* =================== Footer Styling =================== */
+
+/* Reduce extra spacing in the footer */
 .site-footer {
-    font-size: 12px;  // Keep text small
-    padding: 5px 0 !important;  // Reduce vertical padding
-    margin: 0 !important;   // Remove unnecessary margin
-    height: auto;     // Let the footer shrink dynamically
-    line-height: 1.2; // Reduce line spacing for compact look
+    font-size: 12px;
+    padding: 5px 0 !important;
+    margin: 0 !important;
+    height: auto;
+    line-height: 1.2;
 }
 
-// Reduce extra spacing inside the footer container
+/* Remove empty space in the footer */
 .footer-col-wrapper {
     padding: 0 !important;
     margin: 0 !important;
-    min-height: 10px;  // Ensures the footer isn’t too tall
+    min-height: 10px;
 }
 
-// Reduce spacing between the content and footer
+/* Reduce spacing between content and footer */
 .wrapper {
     padding-bottom: 0 !important;
     margin-bottom: 0 !important;
 }
 
-// Remove any empty space that might be pushing the footer down
+/* Remove any empty space that might push the footer down */
 .page {
     margin-bottom: 0 !important;
 }
 
-// Hide any invisible elements that might be adding extra height
+/* Hide invisible elements adding extra height */
 .site-footer::before, 
 .site-footer::after, 
 .footer-col-wrapper::before, 
@@ -50,18 +71,19 @@
     display: none !important;
 }
 
+/* =================== Profile Image Styling =================== */
 
-// Force the profile image to display at full size
+/* Force profile image to display at full size */
 .u-photo {
     width: 180px !important;
     height: 180px !important;
     max-width: none !important;
     max-height: none !important;
-    object-fit: cover !important; // Ensures it fills the area without distortion
+    object-fit: cover !important;
     display: block !important;
 }
 
-// Also fix its container, if it's restricting size
+/* Also fix its container, if restricting size */
 .author__avatar, .author__avatar img, .u-photo {
     width: 200px !important;
     height: 200px !important;
@@ -72,23 +94,25 @@
     justify-content: center !important;
 }
 
-// Add spacing below the profile image container
+/* Add spacing below profile image container */
 .author__avatar {
-    margin-bottom: 20px !important;  // Adjust space between image and text
+    margin-bottom: 20px !important;
 }
 
-// Make profile image square instead of circular
+/* Make profile image square instead of circular */
 .u-photo {
-    border-radius: 0 !important;  // Removes rounded corners
+    border-radius: 0 !important;
 }
 
-/* Keep a standard font size for the whole site */
+/* =================== Typography Styling =================== */
+
+/* Standard font size */
 body {
-  font-size: 16px; /* 14px is fine too, but 11px was too small */
+  font-size: 16px;
   line-height: 1.6;
 }
 
-/* Adjust font size for headers */
+/* Header sizes */
 h1 {
   font-size: 28px;
 }
@@ -101,35 +125,17 @@ h3 {
   font-size: 20px;
 }
 
-/* ONLY increase text size for post content (bio page) */
-.layout-single .page-content {
-  font-size: 18px; /* Increase size ONLY for page content */
-  line-height: 1.6;
-  max-width: 700px;
-  margin: auto;
-}
-
 /* Ensure paragraphs in posts look good */
 .layout-single p {
   font-size: 18px;
   line-height: 1.6;
 }
 
-/* Force full-width layout */
-.layout--single {
-  max-width: 1600px !important; /* Expand max width */
-  width: 95% !important; /* Prevent unnecessary shrinking */
-  margin: auto;
-  display: block;
-}
+/* =================== Research Page Styling =================== */
 
-
-/* Research Page Styling ***************************************************/ 
-/* Research Page Styling ***************************************************/ 
-
-/* Ensure the entire page expands */
+/* Ensure the research page expands fully */
 .layout--single, .initial-content, .page__inner-wrap, .page__content {
-  max-width: 1600px !important; /* Ensure full width */
+  max-width: 1600px !important; /* Full width */
   width: 100% !important; /* Take full screen width */
   margin: auto;
   display: block;
@@ -146,7 +152,7 @@ h3 {
 /* Ensure research sections expand fully */
 .research-entry {
   max-width: 1600px !important;
-  width: 100% !important; /* Take up full available space */
+  width: 100% !important;
   margin: 30px auto; /* Adds spacing between research entries */
   display: flex;
   align-items: flex-start;
