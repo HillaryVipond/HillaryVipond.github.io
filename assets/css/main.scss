@@ -138,9 +138,10 @@ h3 {
   margin-bottom: 30px;
 }
 
-/* Increase max width for single page layout */
+/* Ensure wider content area */
 .layout-single .page-content {
-  max-width: 1100px; /* Adjust as needed */
+  max-width: 1000px; /* Adjust this width as needed */
+  width: 90%;
   margin: auto;
 }
 
