@@ -246,6 +246,10 @@ html, body {
 /* 3️⃣ Make the main content push the footer down */
 .page__content {
   flex-grow: 1; /* Expands content to fill space, pushing footer down */
+  min-height: 80vh; /* Ensures content takes up enough space on short pages */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centers content vertically */
 }
 
 /* 4️⃣ Ensure the footer itself stays at the bottom */
@@ -268,6 +272,10 @@ html body.landing-page .wrapper {
 
 html body.landing-page .page__content {
   flex-grow: 1;
+  min-height: 80vh; /* Ensures content area is tall enough to reveal footer */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 html body.landing-page #footer,
