@@ -121,26 +121,26 @@ h3 {
 /* Ensure the entire page expands */
 .initial-content {
   max-width: 1400px !important;
-  width: 90% !important;
+  width: 100% !important; /* Instead of 90% */
   margin: auto;
   display: block;
 }
-
 
 /* Expand the entire inner container */
 .page__inner-wrap {
-  max-width: 1400px !important; /* Wider container */
-  width: 90% !important; /* Ensures responsiveness */
+  max-width: 1400px !important;
+  width: 100% !important; /* Instead of 90% */
   margin: auto;
 }
 
-
+/* Make sure the main content expands */
 .page__content {
   max-width: 1400px !important;
-  width: 90% !important;
+  width: 100% !important; /* Instead of 90% */
   margin: auto;
   display: block;
 }
+
 
 .research h2 {
   font-size: 24px;
