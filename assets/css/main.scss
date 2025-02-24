@@ -22,14 +22,9 @@ width: 95% !important;
 margin: auto;
 }
 
-/* BUT: Limit width ONLY on the landing page */
-html body.landing-page .page {
-max-width: 700px !important;
-width: 90% !important;
-margin: auto;
-}
 
-/* ✅ Ensure Landing Page Content is at the Top */
+
+/* Ensure Landing Page Content is at the Top */
 html body.landing-page .page__inner-wrap {
   display: block !important; /* Removes flexbox behavior */
   min-height: auto !important; /* Prevents extra spacing */
@@ -37,11 +32,19 @@ html body.landing-page .page__inner-wrap {
   padding-top: 20px; /* Adds a little spacing from navbar */
 }
 
-/* ✅ Ensure `.page__content` is not stretched */
+/* Ensure `.page__content` is not stretched */
 html body.landing-page .page__content {
   flex-grow: 0 !important; /* Prevents unwanted vertical stretching */
   min-height: auto !important;
-  disp
+  display: block !important; /* Ensures normal text flow */
+}
+
+  /* BUT: Limit width ONLY on the landing page */
+html body.landing-page .page {
+max-width: 700px !important;
+width: 90% !important;
+margin: auto;
+}
 
 
 @media (min-width: 80em) {
