@@ -227,105 +227,55 @@ h3 {
   line-height: 1.5;
 }
 
+/* ============================= */
+/* ✅ Universal Footer Fix: Stick Footer to Bottom on ALL Pages */
+/* ============================= */
 
-/* ============================= */
-/* ✅ Footer Fix: Always Stick to Bottom (Place at the End) */
-/* ============================= */
-/* Ensure footer always stays at bottom on ALL pages */
+/* Ensure body and wrapper expand to full height */
 html, body {
   height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
+/* Make sure the wrapper stretches */
 .wrapper {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  min-height: 100vh; /* Full viewport height */
 }
 
+/* Ensure the main content expands to push footer down */
 .page__content {
-  flex: 1;
+  flex-grow: 1;
 }
 
-/* Special Fix: Ensure footer is at bottom on landing page */
-html body.landing-page .wrapper {
-  min-height: 100vh; /* Forces full viewport height */
-  display: flex;
-  flex-direction: column;
-}
-
-html body.landing-page .page__content {
-  flex-grow: 1; /* Pushes footer down */
-}
-
-html body.landing-page .site-footer {
-  margin-top: auto;
-  padding: 10px 0;
-  text-align: center;
-}
-
-/* Ensure footer always stays at bottom on ALL pages */
-html, body {
-  height: 100%;
-}
-
-.wrapper {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.page__content {
-  flex: 1;
-}
-
-/* Special Fix: Ensure footer is at bottom on landing page */
-html body.landing-page .wrapper {
-  min-height: 100vh; /* Forces full viewport height */
-  display: flex;
-  flex-direction: column;
-}
-
-html body.landing-page .page__content {
-  flex-grow: 1; /* Pushes footer down */
-}
-
-html body.landing-page .site-footer {
-  margin-top: auto;
-  padding: 10px 0;
-  text-align: center;
-
-
-  /*  FORCE FOOTER TO STAY INSIDE THE PAGE */
-
-/* Make sure body and html take full height */
-html, body {
-  height: 100% !important;
-}
-
-/* Make sure the whole page wrapper is stretched */
-.wrapper {
-  display: flex !important;
-  flex-direction: column !important;
-  min-height: 100vh !important; /* Forces full screen height */
-  position: relative !important;
-  border: 2px solid red !important; /* Debugging */
-}
-
-/* Make sure content expands so footer isn't floating */
-.page__content {
-  flex-grow: 1 !important; /* Forces it to take up all available space */
-  border: 2px solid blue !important; /* Debugging */
-}
-
-/* FORCE THE FOOTER TO STAY AT THE BOTTOM */
+/* Force footer to always sit at the bottom */
 .site-footer {
-  position: relative !important; /* Remove any absolute positioning */
-  width: 100% !important;
-  margin-top: auto !important;
-  background-color: #f8f8f8; /* Just for visibility */
-  border: 2px solid green !important; /* Debugging */
+  margin-top: auto;
+  width: 100%;
+  text-align: center;
 }
 
+/* ============================= */
+/* ✅ Special Fix for the Landing Page */
+/* ============================= */
+
+html body.landing-page .wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+html body.landing-page .page__content {
+  flex-grow: 1; /* Expands content to push footer down */
+}
+
+html body.landing-page .site-footer {
+  margin-top: auto;
+  width: 100%;
+  padding: 10px 0;
+  text-align: center;
 }
 
 
