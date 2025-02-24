@@ -21,6 +21,14 @@ body.home .layout-single .page-content {
   width: 90% !important; /* Keep some responsiveness */
 }
 
+@media (min-width: 80em) {
+  .page {
+    width: 100% !important;
+    padding-inline-end: 0 !important;
+  }
+}
+
+
 /* =================== Sidebar Styling =================== */
 
 /* Adjust sidebar spacing */
