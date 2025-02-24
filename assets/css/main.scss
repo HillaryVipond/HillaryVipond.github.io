@@ -49,3 +49,12 @@
     height: 0 !important;
     display: none !important;
 }
+
+
+// Increase the sidebar profile picture size
+.author__avatar {
+    width: 180px !important;  // Adjust width (default is 100px)
+    height: 180px !important; // Adjust height (default is 100px)
+    border-radius: 50%;  // Keeps it circular (optional)
+}
+
