@@ -51,10 +51,16 @@
 }
 
 
-// Increase the sidebar profile picture size
+// Force the sidebar profile picture to be larger
 .author__avatar {
-    width: 180px !important;  // Adjust width (default is 100px)
-    height: 180px !important; // Adjust height (default is 100px)
-    border-radius: 50%;  // Keeps it circular (optional)
+    width: 180px !important;  // Adjust width
+    height: auto !important;  // Maintain aspect ratio
+    max-width: 100% !important; // Prevent scaling issues
+    display: block !important;  // Ensure proper rendering
+}
+
+// Also increase sidebar width if needed
+.sidebar {
+    max-width: 300px !important;  // Adjust sidebar width if image is too cramped
 }
 
