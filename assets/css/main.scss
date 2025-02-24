@@ -95,6 +95,10 @@ html body.landing-page .page__footer {
 // }
 
 
+html body.landing-page .page__inner-wrap {
+  min-height: calc(100vh - 300px) !important;
+}
+
 /* =================== Sidebar Styling =================== */
 
 /* Adjust sidebar spacing */
@@ -177,6 +181,8 @@ margin-bottom: 20px !important;
 .u-photo {
 border-radius: 0 !important;
 }
+
+
 
 /* =================== Typography Styling =================== */
 
