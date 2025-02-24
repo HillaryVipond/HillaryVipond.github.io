@@ -9,6 +9,12 @@
 
 @import "minimal-mistakes"; /* Keep the theme's existing styles */
 
+html body.landing-page article.page {
+  align-self: flex-start !important;
+  margin-top: 0 !important;
+}
+
+
 /* ================= Global Styles & Sticky Footer Setup ================= */
 html, body {
   height: 100%;
