@@ -51,12 +51,21 @@
 }
 
 
-// Force the sidebar profile picture to be larger
+// Force the sidebar profile picture to display correctly
 .author__avatar {
-    width: 180px !important;  // Set desired width
-    height: 180px !important; // Set desired height
-    object-fit: cover !important;  // Ensure the image scales properly
+    width: 200px !important;  // Force correct width
+    height: 200px !important; // Force correct height
+    max-width: 100% !important; // Prevent scaling down
+    max-height: 100% !important; // Prevent unwanted shrinking
+    object-fit: cover !important;  // Ensure full image displays
     display: block !important;
-    border-radius: 50%;  // Keeps it circular (remove if you want a square image)
+}
+
+// Ensure parent container does not shrink the image
+.author__avatar img {
+    width: 200px !important;
+    height: 200px !important;
+    max-width: none !important;
+    max-height: none !important;
 }
 
