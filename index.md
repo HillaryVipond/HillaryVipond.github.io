@@ -6,6 +6,13 @@ layout: single
 author_profile: true
 ---
 
-Postdoctoral Fellow in the Transforming Economies team at the Complexity Science Hub in Vienna. My research is on rapid changes to the occupational structure in historical context.
+Postdoctoral Fellow in the Transforming Economies team at the Complexity Science Hub in Vienna.
+My research is on rapid changes to the occupational structure in historical context.
+
+Current projects:
+
+1. A
+2. B
+3. C
 
 
