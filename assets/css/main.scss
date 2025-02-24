@@ -72,9 +72,14 @@
     justify-content: center !important;
 }
 
-// Add spacing below the profile image
+// Add spacing below the profile image container
+.author__avatar {
+    margin-bottom: 20px !important;  // Adjust space between image and text
+}
+
+// Make profile image square instead of circular
 .u-photo {
-    margin-bottom: 15px !important;  // Adjust the space between image and text
+    border-radius: 0 !important;  // Removes rounded corners
 }
 
 
