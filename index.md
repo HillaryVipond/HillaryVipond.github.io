@@ -1,3 +1,7 @@
+---
+layout: single
+author_profile: true
+---
 
 <!--
 You don't need to edit this file, it's empty on purpose.
@@ -6,12 +10,6 @@ See: https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
 https://youtu.be/Pof342wGt78
 -->
-
-
----
-layout: single
-author_profile: true
----
 
 Postdoctoral Fellow in the Transforming Economies team at the Complexity Science Hub in Vienna.  
 My research is on rapid changes to the occupational structure in historical context.
