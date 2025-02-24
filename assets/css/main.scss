@@ -263,11 +263,9 @@ min-height: 100vh; /* Forces full viewport height */
 
 /* 3️⃣ Make the main content push the footer down */
 .page__content {
-flex-grow: 1; /* Expands content to fill space, pushing footer down */
-min-height: 80vh; /* Ensures content takes up enough space on short pages */
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* Centers content vertically */
+  flex-grow: unset !important; /* Prevents forced stretching */
+  min-height: auto !important; /* Allows content to determine height */
+  display: block !important; /* Normal text flow */
 }
 
 /* 4️⃣ Ensure the footer itself stays at the bottom */
