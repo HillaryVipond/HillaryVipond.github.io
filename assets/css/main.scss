@@ -14,28 +14,38 @@
 }
 
 // Make the footer background smaller and remove excess spacing
+// Reduce the footer height while keeping the background color
 .site-footer {
     font-size: 12px;  // Keep text small
-    padding: 5px 0;   // Reduce vertical padding
-    height: auto;     // Allow it to shrink to content
-    line-height: 1.2; // Keep lines tight
-    text-align: center;
-    background-color: transparent; // Removes light background (optional)
+    padding: 5px 0 !important;  // Reduce vertical padding
+    margin: 0 !important;   // Remove unnecessary margin
+    height: auto;     // Let the footer shrink dynamically
+    line-height: 1.2; // Reduce line spacing for compact look
 }
 
-// Remove extra padding inside the footer container
+// Reduce extra spacing inside the footer container
 .footer-col-wrapper {
-    padding: 0;
-    margin: 0;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-height: 10px;  // Ensures the footer isn’t too tall
 }
 
-// Reduce spacing between content and footer
+// Reduce spacing between the content and footer
 .wrapper {
-    padding-bottom: 0;
-    margin-bottom: 0;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
 }
 
-// Remove any extra margin below the page content
+// Remove any empty space that might be pushing the footer down
 .page {
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
+}
+
+// Hide any invisible elements that might be adding extra height
+.site-footer::before, 
+.site-footer::after, 
+.footer-col-wrapper::before, 
+.footer-col-wrapper::after {
+    height: 0 !important;
+    display: none !important;
 }
