@@ -118,6 +118,13 @@ h3 {
 
 /* Research Page Styling ***************************************************/ 
 
+/* Expand the entire inner container */
+.page__inner-wrap {
+  max-width: 1400px !important; /* Wider container */
+  width: 90% !important; /* Ensures responsiveness */
+  margin: auto;
+}
+
 
 .page__content {
   max-width: 1400px !important;
