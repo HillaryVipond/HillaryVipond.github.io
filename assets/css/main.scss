@@ -228,8 +228,7 @@ h3 {
 }
 
 /* 🚀 FINAL FIX: FORCE THE FOOTER TO BE AT THE PAGE BOTTOM */
-
-/* 1️⃣ Ensure the entire page fills the viewport */
+/* 1️⃣ Make sure body and wrapper stretch properly */
 html, body {
   height: 100%;
   margin: 0;
@@ -240,16 +239,17 @@ html, body {
 .wrapper, .page, .page__inner-wrap {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Forces full viewport height */
+  min-height: 100vh; /* Full viewport height */
 }
 
-/* 3️⃣ Make the main content push the footer down */
+/* 3️⃣ Let the content take only necessary space (NOT stretch) */
 .page__content {
-  flex-grow: 1; /* Expands content to fill space, pushing footer down */
-  min-height: 80vh; /* Ensures content takes up enough space on short pages */
+  flex-grow: 1; /* Allows it to grow only if needed */
+  min-height: auto !important; /* Removes unnecessary height */
+  display: block !important; /* Ensures natural text flow */
 }
 
-/* 4️⃣ Ensure the footer itself stays at the bottom */
+/* 4️⃣ Ensure the footer stays at the bottom */
 #footer,
 .page__footer,
 .site-footer {
@@ -257,10 +257,10 @@ html, body {
   width: 100%;
   text-align: center;
   position: relative;
-  background-color: #f8f8f8; /* Just for visibility */
+  background-color: #f8f8f8;
 }
 
-/* 🚀 Special Fix: Landing Page Footer */
+/* 🚀 Special Fix: Landing Page */
 html body.landing-page .wrapper {
   min-height: 100vh;
   display: flex;
@@ -268,9 +268,9 @@ html body.landing-page .wrapper {
 }
 
 html body.landing-page .page__content {
-  flex-grow: 1;
-  min-height: 80vh; /* Ensures content area is tall enough to reveal footer */
+  flex-grow: unset !important; /* Removes unwanted stretching */
+  min-height: auto !important; /* Fixes floating content */
+  display: block !important; /* Natural positioning */
 }
 
-/* ✅ Removed justify-content: center; so content stays at the top */
 
