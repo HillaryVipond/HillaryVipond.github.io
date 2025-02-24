@@ -1,8 +1,12 @@
 
-# You don't need to edit this file, it's empty on purpose.
-# Edit theme's home layout instead if you wanna make some changes
-# See: https://jekyllrb.com/docs/themes/#overriding-theme-defaults
-# https://youtu.be/Pof342wGt78
+<!--
+You don't need to edit this file, it's empty on purpose.
+Edit theme's home layout instead if you want to make changes.
+See: https://jekyllrb.com/docs/themes/#overriding-theme-defaults
+
+https://youtu.be/Pof342wGt78
+-->
+
 
 layout: single
 author_profile: true
