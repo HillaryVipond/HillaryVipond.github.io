@@ -296,14 +296,9 @@ padding: 0;
 .wrapper, .page, .page__inner-wrap {
 display: flex;
 flex-direction: column;
-min-height: 100vh; /* Forces full viewport height */
+min-height: 70vh; /* Forces full viewport height */
 }
 
-html body.landing-page .page,
-html body.landing-page .page__inner-wrap {
-  display: block !important;
-  min-height: auto !important;
-}
 
 
 /* 3️⃣ Make the main content push the footer down */
