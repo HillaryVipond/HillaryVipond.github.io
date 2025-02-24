@@ -263,4 +263,36 @@ html body.landing-page .site-footer {
   text-align: center;
 }
 
+/* Ensure footer always stays at bottom on ALL pages */
+html, body {
+  height: 100%;
+}
+
+.wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page__content {
+  flex: 1;
+}
+
+/* Special Fix: Ensure footer is at bottom on landing page */
+html body.landing-page .wrapper {
+  min-height: 100vh; /* Forces full viewport height */
+  display: flex;
+  flex-direction: column;
+}
+
+html body.landing-page .page__content {
+  flex-grow: 1; /* Pushes footer down */
+}
+
+html body.landing-page .site-footer {
+  margin-top: auto;
+  padding: 10px 0;
+  text-align: center;
+}
+
 
