@@ -14,6 +14,11 @@ html body.landing-page article.page {
   margin-top: 0 !important;
 }
 
+html body.landing-page .page__inner-wrap {
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+}
+
 
 /* ================= Global Styles & Sticky Footer Setup ================= */
 .initial-content {
