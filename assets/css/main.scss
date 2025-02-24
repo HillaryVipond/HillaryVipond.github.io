@@ -108,6 +108,14 @@ html body.landing-page article.page {
   flex: 1;
 }
 
+.initial-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align content at the top */
+}
+
+
 /* =================== Sidebar Styling =================== */
 
 /* Adjust sidebar spacing */
