@@ -82,6 +82,12 @@ html body.landing-page .page__content {
 }
 
 /* =================== Research Page Styling =================== */
+/* 🚀 Make the Research Page **FULL WIDTH** */
+html body.research .page {
+  max-width: 1600px !important;
+  width: 100% !important;
+  margin: auto;
+}
 
 /* Ensure research sections expand fully */
 .research-entry {
