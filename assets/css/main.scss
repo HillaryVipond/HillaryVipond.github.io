@@ -95,7 +95,13 @@ html body.landing-page .page__inner-wrap {
 
 
 
+html body.landing-page .page__meta {
+  display: none !important; /* Hides the empty footer metadata */
+}
 
+html body.landing-page .page__footer {
+  margin-top: 10px !important; /* Small space, not excessive */
+}
 
 /* =================== Sidebar Styling =================== */
 
