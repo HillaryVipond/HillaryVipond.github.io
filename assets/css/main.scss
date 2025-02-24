@@ -137,3 +137,10 @@ h3 {
 .research-entry {
   margin-bottom: 30px;
 }
+
+/* Increase max width for single page layout */
+.layout-single .page-content {
+  max-width: 900px; /* Adjust as needed */
+  margin: auto;
+}
+
