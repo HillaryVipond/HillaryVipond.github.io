@@ -1,92 +1,174 @@
----
-# Needed for Jekyll to process SCSS
----
-
 @import "minimal-mistakes"; // Keep the theme's existing styles
+
+/* Remove grayscale effect on profile image */
+.author__avatar img {
+  filter: none !important;
+  transition: none !important; /* Prevents fade-in effect */
+}
+
 
 /* =================== General Page Styling =================== */
 
 /* Ensure all pages are full width by default */
-html body:not(.landing-page) .layout--single .page-content {
-  max-width: 1600px !important;
+.layout--single .page-content {
+  font-size: 18px;
+  line-height: 1.6;
+  max-width: 1600px !important; /* Full width */
   width: 95% !important;
   margin: auto;
 }
 
-/* BUT: Keep landing page narrow */
+/* BUT: Limit width ONLY on the landing page */
 html body.landing-page .page {
   max-width: 700px !important;
   width: 90% !important;
   margin: auto;
 }
 
+@media (min-width: 80em) {
+  html body .page {
+    width: 100% !important; /* Expand full width for all pages */
+    padding-inline-end: 0 !important;
+    max-width: none !important;
+  }
+
+  /* Keep the landing page narrow */
+  html body.landing-page .page {
+    max-width: 700px !important;
+    width: 90% !important;
+    margin: auto;
+  }
+}
+
+
+
+
 /* =================== Sidebar Styling =================== */
 
 /* Adjust sidebar spacing */
 .sidebar {
-  margin-left: -60px; /* Moves sidebar left */
+    margin-left: -60px; /* Moves sidebar left */
 }
 
 /* Add space between sidebar and text */
 .page__content {
-  margin-left: 30px;
+    margin-left: 30px;
 }
 
 /* =================== Footer Styling =================== */
 
-/* Ensure body and wrapper stretch fully */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-/* Make wrapper expand fully */
-.wrapper, .page, .page__inner-wrap {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* Forces full viewport height */
-}
-
-/* Ensure the main content area behaves correctly */
-.page__content {
-  flex-grow: 1;
-  min-height: auto !important; /* Prevents weird stretching */
-  display: block !important; /* Keeps natural flow */
-}
-
-/* Ensure footer is always at the bottom */
-#footer,
-.page__footer,
+/* Reduce extra spacing in the footer */
 .site-footer {
-  margin-top: auto !important;
-  width: 100%;
-  text-align: center;
-  position: relative;
-  background-color: #f8f8f8;
+    font-size: 12px;
+    padding: 5px 0 !important;
+    margin: 0 !important;
+    height: auto;
+    line-height: 1.2;
 }
 
-/* 🚀 Special Fix: Landing Page */
-html body.landing-page .wrapper {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+/* Remove empty space in the footer */
+.footer-col-wrapper {
+    padding: 0 !important;
+    margin: 0 !important;
+    min-height: 10px;
 }
 
-html body.landing-page .page__content {
-  flex-grow: 1 !important; /* Ensures content fills space without floating */
-  min-height: 80vh !important; /* Prevents unnecessary shrinking */
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: flex-start !important; /* Forces content to the top */
+/* Reduce spacing between content and footer */
+.wrapper {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+/* Remove any empty space that might push the footer down */
+.page {
+    margin-bottom: 0 !important;
+}
+
+/* Hide invisible elements adding extra height */
+.site-footer::before, 
+.site-footer::after, 
+.footer-col-wrapper::before, 
+.footer-col-wrapper::after {
+    height: 0 !important;
+    display: none !important;
+}
+
+/* =================== Profile Image Styling =================== */
+
+/* Force profile image to display at full size */
+.u-photo {
+    width: 180px !important;
+    height: 180px !important;
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: cover !important;
+    display: block !important;
+}
+
+/* Also fix its container, if restricting size */
+.author__avatar, .author__avatar img, .u-photo {
+    width: 200px !important;
+    height: 200px !important;
+    max-width: none !important;
+    max-height: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Add spacing below profile image container */
+.author__avatar {
+    margin-bottom: 20px !important;
+}
+
+/* Make profile image square instead of circular */
+.u-photo {
+    border-radius: 0 !important;
+}
+
+/* =================== Typography Styling =================== */
+
+/* Standard font size */
+body {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Header sizes */
+h1 {
+  font-size: 28px;
+}
+
+h2 {
+  font-size: 24px;
+}
+
+h3 {
+  font-size: 20px;
+}
+
+/* Ensure paragraphs in posts look good */
+.layout-single p {
+  font-size: 18px;
+  line-height: 1.6;
 }
 
 /* =================== Research Page Styling =================== */
-/* 🚀 Make the Research Page **FULL WIDTH** */
-html body.research .page {
+
+/* Ensure the research page expands fully */
+.layout--single, .initial-content, .page__inner-wrap, .page__content {
+  max-width: 1600px !important; /* Full width */
+  width: 100% !important; /* Take full screen width */
+  margin: auto;
+  display: block;
+}
+
+/* Break width constraints on inner wrap */
+.page__inner-wrap {
   max-width: 1600px !important;
   width: 100% !important;
   margin: auto;
+  padding: 0 20px; /* Add some spacing on sides */
 }
 
 /* Ensure research sections expand fully */
@@ -141,94 +223,48 @@ html body.research .page {
   line-height: 1.5;
 }
 
-/* =================== Profile Image Styling =================== */
-
-/* Remove grayscale effect on profile image */
-.author__avatar img {
-  filter: none !important;
-  transition: none !important; /* Prevents fade-in effect */
-}
-
-/* Force profile image to display at full size */
-.u-photo {
-  width: 180px !important;
-  height: 180px !important;
-  max-width: none !important;
-  max-height: none !important;
-  object-fit: cover !important;
-  display: block !important;
-}
-
-/* Also fix its container, if restricting size */
-.author__avatar, .author__avatar img, .u-photo {
-  width: 200px !important;
-  height: 200px !important;
-  max-width: none !important;
-  max-height: none !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-/* Add spacing below profile image container */
-.author__avatar {
-  margin-bottom: 20px !important;
-}
-
-/* Make profile image square instead of circular */
-.u-photo {
-  border-radius: 0 !important;
-}
-
-/* =================== Typography Styling =================== */
-
-/* Standard font size */
-body {
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-/* Header sizes */
-h1 {
-  font-size: 28px;
-}
-
-h2 {
-  font-size: 24px;
-}
-
-h3 {
-  font-size: 20px;
-}
-
-/* Ensure paragraphs in posts look good */
-.layout-single p {
-  font-size: 18px;
-  line-height: 1.6;
-}
-
-/* =================== FINAL FOOTER FIX =================== */
-
-/* Ensure footer stays at bottom on ALL pages */
+/* 🚀 FINAL FIX: FORCE THE FOOTER TO BE AT THE PAGE BOTTOM */
+/* 1️⃣ Make sure body and wrapper stretch properly */
 html, body {
   height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-.wrapper {
-  display: flex !important;
-  flex-direction: column !important;
-  min-height: 100vh !important; /* Forces full screen height */
+/* 2️⃣ Force the wrapper (or main container) to expand fully */
+.wrapper, .page, .page__inner-wrap {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Full viewport height */
 }
 
-/* Ensure main content expands properly */
+/* 3️⃣ Let the content take only necessary space (NOT stretch) */
 .page__content {
-  flex-grow: 1 !important; /* Forces it to take up available space */
+  flex-grow: 1; /* Allows it to grow only if needed */
+  min-height: auto !important; /* Removes unnecessary height */
+  display: block !important; /* Ensures natural text flow */
 }
 
-/* Ensure footer is at the bottom */
+/* 4️⃣ Ensure the footer stays at the bottom */
+#footer,
+.page__footer,
 .site-footer {
-  position: relative !important;
-  width: 100% !important;
-  margin-top: auto !important;
-  background-color: #f8f8f8; /* Just for visibility */
+  margin-top: auto;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  background-color: #f8f8f8;
+}
+
+/* 🚀 Special Fix: Landing Page */
+html body.landing-page .wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+html body.landing-page .page__content {
+  flex-grow: unset !important; /* Removes unwanted stretching */
+  min-height: auto !important; /* Fixes floating content */
+  display: block !important; /* Natural positioning */
 }
