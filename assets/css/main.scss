@@ -81,6 +81,12 @@ html body.landing-page .initial-content {
   display: block !important; /* Removes unnecessary flex behavior */
 }
 
+/* 🚀 Reduce White Space Between Text and Footer on Landing Page */
+html body.landing-page .page__inner-wrap {
+  min-height: auto !important; /* Prevent unnecessary height */
+  padding-bottom: 0 !important; /* Reduce padding */
+}
+
 
 
 
