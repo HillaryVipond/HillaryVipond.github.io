@@ -22,13 +22,6 @@ width: 95% !important;
 margin: auto;
 }
 
-
-
-/* Ensure Landing Page Content is at the Top */
-html body.landing-page .page__inner-wrap {
-  padding-top: 20px; /* Adds a little spacing from navbar */
-}
-
 /* Ensure `.page__content` is not stretched */
 html body.landing-page .page__content {
   flex-grow: 0 !important; /* Prevents unwanted vertical stretching */
@@ -99,6 +92,14 @@ html body.landing-page .page__meta {
 html body.landing-page .page__footer {
   margin-top: 10px !important; /* Small space, not excessive */
 }
+
+html body.landing-page .initial-content {
+  min-height: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 
 /* =================== Sidebar Styling =================== */
 
