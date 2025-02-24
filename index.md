@@ -2,7 +2,6 @@
 layout: single
 author_profile: true
 classes: landing-page
-permalink: /
 ---
 
 <!--
