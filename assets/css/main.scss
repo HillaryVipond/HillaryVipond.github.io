@@ -29,6 +29,21 @@ width: 90% !important;
 margin: auto;
 }
 
+/* ✅ Ensure Landing Page Content is at the Top */
+html body.landing-page .page__inner-wrap {
+  display: block !important; /* Removes flexbox behavior */
+  min-height: auto !important; /* Prevents extra spacing */
+  margin-top: 0 !important; /* Removes unwanted vertical gap */
+  padding-top: 20px; /* Adds a little spacing from navbar */
+}
+
+/* ✅ Ensure `.page__content` is not stretched */
+html body.landing-page .page__content {
+  flex-grow: 0 !important; /* Prevents unwanted vertical stretching */
+  min-height: auto !important;
+  disp
+
+
 @media (min-width: 80em) {
 html body .page {
 width: 100% !important; /* Expand full width for all pages */
