@@ -13,9 +13,27 @@
     margin-left: 30px;  // Adds space between sidebar and text
 }
 
+// Reduce footer height and spacing without affecting headings
 .site-footer {
     font-size: 12px;  // Decrease text size
-    padding: 5px 0;   // Reduce padding (top and bottom)
-    height: auto;     // Ensure it adapts to content size
+    padding: 5px 0;   // Reduce vertical padding
+    height: auto;     // Allow it to shrink to content
+    line-height: 1.2; // Reduce line spacing if needed
     text-align: center; // Keep it centered
+}
+
+// Reduce unnecessary margin above the footer
+.wrapper {
+    padding-bottom: 0; // Reduces space below content
+    margin-bottom: 0;
+}
+
+// Reduce spacing above the footer
+.page {
+    margin-bottom: 0;
+}
+
+// Target inner footer elements to reduce size
+.footer-col-wrapper {
+    padding: 0; // Removes extra internal padding
 }
