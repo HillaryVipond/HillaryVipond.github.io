@@ -26,9 +26,6 @@ margin: auto;
 
 /* Ensure Landing Page Content is at the Top */
 html body.landing-page .page__inner-wrap {
-  display: block !important; /* Removes flexbox behavior */
-  min-height: auto !important; /* Prevents extra spacing */
-  margin-top: 0 !important; /* Removes unwanted vertical gap */
   padding-top: 20px; /* Adds a little spacing from navbar */
 }
 
@@ -338,9 +335,6 @@ html body.landing-page .site-footer {
   text-align: center;
 }
 
-html body.landing-page .page__inner-wrap {
-  min-height: calc(100vh - 250px) !important;
-  padding-bottom: 10px !important; /* Adjust if needed */
-}
+
 
 /* ✅ Removed justify-content: center; so content stays at the top */
