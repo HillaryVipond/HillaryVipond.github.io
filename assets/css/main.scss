@@ -82,30 +82,35 @@
     border-radius: 0 !important;  // Removes rounded corners
 }
 
-/* Adjust font size for body text */
+/* Keep a standard font size for the whole site */
 body {
-  font-size: 14px; /* or 14px for a more compact look */
+  font-size: 16px; /* 14px is fine too, but 11px was too small */
   line-height: 1.6;
 }
 
 /* Adjust font size for headers */
 h1 {
-  font-size: 26px;
+  font-size: 28px;
 }
 
 h2 {
-  font-size: 22px;
+  font-size: 24px;
 }
 
 h3 {
-  font-size: 18px;
+  font-size: 20px;
 }
 
+/* ONLY increase text size for post content (bio page) */
+.layout-single .page-content {
+  font-size: 18px; /* Increase size ONLY for page content */
+  line-height: 1.6;
+  max-width: 700px;
+  margin: auto;
+}
+
+/* Ensure paragraphs in posts look good */
 .layout-single p {
-  font-size: 11px;
+  font-size: 18px;
   line-height: 1.6;
 }
-
-
-
-
