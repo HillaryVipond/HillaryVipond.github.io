@@ -227,54 +227,54 @@ h3 {
   line-height: 1.5;
 }
 
-/* 🚀 FINAL FOOTER FIX: FORCE IT TO STAY AT THE BOTTOM */
+/* 🚀 FINAL FOOTER FIX: Ignore JavaScript */
 
-/* Ensure body and page fill the viewport */
+/* Ensure body and wrapper stretch to full height */
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
 }
 
-/* Ensure wrapper expands fully */
+/* Make sure the whole layout fills the screen */
 .wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* Full height */
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 100vh !important;
 }
 
-/* Make content take up available space, pushing footer down */
+/* Push the content to fill available space */
 .page__content {
-  flex-grow: 1;
+  flex-grow: 1 !important;
 }
 
-/* FORCE FOOTER TO THE BOTTOM */
+/* FORCE FOOTER TO STAY AT THE BOTTOM */
+#footer,
+.page__footer,
 .site-footer {
-  margin-top: auto; /* Push footer to bottom */
-  width: 100%;
-  text-align: center;
-  position: relative;
-  background-color: #f8f8f8;
+  margin-top: auto !important;
+  width: 100% !important;
+  text-align: center !important;
+  position: relative !important;
+  bottom: 0 !important;
+  left: 0 !important;
 }
 
-/* 🚀 SPECIAL FIX: Landing Page Footer */
+/* 🚀 Special Fix for the Landing Page */
 html body.landing-page .wrapper {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  min-height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 html body.landing-page .page__content {
-  flex-grow: 1;
+  flex-grow: 1 !important;
 }
 
+html body.landing-page #footer,
+html body.landing-page .page__footer,
 html body.landing-page .site-footer {
-  margin-top: auto;
-  width: 100%;
-  padding: 10px 0;
-  text-align: center;
+  margin-top: auto !important;
+  width: 100% !important;
+  text-align: center !important;
 }
-
-}
-
-
