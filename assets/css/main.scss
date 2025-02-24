@@ -10,23 +10,33 @@
 .layout-single .page-content {
   font-size: 18px;
   line-height: 1.6;
-  max-width: 1600px !important; /* Full width */
+  max-width: 1600px !important;
   width: 95% !important;
   margin: auto;
 }
 
 /* BUT: Limit width ONLY on the landing page */
 body.home .layout-single .page-content {
-  max-width: 700px !important; /* Narrower landing page */
+  max-width: 700px !important;
   width: 90% !important; /* Keep some responsiveness */
+  margin: auto;
 }
 
 @media (min-width: 80em) {
-  .page {
-    width: 100% !important;
+  html body .page {
+    width: 100% !important; /* Expand full width for all pages */
     padding-inline-end: 0 !important;
+    max-width: none !important;
+  }
+
+  /* BUT: Keep home page narrow */
+  html body.home .page {
+    max-width: 700px !important;
+    width: 90% !important;
+    margin: auto;
   }
 }
+
 
 
 /* =================== Sidebar Styling =================== */
