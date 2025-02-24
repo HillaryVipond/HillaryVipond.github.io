@@ -7,18 +7,18 @@
 /* =================== General Page Styling =================== */
 
 /* Ensure all pages are full width by default */
-.layout-single .page-content {
+.layout--single .page-content {
   font-size: 18px;
   line-height: 1.6;
-  max-width: 1600px !important;
+  max-width: 1600px !important; /* Full width */
   width: 95% !important;
   margin: auto;
 }
 
 /* BUT: Limit width ONLY on the landing page */
-body.home .layout-single .page-content {
+html body.landing-page .page {
   max-width: 700px !important;
-  width: 90% !important; /* Keep some responsiveness */
+  width: 90% !important;
   margin: auto;
 }
 
@@ -29,13 +29,14 @@ body.home .layout-single .page-content {
     max-width: none !important;
   }
 
-  /* BUT: Keep home page narrow */
-  html body.home .page {
+  /* Keep the landing page narrow */
+  html body.landing-page .page {
     max-width: 700px !important;
     width: 90% !important;
     margin: auto;
   }
 }
+
 
 
 
