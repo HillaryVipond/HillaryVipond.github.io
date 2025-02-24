@@ -63,7 +63,7 @@ author:
   bio    : "Technological unemployment in 19th century Britain."
   links:
     - label: "BlueSky"
-      icon: "fas fa-fw fa-link"
+      icon: "fas fa-fw fa-bluesky"
       url: "https://bsky.app/profile/hillaryvipond.bsky.social"
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
