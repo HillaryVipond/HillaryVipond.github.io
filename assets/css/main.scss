@@ -115,6 +115,14 @@ h3 {
   line-height: 1.6;
 }
 
+/* Force full-width layout */
+.layout--single {
+  max-width: 1600px !important; /* Expand max width */
+  width: 95% !important; /* Prevent unnecessary shrinking */
+  margin: auto;
+  display: block;
+}
+
 
 /* Research Page Styling ***************************************************/ 
 
