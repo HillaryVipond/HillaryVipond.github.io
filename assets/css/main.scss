@@ -4,6 +4,13 @@
 
 @import "minimal-mistakes"; // Keep the theme's existing styles
 
+/* Remove grayscale effect on profile image */
+.author__avatar img {
+  filter: none !important;
+  transition: none !important; /* Prevents fade-in effect */
+}
+
+
 /* =================== General Page Styling =================== */
 
 /* Ensure all pages are full width by default */
@@ -219,3 +226,24 @@ h3 {
   font-size: 16px;
   line-height: 1.5;
 }
+
+/* Ensure the footer always sticks to the bottom */
+html, body {
+  height: 100%;
+}
+
+.wrapper {
+  min-height: 100vh; /* Ensures the content pushes the footer down */
+  display: flex;
+  flex-direction: column;
+}
+
+.page__content {
+  flex: 1; /* Expands to push the footer down */
+}
+
+/* Keep the footer at the bottom */
+.site-footer {
+  margin-top: auto; /* Pushes the footer to the bottom */
+}
+
