@@ -75,6 +75,11 @@ html body.landing-page .page__meta {
   display: none !important; /* If it's not needed, hide it completely */
 }
 
+html body.landing-page .initial-content {
+  min-height: auto !important; /* Prevents it from stretching */
+  height: auto !important; /* Resizes to fit content */
+  display: block !important; /* Removes unnecessary flex behavior */
+}
 
 
 
