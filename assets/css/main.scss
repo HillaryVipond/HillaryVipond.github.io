@@ -335,6 +335,14 @@ html body.landing-page .site-footer {
   width: 100%;
   text-align: center;
 }
+article.page {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+article.page::after {
+  content: none !important;
+}
 
 
 
