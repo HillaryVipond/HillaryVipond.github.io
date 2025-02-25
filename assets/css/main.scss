@@ -116,7 +116,7 @@ max-width: none !important;
 }
 
 /* Increase font size for very large screens */
-@media (min-width: 1400px) {
+@media (min-width: 1700px) {
   .landing-page .page__content {
     font-size: 0.9rem; /* Slightly larger font for large screens */
   }
@@ -125,7 +125,7 @@ max-width: none !important;
 /* Increase font size for small screens (mobile devices) */
 @media (max-width: 768px) {
   .landing-page .page__content {
-    font-size: 1rem; /* Larger font for better readability on small screens */
+    font-size: 1.1rem; /* Larger font for better readability on small screens */
   }
 }
 
