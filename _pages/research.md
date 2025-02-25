@@ -40,7 +40,7 @@ header: false  # 👈 This disables the large title
   <div class="research-text">
     <h4><a href="https://jkastis.github.io/yanniskastis/Kastis_JMP.pdf"><strong>Organizational Practices and Technology Adoption:
 Evidence from Jewish Immigration and the Tailoring Industry in England</strong></a></h4>
-    <p><strong>Yannis Kastis, Hillary Vipond</strong></p>
+    <p><strong>Yannis Kastis (JMP), Hillary Vipond</strong></p>
     <p>This paper provides causal evidence on the role of organizational practices in driving technology adoption. </p>
   </div>
 </div>
