@@ -128,10 +128,22 @@ display: none !important;
 
 /* =================== Profile Image Styling =================== */
 
-/* Move profile picture slightly to the right only on the landing page */
+/* Default: Position profile picture to the left */
 html body.landing-page .author__avatar {
-  margin-left: 20px !important; /* Adjust this value as needed */
+  float: left; /* Keeps it on the left */
+  margin-right: 20px; /* Adds spacing between image and text */
+  max-width: 180px; /* Keep it reasonably sized */
 }
+
+/* On mobile (screens < 768px), move the profile picture above the text */
+@media (max-width: 768px) {
+  html body.landing-page .author__avatar {
+    float: none; /* Removes left positioning */
+    display: block;
+    margin: 0 auto 20px auto; /* Centers it above the text */
+  }
+}
+
 
 /* Force profile image to display at full size */
 .u-photo {
