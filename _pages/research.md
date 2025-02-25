@@ -35,7 +35,7 @@ header: false  # 👈 This disables the large title
 <!-- Research Entry 2 -->
 <div class="research-entry">
   <div class="research-image">
-    <img src="/assets/images/immigration.jpg" alt="Research Topic 2">
+    <img src="/assets/images/Immigration.jpg" alt="Research Topic 2">
   </div>
   <div class="research-text">
     <h4><a href="https://jkastis.github.io/yanniskastis/Kastis_JMP.pdf"><strong>Organizational Practices and Technology Adoption:
@@ -61,17 +61,6 @@ how this shift influenced the adoption of the sewing machine and the transition 
   </div>
 </div>
 
-<!-- Research Entry 4 -->
-<div class="research-entry">
-  <div class="research-image">
-    <img src="../assets/images/Research3.jpg" alt="Research Topic 3">
-  </div>
-  <div class="research-text">
-    <h4><a href="https://example.com/research3"><strong>Technological Change and Social Mobility in Victorian Britain
-</strong></a></h4>
-    <p><strong>Hillary Vipond</strong></p>
-   </div>
-</div>
 
 <!-- Research Entry 5 -->
 <div class="research-entry">
@@ -81,11 +70,19 @@ how this shift influenced the adoption of the sewing machine and the transition 
   <div class="research-text">
     <h4><a href="https://example.com/research5"><strong>Census Linking: Confidence in the Absence of Ground Truth</strong></a></h4>
     <p><strong>Hillary Vipond</strong></p>
-    <p>This study examines how labor mobility influenced economic growth patterns in Victorian Britain...</p>
+    <p>Linking historical census datasets faces significant challenges. The first order issue is the
+risk of false positives, which can distort key downstream coefficients of interest, particularly for migration and occupation. These errors then result in incorrect conclusions
+being drawn in new research in economic history. In this paper, I propose an approach which makes it possible to assess the share of false positives in panel datasets generated
+by any given linking algorithms. It does not require ground truth data. Instead, it exploits systematic biases induced by false positives in outcomes of interest to construct a
+litmus testing process. Using this framework, I take a multi-model comparison approach to explore the impacts of model specification choices on the linked panel datasets. Three
+findings emerge. Firstly, historical British is substantially less exposed to false positives than American level census data. Secondly, linking full census datasets yields more accurate
+results than using population subsets, especially for American level data. Finally, a case study of immigrant tailors from Russia demonstrates how this approach facilitates
+linking challenging segments of the population. I propose a generalizable falsification test derived from this methodology, which can serve as a data quality check for any census
+linking algorithm..</p>
   </div>
 </div>
 
-<!-- Research Entry 6 -->
+<!-- Research Entry 4 -->
 <div class="research-entry">
   <div class="research-image">
     <img src="../assets/images/Research6.jpg" alt="Research Topic 6">
@@ -95,4 +92,16 @@ how this shift influenced the adoption of the sewing machine and the transition 
 Britain</strong></a></h4>
     <p><strong>Hillary Vipond</strong></p>
   </div>
+</div>
+
+<!-- Research Entry 5 -->
+<div class="research-entry">
+  <div class="research-image">
+    <img src="../assets/images/Research3.jpg" alt="Research Topic 3">
+  </div>
+  <div class="research-text">
+    <h4><a href="https://example.com/research3"><strong>Technological Change and Social Mobility in Victorian Britain
+</strong></a></h4>
+    <p><strong>Hillary Vipond</strong></p>
+   </div>
 </div>
