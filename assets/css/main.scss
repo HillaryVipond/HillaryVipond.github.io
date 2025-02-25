@@ -48,12 +48,14 @@ padding-top: 20px; /* Adds a little spacing from navbar */
 .landing-page .initial-content {
   display: block !important; /* Removes flexbox if it's being applied */
   height: auto !important; /* Ensures it only takes the necessary space */
-  min-height: auto !important; /* Prevents unnecessary stretching */
+  min-height: 80vh !important; /* Ensures it remains long enough */
   flex-grow: 0 !important; /* Stops it from forcing extra height */
   overflow: hidden !important; /* Prevents extra space from margins */
   margin-bottom: 0 !important; /* Removes any extra space below */
   padding-bottom: 0 !important; /* Prevents unnecessary padding */
 }
+
+
 
 .landing-page .initial-content {
   background-color: green !important;
