@@ -28,12 +28,12 @@ html, body {
   which is useful for creating consistent layouts and managing the placement of elements like sticky footers.
 */
 
-/* Global Layout Containers */
-.wrapper, .page, .page__inner-wrap {
-  display: flex;
-  flex-direction: column;
-  min-height: 60vh; /* You can adjust this value (e.g., 80vh) if needed */
-}
+// /* Global Layout Containers */
+// .wrapper, .page, .page__inner-wrap {
+//   display: flex;
+//   flex-direction: column;
+//   min-height: 60vh; /* You can adjust this value (e.g., 80vh) if needed */
+// }
 
 
 /* ===================================================
@@ -243,6 +243,11 @@ h3 {
   max-width: 1600px !important;
   width: 100% !important;
   margin: auto;
+}
+
+.research-page .page {
+  max-width: 1600px !important;
+  width: 100% !important;
 }
 
 
