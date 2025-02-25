@@ -1,4 +1,4 @@
-s---
+---
 layout: single
 classes: research-page
 title: ""
@@ -12,7 +12,7 @@ header: false  # 👈 This disables the large title
 <div class="research-entry">
 
   <div class="research-image">
-    <img src="assets/images/AreaGraph.jpg" alt="Bootmaking Mechanization Impact">
+    <img src="/assets/images/AreaGraph.jpg" alt="Bootmaking Mechanization Impact">
   </div>
 
   <div class="research-text">
