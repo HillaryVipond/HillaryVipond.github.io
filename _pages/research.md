@@ -7,8 +7,6 @@ header: false  # 👈 This disables the large title
 ---
 
 <!-- Research Entry 1 -->
-## Technological Change & Labor Markets  
-
 <div class="research-entry">
 
   <div class="research-image">
