@@ -5,36 +5,37 @@ title: "Seminars"
 permalink: /Seminars/
 ---
 
-## Upcoming & Past Seminars
 
 ### 2025
-- Inequalities Winter School  
-- Economic History Society Conference  
-- Gender Workshop (Lund)  
+- University of Southern Denmark Economics Seminar 
+- Inequalities Theory and Measurement Winter School  
+- Economic History Society Conference (Glasgow)  
+- Economic History Gender Workshop (Lund)  
 - World Economic History Congress (Lund)  
-- University of Southern Denmark Economics Seminar  
+ 
 
 ### 2024
-- PSE Seminar  
+- PSE Economic History Seminar  
 - LSE SPEECH Seminar  
-- UCL Stone PhD Workshop  
-- Exeter Business School Seminar  
-- Birmingham Economic History Conference  
+- UCL Stone PhD Workshop
 - Harvard Growth Lab Seminar  
-- Cliometrica Conference (Dublin)  
+- Exeter Business School Seminar
+- Queen’s Belfast Seminar
+- Lund Economic History Seminar
 - Cambridge CamPop Seminar  
-- Lund Economic History Seminar  
-- Queen’s Belfast Seminar  
-- Wealth Inequality Seminar (WU)  
+- Birmingham Economic History Conference  
+- Cliometrica Conference (Dublin)  
+- Wealth Inequality Conference (WU)  
 
 ### 2023
+- Oxford, Warwick & LSE Workshop (*unable to attend) 
+- Manchester Seminar Series  
 - CESifo Conference (Venice)  
 - LSE Inequalities Seminar  
-- Manchester Seminar Series  
-- European Social Science Seminar  
+- European Social Science Conference
 
 ### 2022
-- Economic History Association  
+- Economic History Association Conference
 - World Economic History Congress  
 - European Economic History Conference  
 - Economic History Society  
