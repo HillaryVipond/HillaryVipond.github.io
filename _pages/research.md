@@ -3,8 +3,10 @@ layout: single
 classes: research-page
 title: "Research"
 permalink: /research/
+header: false  # 👈 This disables the large title
 ---
 
+<!-- Research Entry 1 -->
 ## Technological Change & Labor Markets  
 
 <div class="research-entry">
@@ -27,4 +29,65 @@ permalink: /research/
     <p>This was not a case of widespread labor displacement—rather, incumbents were "grandfathered out." The technological shock primarily reshaped the <strong>matrix of employment opportunities available to young people</strong>.</p>
   </div>
 
+</div>
+
+
+<!-- Research Entry 2 -->
+<div class="research-entry">
+  <div class="research-image">
+    <img src="../assets/images/Research2.jpg" alt="Research Topic 2">
+  </div>
+  <div class="research-text">
+    <h4><a href="https://example.com/research2"><strong>Mechanization and Labor Market Adjustment</strong></a></h4>
+    <p><strong>Hillary Vipond</strong></p>
+    <p>This research investigates how mechanization reshaped labor markets in different industries across the 19th century...</p>
+  </div>
+</div>
+
+<!-- Research Entry 3 -->
+<div class="research-entry">
+  <div class="research-image">
+    <img src="../assets/images/Research3.jpg" alt="Research Topic 3">
+  </div>
+  <div class="research-text">
+    <h4><a href="https://example.com/research3"><strong>Skill Transfer and Occupational Persistence</strong></a></h4>
+    <p><strong>Hillary Vipond</strong></p>
+    <p>This paper examines whether workers displaced by mechanization were able to transition into new occupations...</p>
+  </div>
+</div>
+
+<!-- Research Entry 4 -->
+<div class="research-entry">
+  <div class="research-image">
+    <img src="../assets/images/Research4.jpg" alt="Research Topic 4">
+  </div>
+  <div class="research-text">
+    <h4><a href="https://example.com/research4"><strong>Regional Economic Disparities in Industrial England</strong></a></h4>
+    <p><strong>Hillary Vipond</strong></p>
+    <p>Exploring how different counties adapted to economic changes, with a focus on industries that mechanized rapidly...</p>
+  </div>
+</div>
+
+<!-- Research Entry 5 -->
+<div class="research-entry">
+  <div class="research-image">
+    <img src="../assets/images/Research5.jpg" alt="Research Topic 5">
+  </div>
+  <div class="research-text">
+    <h4><a href="https://example.com/research5"><strong>Labor Mobility and Economic Growth</strong></a></h4>
+    <p><strong>Hillary Vipond</strong></p>
+    <p>This study examines how labor mobility influenced economic growth patterns in Victorian Britain...</p>
+  </div>
+</div>
+
+<!-- Research Entry 6 -->
+<div class="research-entry">
+  <div class="research-image">
+    <img src="../assets/images/Research6.jpg" alt="Research Topic 6">
+  </div>
+  <div class="research-text">
+    <h4><a href="https://example.com/research6"><strong>The Role of Apprenticeships in Technological Change</strong></a></h4>
+    <p><strong>Hillary Vipond</strong></p>
+    <p>Investigating the impact of apprenticeship systems on adapting to technological change and labor market shifts...</p>
+  </div>
 </div>
