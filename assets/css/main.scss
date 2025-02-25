@@ -110,20 +110,20 @@ html, body {
 
 
 
-/* Responsive Adjustments */
-@media (min-width: 80em) {
-  html body .page {
-    width: 100% !important;
-    padding-inline-end: 0 !important;
-    max-width: none !important;
-  }
-  /* Reapply landing page narrow rule */
-  html body.landing-page .page {
-    max-width: 700px !important;
-    width: 90% !important;
-    margin: auto;
-  }
-}
+// /* Responsive Adjustments */
+// @media (min-width: 80em) {
+//   html body .page {
+//     width: 100% !important;
+//     padding-inline-end: 0 !important;
+//     max-width: none !important;
+//   }
+//   /* Reapply landing page narrow rule */
+//   html body.landing-page .page {
+//     max-width: 700px !important;
+//     width: 90% !important;
+//     margin: auto;
+//   }
+// }
 
 /* Footer Specific Styling */
 .site-footer {
@@ -237,18 +237,25 @@ h3 {
 }
 
 /* =================== Research Page Styling =================== */
-.research-page .initial-content,
-.research-page .page__inner-wrap,
-.research-page .page__content {
+.layout--single .initial-content,
+.layout--single .page__inner-wrap,
+.layout--single .page__content,
+.layout--single .page {
   max-width: 1600px !important;
   width: 100% !important;
   margin: auto;
 }
 
+
+.research-page .initial-content,
+.research-page .page__inner-wrap,
+.research-page .page__content, 
 .research-page .page {
   max-width: 1600px !important;
   width: 100% !important;
+  margin: auto;
 }
+
 
 
 // /* Ensure the research page expands fully */
