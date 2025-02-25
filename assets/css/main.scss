@@ -128,19 +128,23 @@ display: none !important;
 
 /* =================== Profile Image Styling =================== */
 
-/* Default: Position profile picture to the left */
-html body.landing-page .author__avatar {
-  float: left; /* Keeps it on the left */
-  margin-right: 20px; /* Adds spacing between image and text */
-  max-width: 180px; /* Keep it reasonably sized */
+/* 🖥️ On Desktop: Move the entire sidebar slightly to the right */
+@media (min-width: 1024px) { /* Adjust as needed */
+  .sidebar {
+    margin-left: 20px; /* Nudges the whole sidebar right */
+  }
 }
 
-/* On mobile (screens < 768px), move the profile picture above the text */
+/* 📱 On Mobile: Keep sidebar centered */
 @media (max-width: 768px) {
-  html body.landing-page .author__avatar {
-    float: none; /* Removes left positioning */
+  .sidebar {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center; /* Ensures everything inside is centered */
+  }
+  .author__avatar {
     display: block;
-    margin: 0 auto 20px auto; /* Centers it above the text */
+    margin: 0 auto 20px auto; /* Centers image above text */
   }
 }
 
