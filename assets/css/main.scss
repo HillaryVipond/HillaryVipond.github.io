@@ -107,76 +107,76 @@ html, body {
 /*
 
 
-// /* Footer Styles */
-// #footer,
-// .page__footer,
-// .site-footer {
-//   margin-top: auto;
-//   width: 100%;
-//   text-align: center;
-//   position: relative;
-//   background-color: #f8f8f8;
-// }
+/* Footer Styles */
+#footer,
+.page__footer,
+.site-footer {
+  margin-top: auto;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  background-color: #f8f8f8;
+}
 
 
 
-// /* Responsive Adjustments */
-// @media (min-width: 80em) {
-//   html body .page {
-//     width: 100% !important;
-//     padding-inline-end: 0 !important;
-//     max-width: none !important;
-//   }
-//   /* Reapply landing page narrow rule */
-//   html body.landing-page .page {
-//     max-width: 700px !important;
-//     width: 90% !important;
-//     margin: auto;
-//   }
-// }
+/* Responsive Adjustments */
+@media (min-width: 80em) {
+  html body .page {
+    width: 100% !important;
+    padding-inline-end: 0 !important;
+    max-width: none !important;
+  }
+  /* Reapply landing page narrow rule */
+  html body.landing-page .page {
+    max-width: 700px !important;
+    width: 90% !important;
+    margin: auto;
+  }
+}
 
-// /* Footer Specific Styling */
-// .site-footer {
-//   font-size: 12px;
-//   padding: 5px 0 !important;
-//   margin: 0 !important;
-//   height: auto;
-//   line-height: 1.2;
-// }
+/* Footer Specific Styling */
+.site-footer {
+  font-size: 12px;
+  padding: 5px 0 !important;
+  margin: 0 !important;
+  height: auto;
+  line-height: 1.2;
+}
 
-// .footer-col-wrapper {
-//   padding: 0 !important;
-//   margin: 0 !important;
-//   min-height: 10px;
-// }
+.footer-col-wrapper {
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: 10px;
+}
 
-// .wrapper {
-//   padding-bottom: 0 !important;
-//   margin-bottom: 0 !important;
-// }
+.wrapper {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
 
-// .page {
-//   margin-bottom: 0 !important;
-// }
+.page {
+  margin-bottom: 0 !important;
+}
 
-// .site-footer::before,
-// .site-footer::after,
-// .footer-col-wrapper::before,
-// .footer-col-wrapper::after {
-//   height: 0 !important;
-//   display: none !important;
-// }
+.site-footer::before,
+.site-footer::after,
+.footer-col-wrapper::before,
+.footer-col-wrapper::after {
+  height: 0 !important;
+  display: none !important;
+}
 
 
-// /* Remove extra spacing on the article */
-// article.page {
-//   margin: 0 !important;
-//   padding: 0 !important;
-// }
+/* Remove extra spacing on the article */
+article.page {
+  margin: 0 !important;
+  padding: 0 !important;
+}
 
-// article.page::after {
-//   content: none !important;
-// }
+article.page::after {
+  content: none !important;
+}
 
 /* ===========================
    End of Part I
