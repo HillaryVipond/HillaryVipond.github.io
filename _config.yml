@@ -60,14 +60,18 @@ plugins:
 author:
   name   : "Hillary Vipond"
   avatar : "/assets/images/Untitled design.jpg"
-  bio    : "Technological unemployment in 19th century Britain."
-  links:
-    - label: "BlueSky"
-      icon: "fas fa-fw fa-bluesky"
-      url: "https://bsky.app/profile/hillaryvipond.bsky.social"
-    - label: "X"
-      icon: "fab fa-fw fa-twitter-square"
-      url: "https://x.com/hillaryvipond"
+  contact: |
+    Postdoctoral Fellow  
+    Complexity Science Hub Vienna  
+    vipond@csh.ac.at  
+    h.g.vipond@lse.ac.uk  
+  # links:
+  #   - label: "BlueSky"
+  #     icon: "fas fa-fw fa-bluesky"
+  #     url: "https://bsky.app/profile/hillaryvipond.bsky.social"
+  #   - label: "X"
+  #     icon: "fab fa-fw fa-twitter-square"
+  #     url: "https://x.com/hillaryvipond"
     #- label: "GitHub"
      # icon: "fab fa-fw fa-github"
      # url: "https://github.com/"
