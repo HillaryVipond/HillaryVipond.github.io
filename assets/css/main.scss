@@ -44,6 +44,15 @@ margin-top: 0 !important; /* Removes unwanted vertical gap */
 padding-top: 20px; /* Adds a little spacing from navbar */
 }
 
+.landing-page .initial-content {
+  min-height: auto !important; /* Prevents it from stretching */
+  height: auto !important; /* Ensures it only takes the necessary space */
+  margin-bottom: 0 !important; /* Removes any extra space below */
+  padding-bottom: 0 !important; /* Prevents unnecessary padding */
+  flex-grow: unset !important; /* Stops it from forcing extra height */
+}
+
+
 /* Ensure `.page__content` is not stretched */
 html body.landing-page .page__content {
 flex-grow: 0 !important; /* Prevents unwanted vertical stretching */
