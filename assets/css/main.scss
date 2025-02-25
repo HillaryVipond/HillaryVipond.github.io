@@ -230,6 +230,19 @@ line-height: 1.6;
 
 /* =================== Research Page Styling =================== */
 
+/* Ensure research sections expand fully with more spacing */
+.research-entry {
+  max-width: 1600px !important;
+  width: 100% !important;
+  margin: 50px auto; /* Increase spacing between research entries */
+  display: flex;
+  align-items: flex-start;
+  gap: 30px; /* Space between image and text */
+  padding-bottom: 30px; /* Adds more spacing below each entry */
+  border-bottom: 1px solid #ddd; /* Optional: subtle separator */
+}
+
+
 /* Reduce the size of research images */
 .research-image {
   flex: 0 0 25%; /* Reduce from 35% to 25% of the container width */
