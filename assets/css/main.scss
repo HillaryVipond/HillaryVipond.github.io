@@ -35,14 +35,6 @@ html, body {
   min-height: 60vh; /* You can adjust this value (e.g., 80vh) if needed */
 }
 
-/* General Page Styling (Applies to All Pages) */
-.layout--single .page-content {
-  font-size: 12px;
-  line-height: 1.6;
-  max-width: 1600px !important;
-  width: 95% !important;
-  margin: auto;
-}
 
 /* ===================================================
    Part I-B: Landing Page Specific 
@@ -246,12 +238,12 @@ h3 {
 
 /* =================== Research Page Styling =================== */
 
-// /* Ensure the research page expands fully */
-// .layout--single, .initial-content, .page__inner-wrap, .page__content {
-//   max-width: 1600px !important; /* Full width */
-//   width: 100% !important; /* Take full screen width */
-//   margin: auto;
-// }
+/* Ensure the research page expands fully */
+.layout--single, .initial-content, .page__inner-wrap, .page__content {
+  max-width: 1600px !important; /* Full width */
+  width: 100% !important; /* Take full screen width */
+  margin: auto;
+}
 
 /* Break width constraints on inner wrap */
 .page__inner-wrap {
