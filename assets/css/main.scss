@@ -298,6 +298,22 @@ font-size: 16px;
 line-height: 1.5;
 }
 
+/* ✅ Ensure both image and text align at the top */
+.research-entry {
+  align-items: flex-start !important; 
+}
+
+/* ✅ Ensure the image and text align properly */
+.research-image, .research-text {
+  align-self: flex-start !important;
+}
+
+/* ✅ Remove extra margin at the top of paragraphs and headers */
+.research-text p, .research-text h4 {
+  margin-top: 0 !important;
+}
+
+
 /* 🚀 FINAL FIX: FORCE THE FOOTER TO BE AT THE PAGE BOTTOM */
 
 /* 1️⃣ Ensure the entire page fills the viewport */
