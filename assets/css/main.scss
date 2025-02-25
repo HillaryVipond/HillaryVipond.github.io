@@ -130,9 +130,18 @@ html body.landing-page .page__content {
 }
 
 
+/* Default text size for larger screens */
 .landing-page .page__content {
-  font-size: 0.8rem !important;
-  line-height: 1.4 !important;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+/* Increase font size for mobile devices */
+@media only screen and (max-width: 768px) {
+  .landing-page .page__content {
+    font-size: 1rem; /* Adjust this value as needed */
+    line-height: 1.5; /* Optional: adjust line-height for better readability */
+  }
 }
 
 
@@ -211,8 +220,8 @@ display: none !important;
 
 /* Force profile image to display at full size */
 .u-photo {
-width: 180px !important;
-height: 180px !important;
+width: 200px !important;
+height: 200px !important;
 max-width: none !important;
 max-height: none !important;
 object-fit: cover !important;
