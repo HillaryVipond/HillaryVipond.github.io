@@ -59,13 +59,20 @@ padding-top: 20px; /* Adds a little spacing from navbar */
   background-color: green !important;
 }
 
-
-/* Ensure `.page__content` is not stretched */
-html body.landing-page .page__content {
-flex-grow: 0 !important; /* Prevents unwanted vertical stretching */
-min-height: auto !important;
-display: block !important; /* Ensures normal text flow */
+.landing-page .page__content {
+  display: block !important; /* Ensures normal text flow */
+  height: auto !important; /* Prevents forced height */
+  min-height: auto !important; /* Stops stretching */
+  flex-grow: 0 !important; /* Stops it from expanding */
 }
+
+.landing-page .wrapper, 
+.landing-page .page {
+  min-height: auto !important; /* Prevents them from taking extra space */
+  height: auto !important; /* Ensures they only take up needed space */
+  flex-grow: unset !important;
+}
+
 
 /* BUT: Limit width ONLY on the landing page */
 html body.landing-page .page,
