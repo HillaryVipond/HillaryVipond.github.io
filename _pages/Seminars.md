@@ -2,7 +2,7 @@
 layout: single
 classes: seminars-page
 title: "Seminars"
-permalink: /seminars/
+permalink: /Seminars/
 ---
 
 ## Upcoming & Past Seminars
