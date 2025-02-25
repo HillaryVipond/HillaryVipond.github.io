@@ -65,7 +65,7 @@ how this shift influenced the adoption of the sewing machine and the transition 
 <!-- Research Entry 5 -->
 <div class="research-entry">
   <div class="research-image">
-    <img src="/assets/images/Linking.jpg" alt="Research Topic 5">
+    <img src="/assets/images/Linking.png" alt="Research Topic 5">
   </div>
   <div class="research-text">
     <h4><strong>Census Linking: Confidence in the Absence of Ground Truth</strong></h4>
