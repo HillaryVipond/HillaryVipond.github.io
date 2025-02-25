@@ -60,7 +60,13 @@ plugins:
 author:
   name: "Hillary Vipond"
   avatar: "/assets/images/Untitled design.jpg"
-  <p class="author__contact">{{ site.author.contact }}</p>
+  contact: >
+    Postdoctoral Fellow  
+    Complexity Science Hub Vienna  
+    vipond@csh.ac.at  
+    h.g.vipond@lse.ac.uk
+
+  
   
 
 
