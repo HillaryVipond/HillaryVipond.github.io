@@ -206,8 +206,8 @@ display: none !important;
 
 /* Force profile image to display at full size */
 .u-photo {
-width: 200px !important;
-height: 200px !important;
+width: 250px !important;
+height: 250px !important;
 max-width: none !important;
 max-height: none !important;
 object-fit: cover !important;
@@ -216,8 +216,8 @@ display: block !important;
 
 /* Also fix its container, if restricting size */
 .author__avatar, .author__avatar img, .u-photo {
-width: 200px !important;
-height: 200px !important;
+width: 250px !important;
+height: 250px !important;
 max-width: none !important;
 max-height: none !important;
 display: flex !important;
@@ -271,7 +271,7 @@ line-height: 1.6;
   margin: 80px auto; /* Increased spacing between research entries */
   display: flex;
   align-items: flex-start;
-  gap: 60px; /* Increased space between image and text */
+  gap: 1200px; /* Increased space between image and text */
   padding-bottom: 40px; /* Adds more spacing below each entry */
   border-bottom: 1px solid #ddd; /* Optional: subtle separator */
 }
