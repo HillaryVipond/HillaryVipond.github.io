@@ -52,6 +52,10 @@ padding-top: 20px; /* Adds a little spacing from navbar */
   flex-grow: unset !important; /* Stops it from forcing extra height */
 }
 
+.landing-page .initial-content {
+  background-color: green !important;
+}
+
 
 /* Ensure `.page__content` is not stretched */
 html body.landing-page .page__content {
