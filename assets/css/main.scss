@@ -83,7 +83,7 @@ html body.landing-page .page__content {
 /* On very large screens, increase font size */
 @media (min-width: 1400px) {
   html body.landing-page .page__content {
-    font-size: 1.1rem; /* Makes text slightly bigger */
+    font-size: 0.9rem; /* Makes text slightly bigger */
   }
 }
 
@@ -106,7 +106,7 @@ margin-left: -60px; /* Moves sidebar left */
 
 /* Add space between sidebar and text */
 .page__content {
-margin-left: 15px;
+margin-left: 25px;
 }
 
 /* =================== Footer Styling =================== */
