@@ -1,7 +1,7 @@
 ---
 layout: single
 classes: research-page
-title: "Research"
+title: ""
 permalink: /research/
 header: false  # 👈 This disables the large title
 ---
