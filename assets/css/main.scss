@@ -237,13 +237,21 @@ h3 {
 }
 
 /* =================== Research Page Styling =================== */
-
-/* Ensure the research page expands fully */
-.layout--single, .initial-content, .page__inner-wrap, .page__content {
-  max-width: 1600px !important; /* Full width */
-  width: 100% !important; /* Take full screen width */
+.research-page .initial-content,
+.research-page .page__inner-wrap,
+.research-page .page__content {
+  max-width: 1600px !important;
+  width: 100% !important;
   margin: auto;
 }
+
+
+// /* Ensure the research page expands fully */
+// .layout--single, .initial-content, .page__inner-wrap, .page__content {
+//   max-width: 1600px !important; /* Full width */
+//   width: 100% !important; /* Take full screen width */
+//   margin: auto;
+// }
 
 /* Break width constraints on inner wrap */
 .page__inner-wrap {
