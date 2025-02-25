@@ -85,7 +85,7 @@ linking algorithm..</p>
 <!-- Research Entry 5 -->
 <div class="research-entry">
   <div class="research-image">
-    <img src="../assets/images/Research6.jpg" alt="Research Topic 6">
+    <img src="../assets/images/Placeholder.jpg" alt="Research Topic 5">
   </div>
   <div class="research-text">
     <h4><strong>Mapping the Industrial Revolution: A Micro-Level Analysis of Job Creation and Loss in Victorian
@@ -97,7 +97,7 @@ Britain</strong></h4>
 <!-- Research Entry 6 -->
 <div class="research-entry">
   <div class="research-image">
-    <img src="../assets/images/Research3.jpg" alt="Research Topic 3">
+    <img src="../assets/images/Placeholder.jpg" alt="Research Topic 6">
   </div>
   <div class="research-text">
     <h4><strong>Technological Change and Social Mobility in Victorian Britain
