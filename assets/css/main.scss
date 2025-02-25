@@ -105,117 +105,117 @@ html, body {
 /*
 
 
-/* Footer Styles */
-#footer,
-.page__footer,
-.site-footer {
-  margin-top: auto;
-  width: 100%;
-  text-align: center;
-  position: relative;
-  background-color: #f8f8f8;
-}
-
-
-
-// /* Responsive Adjustments */
-// @media (min-width: 80em) {
-//   html body .page {
-//     width: 100% !important;
-//     padding-inline-end: 0 !important;
-//     max-width: none !important;
-//   }
-//   /* Reapply landing page narrow rule */
-//   html body.landing-page .page {
-//     max-width: 700px !important;
-//     width: 90% !important;
-//     margin: auto;
-//   }
+// /* Footer Styles */
+// #footer,
+// .page__footer,
+// .site-footer {
+//   margin-top: auto;
+//   width: 100%;
+//   text-align: center;
+//   position: relative;
+//   background-color: #f8f8f8;
 // }
 
-/* Footer Specific Styling */
-.site-footer {
-  font-size: 12px;
-  padding: 5px 0 !important;
-  margin: 0 !important;
-  height: auto;
-  line-height: 1.2;
-}
-
-.footer-col-wrapper {
-  padding: 0 !important;
-  margin: 0 !important;
-  min-height: 10px;
-}
-
-.wrapper {
-  padding-bottom: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-.page {
-  margin-bottom: 0 !important;
-}
-
-.site-footer::before,
-.site-footer::after,
-.footer-col-wrapper::before,
-.footer-col-wrapper::after {
-  height: 0 !important;
-  display: none !important;
-}
 
 
-/* Remove extra spacing on the article */
-article.page {
-  margin: 0 !important;
-  padding: 0 !important;
-}
+// // /* Responsive Adjustments */
+// // @media (min-width: 80em) {
+// //   html body .page {
+// //     width: 100% !important;
+// //     padding-inline-end: 0 !important;
+// //     max-width: none !important;
+// //   }
+// //   /* Reapply landing page narrow rule */
+// //   html body.landing-page .page {
+// //     max-width: 700px !important;
+// //     width: 90% !important;
+// //     margin: auto;
+// //   }
+// // }
 
-article.page::after {
-  content: none !important;
-}
+// /* Footer Specific Styling */
+// .site-footer {
+//   font-size: 12px;
+//   padding: 5px 0 !important;
+//   margin: 0 !important;
+//   height: auto;
+//   line-height: 1.2;
+// }
 
-/* ===========================
-   End of Part I
-   =========================== */
+// .footer-col-wrapper {
+//   padding: 0 !important;
+//   margin: 0 !important;
+//   min-height: 10px;
+// }
 
-/* ===========================
-   Part II: Typography, Profile Image & Research Page Styling
-   =========================== */
+// .wrapper {
+//   padding-bottom: 0 !important;
+//   margin-bottom: 0 !important;
+// }
 
-/* =================== Profile Image Styling =================== */
+// .page {
+//   margin-bottom: 0 !important;
+// }
 
-/* Force profile image to display at full size */
-.u-photo {
-  width: 180px !important;
-  height: 180px !important;
-  max-width: none !important;
-  max-height: none !important;
-  object-fit: cover !important;
-  display: block !important;
-}
+// .site-footer::before,
+// .site-footer::after,
+// .footer-col-wrapper::before,
+// .footer-col-wrapper::after {
+//   height: 0 !important;
+//   display: none !important;
+// }
 
-/* Ensure its container is sized correctly */
-.author__avatar, .author__avatar img, .u-photo {
-  width: 200px !important;
-  height: 200px !important;
-  max-width: none !important;
-  max-height: none !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
 
-/* Add spacing below profile image container */
-.author__avatar {
-  margin-bottom: 20px !important;
-}
+// /* Remove extra spacing on the article */
+// article.page {
+//   margin: 0 !important;
+//   padding: 0 !important;
+// }
 
-/* Make profile image square instead of circular */
-.u-photo {
-  border-radius: 0 !important;
-}
+// article.page::after {
+//   content: none !important;
+// }
+
+// /* ===========================
+//    End of Part I
+//    =========================== */
+
+// /* ===========================
+//    Part II: Typography, Profile Image & Research Page Styling
+//    =========================== */
+
+// /* =================== Profile Image Styling =================== */
+
+// /* Force profile image to display at full size */
+// .u-photo {
+//   width: 180px !important;
+//   height: 180px !important;
+//   max-width: none !important;
+//   max-height: none !important;
+//   object-fit: cover !important;
+//   display: block !important;
+// }
+
+// /* Ensure its container is sized correctly */
+// .author__avatar, .author__avatar img, .u-photo {
+//   width: 200px !important;
+//   height: 200px !important;
+//   max-width: none !important;
+//   max-height: none !important;
+//   display: flex !important;
+//   align-items: center !important;
+//   justify-content: center !important;
+// }
+
+// /* Add spacing below profile image container */
+// .author__avatar {
+//   margin-bottom: 20px !important;
+// }
+
+// /* Make profile image square instead of circular */
+// .u-photo {
+//   border-radius: 0 !important;
+// }
 
 /* =================== Typography Styling =================== */
 
@@ -245,24 +245,24 @@ h3 {
 }
 
 /* =================== Research Page Styling =================== */
-.layout--single .initial-content,
-.layout--single .page__inner-wrap,
-.layout--single .page__content,
-.layout--single .page {
-  max-width: 1600px !important;
-  width: 100% !important;
-  margin: auto;
-}
+// .layout--single .initial-content,
+// .layout--single .page__inner-wrap,
+// .layout--single .page__content,
+// .layout--single .page {
+//   max-width: 1600px !important;
+//   width: 100% !important;
+//   margin: auto;
+// }
 
 
-.research-page .initial-content,
-.research-page .page__inner-wrap,
-.research-page .page__content, 
-.research-page .page {
-  max-width: 1600px !important;
-  width: 100% !important;
-  margin: auto;
-}
+// .research-page .initial-content,
+// .research-page .page__inner-wrap,
+// .research-page .page__content, 
+// .research-page .page {
+//   max-width: 1600px !important;
+//   width: 100% !important;
+//   margin: auto;
+// }
 
 
 
@@ -273,68 +273,68 @@ h3 {
 //   margin: auto;
 // }
 
-/* Break width constraints on inner wrap */
-.page__inner-wrap {
-  max-width: 1600px !important;
-  width: 100% !important;
-  margin: auto;
-  padding: 0 20px; /* Add some spacing on sides */
-}
+// /* Break width constraints on inner wrap */
+// .page__inner-wrap {
+//   max-width: 1600px !important;
+//   width: 100% !important;
+//   margin: auto;
+//   padding: 0 20px; /* Add some spacing on sides */
+// }
 
-/* Research entry layout: note that research-entry is correctly wrapping both the research-image and research-text  */
-.research-entry {
-  max-width: 1600px !important;
-  width: 100% !important;
-  margin: 30px auto; /* Spacing between research entries */
-  display: flex !important;
-  flex-direction: row !important; /* Ensure image is on the left, text on the right */
-  align-items: flex-start;
-  gap: 30px; /* Space between image and text */
-  flex-wrap: nowrap !important; /* Prevents image from wrapping under text */
-}
+// /* Research entry layout: note that research-entry is correctly wrapping both the research-image and research-text  */
+// .research-entry {
+//   max-width: 1600px !important;
+//   width: 100% !important;
+//   margin: 30px auto; /* Spacing between research entries */
+//   display: flex !important;
+//   flex-direction: row !important; /* Ensure image is on the left, text on the right */
+//   align-items: flex-start;
+//   gap: 30px; /* Space between image and text */
+//   flex-wrap: nowrap !important; /* Prevents image from wrapping under text */
+// }
 
 
-/* Ensure the image stays on the left */
-.research-image {
-  flex: 0 0 35%; /* Image takes up 35% of the width */
-  max-width: 35%;
-}
+// /* Ensure the image stays on the left */
+// .research-image {
+//   flex: 0 0 35%; /* Image takes up 35% of the width */
+//   max-width: 35%;
+// }
 
-.research-image img {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 5px;
-}
+// .research-image img {
+//   width: 100%;
+//   height: auto;
+//   display: block;
+//   border-radius: 5px;
+// }
 
-/* Ensure the text takes up the remaining space */
-.research-text {
-  flex: 1;
-  font-size: 16px;
-  line-height: 1.6;
-}
+// /* Ensure the text takes up the remaining space */
+// .research-text {
+//   flex: 1;
+//   font-size: 16px;
+//   line-height: 1.6;
+// }
 
-/* Fix paragraph spacing inside research text */
-.research-text p {
-  margin-bottom: 15px;
-}
+// /* Fix paragraph spacing inside research text */
+// .research-text p {
+//   margin-bottom: 15px;
+// }
 
-/* Research headers and paragraphs */
-.research h2 {
-  font-size: 24px;
-  margin-top: 30px;
-}
+// /* Research headers and paragraphs */
+// .research h2 {
+//   font-size: 24px;
+//   margin-top: 30px;
+// }
 
-.research h3 {
-  font-size: 20px;
-  font-weight: bold;
-  margin-top: 20px;
-}
+// .research h3 {
+//   font-size: 20px;
+//   font-weight: bold;
+//   margin-top: 20px;
+// }
 
-.research p {
-  font-size: 16px;
-  line-height: 1.5;
-}
+// .research p {
+//   font-size: 16px;
+//   line-height: 1.5;
+// }
 
 /* ===========================
    End of Part II
