@@ -12,6 +12,14 @@ html, body {
   padding: 0;
 }
 
+.layout--single.research-page .initial-content,
+.layout--single.research-page .page__inner-wrap,
+.layout--single.research-page .page__content {
+  max-width: 1600px !important;
+  width: 100% !important;
+  margin: auto;
+}
+
 
 /*
   The following rule applies to all elements with the classes .wrapper, .page, and .page__inner-wrap.
