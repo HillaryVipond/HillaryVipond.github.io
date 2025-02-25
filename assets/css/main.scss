@@ -1,21 +1,18 @@
-/* ===================================================
-   Part I: Global Layout, Page Styling & Footer Fix
-   =============================================== */
+---
+# Needed for Jekyll to process SCSS
+---
 
-/* A) Import theme styles */
-@import "minimal-mistakes"; /* Keep the theme's existing styles */
+@import "minimal-mistakes"; // Keep the theme's existing styles
 
-/* Global Reset */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
+/* Remove grayscale effect on profile image */
+.author__avatar img {
+filter: none !important;
+transition: none !important; /* Prevents fade-in effect */
 }
 
-/* ================================
-   Force ALL Pages to be Full Width 
-   (Except Landing Page)
-================================ */
+
+/* =================== General Page Styling =================== */
+
 /* Ensure all pages are full width by default */
 .layout--single .page-content {
 font-size: 18px;
@@ -26,346 +23,290 @@ margin: auto;
 }
 
 
-// /* Research Page Specific Overrides */
-// .layout--single.research-page .research-entry {
-//   max-width: 1600px !important;
-//   width: 100% !important;
-//   margin: auto;
-//   display: flex !important;
-//   flex-direction: row !important; /* Ensure image is on the left */
-//   align-items: flex-start;
-//   gap: 30px; /* Space between image and text */
-// }
 
-// /* Ensure the image takes up only 35% */
-// .layout--single.research-page .research-image {
-//   flex: 0 0 35%;
-//   max-width: 35%;
-// }
+/* Ensure Landing Page Content is at the Top */
+html body.landing-page .page__inner-wrap {
+display: block !important; /* Removes flexbox behavior */
+min-height: auto !important; /* Prevents extra spacing */
+margin-top: 0 !important; /* Removes unwanted vertical gap */
+padding-top: 20px; /* Adds a little spacing from navbar */
+}
 
-// /* Ensure the text takes up the remaining space */
-// .layout--single.research-page .research-text {
-//   flex: 1;
-//   font-size: 16px;
-//   line-height: 1.6;
-// }
+/* Ensure `.page__content` is not stretched */
+html body.landing-page .page__content {
+flex-grow: 0 !important; /* Prevents unwanted vertical stretching */
+min-height: auto !important;
+display: block !important; /* Ensures normal text flow */
+}
 
-
-/*
-  The following rule applies to all elements with the classes .wrapper, .page, and .page__inner-wrap.
-  
-  It does three things:
-  1. display: flex;
-     - Turns the element into a flex container so that its direct children become flex items.
-  2. flex-direction: column;
-     - Arranges the flex items vertically (in a column) from top to bottom.
-  3. min-height: 60vh;
-     - Ensures that the container always has a minimum height of 60% of the viewport's height.
-
-  In summary, these elements will behave as vertical flex containers that fill at least 60% of the screen,
-  which is useful for creating consistent layouts and managing the placement of elements like sticky footers.
-*/
-
-// /* Global Layout Containers */
-// .wrapper, .page, .page__inner-wrap {
-//   display: flex;
-//   flex-direction: column;
-//   min-height: 60vh; /* You can adjust this value (e.g., 80vh) if needed */
-// }
+/* BUT: Limit width ONLY on the landing page */
+html body.landing-page .page {
+max-width: 700px !important;
+width: 90% !important;
+margin: auto;
+}
 
 
-/* ===================================================
-   Part I-B: Landing Page Specific 
-   =============================================== */
-/*
+@media (min-width: 80em) {
+html body .page {
+width: 100% !important; /* Expand full width for all pages */
+padding-inline-end: 0 !important;
+max-width: none !important;
+}
 
-// /* Landing Page Specific Overrides */
-// html body.landing-page article.page {
-//   align-self: flex-start !important;
-//   margin-top: 0 !important;
-// }
-
-// /* Makes the text in the inner wrap start at the top */
-// html body.landing-page .page__inner-wrap {
-//   justify-content: flex-start !important;
-//   align-items: flex-start !important;
-// }
-
-// /* This makes the Landing Page Text narrow */
-// html body.landing-page .page {
-//   max-width: 700px !important;
-//   width: 90% !important;
-//   margin: auto;
-// }
-
-// /* This controls spacing between the main content and footer */
-// html body.landing-page .page__content {
-//   margin-bottom: 0 !important;
-//   padding-bottom: 10px !important;
-// }
-
-// /* Additional Footer Overrides for Landing Page */
-// html body.landing-page #footer,
-// html body.landing-page .page__footer,
-// html body.landing-page .site-footer {
-//   margin-top: auto;
-//   width: 100%;
-//   text-align: center;
-// }
-
-
-// /* Sticky Footer Setup: Body as a Flex Container */
-// body {
-//   display: flex;
-//   flex-direction: column;
-// }
-
-// /* Main Content Container */
-// .initial-content {
-//   flex: 1;
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: flex-start;
-// }
-
-
-/* ===================================================
-   Part I-C: Footer Specific 
-   =============================================== */
-/*
-
-
-// /* Footer Styles */
-// #footer,
-// .page__footer,
-// .site-footer {
-//   margin-top: auto;
-//   width: 100%;
-//   text-align: center;
-//   position: relative;
-//   background-color: #f8f8f8;
-// }
+/* Keep the landing page narrow */
+html body.landing-page .page {
+max-width: 700px !important;
+width: 90% !important;
+margin: auto;
+}
+}
 
 
 
-// // /* Responsive Adjustments */
-// // @media (min-width: 80em) {
-// //   html body .page {
-// //     width: 100% !important;
-// //     padding-inline-end: 0 !important;
-// //     max-width: none !important;
-// //   }
-// //   /* Reapply landing page narrow rule */
-// //   html body.landing-page .page {
-// //     max-width: 700px !important;
-// //     width: 90% !important;
-// //     margin: auto;
-// //   }
-// // }
 
-// /* Footer Specific Styling */
-// .site-footer {
-//   font-size: 12px;
-//   padding: 5px 0 !important;
-//   margin: 0 !important;
-//   height: auto;
-//   line-height: 1.2;
-// }
+/* =================== Sidebar Styling =================== */
 
-// .footer-col-wrapper {
-//   padding: 0 !important;
-//   margin: 0 !important;
-//   min-height: 10px;
-// }
+/* Adjust sidebar spacing */
+.sidebar {
+margin-left: -60px; /* Moves sidebar left */
+}
 
-// .wrapper {
-//   padding-bottom: 0 !important;
-//   margin-bottom: 0 !important;
-// }
+/* Add space between sidebar and text */
+.page__content {
+margin-left: 30px;
+}
 
-// .page {
-//   margin-bottom: 0 !important;
-// }
+/* =================== Footer Styling =================== */
 
-// .site-footer::before,
-// .site-footer::after,
-// .footer-col-wrapper::before,
-// .footer-col-wrapper::after {
-//   height: 0 !important;
-//   display: none !important;
-// }
+/* Reduce extra spacing in the footer */
+.site-footer {
+font-size: 12px;
+padding: 5px 0 !important;
+margin: 0 !important;
+height: auto;
+line-height: 1.2;
+}
 
+/* Remove empty space in the footer */
+.footer-col-wrapper {
+padding: 0 !important;
+margin: 0 !important;
+min-height: 10px;
+}
 
-// /* Remove extra spacing on the article */
-// article.page {
-//   margin: 0 !important;
-//   padding: 0 !important;
-// }
+/* Reduce spacing between content and footer */
+.wrapper {
+padding-bottom: 0 !important;
+margin-bottom: 0 !important;
+}
 
-// article.page::after {
-//   content: none !important;
-// }
+/* Remove any empty space that might push the footer down */
+.page {
+margin-bottom: 0 !important;
+}
 
-// /* ===========================
-//    End of Part I
-//    =========================== */
+/* Hide invisible elements adding extra height */
+.site-footer::before, 
+.site-footer::after, 
+.footer-col-wrapper::before, 
+.footer-col-wrapper::after {
+height: 0 !important;
+display: none !important;
+}
 
-// /* ===========================
-//    Part II: Typography, Profile Image & Research Page Styling
-//    =========================== */
+/* =================== Profile Image Styling =================== */
 
-// /* =================== Profile Image Styling =================== */
+/* Force profile image to display at full size */
+.u-photo {
+width: 180px !important;
+height: 180px !important;
+max-width: none !important;
+max-height: none !important;
+object-fit: cover !important;
+display: block !important;
+}
 
-// /* Force profile image to display at full size */
-// .u-photo {
-//   width: 180px !important;
-//   height: 180px !important;
-//   max-width: none !important;
-//   max-height: none !important;
-//   object-fit: cover !important;
-//   display: block !important;
-// }
+/* Also fix its container, if restricting size */
+.author__avatar, .author__avatar img, .u-photo {
+width: 200px !important;
+height: 200px !important;
+max-width: none !important;
+max-height: none !important;
+display: flex !important;
+align-items: center !important;
+justify-content: center !important;
+}
 
-// /* Ensure its container is sized correctly */
-// .author__avatar, .author__avatar img, .u-photo {
-//   width: 200px !important;
-//   height: 200px !important;
-//   max-width: none !important;
-//   max-height: none !important;
-//   display: flex !important;
-//   align-items: center !important;
-//   justify-content: center !important;
-// }
+/* Add spacing below profile image container */
+.author__avatar {
+margin-bottom: 20px !important;
+}
 
-// /* Add spacing below profile image container */
-// .author__avatar {
-//   margin-bottom: 20px !important;
-// }
-
-// /* Make profile image square instead of circular */
-// .u-photo {
-//   border-radius: 0 !important;
-// }
+/* Make profile image square instead of circular */
+.u-photo {
+border-radius: 0 !important;
+}
 
 /* =================== Typography Styling =================== */
 
 /* Standard font size */
 body {
-  font-size: 16px;
-  line-height: 1.6;
+font-size: 16px;
+line-height: 1.6;
 }
 
 /* Header sizes */
 h1 {
-  font-size: 28px;
+font-size: 28px;
 }
 
 h2 {
-  font-size: 24px;
+font-size: 24px;
 }
 
 h3 {
-  font-size: 20px;
+font-size: 20px;
 }
 
 /* Ensure paragraphs in posts look good */
 .layout-single p {
-  font-size: 18px;
-  line-height: 1.6;
+font-size: 18px;
+line-height: 1.6;
 }
 
 /* =================== Research Page Styling =================== */
-// .layout--single .initial-content,
-// .layout--single .page__inner-wrap,
-// .layout--single .page__content,
-// .layout--single .page {
-//   max-width: 1600px !important;
-//   width: 100% !important;
-//   margin: auto;
-// }
+
+/* Ensure the research page expands fully */
+.layout--single, .initial-content, .page__inner-wrap, .page__content {
+max-width: 1600px !important; /* Full width */
+width: 100% !important; /* Take full screen width */
+margin: auto;
+display: block;
+}
+
+/* Break width constraints on inner wrap */
+.page__inner-wrap {
+max-width: 1600px !important;
+width: 100% !important;
+margin: auto;
+padding: 0 20px; /* Add some spacing on sides */
+}
+
+/* Ensure research sections expand fully */
+.research-entry {
+max-width: 1600px !important;
+width: 100% !important;
+margin: 30px auto; /* Adds spacing between research entries */
+display: flex;
+align-items: flex-start;
+gap: 30px; /* Space between image and text */
+}
+
+/* Ensure the image stays on the left */
+.research-image {
+flex: 0 0 35%; /* Image takes up 35% of the width */
+max-width: 35%;
+}
+
+.research-image img {
+width: 100%;
+height: auto;
+display: block;
+border-radius: 5px;
+}
+
+/* Ensure the text takes up the remaining space */
+.research-text {
+flex: 1;
+font-size: 16px;
+line-height: 1.6;
+}
+
+/* Fix paragraph spacing inside .research-text */
+.research-text p {
+margin-bottom: 15px;
+}
+
+/* Ensure proper typography */
+.research h2 {
+font-size: 24px;
+margin-top: 30px;
+}
+
+.research h3 {
+font-size: 20px;
+font-weight: bold;
+margin-top: 20px;
+}
+
+.research p {
+font-size: 16px;
+line-height: 1.5;
+}
+
+/* 🚀 FINAL FIX: FORCE THE FOOTER TO BE AT THE PAGE BOTTOM */
+
+/* 1️⃣ Ensure the entire page fills the viewport */
+html, body {
+height: 100%;
+margin: 0;
+padding: 0;
+}
+
+/* 2️⃣ Force the wrapper (or main container) to expand fully */
+.wrapper, .page, .page__inner-wrap {
+display: flex;
+flex-direction: column;
+min-height: 100vh; /* Forces full viewport height */
+}
+
+/* 3️⃣ Make the main content push the footer down */
+.page__content {
+flex-grow: unset !important; /* Prevents forced stretching */
+min-height: auto !important; /* Allows content to determine height */
+display: block !important; /* Normal text flow */
+}
+
+/* 4️⃣ Ensure the footer itself stays at the bottom */
+#footer,
+.page__footer,
+.site-footer {
+margin-top: auto;
+width: 100%;
+text-align: center;
+position: relative;
+background-color: #f8f8f8; /* Just for visibility */
+}
+
+/* 🚀 Special Fix: Landing Page Footer */
+html body.landing-page .wrapper {
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+  min-height: auto !important; /* Ensures wrapper only grows as needed */
+  display: block !important; /* Normal page structure */
+}
+
+html body.landing-page .page__content {
+flex-grow: 1;
+min-height: 80vh; /* Ensures content area is tall enough to reveal footer */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: unset !important; /* Prevents unnecessary stretching */
+  min-height: auto !important; /* Allows content to determine height */
+  display: block !important; /* Ensures normal text flow */
+}
 
 
-// .research-page .initial-content,
-// .research-page .page__inner-wrap,
-// .research-page .page__content, 
-// .research-page .page {
-//   max-width: 1600px !important;
-//   width: 100% !important;
-//   margin: auto;
-// }
-
-
-
-// /* Ensure the research page expands fully */
-// .layout--single, .initial-content, .page__inner-wrap, .page__content {
-//   max-width: 1600px !important; /* Full width */
-//   width: 100% !important; /* Take full screen width */
-//   margin: auto;
-// }
-
-// /* Break width constraints on inner wrap */
-// .page__inner-wrap {
-//   max-width: 1600px !important;
-//   width: 100% !important;
-//   margin: auto;
-//   padding: 0 20px; /* Add some spacing on sides */
-// }
-
-// /* Research entry layout: note that research-entry is correctly wrapping both the research-image and research-text  */
-// .research-entry {
-//   max-width: 1600px !important;
-//   width: 100% !important;
-//   margin: 30px auto; /* Spacing between research entries */
-//   display: flex !important;
-//   flex-direction: row !important; /* Ensure image is on the left, text on the right */
-//   align-items: flex-start;
-//   gap: 30px; /* Space between image and text */
-//   flex-wrap: nowrap !important; /* Prevents image from wrapping under text */
-// }
-
-
-// /* Ensure the image stays on the left */
-// .research-image {
-//   flex: 0 0 35%; /* Image takes up 35% of the width */
-//   max-width: 35%;
-// }
-
-// .research-image img {
-//   width: 100%;
-//   height: auto;
-//   display: block;
-//   border-radius: 5px;
-// }
-
-// /* Ensure the text takes up the remaining space */
-// .research-text {
-//   flex: 1;
-//   font-size: 16px;
-//   line-height: 1.6;
-// }
-
-// /* Fix paragraph spacing inside research text */
-// .research-text p {
-//   margin-bottom: 15px;
-// }
-
-// /* Research headers and paragraphs */
-// .research h2 {
-//   font-size: 24px;
-//   margin-top: 30px;
-// }
-
-// .research h3 {
-//   font-size: 20px;
-//   font-weight: bold;
-//   margin-top: 20px;
-// }
-
-// .research p {
-//   font-size: 16px;
-//   line-height: 1.5;
-// }
-
-/* ===========================
-   End of Part II
-   =========================== */
+html body.landing-page #footer,
+html body.landing-page .page__footer,
+html body.landing-page .site-footer {
+margin-top: auto;
+width: 100%;
+text-align: center;
+}
+/* ✅ Removed justify-content: center; so content stays at the top *//* ===================================================
+   Part I: Global Layout, Page Styling & Footer Fix
+   =============================================== */
