@@ -32,6 +32,7 @@ display: block;
 // }
 
 
+/* =================== Landing Page Styling =================== */
 
 /* Ensure Landing Page Content is at the Top */
 html body.landing-page .page__inner-wrap {
@@ -71,6 +72,26 @@ padding-inline-end: 0 !important;
 max-width: none !important;
 }
 
+}
+
+/* Default text size for normal screens */
+html body.landing-page .page__content {
+  font-size: 1.2rem; /* Scales with browser settings */
+  line-height: 1.6;
+}
+
+/* On very large screens, increase font size */
+@media (min-width: 1400px) {
+  html body.landing-page .page__content {
+    font-size: 1.5rem; /* Makes text slightly bigger */
+  }
+}
+
+/* On small screens, slightly reduce font size */
+@media (max-width: 768px) {
+  html body.landing-page .page__content {
+    font-size: 1rem; /* Prevents text from being too large */
+  }
 }
 
 
