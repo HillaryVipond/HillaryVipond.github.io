@@ -70,7 +70,8 @@ how this shift influenced the adoption of the sewing machine and the transition 
   <div class="research-text">
     <h4><strong>Census Linking: Confidence in the Absence of Ground Truth</strong></h4>
     <p><strong>Hillary Vipond</strong></p>
-    <p>Linking historical census datasets faces significant challenges. The first order issue is the
+    <p>
+      Linking historical census datasets faces significant challenges. The first order issue is the
 risk of false positives, which can distort key downstream coefficients of interest, particularly for migration and occupation. These errors then result in incorrect conclusions
 being drawn in new research in economic history. In this paper, I propose an approach which makes it possible to assess the share of false positives in panel datasets generated
 by any given linking algorithms. It does not require ground truth data. Instead, it exploits systematic biases induced by false positives in outcomes of interest to construct a
@@ -78,30 +79,38 @@ litmus testing process. Using this framework, I take a multi-model comparison ap
 findings emerge. Firstly, historical British is substantially less exposed to false positives than American level census data. Secondly, linking full census datasets yields more accurate
 results than using population subsets, especially for American level data. Finally, a case study of immigrant tailors from Russia demonstrates how this approach facilitates
 linking challenging segments of the population. I propose a generalizable falsification test derived from this methodology, which can serve as a data quality check for any census
-linking algorithm..</p>
+linking algorithm.</p>
   </div>
 </div>
 
 <!-- Research Entry 5 -->
 <div class="research-entry">
   <div class="research-image">
-    <img src="../assets/images/Placeholder.jpg" alt="Research Topic 5">
+    <img src="../assets/images/Census.jpg" alt="Research Topic 5">
   </div>
   <div class="research-text">
     <h4><strong>Mapping the Industrial Revolution: A Micro-Level Analysis of Job Creation and Loss in Victorian
 Britain</strong></h4>
     <p><strong>Hillary Vipond</strong></p>
+      <p>
+        During the Industrial Revolution, mechanization transformed Britain’s occupational landscape, creating new jobs while rendering others obsolete. This project maps these changes at a granular level, using historical census data to quantify shifts in employment across industries and regions. By analyzing job creation and loss at the micro level, the research provides insights into how technological change reshaped the occupational structure and local labor markets
+      <p>
   </div>
 </div>
 
 <!-- Research Entry 6 -->
 <div class="research-entry">
   <div class="research-image">
-    <img src="../assets/images/Placeholder.jpg" alt="Research Topic 6">
+    <img src="../assets/images/SonsPicture.jpg" alt="Research Topic 6">
   </div>
   <div class="research-text">
     <h4><strong>Technological Change and Social Mobility in Victorian Britain
 </strong></h4>
     <p><strong>Hillary Vipond</strong></p>
+      <p>
+        The Industrial Revolution not only transformed industries but also redefined social mobility in Britain. This project examines how technological change affected the career trajectories of workers and their families, using historical census data to track occupational transitions across generations. By analyzing patterns of skill inheritance, job displacement, and new employment opportunities, the research explores whether mechanization acted as a driver of mobility or reinforced existing social structures.
+
+
+      <p>
    </div>
 </div>
