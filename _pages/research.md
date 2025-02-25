@@ -101,7 +101,7 @@ Britain</strong></h4>
 <!-- Research Entry 6 -->
 <div class="research-entry">
   <div class="research-image">
-    <img src="../assets/images/SonsPicture.jpg" alt="Research Topic 6">
+    <img src="../assets/images/SonsPicture.png" alt="Research Topic 6">
   </div>
   <div class="research-text">
     <h4><strong>Technological Change and Social Mobility in Victorian Britain
@@ -109,8 +109,6 @@ Britain</strong></h4>
     <p><strong>Hillary Vipond</strong></p>
       <p>
         The Industrial Revolution not only transformed industries but also redefined social mobility in Britain. This project examines how technological change affected the career trajectories of workers and their families, using historical census data to track occupational transitions across generations. By analyzing patterns of skill inheritance, job displacement, and new employment opportunities, the research explores whether mechanization acted as a driver of mobility or reinforced existing social structures.
-
-
       <p>
    </div>
 </div>
