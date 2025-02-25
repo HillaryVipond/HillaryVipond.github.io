@@ -261,7 +261,7 @@ h3 {
   padding: 0 20px; /* Add some spacing on sides */
 }
 
-/* Research entry layout */
+/* Research entry layout: note that research-entry is correctly wrapping both the research-image and research-text  */
 .research-entry {
   max-width: 1600px !important;
   width: 100% !important;
@@ -280,12 +280,12 @@ h3 {
   max-width: 35%;
 }
 
-// .research-image img {
-//   width: 100%;
-//   height: auto;
-//   display: block;
-//   border-radius: 5px;
-// }
+.research-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 5px;
+}
 
 /* Ensure the text takes up the remaining space */
 .research-text {
