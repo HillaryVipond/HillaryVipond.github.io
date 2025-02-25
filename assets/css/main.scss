@@ -278,16 +278,16 @@ line-height: 1.6;
 
 /* Ensure the image takes up only 35% */
 .research-image {
-  flex: 0 0 30%;
-  max-width: 30%;
+  flex: 0 0 25%;
+  max-width: 25%;
 }
 
 /* Ensure the text takes up the remaining space */
 .research-text {
   flex: 1;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.6;
-  padding-left: 20px; /* Adds a bit more space between image and text */
+  padding-left: 40px; /* Adds a bit more space between image and text */
 }
 
 
