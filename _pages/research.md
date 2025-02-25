@@ -1,5 +1,6 @@
 ---
 layout: single
+classes: research-page
 title: "Research"
 permalink: /research/
 ---
