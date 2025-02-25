@@ -65,10 +65,10 @@ how this shift influenced the adoption of the sewing machine and the transition 
 <!-- Research Entry 5 -->
 <div class="research-entry">
   <div class="research-image">
-    <img src="../assets/images/Research5.jpg" alt="Research Topic 5">
+    <img src="/assets/images/Linking.jpg" alt="Research Topic 5">
   </div>
   <div class="research-text">
-    <h4><a href="https://example.com/research5"><strong>Census Linking: Confidence in the Absence of Ground Truth</strong></a></h4>
+    <h4><strong>Census Linking: Confidence in the Absence of Ground Truth</strong></h4>
     <p><strong>Hillary Vipond</strong></p>
     <p>Linking historical census datasets faces significant challenges. The first order issue is the
 risk of false positives, which can distort key downstream coefficients of interest, particularly for migration and occupation. These errors then result in incorrect conclusions
@@ -88,8 +88,8 @@ linking algorithm..</p>
     <img src="../assets/images/Research6.jpg" alt="Research Topic 6">
   </div>
   <div class="research-text">
-    <h4><a href="https://example.com/research6"><strong>Mapping the Industrial Revolution: A Micro-Level Analysis of Job Creation and Loss in Victorian
-Britain</strong></a></h4>
+    <h4><strong>Mapping the Industrial Revolution: A Micro-Level Analysis of Job Creation and Loss in Victorian
+Britain</strong></h4>
     <p><strong>Hillary Vipond</strong></p>
   </div>
 </div>
@@ -100,8 +100,8 @@ Britain</strong></a></h4>
     <img src="../assets/images/Research3.jpg" alt="Research Topic 3">
   </div>
   <div class="research-text">
-    <h4><a href="https://example.com/research3"><strong>Technological Change and Social Mobility in Victorian Britain
-</strong></a></h4>
+    <h4><strong>Technological Change and Social Mobility in Victorian Britain
+</strong></h4>
     <p><strong>Hillary Vipond</strong></p>
    </div>
 </div>
