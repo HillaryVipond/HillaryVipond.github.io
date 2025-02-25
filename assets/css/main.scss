@@ -57,9 +57,9 @@ padding-top: 20px; /* Adds a little spacing from navbar */
 
 
 
-.landing-page .initial-content {
-  background-color: green !important;
-}
+// .landing-page .initial-content {
+//   background-color: green !important;
+// }
 
 .landing-page .page__content {
   display: block !important; /* Ensures normal text flow */
@@ -87,7 +87,7 @@ html body.landing-page .page__content {
 
 
 .landing-page .page__inner-wrap {
-  background-color: yellow !important;
+  // background-color: yellow !important;
   max-width: 700px; /* Keep it the same width as your text */
   margin: auto;
   padding: 10px; /* Add some spacing around it */
