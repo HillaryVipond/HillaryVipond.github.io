@@ -13,14 +13,22 @@ transition: none !important; /* Prevents fade-in effect */
 
 /* =================== General Page Styling =================== */
 
-/* Ensure all pages are full width by default */
-.layout--single .page-content {
-font-size: 18px;
-line-height: 1.6;
+/*IMPORTANT!!! This is doing all the heavy lifting to go full width for all layout--single pages */
+.layout--single, .initial-content, .page__inner-wrap, .page__content {
 max-width: 1600px !important; /* Full width */
-width: 95% !important;
+width: 100% !important; /* Take full screen width */
 margin: auto;
+display: block;
 }
+
+// /* Ensure all pages are full width by default */
+// .layout--single .page-content {
+// font-size: 18px;
+// line-height: 1.6;
+// max-width: 1600px !important; /* Full width */
+// width: 95% !important;
+// margin: auto;
+// }
 
 
 
@@ -46,6 +54,11 @@ width: 90% !important;
 margin: auto;
 }
 
+/* Debug: Turn the landing page background yellow */
+html body.landing-page {
+  background-color: yellow !important;
+}
+
 
 @media (min-width: 80em) {
 html body .page {
@@ -54,12 +67,6 @@ padding-inline-end: 0 !important;
 max-width: none !important;
 }
 
-/* Keep the landing page narrow */
-html body.landing-page .page {
-max-width: 700px !important;
-width: 90% !important;
-margin: auto;
-}
 }
 
 
