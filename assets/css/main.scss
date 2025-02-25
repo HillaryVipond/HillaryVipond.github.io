@@ -65,8 +65,10 @@ html body.landing-page .page__content {
   background-color: yellow !important;
   max-width: 700px; /* Keep it the same width as your text */
   margin: auto;
-  padding: 20px; /* Add some spacing around it */
+  padding: 10px; /* Add some spacing around it */
   border-radius: 10px; /* (Optional) Adds rounded corners */
+  min-height: auto !important; /* Prevents forced height */
+  height: auto !important; /* Ensures it only takes necessary space */
 }
 
 
