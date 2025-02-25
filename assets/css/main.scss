@@ -59,9 +59,12 @@ html body.landing-page .page__content {
 }
 
 
-/* Debug: Turn the landing page background yellow */
-html body.landing-page {
+.landing-page .page__inner-wrap {
   background-color: yellow !important;
+  max-width: 700px; /* Keep it the same width as your text */
+  margin: auto;
+  padding: 20px; /* Add some spacing around it */
+  border-radius: 10px; /* (Optional) Adds rounded corners */
 }
 
 
