@@ -5,9 +5,7 @@ title: "Research"
 permalink: /research/
 ---
 
-## Publications  
-
-### Technological Change & Labor Markets  
+## Technological Change & Labor Markets  
 
 <div class="research-entry">
 
