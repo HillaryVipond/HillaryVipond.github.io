@@ -48,11 +48,14 @@ display: block !important; /* Ensures normal text flow */
 }
 
 /* BUT: Limit width ONLY on the landing page */
-html body.landing-page .page {
-max-width: 700px !important;
-width: 90% !important;
-margin: auto;
+html body.landing-page .page,
+html body.landing-page .page__inner-wrap,
+html body.landing-page .page__content {
+  max-width: 700px !important;
+  width: 90% !important;
+  margin: auto;
 }
+
 
 /* Debug: Turn the landing page background yellow */
 html body.landing-page {
