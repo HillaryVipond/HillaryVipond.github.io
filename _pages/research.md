@@ -6,7 +6,7 @@ permalink: /research/
 header: false  # 👈 This disables the large title
 ---
 
-## Technological Change & Labor Markets  
+## Technological Change & Labour Markets  
 <!-- Research Entry 1 -->
 <div class="research-entry">
 
