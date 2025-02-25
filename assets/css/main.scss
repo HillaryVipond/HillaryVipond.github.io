@@ -13,6 +13,7 @@ transition: none !important; /* Prevents fade-in effect */
 
 /* =================== General Page Styling =================== */
 
+
 /*IMPORTANT!!! This is doing all the heavy lifting to go full width for all layout--single pages */
 .layout--single, .initial-content, .page__inner-wrap, .page__content {
 max-width: 1600px !important; /* Full width */
@@ -126,6 +127,11 @@ display: none !important;
 }
 
 /* =================== Profile Image Styling =================== */
+
+/* Move profile picture slightly to the right only on the landing page */
+html body.landing-page .author__avatar {
+  margin-left: 20px !important; /* Adjust this value as needed */
+}
 
 /* Force profile image to display at full size */
 .u-photo {
