@@ -82,7 +82,7 @@ linking algorithm..</p>
   </div>
 </div>
 
-<!-- Research Entry 4 -->
+<!-- Research Entry 5 -->
 <div class="research-entry">
   <div class="research-image">
     <img src="../assets/images/Research6.jpg" alt="Research Topic 6">
@@ -94,7 +94,7 @@ Britain</strong></h4>
   </div>
 </div>
 
-<!-- Research Entry 5 -->
+<!-- Research Entry 6 -->
 <div class="research-entry">
   <div class="research-image">
     <img src="../assets/images/Research3.jpg" alt="Research Topic 3">
