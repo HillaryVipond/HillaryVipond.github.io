@@ -60,11 +60,8 @@ plugins:
 author:
   name: "Hillary Vipond"
   avatar: "/assets/images/Untitled design.jpg"
+  bio: "Postdoctoral Fellow, Complexity Science Hub Vienna"
   links:
-    - label: "Postdoctoral Fellow, Complexity Science Hub Vienna"
-      icon: "fas fa-university"  # Uses a university icon
-      url: "#"  # This prevents the text from being clickable
-
     - label: "vipond@csh.ac.at"
       icon: "fas fa-envelope"
       url: "mailto:vipond@csh.ac.at"
