@@ -39,7 +39,7 @@ html, body {
 .layout--single .page-content {
   font-size: 18px;
   line-height: 1.6;
-  max-width: 1400px !important;
+  max-width: 1600px !important;
   width: 95% !important;
   margin: auto;
 }
@@ -251,7 +251,6 @@ h3 {
   max-width: 1600px !important; /* Full width */
   width: 100% !important; /* Take full screen width */
   margin: auto;
-  display: block;
 }
 
 /* Break width constraints on inner wrap */
