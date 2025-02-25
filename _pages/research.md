@@ -12,7 +12,7 @@ header: false  # 👈 This disables the large title
 <div class="research-entry">
 
   <div class="research-image">
-    <img src="../assets/images/Data.jpg" alt="Bootmaking Mechanization Impact">
+    <img src="AreaGraph.jpg" alt="Bootmaking Mechanization Impact">
   </div>
 
   <div class="research-text">
@@ -35,7 +35,7 @@ header: false  # 👈 This disables the large title
 <!-- Research Entry 2 -->
 <div class="research-entry">
   <div class="research-image">
-    <img src="../assets/images/Research2.jpg" alt="Research Topic 2">
+    <img src="immigration.jpg" alt="Research Topic 2">
   </div>
   <div class="research-text">
     <h4><a href="https://jkastis.github.io/yanniskastis/Kastis_JMP.pdf"><strong>Organizational Practices and Technology Adoption:
@@ -52,12 +52,12 @@ how this shift influenced the adoption of the sewing machine and the transition 
 <!-- Research Entry 3 -->
 <div class="research-entry">
   <div class="research-image">
-    <img src="../assets/images/Research4.jpg" alt="Research Topic 4">
+    <img src="cesifo1_wp10766.jpg" alt="Research Topic 4">
   </div>
   <div class="research-text">
     <h4><a href="[https://example.com/research](https://www.cesifo.org/en/publications/2023/working-paper/past-and-future-work-how-history-can-inform-age-automation)4"><strong>The Past and Future of Work: How History Can Inform the Age of Automation </strong></a></h4>
     <p><strong>Ben Schneider, Hillary Vipond</strong></p>
-    <p>Exploring how different counties adapted to economic changes, with a focus on industries that mechanized rapidly...</p>
+    <p>Debates about the future of work frequently reference past instances of transformative innovation to preface analysis of how automation and artificial intelligence could reshape society and the economy. However, technological shifts in history are rarely considered in depth or used to improve predictions and planning for the coming decades. In this paper we show that a deeper understanding of history can expand knowledge of possibilities and pitfalls for employment in the future. We open by demonstrating that evidence from historical events has been used to inform responses to present-day challenges. We argue that history provides the only way to analyze the long-term impacts of technological change, and that the scale of the First Industrial Revolution may make it the only precedent for emerging transformations. Next, we present an overview of the current debates around the potential effects of impending labor-replacing innovation. We then summarize existing historical research on the causes and consequences of technological change and identify areas in which salient historical findings are overlooked. We close by proposing further research into past technological shocks that can enhance our understanding of work and employment in an automated future.</p>
   </div>
 </div>
 
