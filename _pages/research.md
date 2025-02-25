@@ -89,12 +89,11 @@ linking algorithm.</p>
     <img src="../assets/images/Census.jpg" alt="Research Topic 5">
   </div>
   <div class="research-text">
-    <h4><strong>Mapping the Industrial Revolution: A Micro-Level Analysis of Job Creation and Loss in Victorian
-Britain</strong></h4>
+    <h4><strong>Mapping the Industrial Revolution: A Micro-Level Analysis of Job Creation and Loss in Victorian Britain</strong></h4>
     <p><strong>Hillary Vipond</strong></p>
-      <p>
-        During the Industrial Revolution, mechanization transformed Britain’s occupational landscape, creating new jobs while rendering others obsolete. This project maps these changes at a granular level, using historical census data to quantify shifts in employment across industries and regions. By analyzing job creation and loss at the micro level, the research provides insights into how technological change reshaped the occupational structure and local labor markets
-      <p>
+    <p>
+      During the Industrial Revolution, mechanization transformed Britain’s occupational landscape, creating new jobs while rendering others obsolete. This project maps these changes at a granular level, using historical census data to quantify shifts in employment across industries and regions. By analyzing job creation and loss at the micro level, the research provides insights into how technological change reshaped the occupational structure and local labor markets.
+    </p> <!-- ✅ Properly closed paragraph -->
   </div>
 </div>
 
@@ -104,11 +103,12 @@ Britain</strong></h4>
     <img src="../assets/images/SonsPicture.png" alt="Research Topic 6">
   </div>
   <div class="research-text">
-    <h4><strong>Technological Change and Social Mobility in Victorian Britain
-</strong></h4>
+    <h4><strong>Technological Change and Social Mobility in Victorian Britain</strong></h4>
     <p><strong>Hillary Vipond</strong></p>
-      <p>
-        The Industrial Revolution not only transformed industries but also redefined social mobility in Britain. This project examines how technological change affected the career trajectories of workers and their families, using historical census data to track occupational transitions across generations. By analyzing patterns of skill inheritance, job displacement, and new employment opportunities, the research explores whether mechanization acted as a driver of mobility or reinforced existing social structures.
-      <p>
-   </div>
+    <p>
+      The Industrial Revolution not only transformed industries but also redefined social mobility in Britain. This project examines how technological change affected the career trajectories of workers and their families, using historical census data to track occupational transitions across generations. By analyzing patterns of skill inheritance, job displacement, and new employment opportunities, the research explores whether mechanization acted as a driver of mobility or reinforced existing social structures.
+    </p> <!-- ✅ Properly closed paragraph -->
+  </div>
 </div>
+
+
