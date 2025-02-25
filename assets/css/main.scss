@@ -230,6 +230,20 @@ line-height: 1.6;
 
 /* =================== Research Page Styling =================== */
 
+/* Reduce the size of research images */
+.research-image {
+  flex: 0 0 25%; /* Reduce from 35% to 25% of the container width */
+  max-width: 25%;
+}
+
+.research-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 5px;
+}
+
+
 /* Ensure the research page expands fully */
 .layout--single, .initial-content, .page__inner-wrap, .page__content {
 max-width: 1600px !important; /* Full width */
