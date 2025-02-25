@@ -130,19 +130,11 @@ html body.landing-page .page__content {
 }
 
 
-/* Default text size for larger screens */
 .landing-page .page__content {
-  font-size: 0.8rem;
-  line-height: 1.4;
+  font-size: 0.8rem !important;
+  line-height: 1.4 !important;
 }
 
-/* Increase font size for mobile devices */
-@media only screen and (max-width: 768px) {
-  .landing-page .page__content {
-    font-size: 1rem; /* Adjust this value as needed */
-    line-height: 1.5; /* Optional: adjust line-height for better readability */
-  }
-}
 
 
 /* =================== Sidebar Styling =================== */
