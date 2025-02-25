@@ -268,18 +268,18 @@ line-height: 1.6;
 .research-entry {
   max-width: 1600px !important;
   width: 100% !important;
-  margin: 70px auto; /* Increased spacing between research entries */
+  margin: 80px auto; /* Increased spacing between research entries */
   display: flex;
   align-items: flex-start;
-  gap: 40px; /* Increased space between image and text */
+  gap: 60px; /* Increased space between image and text */
   padding-bottom: 40px; /* Adds more spacing below each entry */
   border-bottom: 1px solid #ddd; /* Optional: subtle separator */
 }
 
 /* Ensure the image takes up only 35% */
 .research-image {
-  flex: 0 0 35%;
-  max-width: 35%;
+  flex: 0 0 30%;
+  max-width: 30%;
 }
 
 /* Ensure the text takes up the remaining space */
