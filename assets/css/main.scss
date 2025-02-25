@@ -16,31 +16,15 @@ html, body {
    Force ALL Pages to be Full Width 
    (Except Landing Page)
 ================================ */
-/* Apply to all single-page layouts */
-.layout--single,
-.layout--single .initial-content,
-.layout--single #main,
-.layout--single .page,
-.layout--single .page__inner-wrap,
-.layout--single .page__content {
-  max-width: 100vw !important;
-  width: 100% !important;
-  margin: auto;
-  display: block !important;
+/* Ensure all pages are full width by default */
+.layout--single .page-content {
+font-size: 18px;
+line-height: 1.6;
+max-width: 1600px !important; /* Full width */
+width: 95% !important;
+margin: auto;
 }
 
-/* Ensure content structure remains intact */
-.layout--single .page__inner-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center content horizontally */
-}
-
-/* Ensure text blocks take the right width */
-.layout--single .page__content {
-  max-width: 1600px !important;
-  width: 95% !important; /* Adjust to your preference */
-}
 
 // /* Research Page Specific Overrides */
 // .layout--single.research-page .research-entry {
