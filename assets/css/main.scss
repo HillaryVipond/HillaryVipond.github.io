@@ -51,54 +51,54 @@ html, body {
    =============================================== */
 /*
 
-/* Landing Page Specific Overrides */
-html body.landing-page article.page {
-  align-self: flex-start !important;
-  margin-top: 0 !important;
-}
+// /* Landing Page Specific Overrides */
+// html body.landing-page article.page {
+//   align-self: flex-start !important;
+//   margin-top: 0 !important;
+// }
 
-/* Makes the text in the inner wrap start at the top */
-html body.landing-page .page__inner-wrap {
-  justify-content: flex-start !important;
-  align-items: flex-start !important;
-}
+// /* Makes the text in the inner wrap start at the top */
+// html body.landing-page .page__inner-wrap {
+//   justify-content: flex-start !important;
+//   align-items: flex-start !important;
+// }
 
-/* This makes the Landing Page Text narrow */
-html body.landing-page .page {
-  max-width: 700px !important;
-  width: 90% !important;
-  margin: auto;
-}
+// /* This makes the Landing Page Text narrow */
+// html body.landing-page .page {
+//   max-width: 700px !important;
+//   width: 90% !important;
+//   margin: auto;
+// }
 
-/* This controls spacing between the main content and footer */
-html body.landing-page .page__content {
-  margin-bottom: 0 !important;
-  padding-bottom: 10px !important;
-}
+// /* This controls spacing between the main content and footer */
+// html body.landing-page .page__content {
+//   margin-bottom: 0 !important;
+//   padding-bottom: 10px !important;
+// }
 
-/* Additional Footer Overrides for Landing Page */
-html body.landing-page #footer,
-html body.landing-page .page__footer,
-html body.landing-page .site-footer {
-  margin-top: auto;
-  width: 100%;
-  text-align: center;
-}
+// /* Additional Footer Overrides for Landing Page */
+// html body.landing-page #footer,
+// html body.landing-page .page__footer,
+// html body.landing-page .site-footer {
+//   margin-top: auto;
+//   width: 100%;
+//   text-align: center;
+// }
 
 
-/* Sticky Footer Setup: Body as a Flex Container */
-body {
-  display: flex;
-  flex-direction: column;
-}
+// /* Sticky Footer Setup: Body as a Flex Container */
+// body {
+//   display: flex;
+//   flex-direction: column;
+// }
 
-/* Main Content Container */
-.initial-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-}
+// /* Main Content Container */
+// .initial-content {
+//   flex: 1;
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: flex-start;
+// }
 
 
 /* ===================================================
