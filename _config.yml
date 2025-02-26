@@ -2,7 +2,11 @@
 #
 
 
-google_analytics: G-3LYJL0F6DY
+  analytics:
+    provider: "google-gtag"
+    google:
+      tracking_id: "G-3LYJL0F6DY"
+
 
 
 # This config file is meant for settings that affect your whole blog, values
