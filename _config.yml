@@ -2,10 +2,6 @@
 #
 
 
-  analytics:
-    provider: "google-gtag"
-    google:
-      tracking_id: "G-3LYJL0F6DY"
 
 
 
@@ -25,9 +21,8 @@
 title: ""
 email: 
 description: >- # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+  Hillary Vipond. Applied microeconomics. Economic History. Data science. 
+  Technological Change - job loss and job creation. 
 twitter_username: username
 github_username: username
 minimal_mistakes_skin: default
@@ -44,6 +39,12 @@ timezone: # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
 include:
   - _pages
+
+analytics:
+  provider: "google-gtag"
+  google:
+    tracking_id: "G-3LYJL0F6DY"
+
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
