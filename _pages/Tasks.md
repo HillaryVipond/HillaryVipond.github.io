@@ -5,16 +5,9 @@ permalink: /tasks/
 nav_exclude: false
 ---
 
----
-layout: single
-title: "Tasks"
-permalink: /tasks/
-nav_exclude: false
----
-
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
-<h2>Interactive Treemap: Context-Preserving Drill-In</h2>
+<h2>Interactive Treemap: Orders → Industries → Tasks</h2>
 <div id="treemap"></div>
 
 <script>
@@ -30,22 +23,22 @@ document.addEventListener("DOMContentLoaded", function () {
     .style("font-size", "14px");
 
   d3.json("/assets/data/Tasks.json").then(data => {
-    const root = d3.hierarchy(data)
+    const fullRoot = d3.hierarchy(data)
       .sum(d => d.size || 0)
       .sort((a, b) => b.value - a.value);
 
     d3.treemap()
       .size([width, height])
-      .paddingInner(2)(root);
+      .paddingInner(2)(fullRoot);
 
     const group = svg.append("g");
 
-    draw(root); // start with top-level Orders
+    draw(fullRoot); // show all Orders initially
 
     function draw(node) {
       group.selectAll("*").remove();
 
-      // Create layout for the current node (root or a child)
+      // Set up new layout for this node's children
       const hierarchyData = d3.hierarchy(node.data || node)
         .sum(d => d.size || 0)
         .sort((a, b) => b.value - a.value);
@@ -54,10 +47,11 @@ document.addEventListener("DOMContentLoaded", function () {
         .size([width, height])
         .paddingInner(2)(hierarchyData);
 
-      const topLevel = hierarchyData.children;
+      const children = hierarchyData.children || [];
 
+      // Render all children of this node
       const nodes = group.selectAll("g")
-        .data(topLevel)
+        .data(children)
         .join("g")
         .attr("transform", d => `translate(${d.x0},${d.y0})`)
         .style("cursor", d => d.children ? "pointer" : "default")
@@ -70,10 +64,8 @@ document.addEventListener("DOMContentLoaded", function () {
         .attr("width", d => d.x1 - d.x0)
         .attr("height", d => d.y1 - d.y0)
         .attr("fill", d => {
-          if (node.data && node.data.name !== "All Orders") {
-            return "#ddd"; // ghosted siblings
-          }
-          return color(d.data.name);
+          const top = d.ancestors().slice(-2)[0]; // the Order
+          return color(top?.data.name || d.data.name);
         })
         .attr("stroke", "#fff");
 
@@ -81,48 +73,17 @@ document.addEventListener("DOMContentLoaded", function () {
         .attr("x", 4)
         .attr("y", 18)
         .text(d => d.data.name)
-        .attr("fill", d => {
-          if (node.data && node.data.name !== "All Orders") {
-            return "#666";
-          }
-          return "white";
-        })
+        .attr("fill", "white")
+        .style("font-size", "12px")
         .style("pointer-events", "none");
 
-      // If clicked node is not root, show its children
-      if (node.children) {
-        const innerGroup = group.append("g");
-
-        innerGroup.selectAll("g")
-          .data(node.children)
-          .join("g")
-          .attr("transform", d => `translate(${d.x0},${d.y0})`)
-          .on("click", (event, d) => {
-            if (d.children) draw(d);
-            event.stopPropagation();
-          })
-          .call(g => {
-            g.append("rect")
-              .attr("width", d => d.x1 - d.x0)
-              .attr("height", d => d.y1 - d.y0)
-              .attr("fill", d => color(node.data.name))
-              .attr("stroke", "#fff");
-
-            g.append("text")
-              .attr("x", 4)
-              .attr("y", 18)
-              .text(d => d.data.name)
-              .attr("fill", "white")
-              .style("font-size", "12px")
-              .style("pointer-events", "none");
-          });
-
-        svg.on("click", () => draw(root));
-      }
+      // Click background to go up
+      svg.on("click", () => {
+        if (node.parent) draw(node.parent);
+      });
     }
   }).catch(err => {
     console.error("Error loading JSON:", err);
   });
 });
 </script>
-
