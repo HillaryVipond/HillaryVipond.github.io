@@ -5,6 +5,13 @@ permalink: /tasks/
 nav_exclude: false
 ---
 
+---
+layout: single
+title: "Tasks"
+permalink: /tasks/
+nav_exclude: false
+---
+
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <h2>Interactive Treemap: Context-Preserving Drill-In</h2>
@@ -33,17 +40,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const group = svg.append("g");
 
-    draw(); // initial render
+    draw(root); // start with top-level Orders
 
-    function draw(activeNode) {
+    function draw(node) {
       group.selectAll("*").remove();
 
-      const topLevelNodes = root.children;
+      // Create layout for the current node (root or a child)
+      const hierarchyData = d3.hierarchy(node.data || node)
+        .sum(d => d.size || 0)
+        .sort((a, b) => b.value - a.value);
 
-      const nodes = group.selectAll("g.order")
-        .data(topLevelNodes)
+      d3.treemap()
+        .size([width, height])
+        .paddingInner(2)(hierarchyData);
+
+      const topLevel = hierarchyData.children;
+
+      const nodes = group.selectAll("g")
+        .data(topLevel)
         .join("g")
-        .attr("class", "order")
         .attr("transform", d => `translate(${d.x0},${d.y0})`)
         .style("cursor", d => d.children ? "pointer" : "default")
         .on("click", (event, d) => {
@@ -54,42 +69,43 @@ document.addEventListener("DOMContentLoaded", function () {
       nodes.append("rect")
         .attr("width", d => d.x1 - d.x0)
         .attr("height", d => d.y1 - d.y0)
-        .attr("fill", d =>
-          activeNode ? (d === activeNode ? color(d.data.name) : "#ddd") : color(d.data.name)
-        )
+        .attr("fill", d => {
+          if (node.data && node.data.name !== "All Orders") {
+            return "#ddd"; // ghosted siblings
+          }
+          return color(d.data.name);
+        })
         .attr("stroke", "#fff");
 
       nodes.append("text")
         .attr("x", 4)
         .attr("y", 18)
         .text(d => d.data.name)
-        .attr("fill", d =>
-          activeNode ? (d === activeNode ? "white" : "#666") : "white"
-        )
+        .attr("fill", d => {
+          if (node.data && node.data.name !== "All Orders") {
+            return "#666";
+          }
+          return "white";
+        })
         .style("pointer-events", "none");
 
-      // If an Order is active, draw its Industries INSIDE it
-      if (activeNode && activeNode.children) {
-        const industries = activeNode.children;
+      // If clicked node is not root, show its children
+      if (node.children) {
+        const innerGroup = group.append("g");
 
-        const industryGroup = nodes.filter(d => d === activeNode)
-          .append("g")
-          .attr("class", "industries");
-
-        industryGroup.selectAll("g.industry")
-          .data(industries)
+        innerGroup.selectAll("g")
+          .data(node.children)
           .join("g")
-          .attr("class", "industry")
-          .attr("transform", d => `translate(${d.x0 - activeNode.x0},${d.y0 - activeNode.y0})`)
+          .attr("transform", d => `translate(${d.x0},${d.y0})`)
           .on("click", (event, d) => {
-            if (d.children) draw(d);  // optional: drill to Tasks
+            if (d.children) draw(d);
             event.stopPropagation();
           })
           .call(g => {
             g.append("rect")
               .attr("width", d => d.x1 - d.x0)
               .attr("height", d => d.y1 - d.y0)
-              .attr("fill", d => color(activeNode.data.name))
+              .attr("fill", d => color(node.data.name))
               .attr("stroke", "#fff");
 
             g.append("text")
@@ -101,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
               .style("pointer-events", "none");
           });
 
-        svg.on("click", () => draw()); // zoom out on background click
+        svg.on("click", () => draw(root));
       }
     }
   }).catch(err => {
@@ -109,3 +125,4 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 </script>
+
