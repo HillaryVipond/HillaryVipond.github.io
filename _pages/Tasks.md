@@ -31,9 +31,9 @@ document.addEventListener("DOMContentLoaded", function () {
       .size([width, height])
       .paddingInner(2)(root);
 
-    let group = svg.append("g");
+    const group = svg.append("g");
 
-    draw(null); // start with no node selected
+    draw(null); // draw initially with no node selected
 
     function draw(activeNode = null) {
       group.selectAll("*").remove();
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .style("cursor", d => d.children ? "pointer" : "default")
         .on("click", (event, d) => {
           event.stopPropagation();
-          draw(d); // re-render with selected node as active
+          draw(d);
         });
 
       nodes.append("rect")
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
           .join("g")
           .attr("transform", d => `translate(${d.x0},${d.y0})`)
           .on("click", (event, d) => {
-            if (d.children) draw(d); // if you want to go deeper
+            if (d.children) draw(d); // drill deeper if needed
             event.stopPropagation();
           })
           .call(g => {
@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
               .style("pointer-events", "none");
           });
 
-        svg.on("click", () => draw(null)); // reset when clicking background
+        svg.on("click", () => draw(null));
       }
     }
   }).catch(err => {
@@ -99,12 +99,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 </script>
-
-
-
-
-
-
 
 
 
