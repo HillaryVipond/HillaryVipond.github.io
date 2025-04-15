@@ -33,16 +33,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const group = svg.append("g");
 
-    draw(); // initial render with all Orders
+    draw(); // initial render
 
     function draw(activeNode) {
       group.selectAll("*").remove();
 
       const topLevelNodes = root.children;
 
-      const nodes = group.selectAll("g")
+      const nodes = group.selectAll("g.order")
         .data(topLevelNodes)
         .join("g")
+        .attr("class", "order")
         .attr("transform", d => `translate(${d.x0},${d.y0})`)
         .style("cursor", d => d.children ? "pointer" : "default")
         .on("click", (event, d) => {
@@ -67,16 +68,21 @@ document.addEventListener("DOMContentLoaded", function () {
         )
         .style("pointer-events", "none");
 
+      // If an Order is active, draw its Industries INSIDE it
       if (activeNode && activeNode.children) {
-        const innerGroup = group.append("g")
-          .attr("clip-path", `inset(${activeNode.y0}px ${width - activeNode.x1}px ${height - activeNode.y1}px ${activeNode.x0}px)`);
+        const industries = activeNode.children;
 
-        innerGroup.selectAll("g")
-          .data(activeNode.children)
+        const industryGroup = nodes.filter(d => d === activeNode)
+          .append("g")
+          .attr("class", "industries");
+
+        industryGroup.selectAll("g.industry")
+          .data(industries)
           .join("g")
-          .attr("transform", d => `translate(${d.x0},${d.y0})`)
+          .attr("class", "industry")
+          .attr("transform", d => `translate(${d.x0 - activeNode.x0},${d.y0 - activeNode.y0})`)
           .on("click", (event, d) => {
-            if (d.children) draw(d); // Optional: drill into Tasks
+            if (d.children) draw(d);  // optional: drill to Tasks
             event.stopPropagation();
           })
           .call(g => {
@@ -95,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
               .style("pointer-events", "none");
           });
 
-        svg.on("click", () => draw());
+        svg.on("click", () => draw()); // zoom out on background click
       }
     }
   }).catch(err => {
@@ -103,5 +109,3 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 </script>
-
-
