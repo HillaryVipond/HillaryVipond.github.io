@@ -5,14 +5,6 @@ permalink: /tasks/
 nav_exclude: false
 ---
 
-
----
-layout: single
-title: "Tasks"
-permalink: /tasks/
-nav_exclude: false
----
-
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <h2>Interactive Treemap: Context-Preserving Drill-In</h2>
