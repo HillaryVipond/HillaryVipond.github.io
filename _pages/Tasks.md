@@ -5,7 +5,7 @@ permalink: /tasks/
 nav_exclude: false
 ---
 
-<script src="https://d3js.org/d3.v7.min.js"></script>
+ <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <h2>Interactive Treemap: Orders → Industries → Tasks</h2>
 <div id="treemap"></div>
@@ -33,25 +33,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const group = svg.append("g");
 
-    draw(fullRoot); // show all Orders initially
+    draw(fullRoot);
 
-    function draw(node) {
+    function draw(activeNode) {
       group.selectAll("*").remove();
 
-      // Set up new layout for this node's children
-      const hierarchyData = d3.hierarchy(node.data || node)
-        .sum(d => d.size || 0)
-        .sort((a, b) => b.value - a.value);
+      const level = activeNode.depth;
+      const parent = activeNode.parent;
+      const siblings = parent ? parent.children : fullRoot.children;
 
-      d3.treemap()
-        .size([width, height])
-        .paddingInner(2)(hierarchyData);
-
-      const children = hierarchyData.children || [];
-
-      // Render all children of this node
-      const nodes = group.selectAll("g")
-        .data(children)
+      // draw current siblings at this level
+      const boxes = group.selectAll("g")
+        .data(siblings)
         .join("g")
         .attr("transform", d => `translate(${d.x0},${d.y0})`)
         .style("cursor", d => d.children ? "pointer" : "default")
@@ -60,30 +53,59 @@ document.addEventListener("DOMContentLoaded", function () {
           draw(d);
         });
 
-      nodes.append("rect")
+      boxes.append("rect")
         .attr("width", d => d.x1 - d.x0)
         .attr("height", d => d.y1 - d.y0)
         .attr("fill", d => {
-          const top = d.ancestors().slice(-2)[0]; // the Order
-          return color(top?.data.name || d.data.name);
+          if (d === activeNode) {
+            const top = d.ancestors().slice(-2)[0]?.data.name || d.data.name;
+            return color(top);
+          }
+          return level === 1 ? "#ddd" : "#aaa";  // ghosted Orders or ghosted Industries
         })
         .attr("stroke", "#fff");
 
-      nodes.append("text")
+      boxes.append("text")
         .attr("x", 4)
         .attr("y", 18)
         .text(d => d.data.name)
-        .attr("fill", "white")
-        .style("font-size", "12px")
+        .attr("fill", d => d === activeNode ? "white" : "#444")
         .style("pointer-events", "none");
 
-      // Click background to go up
-      svg.on("click", () => {
-        if (node.parent) draw(node.parent);
-      });
+      // Draw children of the active node inside it
+      if (activeNode.children) {
+        const inner = group.append("g");
+
+        inner.selectAll("g")
+          .data(activeNode.children)
+          .join("g")
+          .attr("transform", d => `translate(${d.x0},${d.y0})`)
+          .on("click", (event, d) => {
+            if (d.children) draw(d);
+            event.stopPropagation();
+          })
+          .call(g => {
+            g.append("rect")
+              .attr("width", d => d.x1 - d.x0)
+              .attr("height", d => d.y1 - d.y0)
+              .attr("fill", () => color(activeNode.data.name))
+              .attr("stroke", "#fff");
+
+            g.append("text")
+              .attr("x", 4)
+              .attr("y", 18)
+              .text(d => d.data.name)
+              .attr("fill", "white")
+              .style("font-size", "12px")
+              .style("pointer-events", "none");
+          });
+
+        svg.on("click", () => {
+          if (activeNode.parent) draw(activeNode.parent);
+        });
+      }
     }
   }).catch(err => {
     console.error("Error loading JSON:", err);
   });
-});
 </script>
