@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .style("font-family", "sans-serif")
     .style("font-size", "14px");
 
-  d3.json("/assets/data/tasks.json").then(data => {
+  d3.json("/assets/data/Tasks.json").then(data => {
     const root = d3.hierarchy(data)
       .sum(d => d.size || 0)
       .sort((a, b) => b.value - a.value);
