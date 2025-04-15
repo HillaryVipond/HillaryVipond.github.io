@@ -19,8 +19,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   d3.json("/assets/data/tasks.json").then(data => {
     const root = d3.hierarchy(data)
-      .sum(d => d.size || 0)
-      .sort((a, b) => b.value - a.value);
+      .eachAfter(d => {
+        d.value = d.children ? d.children.reduce((acc, c) => acc + (c.value || 0), 0) : d.size || 0;
+      });
 
     const treemapLayout = d3.treemap()
       .size([width, height])
@@ -28,9 +29,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     treemapLayout(root);
 
-    // Only show the first level of children (Orders)
+    const orders = root.children; // these are your 21 top-level nodes
+
     const nodes = svg.selectAll("g")
-      .data(root.children)  // ✅ This is the change
+      .data(orders)
       .enter().append("g")
       .attr("transform", d => `translate(${d.x0},${d.y0})`);
 
@@ -40,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("fill", d => color(d.data.name));
 
     nodes.append("title")
-      .text(d => `${d.data.name}\nSize: ${d.value}`);
+      .text(d => `${d.data.name}\nTotal size: ${d.value}`);
 
     nodes.append("text")
       .attr("x", 4)
@@ -53,4 +55,3 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 </script>
-
