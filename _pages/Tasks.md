@@ -14,7 +14,6 @@ nav_exclude: false
 document.addEventListener("DOMContentLoaded", function () {
   const width = 960;
   const height = 600;
-
   const color = d3.scaleOrdinal(d3.schemeCategory10);
 
   const svg = d3.select("#treemap")
@@ -34,60 +33,53 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let group = svg.append("g");
 
-    draw(root);
+    draw(null); // start with no node selected
 
-    function draw(currentNode) {
-      group.selectAll("*").remove(); // clear
+    function draw(activeNode = null) {
+      group.selectAll("*").remove();
 
-      const isRoot = !currentNode.parent;
+      const topLevelNodes = root.children;
 
       const nodes = group.selectAll("g")
-        .data(currentNode.children)
+        .data(topLevelNodes)
         .join("g")
         .attr("transform", d => `translate(${d.x0},${d.y0})`)
         .style("cursor", d => d.children ? "pointer" : "default")
         .on("click", (event, d) => {
-          if (d.children) draw(d);
           event.stopPropagation();
+          draw(d); // re-render with selected node as active
         });
 
       nodes.append("rect")
         .attr("width", d => d.x1 - d.x0)
         .attr("height", d => d.y1 - d.y0)
-        .attr("fill", d => {
-          if (!isRoot) return "#ddd"; // grey background for siblings
-          return color(d.data.name);
-        })
-        .attr("stroke", "#fff")
-        .attr("stroke-width", 1);
+        .attr("fill", d => d === activeNode ? color(d.data.name) : "#ddd")
+        .attr("stroke", "#fff");
 
       nodes.append("text")
         .attr("x", 4)
         .attr("y", 18)
         .text(d => d.data.name)
-        .attr("fill", d => isRoot ? "white" : "#666")
+        .attr("fill", d => d === activeNode ? "white" : "#666")
         .style("pointer-events", "none");
 
-      if (!isRoot) {
-        // draw child nodes within the selected box
-        const childNodes = currentNode.children;
-
+      if (activeNode) {
         const innerGroup = group.append("g")
-          .attr("clip-path", `inset(${currentNode.y0}px ${width - currentNode.x1}px ${height - currentNode.y1}px ${currentNode.x0}px)`);
+          .attr("clip-path", `inset(${activeNode.y0}px ${width - activeNode.x1}px ${height - activeNode.y1}px ${activeNode.x0}px)`);
 
         innerGroup.selectAll("g")
-          .data(childNodes)
+          .data(activeNode.children)
           .join("g")
           .attr("transform", d => `translate(${d.x0},${d.y0})`)
           .on("click", (event, d) => {
-            if (d.children) draw(d);
+            if (d.children) draw(d); // if you want to go deeper
             event.stopPropagation();
           })
           .call(g => {
             g.append("rect")
               .attr("width", d => d.x1 - d.x0)
               .attr("height", d => d.y1 - d.y0)
-              .attr("fill", d => color(d.parent.data.name))
+              .attr("fill", d => color(activeNode.data.name))
               .attr("stroke", "#fff");
 
             g.append("text")
@@ -98,17 +90,15 @@ document.addEventListener("DOMContentLoaded", function () {
               .style("font-size", "12px")
               .style("pointer-events", "none");
           });
+
+        svg.on("click", () => draw(null)); // reset when clicking background
       }
-
-      // Click anywhere else to zoom out
-      svg.on("click", () => {
-        if (currentNode.parent) draw(currentNode.parent);
-      });
     }
+  }).catch(err => {
+    console.error("Error loading JSON:", err);
   });
+});
 </script>
-
-
 
 
 
