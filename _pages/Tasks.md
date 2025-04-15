@@ -5,7 +5,7 @@ permalink: /tasks/
 nav_exclude: false
 ---
 
- <script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
 
 <h2>Interactive Treemap: Orders → Industries → Tasks</h2>
 <div id="treemap"></div>
