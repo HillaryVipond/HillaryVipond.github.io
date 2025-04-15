@@ -5,13 +5,7 @@ permalink: /tasks/
 nav_exclude: false
 ---
 
-<script src="https://d3js.org/d3.v7.min.js"></script>
-
-<h2>Interactive Treemap of Orders, Industries, and Tasks</h2>
-<div id="treemap"></div>
-
 <script>
-// Wait for the page to fully load before running the script
 document.addEventListener("DOMContentLoaded", function () {
   const width = 960;
   const height = 600;
@@ -24,35 +18,39 @@ document.addEventListener("DOMContentLoaded", function () {
   const color = d3.scaleOrdinal(d3.schemeCategory10);
 
   d3.json("/assets/data/tasks.json").then(data => {
-    const root = d3.hierarchy(data).sum(d => d.size || 0);
+    const root = d3.hierarchy(data)
+      .sum(d => d.size || 0)
+      .sort((a, b) => b.value - a.value);
 
     const treemapLayout = d3.treemap()
       .size([width, height])
-      .paddingInner(1);
+      .paddingInner(2);
 
     treemapLayout(root);
 
+    // Only show the first level of children (Orders)
     const nodes = svg.selectAll("g")
-      .data(root.leaves())
+      .data(root.children)  // ✅ This is the change
       .enter().append("g")
       .attr("transform", d => `translate(${d.x0},${d.y0})`);
 
     nodes.append("rect")
       .attr("width", d => d.x1 - d.x0)
       .attr("height", d => d.y1 - d.y0)
-      .attr("fill", d => color(d.parent.data.name));
+      .attr("fill", d => color(d.data.name));
 
     nodes.append("title")
-      .text(d => `${d.ancestors().map(d => d.data.name).reverse().join(" → ")}\nSize: ${d.data.size}`);
+      .text(d => `${d.data.name}\nSize: ${d.value}`);
 
     nodes.append("text")
       .attr("x", 4)
-      .attr("y", 14)
+      .attr("y", 20)
       .text(d => d.data.name)
-      .style("font-size", "10px")
+      .style("font-size", "14px")
       .style("fill", "white");
   }).catch(err => {
     console.error("Error loading JSON:", err);
   });
 });
 </script>
+
