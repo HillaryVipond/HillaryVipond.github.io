@@ -5,9 +5,10 @@ permalink: /tasks/
 nav_exclude: false
 ---
 
+
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
-<h2>Interactive Treemap: Orders → Industries → Tasks</h2>
+<h2>Interactive Treemap: Orders → Industries → Tasks (with Ghosting)</h2>
 <div id="treemap"></div>
 
 <script>
@@ -61,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const top = d.ancestors().slice(-2)[0]?.data.name || d.data.name;
             return color(top);
           }
-          return level === 1 ? "#ddd" : "#aaa";  // ghosted Orders or ghosted Industries
+          return level === 1 ? "#ddd" : "#aaa";
         })
         .attr("stroke", "#fff");
 
@@ -72,7 +73,6 @@ document.addEventListener("DOMContentLoaded", function () {
         .attr("fill", d => d === activeNode ? "white" : "#444")
         .style("pointer-events", "none");
 
-      // Draw children of the active node inside it
       if (activeNode.children) {
         const inner = group.append("g");
 
@@ -108,6 +108,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }).catch(err => {
     console.error("Error loading JSON:", err);
   });
+});
 </script>
-
 
