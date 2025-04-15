@@ -5,6 +5,14 @@ permalink: /tasks/
 nav_exclude: false
 ---
 
+
+---
+layout: single
+title: "Tasks"
+permalink: /tasks/
+nav_exclude: false
+---
+
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <h2>Interactive Treemap: Context-Preserving Drill-In</h2>
@@ -33,9 +41,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const group = svg.append("g");
 
-    draw(null); // draw initially with no node selected
+    draw(); // initial render with all Orders
 
-    function draw(activeNode = null) {
+    function draw(activeNode) {
       group.selectAll("*").remove();
 
       const topLevelNodes = root.children;
@@ -53,17 +61,21 @@ document.addEventListener("DOMContentLoaded", function () {
       nodes.append("rect")
         .attr("width", d => d.x1 - d.x0)
         .attr("height", d => d.y1 - d.y0)
-        .attr("fill", d => d === activeNode ? color(d.data.name) : "#ddd")
+        .attr("fill", d =>
+          activeNode ? (d === activeNode ? color(d.data.name) : "#ddd") : color(d.data.name)
+        )
         .attr("stroke", "#fff");
 
       nodes.append("text")
         .attr("x", 4)
         .attr("y", 18)
         .text(d => d.data.name)
-        .attr("fill", d => d === activeNode ? "white" : "#666")
+        .attr("fill", d =>
+          activeNode ? (d === activeNode ? "white" : "#666") : "white"
+        )
         .style("pointer-events", "none");
 
-      if (activeNode) {
+      if (activeNode && activeNode.children) {
         const innerGroup = group.append("g")
           .attr("clip-path", `inset(${activeNode.y0}px ${width - activeNode.x1}px ${height - activeNode.y1}px ${activeNode.x0}px)`);
 
@@ -72,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
           .join("g")
           .attr("transform", d => `translate(${d.x0},${d.y0})`)
           .on("click", (event, d) => {
-            if (d.children) draw(d); // drill deeper if needed
+            if (d.children) draw(d); // Optional: drill into Tasks
             event.stopPropagation();
           })
           .call(g => {
@@ -91,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
               .style("pointer-events", "none");
           });
 
-        svg.on("click", () => draw(null));
+        svg.on("click", () => draw());
       }
     }
   }).catch(err => {
