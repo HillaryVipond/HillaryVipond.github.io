@@ -7,7 +7,7 @@ nav_exclude: false
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
-<h2>Interactive Treemap: Orders Only (Top Level)</h2>
+<h2>Basic Block Display: 21 Orders</h2>
 <div id="treemap"></div>
 
 <script>
@@ -23,40 +23,32 @@ document.addEventListener("DOMContentLoaded", function () {
   const color = d3.scaleOrdinal(d3.schemeCategory10);
 
   d3.json("/assets/data/tasks.json").then(data => {
-    const root = d3.hierarchy(data)
-      .sum(d => d.children ? 0 : d.size || 0)  // only sum at leaves
-      .sort((a, b) => b.value - a.value);
+    const orders = data.children;  // <-- 21 Orders
 
-    const treemapLayout = d3.treemap()
-      .size([width, height])
-      .paddingInner(2);
+    const boxWidth = width / 7;
+    const boxHeight = height / 3;
 
-    treemapLayout(root);
-
-    const orders = root.children;  // These are your 21 top-level nodes
-
-    const node = svg.selectAll("g")
+    const nodes = svg.selectAll("g")
       .data(orders)
-      .enter().append("g")
-      .attr("transform", d => `translate(${d.x0},${d.y0})`);
+      .enter()
+      .append("g")
+      .attr("transform", (d, i) => {
+        const col = i % 7;
+        const row = Math.floor(i / 7);
+        return `translate(${col * boxWidth}, ${row * boxHeight})`;
+      });
 
-    node.append("rect")
-      .attr("id", d => d.data.name.replace(/\s+/g, "-"))
-      .attr("width", d => d.x1 - d.x0)
-      .attr("height", d => d.y1 - d.y0)
-      .attr("fill", d => color(d.data.name));
+    nodes.append("rect")
+      .attr("width", boxWidth - 10)
+      .attr("height", boxHeight - 10)
+      .attr("fill", d => color(d.name));
 
-    node.append("text")
-      .attr("x", 4)
-      .attr("y", 18)
-      .text(d => d.data.name)
-      .attr("fill", "white")
-      .style("font-size", "14px");
-
-    node.append("title")
-      .text(d => `${d.data.name}\nTotal size: ${d.value}`);
-  }).catch(err => {
-    console.error("Error loading JSON:", err);
+    nodes.append("text")
+      .attr("x", 10)
+      .attr("y", 20)
+      .text(d => d.name)
+      .style("font-size", "12px")
+      .attr("fill", "white");
   });
 });
 </script>
