@@ -169,8 +169,8 @@ That's why it's in its own folder, served raw as-is.
   <div class="slide-counter" id="slide-count">Slide 1 of 5</div>
   <div class="slide-footer">University of Southern Denmark, April 29th, 2025</div>
   <div class="nav-buttons">
-    <button onclick="Reveal.prev()">Back</button>
-    <button onclick="Reveal.next()">Next</button>
+    <button id="prevBtn">Back</button>
+    <button id="nextBtn">Next</button>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.2/dist/reveal.js"></script>
@@ -194,6 +194,20 @@ That's why it's in its own folder, served raw as-is.
       const total = Reveal.getTotalSlides();
       const current = Reveal.getSlidePastCount(event.currentSlide) + 1;
       document.getElementById('slide-count').textContent = `Slide ${current} of ${total}`;
+    });
+
+    // Prevent scroll from wheel or touchpad
+    window.addEventListener('wheel', e => e.preventDefault(), { passive: false });
+    window.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+
+    // Hook up navigation buttons after everything loads
+    window.addEventListener('load', function () {
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      if (prevBtn && nextBtn) {
+        prevBtn.addEventListener('click', () => Reveal.prev());
+        nextBtn.addEventListener('click', () => Reveal.next());
+      }
     });
 
     // D3 Demo (simple bar chart)
