@@ -121,7 +121,7 @@ That's why it's in its own folder, served raw as-is.
     <div class="slides">
       <!-- START SLIDE: Cover -->
       <section class="cover">
-        <h1>Draft 8</h1>
+        <h1>Draft 9</h1>
         <img src="https://csh.ac.at/wp-content/uploads/2021/05/csh_logo_color.svg" alt="CSH Logo">
         <h3>Your Name</h3>
         <p>Complexity Science Hub Vienna</p>
@@ -184,7 +184,9 @@ That's why it's in its own folder, served raw as-is.
       disableLayout: false,
       touch: false,
       keyboard: false
-    }).then(() => {
+    });
+
+    Reveal.on('ready', () => {
       const prevBtn = document.getElementById('prevBtn');
       const nextBtn = document.getElementById('nextBtn');
       if (prevBtn && nextBtn) {
