@@ -4,13 +4,6 @@ It uses Reveal.js and D3, and needs full control over layout and scripts.
 Putting it in _pages would trigger Jekyll processing and possibly break it.
 That's why it's in its own folder, served raw as-is.
 -->
-
-<!--
-This file is outside _pages because it is a standalone HTML presentation.
-It uses Reveal.js and D3, and needs full control over layout and scripts.
-Putting it in _pages would trigger Jekyll processing and possibly break it.
-That's why it's in its own folder, served raw as-is.
--->
 <!doctype html>
 <html lang="en">
 <head>
@@ -128,7 +121,7 @@ That's why it's in its own folder, served raw as-is.
     <div class="slides">
       <!-- START SLIDE: Cover -->
       <section class="cover">
-        <h1>My Talk Title 3</h1>
+        <h1>Draft 4</h1>
         <img src="https://csh.ac.at/wp-content/uploads/2021/05/csh_logo_color.svg" alt="CSH Logo">
         <h3>Your Name</h3>
         <p>Complexity Science Hub Vienna</p>
@@ -201,7 +194,7 @@ That's why it's in its own folder, served raw as-is.
     window.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
 
     // Hook up navigation buttons after everything loads
-    window.addEventListener('load', function () {
+    Reveal.on('ready', function () {
       const prevBtn = document.getElementById('prevBtn');
       const nextBtn = document.getElementById('nextBtn');
       if (prevBtn && nextBtn) {
@@ -229,3 +222,4 @@ That's why it's in its own folder, served raw as-is.
   </script>
 </body>
 </html>
+
