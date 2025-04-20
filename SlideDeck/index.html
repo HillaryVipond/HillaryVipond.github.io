@@ -1,0 +1,174 @@
+<!--
+This file is outside _pages because it is a standalone HTML presentation.
+It uses Reveal.js and D3, and needs full control over layout and scripts.
+Putting it in _pages would trigger Jekyll processing and possibly break it.
+That's why it's in its own folder, served raw as-is.
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>D3 Beamer-style Slides</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.2/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.2/dist/theme/white.css" id="theme">
+  <style>
+    body {
+      font-family: 'Crimson Pro', serif;
+      background: white;
+      color: #222;
+    }
+    section {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding: 2em 2.5em;
+      max-width: 960px;
+      min-height: 90vh;
+      margin: auto;
+      box-sizing: border-box;
+      text-align: left;
+    }
+    section h2 {
+      margin-top: 0;
+      margin-bottom: 1em;
+      font-size: 1.8em;
+      font-weight: bold;
+      border-bottom: 1px solid #ccc;
+    }
+    section p, section ul, section .block {
+      margin-bottom: 1em;
+    }
+    section ul, section ol {
+      padding-left: 1.2em;
+      margin-top: 0.5em;
+      margin-bottom: 0.5em;
+    }
+    section ul li,
+    section ol li {
+      margin-bottom: 0.4em;
+      line-height: 1.4em;
+      text-align: left;
+    }
+    section ul li::marker,
+    section ol li::marker {
+      color: #333;
+      font-size: 1em;
+    }
+    .d3-vis {
+      width: 100%;
+      height: 300px;
+    }
+    .slide-counter {
+      position: absolute;
+      bottom: 1em;
+      right: 2em;
+      font-size: 0.9em;
+      color: #666;
+    }
+    .slide-footer {
+      position: absolute;
+      bottom: 1em;
+      left: 2em;
+      font-size: 0.9em;
+      color: #666;
+    }
+    .block {
+      border: 1px solid #aaa;
+      padding: 1em;
+      background: #f9f9f9;
+      border-left: 5px solid #444;
+    }
+    .cover {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    .cover img {
+      max-height: 100px;
+      margin: 1em 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <!-- START SLIDE: Cover -->
+      <section class="cover">
+        <h1>My Talk Title</h1>
+        <img src="https://csh.ac.at/wp-content/uploads/2021/05/csh_logo_color.svg" alt="CSH Logo">
+        <h3>Your Name</h3>
+        <p>Complexity Science Hub Vienna</p>
+      </section>
+
+      <!-- START SLIDE: Welcome -->
+      <section>
+        <h2>Welcome to the Talk</h2>
+        <p>This is a Reveal.js presentation styled like Beamer.</p>
+      </section>
+
+      <!-- START SLIDE: D3 Visual -->
+      <section>
+        <h2>D3 Visual Goes Here</h2>
+        <div id="vis1" class="d3-vis"></div>
+      </section>
+
+      <!-- START SLIDE: Key Points (stepwise reveal) -->
+      <section>
+        <h2>Key Point</h2>
+        <div class="block">
+          <ul>
+            <li class="fragment">Labor reallocation is slow</li>
+            <li class="fragment">Mechanization isn't just about tools</li>
+            <li class="fragment">Culture shapes economic paths</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- START SLIDE: Thank You -->
+      <section>
+        <h2>Thank You</h2>
+        <p>Talk delivered through a website. No PDFs needed.</p>
+      </section>
+    </div>
+  </div>
+
+  <div class="slide-counter" id="slide-count">Slide 1 of 5</div>
+  <div class="slide-footer">University of Southern Denmark, April 29th, 2025</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.2/dist/reveal.js"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    Reveal.initialize({
+      transition: 'none'
+    });
+
+    Reveal.on('slidechanged', event => {
+      const total = Reveal.getTotalSlides();
+      const current = Reveal.getSlidePastCount(event.currentSlide) + 1;
+      document.getElementById('slide-count').textContent = `Slide ${current} of ${total}`;
+    });
+
+    // D3 Demo (simple bar chart)
+    const svg = d3.select("#vis1")
+      .append("svg")
+      .attr("viewBox", "0 0 500 300")
+      .attr("preserveAspectRatio", "xMidYMid meet")
+      .style("width", "100%")
+      .style("height", "auto");
+
+    svg.selectAll("rect")
+      .data([4, 8, 15, 16, 23, 42])
+      .enter().append("rect")
+      .attr("x", (d, i) => i * 70)
+      .attr("y", d => 300 - d * 5)
+      .attr("width", 60)
+      .attr("height", d => d * 5)
+      .attr("fill", "#444");
+  </script>
+</body>
+</html>
