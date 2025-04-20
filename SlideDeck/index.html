@@ -121,7 +121,7 @@ That's why it's in its own folder, served raw as-is.
     <div class="slides">
       <!-- START SLIDE: Cover -->
       <section class="cover">
-        <h1>Draft 6</h1>
+        <h1>Draft 7</h1>
         <img src="https://csh.ac.at/wp-content/uploads/2021/05/csh_logo_color.svg" alt="CSH Logo">
         <h3>Your Name</h3>
         <p>Complexity Science Hub Vienna</p>
@@ -173,7 +173,7 @@ That's why it's in its own folder, served raw as-is.
     window.addEventListener('wheel', e => e.preventDefault(), { passive: false });
     window.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
 
-    const deck = new Reveal({
+    Reveal.initialize({
       transition: 'none',
       controls: false,
       progress: true,
@@ -187,18 +187,18 @@ That's why it's in its own folder, served raw as-is.
       keyboard: false
     });
 
-    deck.initialize().then(() => {
-      deck.on('slidechanged', event => {
-        const total = deck.getTotalSlides();
-        const current = deck.getSlidePastCount(event.currentSlide) + 1;
-        document.getElementById('slide-count').textContent = `Slide ${current} of ${total}`;
-      });
+    Reveal.on('slidechanged', event => {
+      const total = Reveal.getTotalSlides();
+      const current = Reveal.getSlidePastCount(event.currentSlide) + 1;
+      document.getElementById('slide-count').textContent = `Slide ${current} of ${total}`;
+    });
 
+    window.addEventListener('load', () => {
       const prevBtn = document.getElementById('prevBtn');
       const nextBtn = document.getElementById('nextBtn');
       if (prevBtn && nextBtn) {
-        prevBtn.addEventListener('click', () => deck.prev());
-        nextBtn.addEventListener('click', () => deck.next());
+        prevBtn.addEventListener('click', () => Reveal.prev());
+        nextBtn.addEventListener('click', () => Reveal.next());
       }
     });
 
