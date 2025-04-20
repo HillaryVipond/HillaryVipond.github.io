@@ -5,7 +5,6 @@ Putting it in _pages would trigger Jekyll processing and possibly break it.
 That's why it's in its own folder, served raw as-is.
 -->
 
-
 <!--
 This file is outside _pages because it is a standalone HTML presentation.
 It uses Reveal.js and D3, and needs full control over layout and scripts.
@@ -25,11 +24,12 @@ That's why it's in its own folder, served raw as-is.
       margin: 0;
       padding: 0;
       height: 100%;
-      overflow: hidden;
     }
     .reveal {
-      height: 100%;
-      overflow: hidden !important;
+      height: 100vh;
+    }
+    .reveal .slides {
+      height: 100vh;
     }
     body {
       font-family: 'Crimson Pro', serif;
@@ -42,11 +42,9 @@ That's why it's in its own folder, served raw as-is.
       justify-content: flex-start;
       padding: 2em 2.5em;
       max-width: 960px;
-      min-height: 90vh;
       margin: auto;
       box-sizing: border-box;
       text-align: left;
-      overflow: hidden;
     }
     section h2 {
       margin-top: 0;
@@ -166,7 +164,11 @@ That's why it's in its own folder, served raw as-is.
       controls: true,
       progress: true,
       history: false,
-      center: false
+      center: false,
+      width: "100%",
+      height: "100%",
+      margin: 0,
+      disableLayout: false
     });
 
     Reveal.on('slidechanged', event => {
@@ -194,4 +196,3 @@ That's why it's in its own folder, served raw as-is.
   </script>
 </body>
 </html>
-
