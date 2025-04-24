@@ -110,8 +110,4 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 </script>
-    console.error("Error loading JSON:", err);
-  });
-});
-</script>
 
