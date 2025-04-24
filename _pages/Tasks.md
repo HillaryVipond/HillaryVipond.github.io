@@ -5,13 +5,6 @@ permalink: /tasks/
 nav_exclude: false
 ---
 
----
-layout: single
-title: "Tasks"
-permalink: /tasks/
-nav_exclude: false
----
-
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <h2>Interactive Treemap: Orders Over Time</h2>
@@ -30,50 +23,61 @@ nav_exclude: false
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  const width = 960;
-  const height = 600;
-  const color = d3.scaleOrdinal(d3.schemeCategory10);
-  const svg = d3.select("#treemap-time")
-    .append("svg")
-    .attr("viewBox", [0, 0, width, height])
-    .style("font-family", "sans-serif")
-    .style("font-size", "14px");
-
-  let group = svg.append("g");
-
-  function loadYear(year) {
-    d3.json(`/assets/data/orders_${year}.json`).then(data => {
-      const root = d3.hierarchy(data)
-        .sum(d => d.size)
-        .sort((a, b) => b.value - a.value);
-
-      d3.treemap()
-        .size([width, height])
-        .paddingInner(2)(root);
-
-      group.selectAll("*").remove();
-
-      const nodes = group.selectAll("g")
-        .data(root.children)
-        .join("g")
-        .attr("transform", d => `translate(${d.x0},${d.y0})`);
-
-      nodes.append("rect")
-        .attr("width", d => d.x1 - d.x0)
-        .attr("height", d => d.y1 - d.y0)
-        .attr("fill", d => color(d.data.name));
-
-      nodes.append("text")
-        .attr("x", 4)
-        .attr("y", 18)
-        .text(d => d.data.name)
-        .attr("fill", "white");
-    });
-  }
-
-  // Default load: 1881
-  loadYear(1881);
+  // Attach event listeners to buttons
+  document.getElementById('button-1851').addEventListener('click', function() {
+    loadYear(1851);
+  });
+  document.getElementById('button-1861').addEventListener('click', function() {
+    loadYear(1861);
+  });
+  document.getElementById('button-1881').addEventListener('click', function() {
+    loadYear(1881);
+  });
+  document.getElementById('button-1891').addEventListener('click', function() {
+    loadYear(1891);
+  });
+  document.getElementById('button-1901').addEventListener('click', function() {
+    loadYear(1901);
+  });
+  document.getElementById('button-1911').addEventListener('click', function() {
+    loadYear(1911);
+  });
 });
+
+function loadYear(year) {
+  console.log(`Loading year: ${year}`);  // Debugging
+
+  d3.json(`/assets/data/orders_${year}.json`).then(data => {
+    const root = d3.hierarchy(data)
+      .sum(d => d.size)
+      .sort((a, b) => b.value - a.value);
+
+    d3.treemap()
+      .size([960, 600])
+      .paddingInner(2)(root);
+
+    const svg = d3.select("#treemap-time");
+    svg.selectAll("*").remove(); // Clear existing content
+
+    const nodes = svg.selectAll("g")
+      .data(root.children)
+      .join("g")
+      .attr("transform", d => `translate(${d.x0},${d.y0})`);
+
+    nodes.append("rect")
+      .attr("width", d => d.x1 - d.x0)
+      .attr("height", d => d.y1 - d.y0)
+      .attr("fill", d => d3.scaleOrdinal(d3.schemeCategory10)(d.data.name));
+
+    nodes.append("text")
+      .attr("x", 4)
+      .attr("y", 18)
+      .text(d => d.data.name)
+      .attr("fill", "white");
+  }).catch(err => {
+    console.error("Error loading JSON:", err);
+  });
+}
 </script>
 
 <h2>Interactive Treemap: Click to Drill into Orders → Industries → Tasks</h2>
@@ -170,7 +174,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 </script>
-
 
 
 
