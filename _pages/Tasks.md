@@ -7,7 +7,7 @@ nav_exclude: false
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <!-- 1. This section creates the heading and buttons for selecting the year -->
-<h2>Interactive Treemap: Orders Over Time</h2>
+<h2>Interactive Treemap V2: Orders Over Time</h2>
 <p>Click a year to view the treemap of Orders for that census year.</p>
 
 
@@ -27,59 +27,66 @@ nav_exclude: false
 
 <!-- 4. This is the JavaScript code that creates and inserts the SVG treemap -->
 <script>
+  // 4a. Basic settings and setup
+  const width = 960;
+  const height = 600;
+  const color = d3.scaleOrdinal(d3.schemeCategory10);
+  // Create and append the SVG canvas to the container div
+  const svg = d3.select("#treemap-time")
+    .append("svg")
+    .attr("viewBox", [0, 0, width, height])
+    .style("font-family", "sans-serif")
+    .style("font-size", "14px");
+
+  // 4b. Function to load a given year's data and render the treemap
+  function loadYear(year) {
+    console.log(`Loading year: ${year}`);
+
+    // Load the relevant JSON file
+    d3.json(`/assets/data/orders_${year}.json`).then(data => {
+      // Create a hierarchy from the data
+      const root = d3.hierarchy(data)
+        .sum(d => d.size || 0)
+        .sort((a, b) => b.value - a.value);
+
+      // Compute the treemap layout
+      d3.treemap()
+        .size([width, height])
+        .paddingInner(2)(root);
+
+      // Clear previous nodes
+      svg.selectAll("*").remove();
+
+      // Create groups for each top-level node (Orders)
+      const nodes = svg.selectAll("g")
+        .data(root.children)
+        .join("g")
+        .attr("transform", d => `translate(${d.x0},${d.y0})`);
+
+      // Draw rectangles
+      nodes.append("rect")
+        .attr("width", d => d.x1 - d.x0)
+        .attr("height", d => d.y1 - d.y0)
+        .attr("fill", d => color(d.data.name));
+
+      // Add labels
+      nodes.append("text")
+        .attr("x", 4)
+        .attr("y", 18)
+        .text(d => d.data.name)
+        .attr("fill", "white");
+    }).catch(err => {
+      console.error("Error loading JSON:", err);
+    });
+  }
+
+  // 4c. Initial load when the page first loads
   document.addEventListener("DOMContentLoaded", function () {
-    const width = 960;
-    const height = 600;
-    const color = d3.scaleOrdinal(d3.schemeCategory10);
-
-    // 5. Create the SVG container inside the #treemap-time div
-    const svg = d3.select("#treemap-time")
-      .append("svg")
-      .attr("viewBox", [0, 0, width, height])
-      .style("font-family", "sans-serif")
-      .style("font-size", "14px");
-
-    // 6. Function to load and render a treemap for a given year
-    function loadYear(year) {
-      console.log(`Loading year: ${year}`);  // Debugging
-
-      d3.json(`/assets/data/orders_${year}.json`).then(data => {
-        const root = d3.hierarchy(data)
-          .sum(d => d.size || 0)
-          .sort((a, b) => b.value - a.value);
-
-        d3.treemap()
-          .size([width, height])
-          .paddingInner(2)(root);
-
-        svg.selectAll("*").remove();  // Clear previous treemap
-
-        const nodes = svg.selectAll("g")
-          .data(root.children)
-          .join("g")
-          .attr("transform", d => `translate(${d.x0},${d.y0})`);
-
-        nodes.append("rect")
-          .attr("width", d => d.x1 - d.x0)
-          .attr("height", d => d.y1 - d.y0)
-          .attr("fill", d => color(d.data.name));
-
-        nodes.append("text")
-          .attr("x", 4)
-          .attr("y", 18)
-          .text(d => d.data.name)
-          .attr("fill", "white");
-      }).catch(err => {
-        console.error("Error loading JSON:", err);
-      });
-    }
-
-    // 7. Load a default year (e.g., 1851) when the page first loads
-    loadYear(1851);
+    loadYear(1851); // Show 1851 data by default
   });
 </script>
 
-
+ 
 
 ---
 SECOND BLOCK
