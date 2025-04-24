@@ -1,0 +1,97 @@
+{
+  "name": "All Orders",
+  "children": [
+    {
+      "name": "Metals & Machinery",
+      "size": 132
+    },
+    {
+      "name": "Textiles",
+      "size": 104
+    },
+    {
+      "name": "Professional Services",
+      "size": 59
+    },
+    {
+      "name": "Transport",
+      "size": 46
+    },
+    {
+      "name": "Food & Lodging",
+      "size": 43
+    },
+    {
+      "name": "Mining & Quarrying",
+      "size": 41
+    },
+    {
+      "name": "General Workers",
+      "size": 35
+    },
+    {
+      "name": "Construction",
+      "size": 31
+    },
+    {
+      "name": "Dress",
+      "size": 32
+    },
+    {
+      "name": "Chemicals & Soap",
+      "size": 30
+    },
+    {
+      "name": "Books & Stationery",
+      "size": 28
+    },
+    {
+      "name": "Domestic Services",
+      "size": 26
+    },
+    {
+      "name": "Wood & Furnishings",
+      "size": 28
+    },
+    {
+      "name": "Unoccupied",
+      "size": 26
+    },
+    {
+      "name": "Jewelry & Instruments",
+      "size": 24
+    },
+    {
+      "name": "Agriculture",
+      "size": 19
+    },
+    {
+      "name": "Government",
+      "size": 15
+    },
+    {
+      "name": "Leather & Skins",
+      "size": 12
+    },
+    {
+      "name": "Commerce",
+      "size": 13
+    },
+    {
+      "name": "Defence",
+      "size": 11
+    },
+    {
+      "name": "Brick & Pottery",
+      "size": 10
+    },
+    {
+      "name": "Utilities",
+      "size": 6
+    },
+    {
+      "name": "Fishing",
+      "size": 1
+    }
+  ]
+}
