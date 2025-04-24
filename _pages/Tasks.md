@@ -1,9 +1,3 @@
----
-layout: single
-title: "Tasks"
-permalink: /tasks/
-nav_exclude: false
----
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
@@ -22,165 +16,56 @@ nav_exclude: false
 <div id="treemap-time"></div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  // Attach event listeners to buttons
-  document.getElementById('button-1851').addEventListener('click', function() {
-    loadYear(1851);
-  });
-  document.getElementById('button-1861').addEventListener('click', function() {
-    loadYear(1861);
-  });
-  document.getElementById('button-1881').addEventListener('click', function() {
-    loadYear(1881);
-  });
-  document.getElementById('button-1891').addEventListener('click', function() {
-    loadYear(1891);
-  });
-  document.getElementById('button-1901').addEventListener('click', function() {
-    loadYear(1901);
-  });
-  document.getElementById('button-1911').addEventListener('click', function() {
-    loadYear(1911);
-  });
-});
+  document.addEventListener("DOMContentLoaded", function () {
+    const width = 960;
+    const height = 600;
+    const color = d3.scaleOrdinal(d3.schemeCategory10);
+    const svg = d3.select("#treemap-time")
+      .append("svg")
+      .attr("viewBox", [0, 0, width, height])
+      .style("font-family", "sans-serif")
+      .style("font-size", "14px");
 
-function loadYear(year) {
-  console.log(`Loading year: ${year}`);  // Debugging
+    function loadYear(year) {
+      console.log(`Loading year: ${year}`);  // Debugging
 
-  d3.json(`/assets/data/orders_${year}.json`).then(data => {
-    const root = d3.hierarchy(data)
-      .sum(d => d.size)
-      .sort((a, b) => b.value - a.value);
+      d3.json(`/assets/data/orders_${year}.json`).then(data => {
+        const root = d3.hierarchy(data)
+          .sum(d => d.size || 0)
+          .sort((a, b) => b.value - a.value);
 
-    d3.treemap()
-      .size([960, 600])
-      .paddingInner(2)(root);
+        d3.treemap()
+          .size([960, 600])
+          .paddingInner(2)(root);
 
-    const svg = d3.select("#treemap-time");
-    svg.selectAll("*").remove(); // Clear existing content
+        svg.selectAll("*").remove();  // Clear previous content
 
-    const nodes = svg.selectAll("g")
-      .data(root.children)
-      .join("g")
-      .attr("transform", d => `translate(${d.x0},${d.y0})`);
+        const nodes = svg.selectAll("g")
+          .data(root.children)
+          .join("g")
+          .attr("transform", d => `translate(${d.x0},${d.y0})`);
 
-    nodes.append("rect")
-      .attr("width", d => d.x1 - d.x0)
-      .attr("height", d => d.y1 - d.y0)
-      .attr("fill", d => d3.scaleOrdinal(d3.schemeCategory10)(d.data.name));
+        nodes.append("rect")
+          .attr("width", d => d.x1 - d.x0)
+          .attr("height", d => d.y1 - d.y0)
+          .attr("fill", d => color(d.data.name));
 
-    nodes.append("text")
-      .attr("x", 4)
-      .attr("y", 18)
-      .text(d => d.data.name)
-      .attr("fill", "white");
-  }).catch(err => {
-    console.error("Error loading JSON:", err);
-  });
-}
-</script>
-
-<h2>Interactive Treemap: Click to Drill into Orders → Industries → Tasks</h2>
-<p>Click on an Order to explore its Industries. Then click on an Industry to see its Tasks.</p>
-
-<div id="treemap-deep"></div>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const width = 960;
-  const height = 600;
-  const color = d3.scaleOrdinal(d3.schemeCategory10);
-  const svg = d3.select("#treemap-deep")
-    .append("svg")
-    .attr("viewBox", [0, 0, width, height])
-    .style("font-family", "sans-serif")
-    .style("font-size", "14px");
-
-  let group = svg.append("g");
-
-  function draw(activeNode) {
-    group.selectAll("*").remove();  // clear
-
-    const level = activeNode.depth;
-    const parent = activeNode.parent;
-    const siblings = parent ? parent.children : fullRoot.children;
-
-    // draw current siblings at this level
-    const boxes = group.selectAll("g")
-      .data(siblings)
-      .join("g")
-      .attr("transform", d => `translate(${d.x0},${d.y0})`)
-      .style("cursor", d => d.children ? "pointer" : "default")
-      .on("click", (event, d) => {
-        event.stopPropagation();
-        draw(d);
-      });
-
-    boxes.append("rect")
-      .attr("width", d => d.x1 - d.x0)
-      .attr("height", d => d.y1 - d.y0)
-      .attr("fill", d => d === activeNode ? color(d.data.name) : "#ddd")
-      .attr("stroke", "#fff");
-
-    boxes.append("text")
-      .attr("x", 4)
-      .attr("y", 18)
-      .text(d => d.data.name)
-      .attr("fill", "white")
-      .style("pointer-events", "none");
-
-    if (activeNode.children) {
-      const inner = group.append("g");
-
-      inner.selectAll("g")
-        .data(activeNode.children)
-        .join("g")
-        .attr("transform", d => `translate(${d.x0},${d.y0})`)
-        .on("click", (event, d) => {
-          if (d.children) draw(d);
-          event.stopPropagation();
-        })
-        .call(g => {
-          g.append("rect")
-            .attr("width", d => d.x1 - d.x0)
-            .attr("height", d => d.y1 - d.y0)
-            .attr("fill", () => color(activeNode.data.name))
-            .attr("stroke", "#fff");
-
-          g.append("text")
-            .attr("x", 4)
-            .attr("y", 18)
-            .text(d => d.data.name)
-            .attr("fill", "white")
-            .style("font-size", "12px")
-            .style("pointer-events", "none");
-        });
-
-      svg.on("click", () => {
-        if (activeNode.parent) draw(activeNode.parent);
+        nodes.append("text")
+          .attr("x", 4)
+          .attr("y", 18)
+          .text(d => d.data.name)
+          .attr("fill", "white");
+      }).catch(err => {
+        console.error("Error loading JSON:", err);
       });
     }
-  }
-
-  // Load default data (1891)
-  d3.json("/assets/data/orders_1881.json").then(data => {
-    const fullRoot = d3.hierarchy(data)
-      .sum(d => d.size || 0)
-      .sort((a, b) => b.value - a.value);
-
-    d3.treemap().size([width, height]).paddingInner(2)(fullRoot);
-
-    draw(fullRoot);
   });
-});
 </script>
 
 
-
-<h2>Interactive Treemap: Old Version </h2>
-<p>Click on an Order to explore its Industries. Then click on an Industry to see its Tasks.</p>
-
-
+---
+SECOND BLOCK
+---
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <h2>Interactive Treemap: Orders → Industries → Tasks (with Ghosting)</h2>
