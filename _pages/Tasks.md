@@ -6,9 +6,12 @@ nav_exclude: false
 ---
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
+<!-- 1. This section creates the heading and buttons for selecting the year -->
 <h2>Interactive Treemap: Orders Over Time</h2>
 <p>Click a year to view the treemap of Orders for that census year.</p>
 
+
+<!-- 2. Year selection buttons - each one calls the loadYear(year) JavaScript function -->
 <div style="margin-bottom: 1em;">
   <button onclick="loadYear(1851)">1851</button>
   <button onclick="loadYear(1861)">1861</button>
@@ -18,19 +21,25 @@ nav_exclude: false
   <button onclick="loadYear(1911)">1911</button>
 </div>
 
+
+<!-- 3. This div is the container where the treemap SVG (scalable Vector Graphics) will be inserted -->
 <div id="treemap-time"></div>
 
+<!-- 4. This is the JavaScript code that creates and inserts the SVG treemap -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const width = 960;
     const height = 600;
     const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+    // 5. Create the SVG container inside the #treemap-time div
     const svg = d3.select("#treemap-time")
       .append("svg")
       .attr("viewBox", [0, 0, width, height])
       .style("font-family", "sans-serif")
       .style("font-size", "14px");
 
+    // 6. Function to load and render a treemap for a given year
     function loadYear(year) {
       console.log(`Loading year: ${year}`);  // Debugging
 
@@ -40,10 +49,10 @@ nav_exclude: false
           .sort((a, b) => b.value - a.value);
 
         d3.treemap()
-          .size([960, 600])
+          .size([width, height])
           .paddingInner(2)(root);
 
-        svg.selectAll("*").remove();  // Clear previous content
+        svg.selectAll("*").remove();  // Clear previous treemap
 
         const nodes = svg.selectAll("g")
           .data(root.children)
@@ -64,8 +73,12 @@ nav_exclude: false
         console.error("Error loading JSON:", err);
       });
     }
+
+    // 7. Load a default year (e.g., 1851) when the page first loads
+    loadYear(1851);
   });
 </script>
+
 
 
 ---
