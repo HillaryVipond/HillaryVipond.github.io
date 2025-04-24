@@ -4,7 +4,10 @@ title: "Tasks"
 permalink: /tasks/
 nav_exclude: false
 ---
+
 <script src="https://d3js.org/d3.v7.min.js"></script>
+
+
 
 <!-- 1. This section creates the heading and buttons for selecting the year -->
 <h2>Interactive Treemap V2: Orders Over Time</h2>
@@ -30,7 +33,11 @@ nav_exclude: false
   // 4a. Basic settings and setup
   const width = 960;
   const height = 600;
-  const color = d3.scaleOrdinal(d3.schemeCategory10);
+  const color = d3.scaleOrdinal([
+  "#5C6BC0", "#42A5F5", "#26A69A", "#9CCC65", "#FFCA28",
+  "#EF5350", "#AB47BC", "#8D6E63", "#78909C", "#FF7043",
+  "#66BB6A", "#D4E157", "#FFA726", "#29B6F6", "#BDBDBD"
+]);
   // Create and append the SVG canvas to the container div
   const svg = d3.select("#treemap-time")
     .append("svg")
