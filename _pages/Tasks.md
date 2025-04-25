@@ -434,7 +434,7 @@ function drawLineChart(taskName) {
 Draft THIRD BLOCK
 -------------------------------------------------------------------------------
 
-<!-- THIRD BLOCK -->
+<!-- THIRD BLOCK 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <h2>Interactive Treemap: Orders → Industries → Tasks</h2>
@@ -627,7 +627,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-
+-->
 
 --------------------------------------------------------------------------------
 FOOTER
