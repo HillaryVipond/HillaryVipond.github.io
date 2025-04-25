@@ -171,14 +171,18 @@ document.addEventListener("DOMContentLoaded", function () {
         tooltip.style("visibility", "visible").text(d.industry);
         d3.select(this).attr("stroke", "black").attr("stroke-width", 1.5);
       })
-      .on("mousemove", function (event
-
-      
-
-
-
-
-
+      .on("mousemove", function (event) {
+        tooltip
+          .style("top", (event.pageY - 30) + "px")
+          .style("left", (event.pageX + 10) + "px");
+      })
+      .on("mouseout", function () {
+        tooltip.style("visibility", "hidden");
+        d3.select(this).attr("stroke", null);
+      });
+  });
+});
+</script>
 
 
 
