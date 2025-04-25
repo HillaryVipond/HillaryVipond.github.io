@@ -232,7 +232,7 @@ function showThreshold() {
 
 
 --------------------------------------------------------------------------------
-THIRD BLOCK
+THIRD BLOCK V2
 -------------------------------------------------------------------------------
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -260,8 +260,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const group = svg.append("g");
 
-  d3.json("/assets/data/Tasks.json").then(data => {
-    const fullRoot = d3.hierarchy(data)
+  let timeseriesData = [];
+
+  Promise.all([
+    d3.json("/assets/data/Tasks.json"),
+    d3.csv("/assets/data/task_timeseries_toy.csv", d3.autoType)
+  ]).then(([treemapData, csvData]) => {
+    timeseriesData = csvData;
+
+    const fullRoot = d3.hierarchy(treemapData)
       .sum(d => d.size || 0)
       .sort((a, b) => b.value - a.value);
 
@@ -286,16 +293,10 @@ document.addEventListener("DOMContentLoaded", function () {
         .on("click", (event, d) => {
           event.stopPropagation();
 
-          if (d.depth === 3) {
-            const industryNode = d.parent;
-            const orderNode = industryNode?.parent;
-
-            if (industryNode?.data.name === "5.2" && orderNode?.data.name === "5") {
-              const taskNames = industryNode.children.map(child => child.data.name);
-              drawLineChart(taskNames, "5.2");
-            }
-          } else if (d.children) {
+          if (d.children) {
             draw(d);
+          } else if (d.depth === 3 && d.ancestors().some(a => a.data.name === "5.2")) {
+            drawLineChartForIndustry("5.2");
           }
         });
 
@@ -325,17 +326,13 @@ document.addEventListener("DOMContentLoaded", function () {
           .data(activeNode.children)
           .join("g")
           .attr("transform", d => `translate(${d.x0},${d.y0})`)
+          .style("cursor", d => d.children ? "pointer" : "default")
           .on("click", (event, d) => {
             event.stopPropagation();
             if (d.children) {
               draw(d);
-            } else if (d.depth === 3) {
-              const industryNode = d.parent;
-              const orderNode = industryNode?.parent;
-              if (industryNode?.data.name === "5.2" && orderNode?.data.name === "5") {
-                const taskNames = industryNode.children.map(child => child.data.name);
-                drawLineChart(taskNames, "5.2");
-              }
+            } else if (d.depth === 3 && d.ancestors().some(a => a.data.name === "5.2")) {
+              drawLineChartForIndustry("5.2");
             }
           })
           .call(g => {
@@ -360,48 +357,50 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   });
-});
 
-function drawLineChart(taskList, industryLabel) {
-  d3.select("#linechart").selectAll("*").remove();
-  d3.select("#line-title").text(`Tasks in Industry ${industryLabel} Over Time`);
+  function drawLineChartForIndustry(industryCode) {
+    d3.select("#linechart").selectAll("*").remove();
+    d3.select("#line-title").text(`Task Trends for Industry ${industryCode}`);
 
-  const margin = {top: 20, right: 30, bottom: 40, left: 60};
-  const width = 600 - margin.left - margin.right;
-  const height = 300 - margin.top - margin.bottom;
+    const margin = {top: 20, right: 30, bottom: 40, left: 60};
+    const width = 600 - margin.left - margin.right;
+    const height = 300 - margin.top - margin.bottom;
 
-  const svg = d3.select("#linechart")
-    .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .style("font-family", "sans-serif")
-    .style("font-size", "12px")
-    .append("g")
-    .attr("transform", `translate(${margin.left},${margin.top})`);
+    const svg = d3.select("#linechart")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .style("font-family", "sans-serif")
+      .style("font-size", "12px")
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
 
-  d3.csv("/assets/data/task_timeseries_toy.csv", d3.autoType).then(data => {
-    const filtered = data.filter(d => taskList.includes(d.task));
+    const industryData = timeseriesData.filter(d => d.industry === industryCode);
 
-    const yearMap = d3.rollup(
-      filtered,
-      v => d3.sum(v, d => d.count),
-      d => d.year
-    );
+    const nested = d3.rollups(industryData, v => d3.sum(v, d => d.count), d => d.year)
+      .map(([year, count]) => ({year, count}))
+      .sort((a, b) => d3.ascending(a.year, b.year));
 
-    const yearData = Array.from(yearMap, ([year, count]) => ({year, count}))
-                          .sort((a, b) => d3.ascending(a.year, b.year));
+    if (nested.length === 0) {
+      svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height / 2)
+        .attr("text-anchor", "middle")
+        .text("No Data Available");
+      return;
+    }
 
     const x = d3.scaleLinear()
-      .domain(d3.extent(yearData, d => d.year))
+      .domain(d3.extent(nested, d => d.year))
       .range([0, width]);
 
     const y = d3.scaleLinear()
-      .domain([0, d3.max(yearData, d => d.count)]).nice()
+      .domain([0, d3.max(nested, d => d.count)]).nice()
       .range([height, 0]);
 
     svg.append("g")
       .attr("transform", `translate(0,${height})`)
-      .call(d3.axisBottom(x).ticks(6).tickFormat(d3.format("d")));
+      .call(d3.axisBottom(x).tickFormat(d3.format("d")));
 
     svg.append("g")
       .call(d3.axisLeft(y));
@@ -411,21 +410,21 @@ function drawLineChart(taskList, industryLabel) {
       .y(d => y(d.count));
 
     svg.append("path")
-      .datum(yearData)
+      .datum(nested)
       .attr("fill", "none")
       .attr("stroke", "#007ACC")
       .attr("stroke-width", 2)
       .attr("d", line);
 
     svg.selectAll("circle")
-      .data(yearData)
+      .data(nested)
       .join("circle")
       .attr("cx", d => x(d.year))
       .attr("cy", d => y(d.count))
       .attr("r", 4)
       .attr("fill", "#007ACC");
-  });
-}
+  }
+});
 </script>
 
 
