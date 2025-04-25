@@ -287,16 +287,30 @@ document.addEventListener("DOMContentLoaded", function () {
         .join("g")
         .attr("transform", d => `translate(${d.x0},${d.y0})`)
         .style("cursor", d => d.children ? "pointer" : "default")
+
+        
         .on("click", (event, d) => {
           event.stopPropagation();
 
           if (d.children) {
-            draw(d); // zoom in if it's not a leaf
+            draw(d);
+
+          // New: show line chart if Industry 5.3 inside Order 5
+          if (
+              d.depth === 2 &&
+              d.data.name === "5.3" &&
+              d.parent?.data?.name === "5"
+              ) {
+              drawLineChart("5.3"); // or whatever Task name you want to use
+            }
           } else if (d.depth === 3) {
-            drawLineChart(d.data.name); // only show line chart if it's a Task
+            drawLineChart(d.data.name); // keep for Task clicks
           }
         });
 
+
+
+      
       boxes.append("rect")
         .attr("width", d => d.x1 - d.x0)
         .attr("height", d => d.y1 - d.y0)
