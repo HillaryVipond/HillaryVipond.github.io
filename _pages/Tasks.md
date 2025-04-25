@@ -242,18 +242,16 @@ THIRD BLOCK
 <!-- 1. Treemap container -->
 <div id="treemap"></div>
 
-<!-- 2. Line chart title and container (initially empty) -->
+<!-- 2. Line chart title and container -->
 <h3 id="line-title" style="margin-top: 2em;"></h3>
 <div id="linechart"></div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  // Basic setup
   const width = 960;
   const height = 600;
   const color = d3.scaleOrdinal(d3.schemeCategory10);
 
-  // Append SVG for treemap
   const svg = d3.select("#treemap")
     .append("svg")
     .attr("viewBox", [0, 0, width, height])
@@ -262,7 +260,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const group = svg.append("g");
 
-  // Load treemap data
   d3.json("/assets/data/Tasks.json").then(data => {
     const fullRoot = d3.hierarchy(data)
       .sum(d => d.size || 0)
@@ -274,9 +271,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     draw(fullRoot);
 
-    // Treemap draw function
     function draw(activeNode) {
-      group.selectAll("*").remove();  // clear the view
+      group.selectAll("*").remove();
 
       const level = activeNode.depth;
       const parent = activeNode.parent;
@@ -287,30 +283,22 @@ document.addEventListener("DOMContentLoaded", function () {
         .join("g")
         .attr("transform", d => `translate(${d.x0},${d.y0})`)
         .style("cursor", d => d.children ? "pointer" : "default")
-
-        
         .on("click", (event, d) => {
           event.stopPropagation();
 
-          if (d.children) {
-            draw(d);
+          if (d.depth === 3) {
+            const industryNode = d.parent;
+            const orderNode = industryNode?.parent;
 
-          // New: show line chart if Industry 5.3 inside Order 5
-          if (
-              d.depth === 2 &&
-              d.data.name === "5.3" &&
-              d.parent?.data?.name === "5"
-              ) {
-              drawLineChart("5.3"); // or whatever Task name you want to use
+            if (industryNode?.data.name === "5.2" && orderNode?.data.name === "5") {
+              const taskNames = industryNode.children.map(child => child.data.name);
+              drawLineChart(taskNames, "5.2");
             }
-          } else if (d.depth === 3) {
-            drawLineChart(d.data.name); // keep for Task clicks
+          } else if (d.children) {
+            draw(d);
           }
         });
 
-
-
-      
       boxes.append("rect")
         .attr("width", d => d.x1 - d.x0)
         .attr("height", d => d.y1 - d.y0)
@@ -339,11 +327,15 @@ document.addEventListener("DOMContentLoaded", function () {
           .attr("transform", d => `translate(${d.x0},${d.y0})`)
           .on("click", (event, d) => {
             event.stopPropagation();
-
             if (d.children) {
-              draw(d); // keep zooming in
+              draw(d);
             } else if (d.depth === 3) {
-              drawLineChart(d.data.name); // show line chart if it's a Task
+              const industryNode = d.parent;
+              const orderNode = industryNode?.parent;
+              if (industryNode?.data.name === "5.2" && orderNode?.data.name === "5") {
+                const taskNames = industryNode.children.map(child => child.data.name);
+                drawLineChart(taskNames, "5.2");
+              }
             }
           })
           .call(g => {
@@ -362,7 +354,6 @@ document.addEventListener("DOMContentLoaded", function () {
               .style("pointer-events", "none");
           });
 
-        // Clicking outside goes up one level
         svg.on("click", () => {
           if (activeNode.parent) draw(activeNode.parent);
         });
@@ -370,23 +361,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
-</script>
 
-<!-- 3. Line chart rendering script (called when a Task is clicked) -->
-<script>
-function drawLineChart(taskName) {
-  // Clear previous chart
+function drawLineChart(taskList, industryLabel) {
   d3.select("#linechart").selectAll("*").remove();
+  d3.select("#line-title").text(`Tasks in Industry ${industryLabel} Over Time`);
 
-  // Update chart title
-  d3.select("#line-title").text(`Task: ${taskName}`);
-
-  // Dimensions
   const margin = {top: 20, right: 30, bottom: 40, left: 60};
   const width = 600 - margin.left - margin.right;
   const height = 300 - margin.top - margin.bottom;
 
-  // Create SVG for the line chart
   const svg = d3.select("#linechart")
     .append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -396,21 +379,26 @@ function drawLineChart(taskName) {
     .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
-  // Load the CSV
   d3.csv("/assets/data/task_timeseries_toy.csv", d3.autoType).then(data => {
-    // Filter to just the selected task
-    const taskData = data.filter(d => d.task === taskName);
+    const filtered = data.filter(d => taskList.includes(d.task));
 
-    // Set up scales
+    const yearMap = d3.rollup(
+      filtered,
+      v => d3.sum(v, d => d.count),
+      d => d.year
+    );
+
+    const yearData = Array.from(yearMap, ([year, count]) => ({year, count}))
+                          .sort((a, b) => d3.ascending(a.year, b.year));
+
     const x = d3.scaleLinear()
-      .domain(d3.extent(taskData, d => d.year))
+      .domain(d3.extent(yearData, d => d.year))
       .range([0, width]);
 
     const y = d3.scaleLinear()
-      .domain([0, d3.max(taskData, d => d.count)]).nice()
+      .domain([0, d3.max(yearData, d => d.count)]).nice()
       .range([height, 0]);
 
-    // Axes
     svg.append("g")
       .attr("transform", `translate(0,${height})`)
       .call(d3.axisBottom(x).ticks(6).tickFormat(d3.format("d")));
@@ -418,22 +406,19 @@ function drawLineChart(taskName) {
     svg.append("g")
       .call(d3.axisLeft(y));
 
-    // Line generator
     const line = d3.line()
       .x(d => x(d.year))
       .y(d => y(d.count));
 
-    // Add the line path
     svg.append("path")
-      .datum(taskData)
+      .datum(yearData)
       .attr("fill", "none")
       .attr("stroke", "#007ACC")
       .attr("stroke-width", 2)
       .attr("d", line);
 
-    // Optional: add dots on each point
     svg.selectAll("circle")
-      .data(taskData)
+      .data(yearData)
       .join("circle")
       .attr("cx", d => x(d.year))
       .attr("cy", d => y(d.count))
