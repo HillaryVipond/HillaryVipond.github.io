@@ -7,8 +7,6 @@ nav_exclude: false
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
-
-
 <!-- 1. This section creates the heading and buttons for selecting the year -->
 <h2>Interactive Treemap V2: Orders Over Time</h2>
 <p>Click a year to view the treemap of Orders for that census year.</p>
@@ -101,19 +99,20 @@ SECOND BLOCK
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <!-- 1. Headings and explanation -->
-<h2>Scatterplot: Industry Growth V6 (1851–1911)</h2>
+<h2>Scatterplot: Industry Growth V7 (1851–1911)</h2>
 
+
+<!-- 2. Container for the scatterplot -->
+<div id="scatterplot"></div>
+
+<!-- 3. Text Below Graph and Toggle Button -->
 <h3 style="margin-top: 1em;">
   Population doubled over the period: any industry growing more than 100% outpaced population growth, and any industry that grew less lagged.
 </h3>
 
-<!-- 2. Toggle button for threshold line -->
 <button onclick="showThreshold()" style="margin-top: 1em; padding: 6px 12px; font-size: 14px;">
   Show Population Threshold
 </button>
-
-<!-- 3. Container for the scatterplot -->
-<div id="scatterplot"></div>
 
 <!-- 4. Scatterplot Script -->
 <script>
