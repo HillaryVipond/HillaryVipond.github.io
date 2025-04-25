@@ -98,6 +98,97 @@ nav_exclude: false
 ---
 SECOND BLOCK
 ---
+
+<h2>Industry Growth: 1851 to 1911</h2>
+<p>This scatterplot shows how different industries grew over time. The X-axis is the industry size in 1851, and the Y-axis is the percent increase by 1911. Color indicates the Order.</p>
+
+<div id="scatterplot"></div>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const margin = { top: 30, right: 30, bottom: 60, left: 60 };
+  const width = 960 - margin.left - margin.right;
+  const height = 600 - margin.top - margin.bottom;
+
+  const svg = d3.select("#scatterplot")
+    .append("svg")
+    .attr("viewBox", [0, 0, width + margin.left + margin.right, height + margin.top + margin.bottom])
+    .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  // Load external CSV data
+  d3.csv("/assets/data/industry_growth.csv", d3.autoType).then(data => {
+    // Scales
+    const x = d3.scaleLinear()
+      .domain(d3.extent(data, d => d.initial_size)).nice()
+      .range([0, width]);
+
+    const y = d3.scaleLinear()
+      .domain(d3.extent(data, d => d.growth_pct)).nice()
+      .range([height, 0]);
+
+    const color = d3.scaleOrdinal()
+      .domain([...new Set(data.map(d => d.order))])
+      .range(["#5C6BC0", "#42A5F5", "#EF5350"]);
+
+    // Axes
+    svg.append("g")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(x));
+
+    svg.append("g")
+      .call(d3.axisLeft(y));
+
+    // Labels
+    svg.append("text")
+      .attr("x", width / 2)
+      .attr("y", height + 50)
+      .attr("text-anchor", "middle")
+      .text("Initial Size (1851)");
+
+    svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", -45)
+      .attr("x", -height / 2)
+      .attr("text-anchor", "middle")
+      .text("Growth % (1851–1911)");
+
+    // Dots
+    svg.selectAll("circle")
+      .data(data)
+      .join("circle")
+      .attr("cx", d => x(d.initial_size))
+      .attr("cy", d => y(d.growth_pct))
+      .attr("r", 6)
+      .attr("fill", d => color(d.order))
+      .append("title")
+      .text(d => `${d.industry}: ${d.growth_pct}%`);
+  }).catch(err => {
+    console.error("Error loading CSV:", err);
+  });
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+THIRD BLOCK
+---
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <h2>Interactive Treemap: Orders → Industries → Tasks (with Ghosting)</h2>
