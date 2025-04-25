@@ -349,7 +349,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <!-- Footer credit -->
-<p style="text-align: center; margin-top: 4em; font-size: 0.8em; color: #aaa; font-style: italic;">
-  Coauthored with Daedalus GPT
+<p style="text-align: center; margin-top: 4em; font-size: 0.9em; color: #aaa; font-style: italic;">
+  Data Visualizations Coauthored with Daedalus GPT
 </p>
 
