@@ -11,7 +11,6 @@ nav_exclude: false
 <h2>Interactive Treemap V2: Orders Over Time</h2>
 <p>Click a year to view the treemap of Orders for that census year.</p>
 
-
 <!-- 2. Year selection buttons - each one calls the loadYear(year) JavaScript function -->
 <div style="margin-bottom: 1em;">
   <button onclick="loadYear(1851)">1851</button>
@@ -21,7 +20,6 @@ nav_exclude: false
   <button onclick="loadYear(1901)">1901</button>
   <button onclick="loadYear(1911)">1911</button>
 </div>
-
 
 <!-- 3. This div is the container where the treemap SVG (scalable Vector Graphics) will be inserted -->
 <div id="treemap-time"></div>
@@ -99,16 +97,16 @@ SECOND BLOCK
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <!-- 1. Headings and explanation -->
-<h2>Scatterplot: Industry Growth V7 (1851–1911)</h2>
+<h2>Scatterplot: Industry Growth (1851–1911)</h2>
 
 
 <!-- 2. Container for the scatterplot -->
 <div id="scatterplot"></div>
 
 <!-- 3. Text Below Graph and Toggle Button -->
-<h3 style="margin-top: 1em;">
-  Population doubled over the period: any industry growing more than 100% outpaced population growth, and any industry that grew less lagged.
-</h3>
+<h4 style="margin-top: 1em;">
+  Population doubled over the period: any industry growing more than 100% outpaced population growth, industries which grew less lagged.
+</h4>
 
 <button onclick="showThreshold()" style="margin-top: 1em; padding: 6px 12px; font-size: 14px;">
   Show Population Threshold
