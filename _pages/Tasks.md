@@ -99,7 +99,7 @@ nav_exclude: false
 SECOND BLOCK
 ---
 
-<h2>Scatterplot: Industry Growth (1851–1911)</h2>
+<h2>Scatterplot: Industry Growth V2 (1851–1911)</h2>
 <div id="scatterplot"></div>
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -180,10 +180,13 @@ document.addEventListener("DOMContentLoaded", function () {
         .style("top", (event.pageY - 5) + "px")  // closer above
         .style("left", (event.pageX + 5) + "px");
       })
-      .on("mouseout", function () {
-        tooltip.style("visibility", "hidden");
-        d3.select(this).attr("stroke", null);
+      .on("mousemove", function (event) {
+      const [xPos, yPos] = d3.pointer(event); // relative to SVG container
+      tooltip
+      .style("left", (xPos + margin.left + 10) + "px")
+      .style("top", (yPos + margin.top - 10) + "px");
       });
+
   });
 });
 </script>
