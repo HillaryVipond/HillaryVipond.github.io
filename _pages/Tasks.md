@@ -118,14 +118,18 @@ document.addEventListener("DOMContentLoaded", function () {
   // Tooltip
   const tooltip = d3.select("#scatterplot")
     .append("div")
+    .attr("class", "tooltip")
     .style("position", "absolute")
     .style("background", "white")
     .style("border", "1px solid #ccc")
-    .style("padding", "5px 10px")
-    .style("border-radius", "4px")
+    .style("padding", "8px 12px")
+    .style("border-radius", "5px")
     .style("pointer-events", "none")
-    .style("font-size", "13px")
-    .style("visibility", "hidden");
+    .style("font-size", "15px")
+    .style("font-weight", "bold")
+    .style("visibility", "hidden")
+    .style("box-shadow", "0 2px 6px rgba(0,0,0,0.2)");
+
 
   d3.csv("/assets/data/industry_growth.csv", d3.autoType).then(data => {
     // Set up scales
@@ -172,9 +176,9 @@ document.addEventListener("DOMContentLoaded", function () {
         d3.select(this).attr("stroke", "black").attr("stroke-width", 1.5);
       })
       .on("mousemove", function (event) {
-        tooltip
-          .style("top", (event.pageY - 30) + "px")
-          .style("left", (event.pageX + 10) + "px");
+      tooltip
+        .style("top", (event.pageY - 40) + "px")  // closer above
+        .style("left", (event.pageX + 10) + "px");
       })
       .on("mouseout", function () {
         tooltip.style("visibility", "hidden");
