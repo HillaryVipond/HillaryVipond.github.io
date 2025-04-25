@@ -98,22 +98,17 @@ nav_exclude: false
 ---
 SECOND BLOCK
 ---
-
----
-layout: single
-title: "Tasks"
-permalink: /tasks/
-nav_exclude: false
----
-
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <!-- 1. Headings and explanation -->
-<h2>Scatterplot: Industry Growth V5 (1851–1911)</h2>
-<h3>Population doubled over the period: any industry growing more than 100% outpaced population growth, and any industry that grew less lagged.</h3>
+<h2>Scatterplot: Industry Growth V6 (1851–1911)</h2>
+
+<h3 style="margin-top: 1em;">
+  Population doubled over the period: any industry growing more than 100% outpaced population growth, and any industry that grew less lagged.
+</h3>
 
 <!-- 2. Toggle button for threshold line -->
-<button onclick="showThreshold()" style="margin-bottom: 1em; padding: 6px 12px; font-size: 14px;">
+<button onclick="showThreshold()" style="margin-top: 1em; padding: 6px 12px; font-size: 14px;">
   Show Population Threshold
 </button>
 
