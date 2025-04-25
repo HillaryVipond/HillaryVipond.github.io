@@ -99,10 +99,28 @@ nav_exclude: false
 SECOND BLOCK
 ---
 
-<h2>Scatterplot: Industry Growth V4 (1851–1911)</h2>
-<div id="scatterplot"></div>
+---
+layout: single
+title: "Tasks"
+permalink: /tasks/
+nav_exclude: false
+---
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
+
+<!-- 1. Headings and explanation -->
+<h2>Scatterplot: Industry Growth V5 (1851–1911)</h2>
+<h3>Population doubled over the period: any industry growing more than 100% outpaced population growth, and any industry that grew less lagged.</h3>
+
+<!-- 2. Toggle button for threshold line -->
+<button onclick="showThreshold()" style="margin-bottom: 1em; padding: 6px 12px; font-size: 14px;">
+  Show Population Threshold
+</button>
+
+<!-- 3. Container for the scatterplot -->
+<div id="scatterplot"></div>
+
+<!-- 4. Scatterplot Script -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const margin = {top: 20, right: 30, bottom: 50, left: 60};
@@ -115,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
-  // Tooltip
+  // 4a. Tooltip configuration
   const tooltip = d3.select("body")
     .append("div")
     .attr("class", "tooltip")
@@ -130,9 +148,8 @@ document.addEventListener("DOMContentLoaded", function () {
     .style("visibility", "hidden")
     .style("box-shadow", "0 2px 6px rgba(0,0,0,0.2)");
 
-
+  // 4b. Load CSV and plot data
   d3.csv("/assets/data/industry_growth.csv", d3.autoType).then(data => {
-    // Set up scales
     const x = d3.scaleLinear()
       .domain(d3.extent(data, d => d.initial_size)).nice()
       .range([0, width]);
@@ -149,7 +166,7 @@ document.addEventListener("DOMContentLoaded", function () {
     svg.append("g")
       .call(d3.axisLeft(y));
 
-    // Labels
+    // Axis Labels
     svg.append("text")
       .attr("x", width / 2)
       .attr("y", height + 40)
@@ -163,37 +180,63 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("text-anchor", "middle")
       .text("Growth Percentage (1851–1911)");
 
-    // Circles
+    // 4c. Hidden threshold line
+    svg.append("line")
+      .attr("x1", 0)
+      .attr("x2", width)
+      .attr("y1", y(100))
+      .attr("y2", y(100))
+      .attr("stroke", "grey")
+      .attr("stroke-width", 1.5)
+      .attr("stroke-dasharray", "5,5")
+      .style("visibility", "hidden");
+
+    svg.append("text")
+      .attr("x", width - 10)
+      .attr("y", y(100) - 6)
+      .attr("text-anchor", "end")
+      .style("fill", "grey")
+      .style("font-size", "12px")
+      .style("visibility", "hidden")
+      .text("Population doubled");
+
+    // 4d. Plot the data points
     svg.selectAll("circle")
       .data(data)
       .join("circle")
       .attr("cx", d => x(d.initial_size))
       .attr("cy", d => y(d.growth_pct))
       .attr("r", 6)
-      .attr("fill", "#6BAED6")  // nice semi-light blue
+      .attr("fill", "#6BAED6") // semi-light blue
       .on("mouseover", function (event, d) {
         tooltip.style("visibility", "visible").text(d.industry);
         d3.select(this).attr("stroke", "black").attr("stroke-width", 1.5);
       })
-      .on("mouseover", function (event, d) {
-       tooltip.style("visibility", "visible").text(d.industry);
-      d3.select(this).attr("stroke", "black").attr("stroke-width", 1.5);
-      })
       .on("mousemove", function (event) {
-      tooltip
-      .style("left", (event.pageX + 10) + "px")
-      .style("top", (event.pageY - 20) + "px");
+        tooltip
+          .style("left", (event.pageX + 10) + "px")
+          .style("top", (event.pageY - 20) + "px");
       })
       .on("mouseout", function () {
-      tooltip.style("visibility", "hidden");
-      d3.select(this).attr("stroke", null);
+        tooltip.style("visibility", "hidden");
+        d3.select(this).attr("stroke", null);
       });
-
-
   });
 });
 </script>
 
+<!-- 5. Function to reveal the threshold line on click -->
+<script>
+function showThreshold() {
+  d3.selectAll("line").filter(function() {
+    return d3.select(this).attr("y1") === d3.select(this).attr("y2");
+  }).style("visibility", "visible");
+
+  d3.selectAll("text").filter(function() {
+    return d3.select(this).text() === "Population doubled";
+  }).style("visibility", "visible");
+}
+</script>
 
 
 
