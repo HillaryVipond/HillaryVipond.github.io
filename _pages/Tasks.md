@@ -99,7 +99,7 @@ nav_exclude: false
 SECOND BLOCK
 ---
 
-<h2>Scatterplot: Industry Growth V3 (1851–1911)</h2>
+<h2>Scatterplot: Industry Growth V4 (1851–1911)</h2>
 <div id="scatterplot"></div>
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
   // Tooltip
-  const tooltip = d3.select("#scatterplot")
+  const tooltip = d3.select("body")
     .append("div")
     .attr("class", "tooltip")
     .style("position", "absolute")
