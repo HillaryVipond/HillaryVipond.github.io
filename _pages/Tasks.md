@@ -177,8 +177,8 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .on("mousemove", function (event) {
       tooltip
-        .style("top", (event.pageY - 40) + "px")  // closer above
-        .style("left", (event.pageX + 10) + "px");
+        .style("top", (event.pageY - 5) + "px")  // closer above
+        .style("left", (event.pageX + 5) + "px");
       })
       .on("mouseout", function () {
         tooltip.style("visibility", "hidden");
