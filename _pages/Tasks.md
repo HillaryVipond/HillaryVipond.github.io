@@ -232,24 +232,25 @@ function showThreshold() {
 
 
 
-
-
-
-
-
-
-
-
----
+--------------------------------------------------------------------------------
 THIRD BLOCK
----
+-------------------------------------------------------------------------------
+
+<!-- THIRD BLOCK -->
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
-<h2>Interactive Treemap: Orders → Industries → Tasks (with Ghosting)</h2>
+<h2>Interactive Treemap: Orders → Industries → Tasks</h2>
+
+<!-- 1. Treemap container -->
 <div id="treemap"></div>
+
+<!-- 2. Line chart title and container (initially empty) -->
+<h3 id="line-title" style="margin-top: 2em;"></h3>
+<div id="linechart"></div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+  // --- Treemap Setup ---
   const width = 960;
   const height = 600;
   const color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -280,7 +281,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const parent = activeNode.parent;
       const siblings = parent ? parent.children : fullRoot.children;
 
-      // draw current siblings at this level
+      // Draw current level
       const boxes = group.selectAll("g")
         .data(siblings)
         .join("g")
@@ -288,7 +289,12 @@ document.addEventListener("DOMContentLoaded", function () {
         .style("cursor", d => d.children ? "pointer" : "default")
         .on("click", (event, d) => {
           event.stopPropagation();
-          draw(d);
+          if (d.children) {
+            draw(d);
+          } else {
+            // When user clicks a leaf task node, load its time series
+            drawLineChart(d.data.name);
+          }
         });
 
       boxes.append("rect")
@@ -310,6 +316,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .attr("fill", d => d === activeNode ? "white" : "#444")
         .style("pointer-events", "none");
 
+      // Add children if applicable
       if (activeNode.children) {
         const inner = group.append("g");
 
@@ -319,6 +326,7 @@ document.addEventListener("DOMContentLoaded", function () {
           .attr("transform", d => `translate(${d.x0},${d.y0})`)
           .on("click", (event, d) => {
             if (d.children) draw(d);
+            else drawLineChart(d.data.name);
             event.stopPropagation();
           })
           .call(g => {
@@ -343,10 +351,89 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   }).catch(err => {
-    console.error("Error loading JSON:", err);
+    console.error("Error loading Treemap JSON:", err);
   });
+
+  // --- Line Chart Function ---
+  function drawLineChart(taskName) {
+    d3.select("#line-title").text(`Task Trend Over Time: ${taskName}`);
+    d3.select("#linechart").selectAll("*").remove();  // clear previous chart
+
+    const margin = {top: 20, right: 30, bottom: 50, left: 60};
+    const width = 960 - margin.left - margin.right;
+    const height = 300;
+
+    const svg = d3.select("#linechart")
+      .append("svg")
+      .attr("viewBox", [0, 0, width + margin.left + margin.right, height + margin.top + margin.bottom])
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    d3.json("/assets/data/task_trends.json").then(data => {
+      const filtered = data.filter(d => d.task === taskName);
+
+      const x = d3.scaleLinear()
+        .domain(d3.extent(filtered, d => d.year))
+        .range([0, width]);
+
+      const y = d3.scaleLinear()
+        .domain([0, d3.max(filtered, d => d.count)]).nice()
+        .range([height, 0]);
+
+      const line = d3.line()
+        .x(d => x(d.year))
+        .y(d => y(d.count));
+
+      // Axes
+      svg.append("g")
+        .attr("transform", `translate(0,${height})`)
+        .call(d3.axisBottom(x).tickFormat(d3.format("d")));
+
+      svg.append("g")
+        .call(d3.axisLeft(y));
+
+      // Line path
+      svg.append("path")
+        .datum(filtered)
+        .attr("fill", "none")
+        .attr("stroke", "#5C6BC0")
+        .attr("stroke-width", 2.5)
+        .attr("d", line);
+
+      // Dots
+      svg.selectAll("circle")
+        .data(filtered)
+        .join("circle")
+        .attr("cx", d => x(d.year))
+        .attr("cy", d => y(d.count))
+        .attr("r", 5)
+        .attr("fill", "#42A5F5");
+
+      // Axis labels
+      svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height + 40)
+        .attr("text-anchor", "middle")
+        .text("Year");
+
+      svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -height / 2)
+        .attr("y", -40)
+        .attr("text-anchor", "middle")
+        .text("Count of Task");
+    }).catch(err => {
+      console.error("Error loading line chart data:", err);
+    });
+  }
 });
 </script>
+
+
+
+--------------------------------------------------------------------------------
+FOOTER
+-------------------------------------------------------------------------------
 
 <!-- Footer credit -->
 <p style="text-align: center; margin-top: 4em; font-size: 0.9em; color: #aaa; font-style: italic;">
