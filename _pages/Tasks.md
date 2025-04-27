@@ -394,9 +394,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 --------------------------------------------------------------------------------
-THIRD BLOCK V10
+THIRD BLOCK 
 -------------------------------------------------------------------------------
-<h2>Interactive Treemap V7: Orders → Industries → Tasks</h2>
+<h2>Interactive Treemap V8: Orders → Industries → Tasks</h2>
 
 <!-- Treemap container -->
 <div id="treemap"></div>
@@ -457,9 +457,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const industryCode = d.parent.data.name;
         drawLineChartForIndustry(industryCode);
         }
-        })
-
-
         });
 
       boxes.append("rect")
