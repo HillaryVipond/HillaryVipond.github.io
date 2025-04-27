@@ -90,7 +90,7 @@ nav_exclude: false
 </script>
 
 -------------------------------------------------------------------------------
-Block 1a V2
+Block 1a V3
 --------------------------------------------------------------------------------
 <!-- D3.js library -->
 <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -106,7 +106,7 @@ Block 1a V2
 document.addEventListener("DOMContentLoaded", function () {
   const width = 400;
   const height = 500;
-  const innerMargin = { top: 20, right: 20, bottom: 30, left: 130 }; // small margin for labels
+  const margin = { top: 20, right: 20, bottom: 30, left: 130 };
 
   d3.csv("/assets/data/Orders.csv", d3.autoType).then(data => {
     const belowGrowth = data.filter(d => d.fold_growth_1851_1911 < 2)
@@ -121,35 +121,37 @@ document.addEventListener("DOMContentLoaded", function () {
         .style("font-family", "sans-serif")
         .style("font-size", "13px");
 
+      const g = svg.append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
       const x = d3.scaleLinear()
         .domain([0, d3.max(dataset, d => d.fold_growth_1851_1911)]).nice()
-        .range([innerMargin.left, width - innerMargin.right]);
+        .range([0, width - margin.left - margin.right]);
 
       const y = d3.scaleBand()
         .domain(dataset.map(d => d.order))
-        .range([innerMargin.top, height - innerMargin.bottom])
+        .range([0, height - margin.top - margin.bottom])
         .padding(0.2);
 
       // X Axis
-      svg.append("g")
-        .attr("transform", `translate(0,${height - innerMargin.bottom})`)
+      g.append("g")
+        .attr("transform", `translate(0,${height - margin.top - margin.bottom})`)
         .call(d3.axisBottom(x).ticks(4))
         .call(g => g.selectAll("text").style("font-size", "12px"));
 
       // Y Axis
-      svg.append("g")
-        .attr("transform", `translate(${innerMargin.left},0)`)
+      g.append("g")
         .call(d3.axisLeft(y).tickSize(0))
         .call(g => g.selectAll("text").style("font-size", "12px"));
 
       // Bars
-      const bars = svg.selectAll(".bar")
+      const bars = g.selectAll(".bar")
         .data(dataset)
         .join("rect")
         .attr("class", "bar")
-        .attr("x", x(0))
+        .attr("x", 0)
         .attr("y", d => y(d.order))
-        .attr("width", d => x(d.fold_growth_1851_1911) - x(0))
+        .attr("width", d => x(d.fold_growth_1851_1911))
         .attr("height", y.bandwidth())
         .attr("fill", "#6BAED6");
 
