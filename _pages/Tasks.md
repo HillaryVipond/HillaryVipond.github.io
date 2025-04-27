@@ -147,7 +147,50 @@ document.addEventListener("DOMContentLoaded", function () {
       svg.append("g")
         .attr("transform", `translate(${margin.left},0)`)
         .call(d3.axisLeft(y).tickSize(0))
+        .call(g => g.selectAll("text").style("font-size", "12px"));
 
+      const bars = svg.selectAll(".bar")
+        .data(dataset)
+        .join("rect")
+        .attr("class", "bar")
+        .attr("x", x(0))
+        .attr("y", d => y(d.order))
+        .attr("width", d => x(d.fold_growth_1851_1911) - x(0))
+        .attr("height", y.bandwidth())
+        .attr("fill", "#6BAED6");
+
+      const tooltip = d3.select("body")
+        .append("div")
+        .style("position", "absolute")
+        .style("background", "white")
+        .style("border", "1px solid #ccc")
+        .style("padding", "8px 12px")
+        .style("border-radius", "5px")
+        .style("pointer-events", "none")
+        .style("font-size", "14px")
+        .style("visibility", "hidden")
+        .style("box-shadow", "0 2px 6px rgba(0,0,0,0.2)");
+
+      bars.on("mouseover", function (event, d) {
+          tooltip.style("visibility", "visible").text(`${d.order}: ${d.fold_growth_1851_1911.toFixed(2)}×`);
+          d3.select(this).attr("fill", "#3182BD");
+        })
+        .on("mousemove", function (event) {
+          tooltip.style("left", (event.pageX + 10) + "px")
+                 .style("top", (event.pageY - 20) + "px");
+        })
+        .on("mouseout", function () {
+          tooltip.style("visibility", "hidden");
+          d3.select(this).attr("fill", "#6BAED6");
+        });
+    }
+
+    // Actually draw both charts
+    drawBarChart("#below-growth", belowGrowth);
+    drawBarChart("#above-growth", aboveGrowth);
+  });
+});
+</script>
 
 
 
