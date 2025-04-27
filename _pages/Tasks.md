@@ -89,27 +89,28 @@ nav_exclude: false
   });
 </script>
 
- 
-
 ---
 SECOND BLOCK
 ---
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <!-- 1. Headings and explanation -->
-<h2> Growth by Industry: 1851–1911</h2>
-
+<h2>Growth by Industry: 1851–1911</h2>
 
 <!-- 2. Container for the scatterplot -->
 <div id="scatterplot"></div>
 
-<!-- 3. Text Below Graph and Toggle Button -->
+<!-- 3. Buttons below graph -->
 <h4 style="margin-top: 1em;">
   Population doubled over the period: any industry growing more than 100% outpaced population growth, industries which grew less lagged.
 </h4>
 
 <button onclick="showThreshold()" style="margin-top: 1em; padding: 6px 12px; font-size: 14px;">
   Show Population Threshold
+</button>
+
+<button onclick="zoomToLowGrowth()" style="margin-top: 1em; padding: 6px 12px; font-size: 14px;">
+  Zoom to 0–10 Fold Growth
 </button>
 
 <!-- 4. Scatterplot Script -->
@@ -125,7 +126,6 @@ document.addEventListener("DOMContentLoaded", function () {
     .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
-  // 4a. Tooltip configuration
   const tooltip = d3.select("body")
     .append("div")
     .attr("class", "tooltip")
@@ -140,22 +140,30 @@ document.addEventListener("DOMContentLoaded", function () {
     .style("visibility", "hidden")
     .style("box-shadow", "0 2px 6px rgba(0,0,0,0.2)");
 
-  // 4b. Load CSV and plot data
   d3.csv("/assets/data/Industry.csv", d3.autoType).then(data => {
     const x = d3.scaleLog()
-    .domain(d3.extent(data, d => d.final_size)).nice()
-    .range([0, width]);
+      .domain(d3.extent(data, d => d.final_size).map(d => d > 0 ? d : 1)) // avoid log(0)
+      .nice()
+      .range([0, width]);
 
     const y = d3.scaleLinear()
       .domain(d3.extent(data, d => d.fold_growth)).nice()
       .range([height, 0]);
 
+    // Save x and y to global scope inside this function
+    window._scatter_x = x;
+    window._scatter_y = y;
+    window._scatter_svg = svg;
+    window._scatter_data = data;
+
     // Axes
     svg.append("g")
       .attr("transform", `translate(0,${height})`)
-      .call(d3.axisBottom(x));
+      .attr("class", "x-axis")
+      .call(d3.axisBottom(x).ticks(10, "~s"));
 
     svg.append("g")
+      .attr("class", "y-axis")
       .call(d3.axisLeft(y));
 
     // Axis Labels
@@ -163,49 +171,50 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("x", width / 2)
       .attr("y", height + 40)
       .attr("text-anchor", "middle")
-      .text("Lof of The Initial Size of Industry");
+      .text("Log of Final Size of Industry");
 
     svg.append("text")
       .attr("transform", "rotate(-90)")
       .attr("x", -height / 2)
-      .attr("y", -40)
+      .attr("y", -45)
       .attr("text-anchor", "middle")
-      .text("Fold Increase (1851-1911");
+      .text("Fold Increase (1851–1911)");
 
-    // 4c. Hidden threshold line
+    // Hidden threshold line
     svg.append("line")
+      .attr("class", "threshold-line")
       .attr("x1", 0)
       .attr("x2", width)
-      .attr("y1", y(100))
-      .attr("y2", y(100))
+      .attr("y1", y(2))
+      .attr("y2", y(2))
       .attr("stroke", "grey")
       .attr("stroke-width", 1.5)
       .attr("stroke-dasharray", "5,5")
       .style("visibility", "hidden");
 
     svg.append("text")
+      .attr("class", "threshold-text")
       .attr("x", width - 10)
-      .attr("y", y(100) - 6)
+      .attr("y", y(2) - 6)
       .attr("text-anchor", "end")
       .style("fill", "grey")
       .style("font-size", "12px")
       .style("visibility", "hidden")
       .text("Population doubled");
 
-    // 4d. Plot the data points
+    // Plot the data points
     svg.selectAll("circle")
       .data(data)
       .join("circle")
-      .attr("cx", d => x(d.initial_size))
+      .attr("cx", d => x(d.final_size))
       .attr("cy", d => y(d.fold_growth))
       .attr("r", 6)
-      .attr("fill", "#6BAED6") // semi-light blue
+      .attr("fill", "#6BAED6")
       .on("mouseover", function (event, d) {
-      const label = (d.industry && d.industry !== "NaN") ? d.industry : `Occ ${d.occode}`;
-      tooltip.style("visibility", "visible").text(label);
-      d3.select(this).attr("stroke", "black").attr("stroke-width", 1.5);
+        const label = (d.industry && d.industry !== "NaN") ? d.industry : `Occ ${d.occode}`;
+        tooltip.style("visibility", "visible").text(label);
+        d3.select(this).attr("stroke", "black").attr("stroke-width", 1.5);
       })
-
       .on("mousemove", function (event) {
         tooltip
           .style("left", (event.pageX + 10) + "px")
@@ -216,23 +225,35 @@ document.addEventListener("DOMContentLoaded", function () {
         d3.select(this).attr("stroke", null);
       });
   });
+
+  // Functions for buttons
+  window.showThreshold = function() {
+    d3.selectAll(".threshold-line").style("visibility", "visible");
+    d3.selectAll(".threshold-text").style("visibility", "visible");
+  }
+
+  window.zoomToLowGrowth = function() {
+    const svg = window._scatter_svg;
+    const y = window._scatter_y;
+    const data = window._scatter_data;
+
+    // Update y-axis domain
+    y.domain([0, 10]);
+
+    svg.select(".y-axis")
+      .transition()
+      .duration(750)
+      .call(d3.axisLeft(y));
+
+    svg.selectAll("circle")
+      .transition()
+      .duration(750)
+      .attr("cy", d => y(d.fold_growth));
+  }
 });
 </script>
 
 
-
-<!-- 5. Function to reveal the threshold line on click -->
-<script>
-function showThreshold() {
-  d3.selectAll("line").filter(function() {
-    return d3.select(this).attr("y1") === d3.select(this).attr("y2");
-  }).style("visibility", "visible");
-
-  d3.selectAll("text").filter(function() {
-    return d3.select(this).text() === "Population doubled";
-  }).style("visibility", "visible");
-}
-</script>
 
 
 --------------------------------------------------------------------------------
