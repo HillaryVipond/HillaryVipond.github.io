@@ -142,9 +142,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 4b. Load CSV and plot data
   d3.csv("/assets/data/Industry.csv", d3.autoType).then(data => {
-    const x = d3.scaleLinear()
-      .domain(d3.extent(data, d => d.initial_size)).nice()
-      .range([0, width]);
+    const x = d3.scaleLog()
+    .domain(d3.extent(data, d => d.initial_size)).nice()
+    .range([0, width]);
 
     const y = d3.scaleLinear()
       .domain(d3.extent(data, d => d.fold_growth)).nice()
@@ -163,7 +163,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("x", width / 2)
       .attr("y", height + 40)
       .attr("text-anchor", "middle")
-      .text("Initial Size of Industry");
+      .text("Lof of The Initial Size of Industry");
 
     svg.append("text")
       .attr("transform", "rotate(-90)")
