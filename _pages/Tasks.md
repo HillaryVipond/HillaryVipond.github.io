@@ -97,7 +97,7 @@ SECOND BLOCK
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <!-- 1. Headings and explanation -->
-<h2>Scatterplot: Industry Growth (1851–1911)</h2>
+<h2> Growth by Industry: 1851–1911</h2>
 
 
 <!-- 2. Container for the scatterplot -->
