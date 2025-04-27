@@ -200,8 +200,8 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 
-
-SECOND BLOCK
+-----------------------
+SECOND BLOCK V2
 ---
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
@@ -254,6 +254,9 @@ document.addEventListener("DOMContentLoaded", function () {
     .style("box-shadow", "0 2px 6px rgba(0,0,0,0.2)");
 
   d3.csv("/assets/data/Industry.csv", d3.autoType).then(data => {
+    // Clean data: remove rows with missing or invalid fold_growth
+    data = data.filter(d => d.fold_growth != null && !isNaN(d.fold_growth));
+   
     const x = d3.scaleLog()
       .domain(d3.extent(data, d => d.final_size).map(d => d > 0 ? d : 1)) // avoid log(0)
       .nice()
@@ -371,7 +374,20 @@ document.addEventListener("DOMContentLoaded", function () {
       .transition()
       .duration(750)
       .attr("cy", d => y(d.fold_growth));
+
+    // 🛠️ Fix threshold line position too
+    svg.selectAll(".threshold-line")
+      .transition()
+      .duration(750)
+      .attr("y1", y(2))
+      .attr("y2", y(2));
+
+    svg.selectAll(".threshold-text")
+      .transition()
+      .duration(750)
+      .attr("y", y(2) - 6);
   }
+
 });
 </script>
 
