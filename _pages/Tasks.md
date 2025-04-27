@@ -93,13 +93,16 @@ nav_exclude: false
 Block 1a
 --------------------------------------------------------------------------------
 
-<!-- These divs are the containers -->
+<!-- Chart containers -->
 <div style="display: flex; gap: 2em;">
   <div id="below-growth"></div>
   <div id="above-growth"></div>
 </div>
 
+<!-- D3.js library -->
 <script src="https://d3js.org/d3.v7.min.js"></script>
+
+<!-- Your chart script -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const width = 400;
@@ -107,14 +110,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const margin = {top: 20, right: 20, bottom: 30, left: 150};
 
   d3.csv("/assets/data/Order_growth.csv", d3.autoType).then(data => {
-    // Split data
+    // Split into below and above
     const belowGrowth = data.filter(d => d.fold_growth_1851_1911 < 2)
       .sort((a, b) => d3.descending(a.fold_growth_1851_1911, b.fold_growth_1851_1911));
-
     const aboveGrowth = data.filter(d => d.fold_growth_1851_1911 >= 2)
       .sort((a, b) => d3.descending(a.fold_growth_1851_1911, b.fold_growth_1851_1911));
 
-    // Set up a function to draw each chart
     function drawBarChart(containerId, dataset) {
       const svg = d3.select(containerId)
         .append("svg")
@@ -183,7 +184,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Draw both charts
     drawBarChart("#below-growth", belowGrowth);
     drawBarChart("#above-growth", aboveGrowth);
   });
