@@ -90,10 +90,118 @@ nav_exclude: false
 </script>
 
 -------------------------------------------------------------------------------
-SECOND BLOCK
+Block 1a
 --------------------------------------------------------------------------------
 
- ---
+<script src="https://d3js.org/d3.v7.min.js"></script>
+
+<h2>Industry Growth Compared to Population Growth (1851–1911)</h2>
+
+<!-- Flex container for the two charts -->
+<div id="bar-charts" style="display: flex; gap: 40px; justify-content: center; margin-top: 2em;">
+  <div>
+    <h3 style="text-align: center;">Below Population Growth</h3>
+    <div id="below-growth"></div>
+  </div>
+  <div>
+    <h3 style="text-align: center;">Above Population Growth</h3>
+    <div id="above-growth"></div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const width = 400;
+  const height = 500;
+  const margin = {top: 20, right: 20, bottom: 30, left: 150};
+
+  d3.csv("/assets/data/Industry.csv", d3.autoType).then(data => {
+    // Split data
+    const belowGrowth = data.filter(d => d.fold_growth_1851_1911 < 2)
+      .sort((a, b) => d3.descending(a.fold_growth_1851_1911, b.fold_growth_1851_1911));
+    const aboveGrowth = data.filter(d => d.fold_growth_1851_1911 >= 2)
+      .sort((a, b) => d3.descending(a.fold_growth_1851_1911, b.fold_growth_1851_1911));
+
+    // Set up a function to draw each chart
+    function drawBarChart(containerId, dataset) {
+      const svg = d3.select(containerId)
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+      const x = d3.scaleLinear()
+        .domain([0, d3.max(dataset, d => d.fold_growth_1851_1911)]).nice()
+        .range([0, width - margin.left - margin.right]);
+
+      const y = d3.scaleBand()
+        .domain(dataset.map(d => d.order))
+        .range([0, height - margin.top - margin.bottom])
+        .padding(0.2);
+
+      svg.append("g")
+        .call(d3.axisLeft(y).tickSize(0))
+        .selectAll("text")
+        .style("font-size", "13px")
+        .style("font-family", "sans-serif");
+
+      svg.append("g")
+        .attr("transform", `translate(0,${height - margin.top - margin.bottom})`)
+        .call(d3.axisBottom(x).ticks(4))
+        .selectAll("text")
+        .style("font-size", "12px")
+        .style("font-family", "sans-serif");
+
+      const bars = svg.selectAll(".bar")
+        .data(dataset)
+        .join("rect")
+        .attr("class", "bar")
+        .attr("y", d => y(d.order))
+        .attr("height", y.bandwidth())
+        .attr("x", 0)
+        .attr("width", d => x(d.fold_growth_1851_1911))
+        .attr("fill", "#6BAED6");
+
+      // Tooltip
+      const tooltip = d3.select("body")
+        .append("div")
+        .style("position", "absolute")
+        .style("background", "white")
+        .style("border", "1px solid #ccc")
+        .style("padding", "8px 12px")
+        .style("border-radius", "5px")
+        .style("pointer-events", "none")
+        .style("font-size", "14px")
+        .style("visibility", "hidden")
+        .style("box-shadow", "0 2px 6px rgba(0,0,0,0.2)");
+
+      bars.on("mouseover", function (event, d) {
+          tooltip.style("visibility", "visible").text(`${d.order}: ${d.fold_growth_1851_1911.toFixed(2)}×`);
+          d3.select(this).attr("fill", "#3182BD");
+        })
+        .on("mousemove", function (event) {
+          tooltip
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 20) + "px");
+        })
+        .on("mouseout", function () {
+          tooltip.style("visibility", "hidden");
+          d3.select(this).attr("fill", "#6BAED6");
+        });
+    }
+
+    // Draw both charts
+    drawBarChart("#below-growth", belowGrowth);
+    drawBarChart("#above-growth", aboveGrowth);
+  });
+});
+</script>
+
+
+
+
+----
 SECOND BLOCK
 ---
 <script src="https://d3js.org/d3.v7.min.js"></script>
