@@ -201,7 +201,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("r", 6)
       .attr("fill", "#6BAED6") // semi-light blue
       .on("mouseover", function (event, d) {
-        tooltip.style("visibility", "visible").text(d.industry);
+        tooltip.style("visibility", "visible").text(d.occode);
         d3.select(this).attr("stroke", "black").attr("stroke-width", 1.5);
       })
       .on("mousemove", function (event) {
