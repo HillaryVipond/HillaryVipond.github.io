@@ -394,7 +394,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 --------------------------------------------------------------------------------
-THIRD BLOCK V7
+THIRD BLOCK V8
 -------------------------------------------------------------------------------
 <h2>Interactive Treemap V7: Orders → Industries → Tasks</h2>
 
@@ -449,13 +449,14 @@ document.addEventListener("DOMContentLoaded", function () {
         .join("g")
         .attr("transform", d => `translate(${d.x0},${d.y0})`)
         .style("cursor", d => d.children ? "pointer" : "default")
-        .on("click", (event, d) => {
-          event.stopPropagation();
-          if (d.children) {
-            draw(d);
-          } else if (d.depth === 3 && d.ancestors().some(a => a.data.name === "5.2")) {
-            drawLineChartForIndustry("5.2");
-          }
+        event.stopPropagation();
+        if (d.children) {
+          draw(d);
+        } else if (d.depth === 3 && d.parent) {
+          const industryCode = d.parent.data.name;
+          drawLineChartForIndustry(industryCode);
+        }
+
         });
 
       boxes.append("rect")
@@ -485,13 +486,14 @@ document.addEventListener("DOMContentLoaded", function () {
           .join("g")
           .attr("transform", d => `translate(${d.x0},${d.y0})`)
           .style("cursor", d => d.children ? "pointer" : "default")
-          .on("click", (event, d) => {
-            event.stopPropagation();
-            if (d.children) {
-              draw(d);
-            } else if (d.depth === 3 && d.ancestors().some(a => a.data.name === "5.2")) {
-              drawLineChartForIndustry("5.2");
-            }
+          event.stopPropagation();
+          if (d.children) {
+            draw(d);
+          } else if (d.depth === 3 && d.parent) {
+          const industryCode = d.parent.data.name;
+          drawLineChartForIndustry(industryCode);
+          }
+
           })
           .call(g => {
             g.append("rect")
