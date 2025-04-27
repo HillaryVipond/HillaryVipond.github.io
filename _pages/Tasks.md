@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .range([0, width]);
 
     const y = d3.scaleLinear()
-      .domain(d3.extent(data, d => d.growth_pct)).nice()
+      .domain(d3.extent(data, d => d.fold_growth)).nice()
       .range([height, 0]);
 
     // Axes
@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("x", -height / 2)
       .attr("y", -40)
       .attr("text-anchor", "middle")
-      .text("Growth Percentage (1851–1911)");
+      .text("Fold Increase (1851-1911");
 
     // 4c. Hidden threshold line
     svg.append("line")
@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .data(data)
       .join("circle")
       .attr("cx", d => x(d.initial_size))
-      .attr("cy", d => y(d.growth_pct))
+      .attr("cy", d => y(d.fold_growth))
       .attr("r", 6)
       .attr("fill", "#6BAED6") // semi-light blue
       .on("mouseover", function (event, d) {
