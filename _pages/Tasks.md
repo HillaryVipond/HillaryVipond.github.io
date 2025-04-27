@@ -95,7 +95,7 @@ Block 1a
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
-<h2>Industry Growth Compared to Population Growth (1851–1911)</h2>
+<h2> Order Growth (1851–1911)</h2>
 
 <!-- Flex container for the two charts -->
 <div id="bar-charts" style="display: flex; gap: 40px; justify-content: center; margin-top: 2em;">
@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const height = 500;
   const margin = {top: 20, right: 20, bottom: 30, left: 150};
 
-  d3.csv("/assets/data/Industry.csv", d3.autoType).then(data => {
+  d3.csv("/assets/data/Orderscsv", d3.autoType).then(data => {
     // Split data
     const belowGrowth = data.filter(d => d.fold_growth_1851_1911 < 2)
       .sort((a, b) => d3.descending(a.fold_growth_1851_1911, b.fold_growth_1851_1911));
