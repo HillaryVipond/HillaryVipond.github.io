@@ -94,7 +94,7 @@ Block 1a
 --------------------------------------------------------------------------------
 
 <!-- Chart containers -->
-<div style="display: flex; gap: 2em;">
+<div style="display: flex; gap: 4em; justify-content: center;">
   <div id="below-growth"></div>
   <div id="above-growth"></div>
 </div>
@@ -107,7 +107,7 @@ Block 1a
 document.addEventListener("DOMContentLoaded", function () {
   const width = 400;
   const height = 500;
-  const margin = {top: 20, right: 20, bottom: 30, left: 150};
+  const margin = {top: 20, right: 20, bottom: 30, left: 60};
 
   d3.csv("/assets/data/Orders.csv", d3.autoType).then(data => {
     // Split into below and above
