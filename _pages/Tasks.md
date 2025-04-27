@@ -92,6 +92,9 @@ nav_exclude: false
 -------------------------------------------------------------------------------
 Block 1a
 --------------------------------------------------------------------------------
+<!-- D3.js library -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<h2> Occupation Orders Over Time</h2>
 
 <!-- Chart containers -->
 <div style="display: flex; gap: 2em; justify-content: center;">
@@ -99,8 +102,7 @@ Block 1a
   <div id="above-growth"></div>
 </div>
 
-<!-- D3.js library -->
-<script src="https://d3js.org/d3.v7.min.js"></script>
+
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -117,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function drawBarChart(containerId, dataset) {
       const svg = d3.select(containerId)
         .append("svg")
-        .attr("viewBox", [0, 0, width, height])
+        .attr("viewBox", `0 0 ${width} ${height}`)
         .style("font-family", "sans-serif")
         .style("font-size", "13px");
 
