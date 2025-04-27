@@ -394,10 +394,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 --------------------------------------------------------------------------------
-THIRD BLOCK V4
+THIRD BLOCK V5
 -------------------------------------------------------------------------------
 
-// Cleaned-up and improved version based on your goals:
+<!-- 1. Treemap container -->
+<h2>Interactive Treemap: Orders → Industries → Tasks</h2>
+
+<div id="treemap"></div>
+
+<!-- 2. Line chart title and container -->
+<h3 id="line-title" style="margin-top: 2em;"></h3>
+<div id="linechart"></div>
+
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
