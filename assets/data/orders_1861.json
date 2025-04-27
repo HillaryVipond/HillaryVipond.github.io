@@ -1,0 +1,93 @@
+{
+  "name": "Orders",
+  "children": [
+    {
+      "name": "Agriculture",
+      "size": 1568131
+    },
+    {
+      "name": "Brick",
+      "size": 91351
+    },
+    {
+      "name": "Building",
+      "size": 471204
+    },
+    {
+      "name": "Chemicals",
+      "size": 40950
+    },
+    {
+      "name": "Commerce",
+      "size": 139589
+    },
+    {
+      "name": "Conveyancing",
+      "size": 641781
+    },
+    {
+      "name": "Defence",
+      "size": 108039
+    },
+    {
+      "name": "Domestic",
+      "size": 1364158
+    },
+    {
+      "name": "Dress",
+      "size": 848126
+    },
+    {
+      "name": "Fishing",
+      "size": 16982
+    },
+    {
+      "name": "Food",
+      "size": 462197
+    },
+    {
+      "name": "Gas and Electric",
+      "size": 11370
+    },
+    {
+      "name": "General",
+      "size": 602327
+    },
+    {
+      "name": "Government",
+      "size": 64732
+    },
+    {
+      "name": "Leather",
+      "size": 62999
+    },
+    {
+      "name": "Machines",
+      "size": 595239
+    },
+    {
+      "name": "Mining",
+      "size": 387526
+    },
+    {
+      "name": "Paper",
+      "size": 85926
+    },
+    {
+      "name": "Precious Metals",
+      "size": 44074
+    },
+    {
+      "name": "Professions",
+      "size": 269793
+    },
+    {
+      "name": "Textiles",
+      "size": 976084
+    },
+    {
+      "name": "Wood",
+      "size": 156443
+    }
+  ]
+}
