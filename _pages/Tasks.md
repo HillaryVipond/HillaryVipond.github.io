@@ -90,7 +90,7 @@ nav_exclude: false
 </script>
 
 -------------------------------------------------------------------------------
-Block 1a
+Block 1a V2
 --------------------------------------------------------------------------------
 <!-- D3.js library -->
 <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -101,8 +101,6 @@ Block 1a
   <div id="below-growth"></div>
   <div id="above-growth"></div>
 </div>
-
-
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
