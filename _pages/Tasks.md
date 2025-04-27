@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const height = 500;
   const margin = {top: 20, right: 20, bottom: 30, left: 150};
 
-  d3.csv("/assets/data/Order_growth.csv", d3.autoType).then(data => {
+  d3.csv("/assets/data/Orders.csv", d3.autoType).then(data => {
     // Split into below and above
     const belowGrowth = data.filter(d => d.fold_growth_1851_1911 < 2)
       .sort((a, b) => d3.descending(a.fold_growth_1851_1911, b.fold_growth_1851_1911));
