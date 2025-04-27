@@ -394,17 +394,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 --------------------------------------------------------------------------------
-THIRD BLOCK V5
+THIRD BLOCK V6
 -------------------------------------------------------------------------------
-
-<!-- 1. Treemap container -->
 <h2>Interactive Treemap: Orders → Industries → Tasks</h2>
 
+<!-- Treemap container -->
 <div id="treemap"></div>
 
-<!-- 2. Line chart title and container -->
+<!-- Line chart title and container -->
 <h3 id="line-title" style="margin-top: 2em;"></h3>
 <div id="linechart"></div>
+
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -441,19 +441,22 @@ document.addEventListener("DOMContentLoaded", function () {
     function draw(activeNode) {
       group.selectAll("*").remove();
 
-      const children = activeNode.children || [];
+      const level = activeNode.depth;
+      const parent = activeNode.parent;
+      const siblings = parent ? parent.children : fullRoot.children;
 
       const boxes = group.selectAll("g")
-        .data(children)
+        .data(siblings)
         .join("g")
         .attr("transform", d => `translate(${d.x0},${d.y0})`)
         .style("cursor", d => d.children ? "pointer" : "default")
         .on("click", (event, d) => {
           event.stopPropagation();
+
           if (d.children) {
-            draw(d); // Drill deeper
-          } else if (d.depth === 2) { // If we're at Industry level
-            drawLineChartForIndustry(d.data.name);
+            draw(d);
+          } else if (d.depth === 3 && d.ancestors().some(a => a.data.name === "5.2")) {
+            drawLineChartForIndustry("5.2");
           }
         });
 
@@ -461,8 +464,11 @@ document.addEventListener("DOMContentLoaded", function () {
         .attr("width", d => d.x1 - d.x0)
         .attr("height", d => d.y1 - d.y0)
         .attr("fill", d => {
-          if (d.depth === 1) return color(d.data.name); // Color by Order
-          return color(d.parent.data.name); // Color children by parent Order
+          if (d === activeNode) {
+            const top = d.ancestors().slice(-2)[0]?.data.name || d.data.name;
+            return color(top);
+          }
+          return level === 1 ? "#ddd" : "#aaa";
         })
         .attr("stroke", "#fff");
 
@@ -470,83 +476,117 @@ document.addEventListener("DOMContentLoaded", function () {
         .attr("x", 4)
         .attr("y", 18)
         .text(d => d.data.name)
-        .attr("fill", d => d.depth === 0 ? "white" : "#444")
+        .attr("fill", d => d === activeNode ? "white" : "#444")
         .style("pointer-events", "none");
 
-      svg.on("click", () => {
-        if (activeNode.parent) draw(activeNode.parent); // Click background to go up
-      });
-    }
+      if (activeNode.children) {
+        const inner = group.append("g");
 
-    function drawLineChartForIndustry(industryName) {
-      d3.select("#linechart").selectAll("*").remove();
-      d3.select("#line-title").text(`Task Trends for Industry ${industryName}`);
+        inner.selectAll("g")
+          .data(activeNode.children)
+          .join("g")
+          .attr("transform", d => `translate(${d.x0},${d.y0})`)
+          .style("cursor", d => d.children ? "pointer" : "default")
+          .on("click", (event, d) => {
+            event.stopPropagation();
 
-      const margin = {top: 20, right: 30, bottom: 40, left: 60};
-      const lineWidth = 600 - margin.left - margin.right;
-      const lineHeight = 300 - margin.top - margin.bottom;
+            if (d.children) {
+              draw(d);
+            } else if (d.depth === 3 && d.ancestors().some(a => a.data.name === "5.2")) {
+              drawLineChartForIndustry("5.2");
+            }
+          })
+          .call(g => {
+            g.append("rect")
+              .attr("width", d => d.x1 - d.x0)
+              .attr("height", d => d.y1 - d.y0)
+              .attr("fill", () => color(activeNode.data.name))
+              .attr("stroke", "#fff");
 
-      const svgLine = d3.select("#linechart")
-        .append("svg")
-        .attr("width", lineWidth + margin.left + margin.right)
-        .attr("height", lineHeight + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
+            g.append("text")
+              .attr("x", 4)
+              .attr("y", 18)
+              .text(d => d.data.name)
+              .attr("fill", "white")
+              .style("font-size", "12px")
+              .style("pointer-events", "none");
+          });
 
-      const industryData = timeseriesData.filter(d => d.industry === industryName);
-
-      const nested = d3.rollups(industryData, v => d3.sum(v, d => d.count), d => d.year)
-        .map(([year, count]) => ({year, count}))
-        .sort((a, b) => d3.ascending(a.year, b.year));
-
-      if (nested.length === 0) {
-        svgLine.append("text")
-          .attr("x", lineWidth / 2)
-          .attr("y", lineHeight / 2)
-          .attr("text-anchor", "middle")
-          .text("No Data Available");
-        return;
+        svg.on("click", () => {
+          if (activeNode.parent) draw(activeNode.parent);
+        });
       }
-
-      const x = d3.scaleLinear()
-        .domain(d3.extent(nested, d => d.year))
-        .range([0, lineWidth]);
-
-      const y = d3.scaleLinear()
-        .domain([0, d3.max(nested, d => d.count)]).nice()
-        .range([lineHeight, 0]);
-
-      svgLine.append("g")
-        .attr("transform", `translate(0,${lineHeight})`)
-        .call(d3.axisBottom(x).tickFormat(d3.format("d")));
-
-      svgLine.append("g")
-        .call(d3.axisLeft(y));
-
-      const line = d3.line()
-        .x(d => x(d.year))
-        .y(d => y(d.count));
-
-      svgLine.append("path")
-        .datum(nested)
-        .attr("fill", "none")
-        .attr("stroke", "#007ACC")
-        .attr("stroke-width", 2)
-        .attr("d", line);
-
-      svgLine.selectAll("circle")
-        .data(nested)
-        .join("circle")
-        .attr("cx", d => x(d.year))
-        .attr("cy", d => y(d.count))
-        .attr("r", 4)
-        .attr("fill", "#007ACC");
     }
   });
+
+  function drawLineChartForIndustry(industryCode) {
+    d3.select("#linechart").selectAll("*").remove();
+    d3.select("#line-title").text(`Task Trends for Industry ${industryCode}`);
+
+    const margin = {top: 20, right: 30, bottom: 40, left: 60};
+    const width = 600 - margin.left - margin.right;
+    const height = 300 - margin.top - margin.bottom;
+
+    const svg = d3.select("#linechart")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .style("font-family", "sans-serif")
+      .style("font-size", "12px")
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const industryData = timeseriesData.filter(d => d.industry === industryCode);
+
+    const nested = d3.rollups(industryData, v => d3.sum(v, d => d.count), d => d.year)
+      .map(([year, count]) => ({year, count}))
+      .sort((a, b) => d3.ascending(a.year, b.year));
+
+    if (nested.length === 0) {
+      svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height / 2)
+        .attr("text-anchor", "middle")
+        .text("No Data Available");
+      return;
+    }
+
+    const x = d3.scaleLinear()
+      .domain(d3.extent(nested, d => d.year))
+      .range([0, width]);
+
+    const y = d3.scaleLinear()
+      .domain([0, d3.max(nested, d => d.count)]).nice()
+      .range([height, 0]);
+
+    svg.append("g")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(x).tickFormat(d3.format("d")));
+
+    svg.append("g")
+      .call(d3.axisLeft(y));
+
+    const line = d3.line()
+      .x(d => x(d.year))
+      .y(d => y(d.count));
+
+    svg.append("path")
+      .datum(nested)
+      .attr("fill", "none")
+      .attr("stroke", "#007ACC")
+      .attr("stroke-width", 2)
+      .attr("d", line);
+
+    svg.selectAll("circle")
+      .data(nested)
+      .join("circle")
+      .attr("cx", d => x(d.year))
+      .attr("cy", d => y(d.count))
+      .attr("r", 4)
+      .attr("fill", "#007ACC");
+  }
 });
 </script>
-
-
 
 
 --------------------------------------------------------------------------------
