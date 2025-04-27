@@ -143,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // 4b. Load CSV and plot data
   d3.csv("/assets/data/Industry.csv", d3.autoType).then(data => {
     const x = d3.scaleLog()
-    .domain(d3.extent(data, d => d.initial_size)).nice()
+    .domain(d3.extent(data, d => d.final_size)).nice()
     .range([0, width]);
 
     const y = d3.scaleLinear()
@@ -201,10 +201,11 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("r", 6)
       .attr("fill", "#6BAED6") // semi-light blue
       .on("mouseover", function (event, d) {
-      const label = d.industry ? d.industry : `Occ ${d.occode}`;
+      const label = (d.industry && d.industry !== "NaN") ? d.industry : `Occ ${d.occode}`;
       tooltip.style("visibility", "visible").text(label);
       d3.select(this).attr("stroke", "black").attr("stroke-width", 1.5);
       })
+
       .on("mousemove", function (event) {
         tooltip
           .style("left", (event.pageX + 10) + "px")
