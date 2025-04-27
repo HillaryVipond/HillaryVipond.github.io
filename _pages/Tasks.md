@@ -394,19 +394,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 --------------------------------------------------------------------------------
-THIRD BLOCK V3
+THIRD BLOCK V4
 -------------------------------------------------------------------------------
 
-<script src="https://d3js.org/d3.v7.min.js"></script>
-
-<h2>Interactive Treemap: Orders → Industries → Tasks</h2>
-
-<!-- 1. Treemap container -->
-<div id="treemap"></div>
-
-<!-- 2. Line chart title and container -->
-<h3 id="line-title" style="margin-top: 2em;"></h3>
-<div id="linechart"></div>
+// Cleaned-up and improved version based on your goals:
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -421,7 +412,6 @@ document.addEventListener("DOMContentLoaded", function () {
     .style("font-size", "14px");
 
   const group = svg.append("g");
-
   let timeseriesData = [];
 
   Promise.all([
@@ -454,11 +444,11 @@ document.addEventListener("DOMContentLoaded", function () {
         .style("cursor", d => d.children ? "pointer" : "default")
         .on("click", (event, d) => {
           event.stopPropagation();
-
           if (d.children) {
             draw(d);
-          } else if (d.depth === 3 && d.ancestors().some(a => a.data.name === "5.2")) {
-            drawLineChartForIndustry("5.2");
+            if (d.depth === 2) { // depth 2 means industry
+              drawLineChartForIndustry(d.data.name);
+            }
           }
         });
 
@@ -479,116 +469,83 @@ document.addEventListener("DOMContentLoaded", function () {
         .attr("y", 18)
         .text(d => d.data.name)
         .attr("fill", d => d === activeNode ? "white" : "#444")
-        .style("pointer-events", "none");
+        .style("font-size", "12px")
+        .style("pointer-events", "none")
+        .style("display", d => (d.x1 - d.x0 > 50 && d.y1 - d.y0 > 20) ? "block" : "none");
 
-      if (activeNode.children) {
-        const inner = group.append("g");
+      svg.on("click", () => {
+        if (activeNode.parent) draw(activeNode.parent);
+      });
+    }
 
-        inner.selectAll("g")
-          .data(activeNode.children)
-          .join("g")
-          .attr("transform", d => `translate(${d.x0},${d.y0})`)
-          .style("cursor", d => d.children ? "pointer" : "default")
-          .on("click", (event, d) => {
-            event.stopPropagation();
-            if (d.children) {
-              draw(d);
-            } else if (d.depth === 3 && d.ancestors().some(a => a.data.name === "5.2")) {
-              drawLineChartForIndustry("5.2");
-            }
-          })
-          .call(g => {
-            g.append("rect")
-              .attr("width", d => d.x1 - d.x0)
-              .attr("height", d => d.y1 - d.y0)
-              .attr("fill", () => color(activeNode.data.name))
-              .attr("stroke", "#fff");
+    function drawLineChartForIndustry(industryName) {
+      d3.select("#linechart").selectAll("*").remove();
+      d3.select("#line-title").text(`Task Trends for Industry: ${industryName}`);
 
-            g.append("text")
-              .attr("x", 4)
-              .attr("y", 18)
-              .text(d => d.data.name)
-              .attr("fill", "white")
-              .style("font-size", "12px")
-              .style("pointer-events", "none");
-          });
+      const margin = {top: 20, right: 30, bottom: 40, left: 60};
+      const widthLine = 600 - margin.left - margin.right;
+      const heightLine = 300 - margin.top - margin.bottom;
 
-        svg.on("click", () => {
-          if (activeNode.parent) draw(activeNode.parent);
-        });
+      const svgLine = d3.select("#linechart")
+        .append("svg")
+        .attr("width", widthLine + margin.left + margin.right)
+        .attr("height", heightLine + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+      const industryData = timeseriesData.filter(d => d.industry === industryName);
+
+      const nested = d3.rollups(industryData, v => d3.sum(v, d => d.count), d => d.year)
+        .map(([year, count]) => ({year, count}))
+        .sort((a, b) => d3.ascending(a.year, b.year));
+
+      if (nested.length === 0) {
+        svgLine.append("text")
+          .attr("x", widthLine / 2)
+          .attr("y", heightLine / 2)
+          .attr("text-anchor", "middle")
+          .text("No Data Available");
+        return;
       }
+
+      const x = d3.scaleLinear()
+        .domain(d3.extent(nested, d => d.year))
+        .range([0, widthLine]);
+
+      const y = d3.scaleLinear()
+        .domain([0, d3.max(nested, d => d.count)]).nice()
+        .range([heightLine, 0]);
+
+      svgLine.append("g")
+        .attr("transform", `translate(0,${heightLine})`)
+        .call(d3.axisBottom(x).tickFormat(d3.format("d")));
+
+      svgLine.append("g")
+        .call(d3.axisLeft(y));
+
+      const line = d3.line()
+        .x(d => x(d.year))
+        .y(d => y(d.count));
+
+      svgLine.append("path")
+        .datum(nested)
+        .attr("fill", "none")
+        .attr("stroke", "#007ACC")
+        .attr("stroke-width", 2)
+        .attr("d", line);
+
+      svgLine.selectAll("circle")
+        .data(nested)
+        .join("circle")
+        .attr("cx", d => x(d.year))
+        .attr("cy", d => y(d.count))
+        .attr("r", 4)
+        .attr("fill", "#007ACC");
     }
+
   });
-
-  function drawLineChartForIndustry(industryCode) {
-    d3.select("#linechart").selectAll("*").remove();
-    d3.select("#line-title").text(`Task Trends for Industry ${industryCode}`);
-
-    const margin = {top: 20, right: 30, bottom: 40, left: 60};
-    const width = 600 - margin.left - margin.right;
-    const height = 300 - margin.top - margin.bottom;
-
-    const svg = d3.select("#linechart")
-      .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .style("font-family", "sans-serif")
-      .style("font-size", "12px")
-      .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
-
-    const industryData = timeseriesData.filter(d => d.industry === industryCode);
-
-    const nested = d3.rollups(industryData, v => d3.sum(v, d => d.count), d => d.year)
-      .map(([year, count]) => ({year, count}))
-      .sort((a, b) => d3.ascending(a.year, b.year));
-
-    if (nested.length === 0) {
-      svg.append("text")
-        .attr("x", width / 2)
-        .attr("y", height / 2)
-        .attr("text-anchor", "middle")
-        .text("No Data Available");
-      return;
-    }
-
-    const x = d3.scaleLinear()
-      .domain(d3.extent(nested, d => d.year))
-      .range([0, width]);
-
-    const y = d3.scaleLinear()
-      .domain([0, d3.max(nested, d => d.count)]).nice()
-      .range([height, 0]);
-
-    svg.append("g")
-      .attr("transform", `translate(0,${height})`)
-      .call(d3.axisBottom(x).tickFormat(d3.format("d")));
-
-    svg.append("g")
-      .call(d3.axisLeft(y));
-
-    const line = d3.line()
-      .x(d => x(d.year))
-      .y(d => y(d.count));
-
-    svg.append("path")
-      .datum(nested)
-      .attr("fill", "none")
-      .attr("stroke", "#007ACC")
-      .attr("stroke-width", 2)
-      .attr("d", line);
-
-    svg.selectAll("circle")
-      .data(nested)
-      .join("circle")
-      .attr("cx", d => x(d.year))
-      .attr("cy", d => y(d.count))
-      .attr("r", 4)
-      .attr("fill", "#007ACC");
-  }
 });
 </script>
-
 
 
 --------------------------------------------------------------------------------
