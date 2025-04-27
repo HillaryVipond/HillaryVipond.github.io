@@ -396,7 +396,7 @@ document.addEventListener("DOMContentLoaded", function () {
 --------------------------------------------------------------------------------
 THIRD BLOCK 
 -------------------------------------------------------------------------------
-<h2>Interactive Treemap V10: Orders → Industries → Tasks</h2>
+<h2>Interactive Treemap V11: Orders → Industries → Tasks</h2>
 
 <!-- Treemap container -->
 <div id="treemap"></div>
@@ -450,14 +450,13 @@ document.addEventListener("DOMContentLoaded", function () {
         .attr("transform", d => `translate(${d.x0},${d.y0})`)
         .style("cursor", d => d.children ? "pointer" : "default")
         .on("click", (event, d) => {
-        event.stopPropagation();
-        if (d.children) {
-          draw(d);
-        } else if (d.depth === 3 && d.parent) {
-        const industryCode = d.parent.data.name;
-        drawLineChartForIndustry(industryCode);
-        }
-        });
+            event.stopPropagation();
+            if (d.children) {
+              draw(d);   // ✅ ONLY drill down
+            }
+            // ✅ No more else if here, no more drawLineChartForIndustry
+         });
+
 
       boxes.append("rect")
         .attr("width", d => d.x1 - d.x0)
