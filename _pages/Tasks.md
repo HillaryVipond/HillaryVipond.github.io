@@ -396,7 +396,7 @@ document.addEventListener("DOMContentLoaded", function () {
 --------------------------------------------------------------------------------
 THIRD BLOCK 
 -------------------------------------------------------------------------------
-<h2>Interactive Treemap V11: Orders → Industries → Tasks</h2>
+<h2>Interactive Treemap V12: Orders → Industries → Tasks</h2>
 
 <!-- Treemap container -->
 <div id="treemap"></div>
@@ -518,8 +518,10 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function drawLineChartForTask(taskName) {
-  d3.select("#linechart").selectAll("*").remove();
-  d3.select("#line-title").text(`Task Trends for "${taskName}"`);
+    console.log("Clicked task name:", taskName);
+    console.log("Available task names:", [...new Set(timeseriesData.map(d => d.task))]);
+    d3.select("#linechart").selectAll("*").remove();
+    d3.select("#line-title").text(`Task Trends for "${taskName}"`);
 
   const margin = { top: 20, right: 30, bottom: 40, left: 60 };
   const chartWidth = 600 - margin.left - margin.right;
