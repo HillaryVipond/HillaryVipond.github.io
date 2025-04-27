@@ -90,7 +90,7 @@ nav_exclude: false
 </script>
 
 -------------------------------------------------------------------------------
-Block 1a V4
+Block 1a V5
 --------------------------------------------------------------------------------
 
 
@@ -105,58 +105,56 @@ Block 1a V4
   <div id="above-growth"></div>
 </div>
 
-
-
-
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const width = 400;
   const height = 500;
-  const margin = { top: 20, right: 20, bottom: 30, left: 130 };
+  const margin = {top: 20, right: 20, bottom: 30, left: 150};
 
   d3.csv("/assets/data/Orders.csv", d3.autoType).then(data => {
     const belowGrowth = data.filter(d => d.fold_growth_1851_1911 < 2)
-      .sort((a, b) => d3.descending(a.fold_growth_1851_1911, b.fold_growth_1851_1911));
+      .sort((a, b) => d3.descending(a.fold_growth_1851_1911, b => b.fold_growth_1851_1911));
     const aboveGrowth = data.filter(d => d.fold_growth_1851_1911 >= 2)
-      .sort((a, b) => d3.descending(a.fold_growth_1851_1911, b.fold_growth_1851_1911));
-
-    // Find the overall maximum for x axis across both groups
-    const maxFoldGrowth = d3.max(data, d => d.fold_growth_1851_1911);
+      .sort((a, b) => d3.descending(a.fold_growth_1851_1911, b => b.fold_growth_1851_1911));
 
     function drawBarChart(containerId, dataset) {
       const svg = d3.select(containerId)
         .append("svg")
-        .attr("viewBox", `0 0 ${width} ${height}`)
-        .style("font-family", "sans-serif")
-        .style("font-size", "13px");
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
 
       const x = d3.scaleLinear()
-        .domain([0, maxFoldGrowth]).nice()   // Important: same max
-        .range([margin.left, width - margin.right]);
+        .domain([0, d3.max(dataset, d => d.fold_growth_1851_1911)]).nice()
+        .range([0, width - margin.left - margin.right]);
 
       const y = d3.scaleBand()
         .domain(dataset.map(d => d.order))
-        .range([margin.top, height - margin.bottom])
+        .range([0, height - margin.top - margin.bottom])
         .padding(0.2);
 
       svg.append("g")
-        .attr("transform", `translate(0,${height - margin.bottom})`)
-        .call(d3.axisBottom(x).ticks(4))
-        .call(g => g.selectAll("text").style("font-size", "12px"));
+        .call(d3.axisLeft(y).tickSize(0))
+        .selectAll("text")
+        .style("font-size", "13px")
+        .style("font-family", "sans-serif");
 
       svg.append("g")
-        .attr("transform", `translate(${margin.left},0)`)
-        .call(d3.axisLeft(y).tickSize(0))
-        .call(g => g.selectAll("text").style("font-size", "12px"));
+        .attr("transform", `translate(0,${height - margin.top - margin.bottom})`)
+        .call(d3.axisBottom(x).ticks(4))
+        .selectAll("text")
+        .style("font-size", "12px")
+        .style("font-family", "sans-serif");
 
       const bars = svg.selectAll(".bar")
         .data(dataset)
         .join("rect")
         .attr("class", "bar")
-        .attr("x", x(0))
         .attr("y", d => y(d.order))
-        .attr("width", d => x(d.fold_growth_1851_1911) - x(0))
         .attr("height", y.bandwidth())
+        .attr("x", 0)
+        .attr("width", d => x(d.fold_growth_1851_1911))
         .attr("fill", "#6BAED6");
 
       const tooltip = d3.select("body")
@@ -176,8 +174,9 @@ document.addEventListener("DOMContentLoaded", function () {
           d3.select(this).attr("fill", "#3182BD");
         })
         .on("mousemove", function (event) {
-          tooltip.style("left", (event.pageX + 10) + "px")
-                 .style("top", (event.pageY - 20) + "px");
+          tooltip
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 20) + "px");
         })
         .on("mouseout", function () {
           tooltip.style("visibility", "hidden");
@@ -185,7 +184,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Actually draw both charts
     drawBarChart("#below-growth", belowGrowth);
     drawBarChart("#above-growth", aboveGrowth);
   });
@@ -194,7 +192,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-----
 SECOND BLOCK
 ---
 <script src="https://d3js.org/d3.v7.min.js"></script>
