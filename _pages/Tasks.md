@@ -89,7 +89,11 @@ nav_exclude: false
   });
 </script>
 
----
+-------------------------------------------------------------------------------
+SECOND BLOCK
+--------------------------------------------------------------------------------
+
+ ---
 SECOND BLOCK
 ---
 <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -100,18 +104,20 @@ SECOND BLOCK
 <!-- 2. Container for the scatterplot -->
 <div id="scatterplot"></div>
 
-<!-- 3. Buttons below graph -->
+<!-- 3. Buttons below graph, side by side -->
 <h4 style="margin-top: 1em;">
   Population doubled over the period: any industry growing more than 100% outpaced population growth, industries which grew less lagged.
 </h4>
 
-<button onclick="showThreshold()" style="margin-top: 1em; padding: 6px 12px; font-size: 14px;">
-  Show Population Threshold
-</button>
+<div style="display: flex; gap: 10px; margin-top: 1em;">
+  <button onclick="showThreshold()" style="padding: 6px 12px; font-size: 14px;">
+    Show Population Threshold
+  </button>
 
-<button onclick="zoomToLowGrowth()" style="margin-top: 1em; padding: 6px 12px; font-size: 14px;">
-  Zoom to 0–10 Fold Growth
-</button>
+  <button onclick="toggleZoom()" style="padding: 6px 12px; font-size: 14px;">
+    Toggle Zoom to 0–10 Fold Growth
+  </button>
+</div>
 
 <!-- 4. Scatterplot Script -->
 <script>
@@ -150,11 +156,14 @@ document.addEventListener("DOMContentLoaded", function () {
       .domain(d3.extent(data, d => d.fold_growth)).nice()
       .range([height, 0]);
 
-    // Save x and y to global scope inside this function
+    // Save variables globally
     window._scatter_x = x;
     window._scatter_y = y;
     window._scatter_svg = svg;
     window._scatter_data = data;
+    window._scatter_margin = margin;
+    window._scatter_width = width;
+    window._scatter_height = height;
 
     // Axes
     svg.append("g")
@@ -202,7 +211,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .style("visibility", "hidden")
       .text("Population doubled");
 
-    // Plot the data points
+    // Data Points
     svg.selectAll("circle")
       .data(data)
       .join("circle")
@@ -226,19 +235,25 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   });
 
-  // Functions for buttons
+  // Buttons
   window.showThreshold = function() {
     d3.selectAll(".threshold-line").style("visibility", "visible");
     d3.selectAll(".threshold-text").style("visibility", "visible");
   }
 
-  window.zoomToLowGrowth = function() {
+  let zoomed = false;
+  window.toggleZoom = function() {
     const svg = window._scatter_svg;
     const y = window._scatter_y;
     const data = window._scatter_data;
 
-    // Update y-axis domain
-    y.domain([0, 10]);
+    if (!zoomed) {
+      y.domain([0, 10]);
+      zoomed = true;
+    } else {
+      y.domain(d3.extent(data, d => d.fold_growth)).nice();
+      zoomed = false;
+    }
 
     svg.select(".y-axis")
       .transition()
@@ -252,7 +267,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 </script>
-
 
 
 
