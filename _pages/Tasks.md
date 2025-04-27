@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .style("box-shadow", "0 2px 6px rgba(0,0,0,0.2)");
 
   // 4b. Load CSV and plot data
-  d3.csv("/assets/data/industry_growth.csv", d3.autoType).then(data => {
+  d3.csv("/assets/data/industry.csv", d3.autoType).then(data => {
     const x = d3.scaleLinear()
       .domain(d3.extent(data, d => d.initial_size)).nice()
       .range([0, width]);
