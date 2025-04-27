@@ -201,8 +201,9 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr("r", 6)
       .attr("fill", "#6BAED6") // semi-light blue
       .on("mouseover", function (event, d) {
-        tooltip.style("visibility", "visible").text(d.industry);
-        d3.select(this).attr("stroke", "black").attr("stroke-width", 1.5);
+      const label = d.industry ? d.industry : `Occ ${d.occode}`;
+      tooltip.style("visibility", "visible").text(label);
+      d3.select(this).attr("stroke", "black").attr("stroke-width", 1.5);
       })
       .on("mousemove", function (event) {
         tooltip
@@ -216,6 +217,8 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 </script>
+
+
 
 <!-- 5. Function to reveal the threshold line on click -->
 <script>
