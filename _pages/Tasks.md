@@ -90,7 +90,7 @@ nav_exclude: false
 </script>
 
 -------------------------------------------------------------------------------
-Block 1a V5
+Block 1a V6
 --------------------------------------------------------------------------------
 
 
@@ -99,11 +99,17 @@ Block 1a V5
 
 <h2> Occupation Orders Over Time</h2>
 
-<!-- Chart containers -->
 <div style="display: flex; gap: 2em; justify-content: center;">
-  <div id="below-growth"></div>
-  <div id="above-growth"></div>
+  <div>
+    <h3 style="text-align: center;">Below Population Growth</h3>
+    <div id="below-growth"></div>
+  </div>
+  <div>
+    <h3 style="text-align: center;">Above Population Growth</h3>
+    <div id="above-growth"></div>
+  </div>
 </div>
+
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -112,10 +118,13 @@ document.addEventListener("DOMContentLoaded", function () {
   const margin = {top: 20, right: 20, bottom: 30, left: 150};
 
   d3.csv("/assets/data/Orders.csv", d3.autoType).then(data => {
-    const belowGrowth = data.filter(d => d.fold_growth_1851_1911 < 2)
-      .sort((a, b) => d3.descending(a.fold_growth_1851_1911, b => b.fold_growth_1851_1911));
-    const aboveGrowth = data.filter(d => d.fold_growth_1851_1911 >= 2)
-      .sort((a, b) => d3.descending(a.fold_growth_1851_1911, b => b.fold_growth_1851_1911));
+    const belowGrowth = data
+      .filter(d => d.fold_growth_1851_1911 < 2)
+      .sort((a, b) => d3.descending(a.fold_growth_1851_1911, b.fold_growth_1851_1911));
+    const aboveGrowth = data
+      .filter(d => d.fold_growth_1851_1911 >= 2)
+      .sort((a, b) => d3.descending(a.fold_growth_1851_1911, b.fold_growth_1851_1911));
+
 
     function drawBarChart(containerId, dataset) {
       const svg = d3.select(containerId)
