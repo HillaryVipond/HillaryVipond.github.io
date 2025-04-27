@@ -94,7 +94,7 @@ Block 1a
 --------------------------------------------------------------------------------
 
 <!-- Chart containers -->
-<div style="display: flex; gap: 2em; justify.5-content: center;">
+<div style="display: flex; gap: 2em; justify-content: center;">
   <div id="below-growth"></div>
   <div id="above-growth"></div>
 </div>
@@ -102,15 +102,13 @@ Block 1a
 <!-- D3.js library -->
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
-<!-- Your chart script -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const width = 400;
   const height = 500;
-  const margin = {top: 20, right: 20, bottom: 30, left: 100};
+  const innerMargin = { top: 20, right: 20, bottom: 30, left: 130 }; // small margin for labels
 
   d3.csv("/assets/data/Orders.csv", d3.autoType).then(data => {
-    // Split into below and above
     const belowGrowth = data.filter(d => d.fold_growth_1851_1911 < 2)
       .sort((a, b) => d3.descending(a.fold_growth_1851_1911, b.fold_growth_1851_1911));
     const aboveGrowth = data.filter(d => d.fold_growth_1851_1911 >= 2)
@@ -119,41 +117,40 @@ document.addEventListener("DOMContentLoaded", function () {
     function drawBarChart(containerId, dataset) {
       const svg = d3.select(containerId)
         .append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
+        .attr("viewBox", [0, 0, width, height])
+        .style("font-family", "sans-serif")
+        .style("font-size", "13px");
 
       const x = d3.scaleLinear()
         .domain([0, d3.max(dataset, d => d.fold_growth_1851_1911)]).nice()
-        .range([0, width - margin.left - margin.right]);
+        .range([innerMargin.left, width - innerMargin.right]);
 
       const y = d3.scaleBand()
         .domain(dataset.map(d => d.order))
-        .range([0, height - margin.top - margin.bottom])
+        .range([innerMargin.top, height - innerMargin.bottom])
         .padding(0.2);
 
+      // X Axis
       svg.append("g")
-        .call(d3.axisLeft(y).tickSize(0))
-        .selectAll("text")
-        .style("font-size", "13px")
-        .style("font-family", "sans-serif");
-
-      svg.append("g")
-        .attr("transform", `translate(0,${height - margin.top - margin.bottom})`)
+        .attr("transform", `translate(0,${height - innerMargin.bottom})`)
         .call(d3.axisBottom(x).ticks(4))
-        .selectAll("text")
-        .style("font-size", "12px")
-        .style("font-family", "sans-serif");
+        .call(g => g.selectAll("text").style("font-size", "12px"));
 
+      // Y Axis
+      svg.append("g")
+        .attr("transform", `translate(${innerMargin.left},0)`)
+        .call(d3.axisLeft(y).tickSize(0))
+        .call(g => g.selectAll("text").style("font-size", "12px"));
+
+      // Bars
       const bars = svg.selectAll(".bar")
         .data(dataset)
         .join("rect")
         .attr("class", "bar")
+        .attr("x", x(0))
         .attr("y", d => y(d.order))
+        .attr("width", d => x(d.fold_growth_1851_1911) - x(0))
         .attr("height", y.bandwidth())
-        .attr("x", 0)
-        .attr("width", d => x(d.fold_growth_1851_1911))
         .attr("fill", "#6BAED6");
 
       // Tooltip
@@ -189,7 +186,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 </script>
-
 
 
 
