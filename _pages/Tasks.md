@@ -394,9 +394,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 --------------------------------------------------------------------------------
-THIRD BLOCK V6
+THIRD BLOCK V7
 -------------------------------------------------------------------------------
-<h2>Interactive Treemap: Orders → Industries → Tasks</h2>
+<h2>Interactive Treemap V7: Orders → Industries → Tasks</h2>
 
 <!-- Treemap container -->
 <div id="treemap"></div>
@@ -404,7 +404,6 @@ THIRD BLOCK V6
 <!-- Line chart title and container -->
 <h3 id="line-title" style="margin-top: 2em;"></h3>
 <div id="linechart"></div>
-
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -452,7 +451,6 @@ document.addEventListener("DOMContentLoaded", function () {
         .style("cursor", d => d.children ? "pointer" : "default")
         .on("click", (event, d) => {
           event.stopPropagation();
-
           if (d.children) {
             draw(d);
           } else if (d.depth === 3 && d.ancestors().some(a => a.data.name === "5.2")) {
@@ -489,7 +487,6 @@ document.addEventListener("DOMContentLoaded", function () {
           .style("cursor", d => d.children ? "pointer" : "default")
           .on("click", (event, d) => {
             event.stopPropagation();
-
             if (d.children) {
               draw(d);
             } else if (d.depth === 3 && d.ancestors().some(a => a.data.name === "5.2")) {
@@ -523,14 +520,14 @@ document.addEventListener("DOMContentLoaded", function () {
     d3.select("#linechart").selectAll("*").remove();
     d3.select("#line-title").text(`Task Trends for Industry ${industryCode}`);
 
-    const margin = {top: 20, right: 30, bottom: 40, left: 60};
-    const width = 600 - margin.left - margin.right;
-    const height = 300 - margin.top - margin.bottom;
+    const margin = { top: 20, right: 30, bottom: 40, left: 60 };
+    const chartWidth = 600 - margin.left - margin.right;
+    const chartHeight = 300 - margin.top - margin.bottom;
 
     const svg = d3.select("#linechart")
       .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
+      .attr("width", chartWidth + margin.left + margin.right)
+      .attr("height", chartHeight + margin.top + margin.bottom)
       .style("font-family", "sans-serif")
       .style("font-size", "12px")
       .append("g")
@@ -539,13 +536,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const industryData = timeseriesData.filter(d => d.industry === industryCode);
 
     const nested = d3.rollups(industryData, v => d3.sum(v, d => d.count), d => d.year)
-      .map(([year, count]) => ({year, count}))
+      .map(([year, count]) => ({ year, count }))
       .sort((a, b) => d3.ascending(a.year, b.year));
 
     if (nested.length === 0) {
       svg.append("text")
-        .attr("x", width / 2)
-        .attr("y", height / 2)
+        .attr("x", chartWidth / 2)
+        .attr("y", chartHeight / 2)
         .attr("text-anchor", "middle")
         .text("No Data Available");
       return;
@@ -553,14 +550,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const x = d3.scaleLinear()
       .domain(d3.extent(nested, d => d.year))
-      .range([0, width]);
+      .range([0, chartWidth]);
 
     const y = d3.scaleLinear()
       .domain([0, d3.max(nested, d => d.count)]).nice()
-      .range([height, 0]);
+      .range([chartHeight, 0]);
 
     svg.append("g")
-      .attr("transform", `translate(0,${height})`)
+      .attr("transform", `translate(0,${chartHeight})`)
       .call(d3.axisBottom(x).tickFormat(d3.format("d")));
 
     svg.append("g")
@@ -587,6 +584,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 </script>
+
+
 
 
 --------------------------------------------------------------------------------
