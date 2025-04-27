@@ -406,7 +406,6 @@ THIRD BLOCK V5
 <h3 id="line-title" style="margin-top: 2em;"></h3>
 <div id="linechart"></div>
 
-
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const width = 960;
@@ -420,6 +419,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .style("font-size", "14px");
 
   const group = svg.append("g");
+
   let timeseriesData = [];
 
   Promise.all([
@@ -441,22 +441,19 @@ document.addEventListener("DOMContentLoaded", function () {
     function draw(activeNode) {
       group.selectAll("*").remove();
 
-      const level = activeNode.depth;
-      const parent = activeNode.parent;
-      const siblings = parent ? parent.children : fullRoot.children;
+      const children = activeNode.children || [];
 
       const boxes = group.selectAll("g")
-        .data(siblings)
+        .data(children)
         .join("g")
         .attr("transform", d => `translate(${d.x0},${d.y0})`)
         .style("cursor", d => d.children ? "pointer" : "default")
         .on("click", (event, d) => {
           event.stopPropagation();
           if (d.children) {
-            draw(d);
-            if (d.depth === 2) { // depth 2 means industry
-              drawLineChartForIndustry(d.data.name);
-            }
+            draw(d); // Drill deeper
+          } else if (d.depth === 2) { // If we're at Industry level
+            drawLineChartForIndustry(d.data.name);
           }
         });
 
@@ -464,11 +461,8 @@ document.addEventListener("DOMContentLoaded", function () {
         .attr("width", d => d.x1 - d.x0)
         .attr("height", d => d.y1 - d.y0)
         .attr("fill", d => {
-          if (d === activeNode) {
-            const top = d.ancestors().slice(-2)[0]?.data.name || d.data.name;
-            return color(top);
-          }
-          return level === 1 ? "#ddd" : "#aaa";
+          if (d.depth === 1) return color(d.data.name); // Color by Order
+          return color(d.parent.data.name); // Color children by parent Order
         })
         .attr("stroke", "#fff");
 
@@ -476,28 +470,26 @@ document.addEventListener("DOMContentLoaded", function () {
         .attr("x", 4)
         .attr("y", 18)
         .text(d => d.data.name)
-        .attr("fill", d => d === activeNode ? "white" : "#444")
-        .style("font-size", "12px")
-        .style("pointer-events", "none")
-        .style("display", d => (d.x1 - d.x0 > 50 && d.y1 - d.y0 > 20) ? "block" : "none");
+        .attr("fill", d => d.depth === 0 ? "white" : "#444")
+        .style("pointer-events", "none");
 
       svg.on("click", () => {
-        if (activeNode.parent) draw(activeNode.parent);
+        if (activeNode.parent) draw(activeNode.parent); // Click background to go up
       });
     }
 
     function drawLineChartForIndustry(industryName) {
       d3.select("#linechart").selectAll("*").remove();
-      d3.select("#line-title").text(`Task Trends for Industry: ${industryName}`);
+      d3.select("#line-title").text(`Task Trends for Industry ${industryName}`);
 
       const margin = {top: 20, right: 30, bottom: 40, left: 60};
-      const widthLine = 600 - margin.left - margin.right;
-      const heightLine = 300 - margin.top - margin.bottom;
+      const lineWidth = 600 - margin.left - margin.right;
+      const lineHeight = 300 - margin.top - margin.bottom;
 
       const svgLine = d3.select("#linechart")
         .append("svg")
-        .attr("width", widthLine + margin.left + margin.right)
-        .attr("height", heightLine + margin.top + margin.bottom)
+        .attr("width", lineWidth + margin.left + margin.right)
+        .attr("height", lineHeight + margin.top + margin.bottom)
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -509,8 +501,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (nested.length === 0) {
         svgLine.append("text")
-          .attr("x", widthLine / 2)
-          .attr("y", heightLine / 2)
+          .attr("x", lineWidth / 2)
+          .attr("y", lineHeight / 2)
           .attr("text-anchor", "middle")
           .text("No Data Available");
         return;
@@ -518,14 +510,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const x = d3.scaleLinear()
         .domain(d3.extent(nested, d => d.year))
-        .range([0, widthLine]);
+        .range([0, lineWidth]);
 
       const y = d3.scaleLinear()
         .domain([0, d3.max(nested, d => d.count)]).nice()
-        .range([heightLine, 0]);
+        .range([lineHeight, 0]);
 
       svgLine.append("g")
-        .attr("transform", `translate(0,${heightLine})`)
+        .attr("transform", `translate(0,${lineHeight})`)
         .call(d3.axisBottom(x).tickFormat(d3.format("d")));
 
       svgLine.append("g")
@@ -550,10 +542,11 @@ document.addEventListener("DOMContentLoaded", function () {
         .attr("r", 4)
         .attr("fill", "#007ACC");
     }
-
   });
 });
 </script>
+
+
 
 
 --------------------------------------------------------------------------------
