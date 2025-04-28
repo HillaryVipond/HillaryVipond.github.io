@@ -482,10 +482,11 @@ document.addEventListener("DOMContentLoaded", function () {
           .on("click", (event, d) => {
             event.stopPropagation();
             if (d.children) {
-              draw(d); // Drill if more children (rare)
+              draw(d); // Drill deeper if children
             } else {
-              const industryCode = d.parent.data.name; // 🧠 Parent is industry
-              drawLineChartForIndustry(industryCode);  // ✅ Show Industry line graph
+            let industryCode = d.parent.data.name;
+            industryCode = industryCode.replace(/\s+/g, '_'); // 🛠 replace spaces with       underscores
+            drawLineChartForIndustry(industryCode);  // ✅ Now loads Industry_5.2.csv
             }
           })
           .call(g => {
