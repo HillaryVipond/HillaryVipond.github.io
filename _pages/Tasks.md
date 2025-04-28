@@ -396,7 +396,7 @@ document.addEventListener("DOMContentLoaded", function () {
 --------------------------------------------------------------------------------
 THIRD BLOCK 
 -------------------------------------------------------------------------------
-<h2>Interactive Treemap V12: Orders → Industries → Tasks</h2>
+<h2>Interactive Treemap V13: Orders → Industries → Tasks</h2>
 
 <!-- Treemap container -->
 <div id="treemap"></div>
@@ -419,13 +419,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const group = svg.append("g");
 
-  let timeseriesData = [];
-
   Promise.all([
-    d3.json("/assets/data/Tasks.json"),
-    d3.csv("/assets/data/task_timeseries_toy.csv", d3.autoType)
-  ]).then(([treemapData, csvData]) => {
-    timeseriesData = csvData;
+    d3.json("/assets/data/Tasks.json") // ✅ Only load treemap structure at start
+  ]).then(([treemapData]) => {
 
     const fullRoot = d3.hierarchy(treemapData)
       .sum(d => d.size || 0)
@@ -450,13 +446,11 @@ document.addEventListener("DOMContentLoaded", function () {
         .attr("transform", d => `translate(${d.x0},${d.y0})`)
         .style("cursor", d => d.children ? "pointer" : "default")
         .on("click", (event, d) => {
-            event.stopPropagation();
-            if (d.children) {
-              draw(d);   // ✅ ONLY drill down
-            }
-            // ✅ No more else if here, no more drawLineChartForIndustry
-         });
-
+          event.stopPropagation();
+          if (d.children) {
+            draw(d);   // ✅ Drill deeper
+          }
+        });
 
       boxes.append("rect")
         .attr("width", d => d.x1 - d.x0)
@@ -488,12 +482,12 @@ document.addEventListener("DOMContentLoaded", function () {
           .on("click", (event, d) => {
             event.stopPropagation();
             if (d.children) {
-              draw(d);   // ✅ drill down if any children (rare)
-              } else {
-              const taskName = d.data.name;  // ✅ get task name
-              drawLineChartForTask(taskName);  // ✅ show line graph
-              }
-            })
+              draw(d); // Drill if more children (rare)
+            } else {
+              const industryCode = d.parent.data.name; // 🧠 Parent is industry
+              drawLineChartForIndustry(industryCode);  // ✅ Show Industry line graph
+            }
+          })
           .call(g => {
             g.append("rect")
               .attr("width", d => d.x1 - d.x0)
@@ -517,77 +511,84 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  function drawLineChartForTask(taskName) {
-    console.log("Clicked task name:", taskName);
-    console.log("Available task names:", [...new Set(timeseriesData.map(d => d.task))]);
+  function drawLineChartForIndustry(industryCode) {
     d3.select("#linechart").selectAll("*").remove();
-    d3.select("#line-title").text(`Task Trends for "${taskName}"`);
+    d3.select("#line-title").text(`Task Trends for Industry ${industryCode}`);
 
-  const margin = { top: 20, right: 30, bottom: 40, left: 60 };
-  const chartWidth = 600 - margin.left - margin.right;
-  const chartHeight = 300 - margin.top - margin.bottom;
+    const margin = { top: 20, right: 30, bottom: 40, left: 60 };
+    const chartWidth = 600 - margin.left - margin.right;
+    const chartHeight = 300 - margin.top - margin.bottom;
 
-  const svg = d3.select("#linechart")
-    .append("svg")
-    .attr("width", chartWidth + margin.left + margin.right)
-    .attr("height", chartHeight + margin.top + margin.bottom)
-    .style("font-family", "sans-serif")
-    .style("font-size", "12px")
-    .append("g")
-    .attr("transform", `translate(${margin.left},${margin.top})`);
+    const svg = d3.select("#linechart")
+      .append("svg")
+      .attr("width", chartWidth + margin.left + margin.right)
+      .attr("height", chartHeight + margin.top + margin.bottom)
+      .style("font-family", "sans-serif")
+      .style("font-size", "12px")
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
 
-  const taskData = timeseriesData.filter(d => d.task === taskName);
+    // ✅ Dynamically load the CSV for that industry
+    d3.csv(`/assets/data/${industryCode}.csv`, d3.autoType).then(data => {
+      const nested = d3.rollups(data, v => d3.sum(v, d => d.count), d => d.year)
+        .map(([year, count]) => ({ year, count }))
+        .sort((a, b) => d3.ascending(a.year, b.year));
 
-  const nested = d3.rollups(taskData, v => d3.sum(v, d => d.count), d => d.year)
-    .map(([year, count]) => ({ year, count }))
-    .sort((a, b) => d3.ascending(a.year, b.year));
+      if (nested.length === 0) {
+        svg.append("text")
+          .attr("x", chartWidth / 2)
+          .attr("y", chartHeight / 2)
+          .attr("text-anchor", "middle")
+          .text("No Data Available");
+        return;
+      }
 
-  if (nested.length === 0) {
-    svg.append("text")
-      .attr("x", chartWidth / 2)
-      .attr("y", chartHeight / 2)
-      .attr("text-anchor", "middle")
-      .text("No Data Available");
-    return;
+      const x = d3.scaleLinear()
+        .domain(d3.extent(nested, d => d.year))
+        .range([0, chartWidth]);
+
+      const y = d3.scaleLinear()
+        .domain([0, d3.max(nested, d => d.count)]).nice()
+        .range([chartHeight, 0]);
+
+      svg.append("g")
+        .attr("transform", `translate(0,${chartHeight})`)
+        .call(d3.axisBottom(x).tickFormat(d3.format("d")));
+
+      svg.append("g")
+        .call(d3.axisLeft(y));
+
+      const line = d3.line()
+        .x(d => x(d.year))
+        .y(d => y(d.count));
+
+      svg.append("path")
+        .datum(nested)
+        .attr("fill", "none")
+        .attr("stroke", "#007ACC")
+        .attr("stroke-width", 2)
+        .attr("d", line);
+
+      svg.selectAll("circle")
+        .data(nested)
+        .join("circle")
+        .attr("cx", d => x(d.year))
+        .attr("cy", d => y(d.count))
+        .attr("r", 4)
+        .attr("fill", "#007ACC");
+    }).catch(error => {
+      console.error("Failed to load CSV:", error);
+      svg.append("text")
+        .attr("x", chartWidth / 2)
+        .attr("y", chartHeight / 2)
+        .attr("text-anchor", "middle")
+        .text("Failed to load data");
+    });
   }
-
-  const x = d3.scaleLinear()
-    .domain(d3.extent(nested, d => d.year))
-    .range([0, chartWidth]);
-
-  const y = d3.scaleLinear()
-    .domain([0, d3.max(nested, d => d.count)]).nice()
-    .range([chartHeight, 0]);
-
-  svg.append("g")
-    .attr("transform", `translate(0,${chartHeight})`)
-    .call(d3.axisBottom(x).tickFormat(d3.format("d")));
-
-  svg.append("g")
-    .call(d3.axisLeft(y));
-
-  const line = d3.line()
-    .x(d => x(d.year))
-    .y(d => y(d.count));
-
-  svg.append("path")
-    .datum(nested)
-    .attr("fill", "none")
-    .attr("stroke", "#007ACC")
-    .attr("stroke-width", 2)
-    .attr("d", line);
-
-  svg.selectAll("circle")
-    .data(nested)
-    .join("circle")
-    .attr("cx", d => x(d.year))
-    .attr("cy", d => y(d.count))
-    .attr("r", 4)
-    .attr("fill", "#007ACC");
-}
-  
 });
 </script>
+
+
 
 
 
