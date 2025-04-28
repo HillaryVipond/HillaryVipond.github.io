@@ -396,7 +396,7 @@ document.addEventListener("DOMContentLoaded", function () {
 --------------------------------------------------------------------------------
 THIRD BLOCK 
 -------------------------------------------------------------------------------
-<h2>Interactive Treemap V13: Orders → Industries → Tasks</h2>
+<h2>Interactive Treemap V14: Orders → Industries → Tasks</h2>
 
 <!-- Treemap container -->
 <div id="treemap"></div>
@@ -512,6 +512,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function drawLineChartForIndustry(industryCode) {
+    console.log("Loading industry file:", `/assets/data/${industryCode}.csv`);
     d3.select("#linechart").selectAll("*").remove();
     d3.select("#line-title").text(`Task Trends for Industry ${industryCode}`);
 
