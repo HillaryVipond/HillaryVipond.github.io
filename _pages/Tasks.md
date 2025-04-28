@@ -396,7 +396,7 @@ document.addEventListener("DOMContentLoaded", function () {
 --------------------------------------------------------------------------------
 THIRD BLOCK 
 -------------------------------------------------------------------------------
-<h2>Interactive Treemap V16: Orders → Industries → Tasks</h2>
+<h2>Interactive Treemap V17: Orders → Industries → Tasks</h2>
 
 <!-- Treemap container -->
 <div id="treemap"></div>
@@ -564,6 +564,31 @@ document.addEventListener("DOMContentLoaded", function () {
         .attr("stroke", d => color(d.task))
         .attr("stroke-width", 2)
         .attr("d", d => line(d.values));
+
+      // ✅ Add Legend
+      const legend = d3.select("#linechart svg")
+        .append("g")
+        .attr("transform", `translate(${margin.left}, ${margin.top - 10})`);
+      const legendSpacing = 100;
+
+      legend.selectAll("legend-item")
+        .data(tasks)
+        .join("g")
+        .attr("transform", (d, i) => `translate(${i * legendSpacing}, 0)`)
+        .call(g => {
+          g.append("rect")
+            .attr("width", 12)
+            .attr("height", 12)
+            .attr("fill", d => color(d.task));
+
+          g.append("text")
+            .attr("x", 18)
+            .attr("y", 10)
+            .text(d => d.task)
+            .style("font-size", "12px")
+            .attr("alignment-baseline", "middle");
+            });
+
 
       tasks.forEach(task => {
         svg.selectAll(`.dot-${task.task.replace(/\s+/g, '-')}`)
