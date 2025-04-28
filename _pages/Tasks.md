@@ -513,81 +513,82 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function drawLineChartForIndustry(industryCode) {
-    console.log("Loading industry file:", `/assets/data/${industryCode}.csv`);
-    d3.select("#linechart").selectAll("*").remove();
-    d3.select("#line-title").text(`Task Trends for Industry ${industryCode}`);
+  d3.select("#linechart").selectAll("*").remove();
+  d3.select("#line-title").text(`Task Trends for Industry ${industryCode}`);
 
-    const margin = { top: 20, right: 30, bottom: 40, left: 60 };
-    const chartWidth = 600 - margin.left - margin.right;
-    const chartHeight = 300 - margin.top - margin.bottom;
+  const margin = { top: 20, right: 30, bottom: 40, left: 60 };
+  const chartWidth = 600 - margin.left - margin.right;
+  const chartHeight = 300 - margin.top - margin.bottom;
 
-    const svg = d3.select("#linechart")
-      .append("svg")
-      .attr("width", chartWidth + margin.left + margin.right)
-      .attr("height", chartHeight + margin.top + margin.bottom)
-      .style("font-family", "sans-serif")
-      .style("font-size", "12px")
-      .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
+  const svg = d3.select("#linechart")
+    .append("svg")
+    .attr("width", chartWidth + margin.left + margin.right)
+    .attr("height", chartHeight + margin.top + margin.bottom)
+    .style("font-family", "sans-serif")
+    .style("font-size", "12px")
+    .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // ✅ Dynamically load the CSV for that industry
-    d3.csv(`/assets/data/${industryCode}.csv`, d3.autoType).then(data => {
-      const nested = d3.rollups(data, v => d3.sum(v, d => d.count), d => d.year)
-        .map(([year, count]) => ({ year, count }))
-        .sort((a, b) => d3.ascending(a.year, b.year));
+  // ✅ Load CSV
+  d3.csv(`/assets/data/${industryCode}.csv`, d3.autoType).then(data => {
+    // ✅ Group by task
+    const tasks = Array.from(d3.group(data, d => d.task), ([key, values]) => ({ task: key, values }));
 
-      if (nested.length === 0) {
-        svg.append("text")
-          .attr("x", chartWidth / 2)
-          .attr("y", chartHeight / 2)
-          .attr("text-anchor", "middle")
-          .text("No Data Available");
-        return;
-      }
+    const allYears = d3.extent(data, d => d.year);
+    const maxCount = d3.max(data, d => d.count);
 
-      const x = d3.scaleLinear()
-        .domain(d3.extent(nested, d => d.year))
-        .range([0, chartWidth]);
+    const x = d3.scaleLinear()
+      .domain(allYears)
+      .range([0, chartWidth]);
 
-      const y = d3.scaleLinear()
-        .domain([0, d3.max(nested, d => d.count)]).nice()
-        .range([chartHeight, 0]);
+    const y = d3.scaleLinear()
+      .domain([0, maxCount]).nice()
+      .range([chartHeight, 0]);
 
-      svg.append("g")
-        .attr("transform", `translate(0,${chartHeight})`)
-        .call(d3.axisBottom(x).tickFormat(d3.format("d")));
+    const color = d3.scaleOrdinal(d3.schemeCategory10)
+      .domain(tasks.map(d => d.task));
 
-      svg.append("g")
-        .call(d3.axisLeft(y));
+    svg.append("g")
+      .attr("transform", `translate(0,${chartHeight})`)
+      .call(d3.axisBottom(x).tickFormat(d3.format("d")));
 
-      const line = d3.line()
-        .x(d => x(d.year))
-        .y(d => y(d.count));
+    svg.append("g")
+      .call(d3.axisLeft(y));
 
-      svg.append("path")
-        .datum(nested)
-        .attr("fill", "none")
-        .attr("stroke", "#007ACC")
-        .attr("stroke-width", 2)
-        .attr("d", line);
+    const line = d3.line()
+      .x(d => x(d.year))
+      .y(d => y(d.count));
 
-      svg.selectAll("circle")
-        .data(nested)
+    // ✅ Draw one path per task
+    svg.selectAll(".line")
+      .data(tasks)
+      .join("path")
+      .attr("fill", "none")
+      .attr("stroke", d => color(d.task))
+      .attr("stroke-width", 2)
+      .attr("d", d => line(d.values));
+
+    // ✅ Add dots
+    tasks.forEach(task => {
+      svg.selectAll(`.dot-${task.task.replace(/\s+/g, '-')}`)
+        .data(task.values)
         .join("circle")
         .attr("cx", d => x(d.year))
         .attr("cy", d => y(d.count))
-        .attr("r", 4)
-        .attr("fill", "#007ACC");
-    }).catch(error => {
-      console.error("Failed to load CSV:", error);
-      svg.append("text")
-        .attr("x", chartWidth / 2)
-        .attr("y", chartHeight / 2)
-        .attr("text-anchor", "middle")
-        .text("Failed to load data");
+        .attr("r", 3)
+        .attr("fill", color(task.task));
     });
-  }
-});
+
+  }).catch(error => {
+    console.error("Failed to load CSV:", error);
+    svg.append("text")
+      .attr("x", chartWidth / 2)
+      .attr("y", chartHeight / 2)
+      .attr("text-anchor", "middle")
+      .text("Failed to load data");
+  });
+}
+
 </script>
 
 
