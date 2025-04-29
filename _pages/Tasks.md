@@ -8,7 +8,7 @@ nav_exclude: false
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <!-- 1. This section creates the heading and buttons for selecting the year -->
-<h2>Interactive Treemap V2: Orders Over Time</h2>
+<h2>Treemap: Orders Over Time</h2>
 <p>Click a year to view the treemap of Orders for that census year.</p>
 
 <!-- 2. Year selection buttons - each one calls the loadYear(year) JavaScript function -->
@@ -99,7 +99,7 @@ Block 1a V6
 <!-- D3.js library -->
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
-<h2> Occupation Orders Over Time</h2>
+<h2> Occupation: Orders Over Time (1851-1911) </h2>
 
 <div style="display: flex; gap: 2em; justify-content: center;">
   <div>
@@ -402,7 +402,7 @@ THIRD BLOCK
 -------------------------------------------------------------------------------
 -->
 
-<h2>Interactive Treemap V17: Orders → Industries → Tasks</h2>
+<h2>Treemap to Tasks Level: Orders → Industries → Tasks </h2>
 
 <!-- Treemap container -->
 <div id="treemap"></div>
