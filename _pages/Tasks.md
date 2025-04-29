@@ -202,9 +202,10 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <!
+
 -----------------------
 SECOND BLOCK V2
----
+--------------------------
 -->
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -396,7 +397,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 
-<!--
+<!
 --------------------------------------------------------------------------------
 THIRD BLOCK 
 -------------------------------------------------------------------------------
@@ -620,7 +621,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-<!--
+<!
 --------------------------------------------------------------------------------
 FOOTER
 -------------------------------------------------------------------------------
