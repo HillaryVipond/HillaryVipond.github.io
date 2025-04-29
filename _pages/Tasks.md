@@ -89,10 +89,12 @@ nav_exclude: false
   });
 </script>
 
+
+<!
 -------------------------------------------------------------------------------
 Block 1a V6
 --------------------------------------------------------------------------------
-
+-->
 
 <!-- D3.js library -->
 <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -199,10 +201,12 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-
+<!
 -----------------------
 SECOND BLOCK V2
 ---
+-->
+
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <!-- 1. Headings and explanation -->
@@ -392,10 +396,12 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 
-
+<!--
 --------------------------------------------------------------------------------
 THIRD BLOCK 
 -------------------------------------------------------------------------------
+-->
+
 <h2>Interactive Treemap V17: Orders → Industries → Tasks</h2>
 
 <!-- Treemap container -->
