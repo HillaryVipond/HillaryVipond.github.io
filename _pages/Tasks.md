@@ -90,11 +90,14 @@ nav_exclude: false
 </script>
 
 
-<!
--------------------------------------------------------------------------------
-Block 1a V6
---------------------------------------------------------------------------------
--->
+
+
+
+
+
+
+
+
 
 <!-- D3.js library -->
 <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -201,12 +204,18 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-<!
 
------------------------
-SECOND BLOCK V2
---------------------------
--->
+
+
+
+
+
+
+
+
+
+
+
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
@@ -397,11 +406,12 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 
-<!
---------------------------------------------------------------------------------
-THIRD BLOCK 
--------------------------------------------------------------------------------
--->
+
+
+
+
+
+
 
 <h2>Treemap to Tasks Level: Orders → Industries → Tasks </h2>
 
@@ -621,11 +631,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-<!
---------------------------------------------------------------------------------
-FOOTER
--------------------------------------------------------------------------------
--->
 
 <!-- Footer credit -->
 <p style="text-align: center; margin-top: 4em; font-size: 0.9em; color: #aaa; font-style: italic;">
