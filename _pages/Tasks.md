@@ -620,10 +620,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-
+<!--
 --------------------------------------------------------------------------------
 FOOTER
 -------------------------------------------------------------------------------
+-->
 
 <!-- Footer credit -->
 <p style="text-align: center; margin-top: 4em; font-size: 0.9em; color: #aaa; font-style: italic;">
