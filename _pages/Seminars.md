@@ -7,11 +7,13 @@ permalink: /Seminars/
 
 
 ### 2025
-- University of Southern Denmark Economics Seminar 
-- Inequalities Theory and Measurement Winter School  
-- Economic History Society Conference (Glasgow)  
+- University of Southern Denmark Economics Seminar
+- Vienna University of Economics and Business, Political Economy of Public Policy Semina
+- Economic History Society Conference, Glasgow
+- Workshop on Disseminating Economic History, Stellenbosch
 - Economic History Gender Workshop (Lund)  
-- World Economic History Congress (Lund)  
+- World Economic History Congress (Lund)
+- Inequalities Theory and Measurement Winter School, Canazei  
  
 
 ### 2024
