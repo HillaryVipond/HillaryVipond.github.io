@@ -5,3 +5,6 @@ main:
     url: /assets/files/VipondHillary_CV.pdf
   - title: "Seminars"
     url: /Seminars/
+  - title: "Micro-Occupations"
+    url: /tasks/
+    
