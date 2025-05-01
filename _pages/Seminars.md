@@ -5,13 +5,7 @@ classes: seminars-page
 permalink: /Seminars/
 header: false
 ---
-<style>
-.seminar-wrapper {
-  margin-top: 0 !important;
-}
-</style>
 
-<div class="seminar-wrapper" markdown="1">
   
 ### 2025
 - University of Southern Denmark Economics Seminar
@@ -54,4 +48,3 @@ header: false
 - Warwick CAGE Summer School  
 - LSE Inequality Institute Doctoral Seminar  
 
-</div>
