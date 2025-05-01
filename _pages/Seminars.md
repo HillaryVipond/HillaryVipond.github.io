@@ -1,11 +1,14 @@
 ---
+title: "Seminars"
 layout: single
 classes: seminars-page
 permalink: /Seminars/
+header: false
 ---
 
 
 ### 2025
+- Economic History Association Conference
 - University of Southern Denmark Economics Seminar
 - Vienna University of Economics and Business, Political Economy of Public Policy Seminar
 - Economic History Society Conference, Glasgow
