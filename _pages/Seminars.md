@@ -11,8 +11,7 @@ header: false
 }
 </style>
 
-
-<div class="seminar-wrapper">
+<div class="seminar-wrapper" markdown="1">
   
 ### 2025
 - University of Southern Denmark Economics Seminar
