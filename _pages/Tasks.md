@@ -1,11 +1,15 @@
 ---
 layout: single
-title: "Tasks"
+title: "Tasks and Micro-Occupations"
 permalink: /tasks/
 nav_exclude: false
 ---
 
+Welcome to the Tasks page. This will be a visualization of the changing occupational structure in Britain between 1851-1911, based on census data from the ICeM project. It is a work in progress. Please get in touch if you want to chat.
+
+
 <script src="https://d3js.org/d3.v7.min.js"></script>
+
 
 <!-- 1. This section creates the heading and buttons for selecting the year -->
 <h2>Treemap: Orders Over Time</h2>
