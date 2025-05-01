@@ -1,11 +1,8 @@
 ---
 layout: single
 classes: seminars-page
-title: "Seminars"
 permalink: /Seminars/
 ---
-
-
 ### 2025
 - University of Southern Denmark Economics Seminar
 - Vienna University of Economics and Business, Political Economy of Public Policy Semina
@@ -15,7 +12,6 @@ permalink: /Seminars/
 - World Economic History Congress (Lund)
 - Inequalities Theory and Measurement Winter School, Canazei  
  
-
 ### 2024
 - PSE Economic History Seminar  
 - LSE SPEECH Seminar  
