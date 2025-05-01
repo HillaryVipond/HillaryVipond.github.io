@@ -5,11 +5,11 @@ permalink: /Seminars/
 ---
 ### 2025
 - University of Southern Denmark Economics Seminar
-- Vienna University of Economics and Business, Political Economy of Public Policy Semina
+- Vienna University of Economics and Business, Political Economy of Public Policy Seminar
 - Economic History Society Conference, Glasgow
 - Workshop on Disseminating Economic History, Stellenbosch
-- Economic History Gender Workshop (Lund)  
-- World Economic History Congress (Lund)
+- Economic History Gender Workshop, Lund  
+- World Economic History Congress, Lund
 - Inequalities Theory and Measurement Winter School, Canazei  
  
 ### 2024
@@ -22,13 +22,13 @@ permalink: /Seminars/
 - Lund Economic History Seminar
 - Cambridge CamPop Seminar  
 - Birmingham Economic History Conference  
-- Cliometrica Conference (Dublin)  
-- Wealth Inequality Conference (WU)  
+- Cliometrica Conference, Dublin
+- Wealth Inequality Conference, WU
 
 ### 2023
 - Oxford, Warwick & LSE Workshop (*unable to attend) 
 - Manchester Seminar Series  
-- CESifo Conference (Venice)  
+- CESifo Conference, Venice  
 - LSE Inequalities Seminar  
 - European Social Science Conference
 
