@@ -3,6 +3,8 @@ layout: single
 classes: seminars-page
 permalink: /Seminars/
 ---
+
+
 ### 2025
 - University of Southern Denmark Economics Seminar
 - Vienna University of Economics and Business, Political Economy of Public Policy Seminar
