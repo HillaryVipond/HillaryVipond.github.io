@@ -13,6 +13,7 @@ header: false
 
 
 <div class="seminar-wrapper">
+  
 ### 2025
 - University of Southern Denmark Economics Seminar
 - Vienna University of Economics and Business, Political Economy of Public Policy Seminar
