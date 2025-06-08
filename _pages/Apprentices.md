@@ -80,11 +80,12 @@ Promise.all([
 });
 </script>
 
-<!-- 🧭 Legend container: place this BEFORE the legend script -->
-<div id="legend" style="margin-top: 10px;">
+<!-- 🧭 Legend container: neatly aligned under the map -->
+<div id="legend" style="margin-top: 10px; width: 300px; margin-left: auto; margin-right: auto; transform: translateX(330px);">
   <svg width="300" height="40"></svg>
-  <div style="font-size: 12px;">Share of adult male population</div>
+  <div style="font-size: 12px; text-align: center;">Share of adult male population</div>
 </div>
+
 
 
 <script>
