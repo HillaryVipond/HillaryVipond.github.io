@@ -9,16 +9,9 @@ Welcome to the Apprentices page. This map shows the spatial distribution of the 
 
 <h2>Apprenticeship System: Total Participation</h2>
 
-<!-- Dropdown or slider for selecting year -->
-<label for="year-select">Select year: </label>
-<select id="year-select">
-  <option value="1851">1851</option>
-  <option value="1861">1861</option>
-  <option value="1881">1881</option>
-  <option value="1891">1891</option>
-  <option value="1901">1901</option>
-  <option value="1911">1911</option>
-</select>
+<!-- Slider for selecting year -->
+<label for="year-slider">Select year: <span id="year-label">1851</span></label>
+<input type="range" id="year-slider" min="1851" max="1911" step="10" value="1851" style="width: 300px;">
 
 <div id="map-container">
   <svg width="960" height="600"></svg>
@@ -38,11 +31,11 @@ Promise.all([
   d3.json("/assets/maps/total_by_year.json")
 ]).then(([geoData, yearData]) => {
 
-  // Use geoMercator with fitSize to scale/center automatically
   const projection = d3.geoMercator().fitSize([width, height], geoData);
   const path = d3.geoPath().projection(projection);
 
-  const yearSelect = d3.select("#year-select");
+  const slider = d3.select("#year-slider");
+  const yearLabel = d3.select("#year-label");
 
   function updateMap(year) {
     const values = yearData[year];
@@ -80,9 +73,10 @@ Promise.all([
   // Initial map load
   updateMap("1851");
 
-  // Update map when dropdown changes
-  yearSelect.on("change", function() {
-    updateMap(this.value);
+  slider.on("input", function() {
+    const year = this.value;
+    yearLabel.text(year);
+    updateMap(year);
   });
 
 });
