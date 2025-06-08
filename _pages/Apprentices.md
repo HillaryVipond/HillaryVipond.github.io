@@ -38,27 +38,8 @@ Promise.all([
   d3.json("/assets/maps/total_by_year.json")
 ]).then(([geoData, yearData]) => {
 
-  // Fit the map projection dynamically to the geometry
-  const pathTemp = d3.geoPath().projection(d3.geoMercator());
-  const bounds = pathTemp.bounds(geoData);
-  const dx = bounds[1][0] - bounds[0][0];
-  const dy = bounds[1][1] - bounds[0][1];
-  const x = (bounds[0][0] + bounds[1][0]) / 2;
-  const y = (bounds[0][1] + bounds[1][1]) / 2;
-
-  const scale = 0.95 / Math.max(dx / width, dy / height);
-  const translate = [width / 2 - scale * x, height / 2 - scale * y];
-
-  const projection = d3.geoTransform({
-    point: function (lon, lat) {
-      const projected = d3.geoMercator()
-        .scale(scale)
-        .translate([0, 0])
-        ([lon, lat]);
-      this.stream.point(projected[0] + translate[0], projected[1] + translate[1]);
-    }
-  });
-
+  // Use geoMercator with fitSize to scale/center automatically
+  const projection = d3.geoMercator().fitSize([width, height], geoData);
   const path = d3.geoPath().projection(projection);
 
   const yearSelect = d3.select("#year-select");
@@ -66,7 +47,7 @@ Promise.all([
   function updateMap(year) {
     const values = yearData[year];
     const color = d3.scaleSequential(d3.interpolatePurples)
-      .domain([0.1, 0.9]); // Adjust to your actual data range
+      .domain([0.1, 0.9]); // Adjust based on your data range
 
     svg.selectAll("path")
       .data(geoData.features)
