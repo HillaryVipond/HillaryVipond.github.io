@@ -118,12 +118,11 @@ legendSvg.append("g")
   .attr("transform", "translate(0, 20)")
   .call(legendAxis);
 
+</script>
 <div id="legend" style="margin-top: 10px;">
   <svg width="300" height="40"></svg>
   <div style="font-size: 12px;">Share of adult male population</div>
 </div>
-
-</script>
 
 <h2>Apprenticeship System: Role Breakdown</h2>
 
