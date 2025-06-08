@@ -29,7 +29,7 @@ Welcome to the Apprentices page. This map shows the spatial distribution of the 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <script>
-const width = 960, height = 600;
+const width = 960, height = 800;
 const svg = d3.select("svg");
 const tooltip = d3.select("#tooltip");
 
