@@ -81,3 +81,26 @@ Promise.all([
 
 });
 </script>
+
+<h2>Apprenticeship System: Role Breakdown</h2>
+
+<label for="role-select">Select role: </label>
+<select id="role-select">
+  <option value="master">Master</option>
+  <option value="journeyman">Journeyman</option>
+  <option value="apprentice">Apprentice</option>
+</select>
+
+<input type="range" id="role-slider" min="1851" max="1911" step="10" value="1851">
+<span id="role-year-label">1851</span>
+
+<div id="role-map-container">
+  <svg id="role-map" width="960" height="600"></svg>
+</div>
+
+<div id="role-tooltip" style="position:absolute; background:white; border:1px solid #aaa; padding:5px; visibility:hidden;"></div>
+
+<script>
+  // new Promise.all and new projection setup here for the second map
+</script>
+
