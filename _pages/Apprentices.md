@@ -29,28 +29,44 @@ Welcome to the Apprentices page. This map shows the spatial distribution of the 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <script>
-const width = 960, height = 800;
+const width = 960, height = 600;
 const svg = d3.select("svg");
 const tooltip = d3.select("#tooltip");
-
-const projection = d3.geoMercator()
-  .scale(3000)
-  .center([-1.5, 54.5])
-  .translate([width / 2, height / 2]);
-
-const path = d3.geoPath().projection(projection);
 
 Promise.all([
   d3.json("/assets/maps/Counties1851.geojson"),
   d3.json("/assets/maps/total_by_year.json")
 ]).then(([geoData, yearData]) => {
 
+  // Fit the map projection dynamically to the geometry
+  const pathTemp = d3.geoPath();
+  const bounds = pathTemp.bounds(geoData);
+  const dx = bounds[1][0] - bounds[0][0];
+  const dy = bounds[1][1] - bounds[0][1];
+  const x = (bounds[0][0] + bounds[1][0]) / 2;
+  const y = (bounds[0][1] + bounds[1][1]) / 2;
+
+  const scale = 0.95 / Math.max(dx / width, dy / height);
+  const translate = [width / 2 - scale * x, height / 2 - scale * y];
+
+  const projection = d3.geoTransform({
+    point: function (lon, lat) {
+      const projected = d3.geoMercator()
+        .scale(scale)
+        .translate([0, 0])
+        ([lon, lat]);
+      this.stream.point(projected[0] + translate[0], projected[1] + translate[1]);
+    }
+  });
+
+  const path = d3.geoPath().projection(projection);
+
   const yearSelect = d3.select("#year-select");
 
   function updateMap(year) {
     const values = yearData[year];
     const color = d3.scaleSequential(d3.interpolatePurples)
-      .domain([0.1, 0.9]); // adjust to match your value range
+      .domain([0.1, 0.9]); // Adjust to your actual data range
 
     svg.selectAll("path")
       .data(geoData.features)
@@ -87,5 +103,6 @@ Promise.all([
   yearSelect.on("change", function() {
     updateMap(this.value);
   });
+
 });
 </script>
