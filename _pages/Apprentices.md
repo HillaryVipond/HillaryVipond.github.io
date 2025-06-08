@@ -39,7 +39,7 @@ Promise.all([
 ]).then(([geoData, yearData]) => {
 
   // Fit the map projection dynamically to the geometry
-  const pathTemp = d3.geoPath();
+  const pathTemp = d3.geoPath().projection(d3.geoMercator());
   const bounds = pathTemp.bounds(geoData);
   const dx = bounds[1][0] - bounds[0][0];
   const dy = bounds[1][1] - bounds[0][1];
