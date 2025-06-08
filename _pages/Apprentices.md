@@ -41,7 +41,7 @@ const projection = d3.geoMercator()
 const path = d3.geoPath().projection(projection);
 
 Promise.all([
-  d3.json("/assets/maps/counties_1851.geojson"),
+  d3.json("/assets/maps/counties1851.geojson"),
   d3.json("/assets/maps/total_by_year.json")
 ]).then(([geoData, yearData]) => {
 
