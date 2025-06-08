@@ -118,11 +118,50 @@ legendSvg.append("g")
   .attr("transform", "translate(0, 20)")
   .call(legendAxis);
 
+
 </script>
+<!-- 🧭 Legend container: place this BEFORE the legend script -->
 <div id="legend" style="margin-top: 10px;">
   <svg width="300" height="40"></svg>
   <div style="font-size: 12px;">Share of adult male population</div>
 </div>
+
+<script>
+  // ✅ Put this *after* the legend div
+  const legendSvg = d3.select("#legend svg");
+  const legendWidth = +legendSvg.attr("width");
+  const legendHeight = +legendSvg.attr("height");
+
+  const legendGradient = legendSvg.append("defs")
+    .append("linearGradient")
+    .attr("id", "legend-gradient")
+    .attr("x1", "0%").attr("y1", "0%")
+    .attr("x2", "100%").attr("y2", "0%");
+
+  const color = d3.scaleSequential(d3.interpolatePurples).domain([0.1, 0.9]);
+
+  legendGradient.selectAll("stop")
+    .data(d3.range(0, 1.01, 0.01))
+    .enter().append("stop")
+    .attr("offset", d => `${d * 100}%`)
+    .attr("stop-color", d => color(d * 0.8 + 0.1));
+
+  legendSvg.append("rect")
+    .attr("x", 0).attr("y", 10)
+    .attr("width", legendWidth)
+    .attr("height", 10)
+    .style("fill", "url(#legend-gradient)");
+
+  const legendScale = d3.scaleLinear().domain([0.1, 0.9]).range([0, legendWidth]);
+  const legendAxis = d3.axisBottom(legendScale)
+    .tickValues([0.1, 0.3, 0.5, 0.7, 0.9])
+    .tickFormat(d3.format(".2f"));
+
+  legendSvg.append("g")
+    .attr("transform", "translate(0, 20)")
+    .call(legendAxis);
+</script>
+
 
 <h2>Apprenticeship System: Role Breakdown</h2>
 
