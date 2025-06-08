@@ -80,10 +80,10 @@ Promise.all([
 });
 </script>
 
-<!-- 🧭 Legend container -->
-<div id="legend" style="margin-top: 10px;">
-  <svg width="300" height="40"></svg>
-  <div style="font-size: 12px;">Share of adult male population</div>
+<!-- 🧭 Legend container: aligned and sized to match the map -->
+<div id="legend" style="width: 960px; margin: 20px auto 0 auto;">
+  <svg width="960" height="40"></svg>
+  <div style="font-size: 12px; text-align: center;">Share of adult male population</div>
 </div>
 
 <script>
