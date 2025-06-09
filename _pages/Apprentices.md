@@ -137,6 +137,70 @@ colors.forEach((color, i) => {
 <div id="role-tooltip" style="position:absolute; background:white; border:1px solid #aaa; padding:5px; visibility:hidden;"></div>
 
 <script>
-  // new Promise.all and new projection setup here for the second map
+const roleSvg = d3.select("#role-map");
+const roleTooltip = d3.select("#role-tooltip");
+const roleSlider = d3.select("#role-slider");
+const roleYearLabel = d3.select("#role-year-label");
+const roleSelect = d3.select("#role-select");
+
+Promise.all([
+  d3.json("/assets/maps/Counties1851.geojson"),
+  d3.json("/assets/maps/share_granrole_by_county.json")  // <-- Your new cleaned data
+]).then(([geoData, roleData]) => {
+  const projection = d3.geoMercator().fitSize([960, 600], geoData);
+  const path = d3.geoPath().projection(projection);
+
+  const color = d3.scaleThreshold()
+    .domain([1, 2, 3, 4])
+    .range(d3.schemeBlues[5]); // You can change the palette if you like
+
+  function updateRoleMap(year, role) {
+    const values = roleData[year][role];
+
+    roleSvg.selectAll("path")
+      .data(geoData.features)
+      .join("path")
+      .attr("d", path)
+      .attr("fill", d => {
+        const name = d.properties.R_CTY;
+        const v = values[name];
+        return v != null ? color(v) : "#ccc";
+      })
+      .attr("stroke", "#fff")
+      .attr("stroke-width", 0.5)
+      .on("mouseover", function(event, d) {
+        const name = d.properties.R_CTY;
+        const value = values[name];
+        roleTooltip.style("visibility", "visible")
+          .text(`${name}: ${value != null ? value.toFixed(2) : "N/A"}`);
+        d3.select(this).attr("stroke-width", 2);
+      })
+      .on("mousemove", function(event) {
+        roleTooltip.style("top", (event.pageY + 10) + "px")
+                   .style("left", (event.pageX + 10) + "px");
+      })
+      .on("mouseout", function () {
+        roleTooltip.style("visibility", "hidden");
+        d3.select(this).attr("stroke-width", 0.5);
+      });
+  }
+
+  // Initial draw
+  updateRoleMap("1851", "master");
+
+  // Slider interaction
+  roleSlider.on("input", function () {
+    const year = this.value;
+    roleYearLabel.text(year);
+    updateRoleMap(year, roleSelect.node().value);
+  });
+
+  // Dropdown interaction
+  roleSelect.on("change", function () {
+    const year = roleSlider.node().value;
+    updateRoleMap(year, this.value);
+  });
+});
 </script>
+
 
