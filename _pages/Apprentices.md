@@ -90,31 +90,34 @@ Promise.all([
 
 
 <script>
-const legendSvg = d3.select("#legend svg");
-const legendWidth = +legendSvg.attr("width");
-const legendHeight = +legendSvg.attr("height");
+{
+  const legendSvg = d3.select("#legend svg");
+  const legendWidth = +legendSvg.attr("width");
+  const legendHeight = +legendSvg.attr("height");
 
-const bins = [0, 1, 2, 3, 4, 5];
-const colors = d3.schemePurples[5];
-const binWidth = legendWidth / colors.length;
+  const bins = [0, 1, 2, 3, 4, 5];
+  const colors = d3.schemePurples[5];
+  const binWidth = legendWidth / colors.length;
 
-colors.forEach((color, i) => {
-  legendSvg.append("rect")
-    .attr("x", i * binWidth)
-    .attr("y", 10)
-    .attr("width", binWidth)
-    .attr("height", 10)
-    .attr("fill", color);
+  colors.forEach((color, i) => {
+    legendSvg.append("rect")
+      .attr("x", i * binWidth)
+      .attr("y", 10)
+      .attr("width", binWidth)
+      .attr("height", 10)
+      .attr("fill", color);
 
-  const label = i === colors.length - 1 ? "4+" : `${i}–${i+1}`;
-  legendSvg.append("text")
-    .attr("x", i * binWidth + binWidth / 2)
-    .attr("y", 35)
-    .attr("text-anchor", "middle")
-    .attr("font-size", "10px")
-    .text(label);
-});
+    const label = i === colors.length - 1 ? "4+" : `${i}–${i + 1}`;
+    legendSvg.append("text")
+      .attr("x", i * binWidth + binWidth / 2)
+      .attr("y", 35)
+      .attr("text-anchor", "middle")
+      .attr("font-size", "10px")
+      .text(label);
+  });
+}
 </script>
+
 
 
 
@@ -215,36 +218,42 @@ Promise.all([
 </div>
 
 <script>
-const roleLegendSvg = d3.select("#role-legend svg");
-const roleLegendWidth = +roleLegendSvg.attr("width");
-const binCount = 8;
-const binWidth = roleLegendWidth / binCount;
-const roleColors = d3.schemeBlues[8];
+{
+  const roleLegendSvg = d3.select("#role-legend svg");
+  const legendWidth = +roleLegendSvg.attr("width");
+  const binCount = 8;
+  const binWidth = legendWidth / binCount;
 
-// Draw colored boxes
-roleColors.forEach((color, i) => {
-  roleLegendSvg.append("rect")
-    .attr("x", i * binWidth)
-    .attr("y", 10)
-    .attr("width", binWidth)
-    .attr("height", 10)
-    .attr("fill", color);
-});
+  const roleColors = [
+    "#f7fbff", "#deebf7", "#c6dbef", "#9ecae1",
+    "#6baed6", "#4292c6", "#2171b5", "#084594"
+  ];
 
-// Draw labels
-const roleLabels = [
-  "<0.2", "0.2–0.4", "0.4–0.6", "0.6–0.8",
-  "0.8–1.0", "1.0–1.5", "1.5–2.0", "2.0+"
-];
+  const roleLabels = [
+    "<0.2", "0.2–0.4", "0.4–0.6", "0.6–0.8",
+    "0.8–1.0", "1.0–1.5", "1.5–2.0", "2.0+"
+  ];
 
-roleLabels.forEach((label, i) => {
-  roleLegendSvg.append("text")
-    .attr("x", i * binWidth + binWidth / 2)
-    .attr("y", 35)
-    .attr("text-anchor", "middle")
-    .attr("font-size", "10px")
-    .text(label);
-});
+  roleLegendSvg.selectAll("*").remove();
+
+  roleColors.forEach((color, i) => {
+    roleLegendSvg.append("rect")
+      .attr("x", i * binWidth)
+      .attr("y", 10)
+      .attr("width", binWidth)
+      .attr("height", 10)
+      .attr("fill", color);
+  });
+
+  roleLabels.forEach((label, i) => {
+    roleLegendSvg.append("text")
+      .attr("x", i * binWidth + binWidth / 2)
+      .attr("y", 35)
+      .attr("text-anchor", "middle")
+      .attr("font-size", "10px")
+      .text(label);
+  });
+}
 </script>
 
 
