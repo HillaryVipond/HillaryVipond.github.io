@@ -7,19 +7,25 @@ nav_exclude: false
 
 Welcome to the Apprentices page. This map shows the spatial distribution of the apprenticeship system in 1851 by county.
 
+
+
+
 <h2>Apprenticeship System: Total Participation</h2>
 
-<!-- 🎛️ Role + Year Controls: side-by-side -->
+<!-- 🎛️ Year control for total map -->
 <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 10px;">
-  <label for="role-select">Select role:</label>
-  <select id="role-select">
-    <option value="master">Master</option>
-    <option value="journeyman">Journeyman</option>
-    <option value="apprentice">Apprentice</option>
-  </select>
+  <label for="year-slider">Select year: <span id="year-label">1851</span></label>
+  <input type="range" id="year-slider" min="1851" max="1911" step="10" value="1851" style="width: 300px;">
+</div>
 
-  <label for="role-slider">Select year: <span id="role-year-label">1851</span></label>
-  <input type="range" id="role-slider" min="1851" max="1911" step="10" value="1851" style="width: 300px;">
+<!-- 🗺️ Total map and legend container -->
+<div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 40px;">
+  <svg id="total-map" width="960" height="600"></svg>
+
+  <div style="margin-top: 10px;">
+    <svg id="legend-svg" width="480" height="50"></svg>
+    <div style="font-size: 12px; text-align: center;">Share of adult male population</div>
+  </div>
 </div>
 
 <div id="tooltip" style="position:absolute; background:white; border:1px solid #aaa; padding:5px; visibility:hidden;"></div>
