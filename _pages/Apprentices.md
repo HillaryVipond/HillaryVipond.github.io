@@ -119,6 +119,8 @@ colors.forEach((color, i) => {
 
 
 <h2>Apprenticeship System: Role Breakdown</h2>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
 
 <label for="role-select">Select role: </label>
 <select id="role-select">
