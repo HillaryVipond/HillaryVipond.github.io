@@ -9,18 +9,17 @@ Welcome to the Apprentices page. This map shows the spatial distribution of the 
 
 <h2>Apprenticeship System: Total Participation</h2>
 
-<!-- Slider for selecting year -->
-<label for="year-slider">Select year: <span id="year-label">1851</span></label>
-<input type="range" id="year-slider" min="1851" max="1911" step="10" value="1851" style="width: 300px;">
+<!-- 🎛️ Role + Year Controls: side-by-side -->
+<div style="display: flex; align-items: center; gap: 16px; margin-bottom: 10px;">
+  <label for="role-select">Select role:</label>
+  <select id="role-select">
+    <option value="master">Master</option>
+    <option value="journeyman">Journeyman</option>
+    <option value="apprentice">Apprentice</option>
+  </select>
 
-<!-- 🧭 Flex container for map + legend -->
-<div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 40px;">
-  <svg id="total-map" width="960" height="600"></svg>
-
-  <div style="margin-top: 10px;">
-    <svg id="legend-svg" width="480" height="40"></svg>
-    <div style="font-size: 12px; text-align: center;">Share of adult male population</div>
-  </div>
+  <label for="role-slider">Select year: <span id="role-year-label">1851</span></label>
+  <input type="range" id="role-slider" min="1851" max="1911" step="10" value="1851" style="width: 300px;">
 </div>
 
 <div id="tooltip" style="position:absolute; background:white; border:1px solid #aaa; padding:5px; visibility:hidden;"></div>
@@ -109,18 +108,24 @@ Promise.all([
 }
 </script>
 
+
+
 <h2>Apprenticeship System: Role Breakdown</h2>
 
-<label for="role-select">Select role: </label>
-<select id="role-select">
-  <option value="master">Master</option>
-  <option value="journeyman">Journeyman</option>
-  <option value="apprentice">Apprentice</option>
-</select>
+<!-- 🎛️ Role + Year Controls: side-by-side -->
+<div style="display: flex; align-items: center; gap: 16px; margin-bottom: 10px;">
+  <label for="role-select">Select role:</label>
+  <select id="role-select">
+    <option value="master">Master</option>
+    <option value="journeyman">Journeyman</option>
+    <option value="apprentice">Apprentice</option>
+  </select>
 
-<input type="range" id="role-slider" min="1851" max="1911" step="10" value="1851" style="width: 300px;">
+  <label for="role-slider">Select year: <span id="role-year-label">1851</span></label>
+  <input type="range" id="role-slider" min="1851" max="1911" step="10" value="1851" style="width: 300px;">
+</div>
 
-<!-- 🧭 Flex container for second map + legend -->
+<!-- 🗱️ Flex container for map + legend -->
 <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 40px;">
   <svg id="role-map" width="960" height="600"></svg>
 
@@ -182,8 +187,11 @@ Promise.all([
 
   updateRoleMap("1851", "master");
 
+  const roleYearLabel = d3.select("#role-year-label");
+
   roleSlider.on("input", function () {
     const year = this.value;
+    roleYearLabel.text(year);
     updateRoleMap(year, roleSelect.node().value);
   });
 
@@ -193,6 +201,7 @@ Promise.all([
   });
 });
 
+// Legend rendering
 {
   const roleLegendSvg = d3.select("#role-legend-svg");
   const legendWidth = +roleLegendSvg.attr("width");
@@ -223,3 +232,4 @@ Promise.all([
   });
 }
 </script>
+
