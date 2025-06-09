@@ -205,8 +205,46 @@ Promise.all([
 });
 </script>
 
+
 <!-- 🧭 Legend for Role Breakdown Map -->
 <div id="role-legend" style="margin-top: 10px; width: 480px; margin-left: auto; margin-right: auto;">
+  <svg width="480" height="50"></svg>
+  <div style="font-size: 12px; text-align: center;">Share of adult male population in this role</div>
+</div>
+
+<script>
+const roleLegendSvg = d3.select("#role-legend svg");
+const legendWidth = +roleLegendSvg.attr("width");
+const roleColors = d3.schemeBlues[8];
+const binCount = roleColors.length;
+const binWidth = legendWidth / binCount;
+
+// Draw colored boxes
+roleColors.forEach((color, i) => {
+  roleLegendSvg.append("rect")
+    .attr("x", i * binWidth)
+    .attr("y", 10)
+    .attr("width", binWidth)
+    .attr("height", 10)
+    .attr("fill", color);
+});
+
+// Draw labels
+const roleLabels = [
+  "<0.2", "0.2–0.4", "0.4–0.6", "0.6–0.8",
+  "0.8–1.0", "1.0–1.5", "1.5–2.0", "2.0+"
+];
+
+roleLabels.forEach((label, i) => {
+  roleLegendSvg.append("text")
+    .attr("x", i * binWidth + binWidth / 2)
+    .attr("y", 35)
+    .attr("text-anchor", "middle")
+    .attr("font-size", "10px")
+    .text(label);
+});
+</script>
+
 
 
 
