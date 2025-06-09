@@ -127,8 +127,8 @@ colors.forEach((color, i) => {
   <option value="apprentice">Apprentice</option>
 </select>
 
-<input type="range" id="role-slider" min="1851" max="1911" step="10" value="1851">
-<span id="role-year-label">1851</span>
+<input type="range" id="role-slider" min="1851" max="1911" step="10" value="1851" style="width: 300px;">
+
 
 <div id="role-map-container">
   <svg id="role-map" width="960" height="600"></svg>
