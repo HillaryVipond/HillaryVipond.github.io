@@ -121,7 +121,7 @@ Promise.all([
 <h2>Apprenticeship System: Role Breakdown</h2>
 
 <!-- 🎛️ Role + Year Controls: side-by-side -->
-<div style="display: flex; align-items: center; gap: 32px; margin-bottom: 10px;">
+<div style="display: flex; align-items: center; gap: 48px; margin-bottom: 10px;">
   <label for="role-select">Select role:</label>
   <select id="role-select">
     <option value="master">Master</option>
