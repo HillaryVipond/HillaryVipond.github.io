@@ -115,7 +115,7 @@ legendSvg.append("rect")
 
 const legendScale = d3.scaleLinear().domain([0.1, 0.9]).range([0, legendWidth]);
 const legendAxis = d3.axisBottom(legendScale)
-  .tickValues([0.1, 0.3, 0.5, 0.7, 0.9])
+  .tickValues([0.0, 1.0, 2.0, 3.0, 4.0, 5.0])
   .tickFormat(d3.format(".2f"));
 
 legendSvg.append("g")
