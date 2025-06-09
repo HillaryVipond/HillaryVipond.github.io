@@ -82,8 +82,8 @@ Promise.all([
 </script>
 
 <!-- 🧭 Legend container: neatly aligned under the map -->
-<div id="legend" style="margin-top: 10px; width: 960px; margin-left: auto; margin-right: auto;">
-  <svg width="960" height="40"></svg>
+<div id="legend" style="margin-top: 10px; width: 480px; margin-left: auto; margin-right: auto;">
+  <svg width="480" height="40"></svg>
   <div style="font-size: 12px; text-align: center;">Share of adult male population</div>
 </div>
 
@@ -213,8 +213,8 @@ Promise.all([
 
 
 <!-- 🧭 Legend for Role Breakdown Map -->
-<div id="role-legend" style="margin-top: 10px; width: 960px; margin-left: auto; margin-right: auto;">
-  <svg width="960" height="50"></svg>
+<div id="role-legend" style="margin-top: 10px; width: 480px; margin-left: auto; margin-right: auto;">
+  <svg width="480" height="50"></svg>
   <div style="font-size: 12px; text-align: center;">Share of adult male population in this role</div>
 </div>
 
