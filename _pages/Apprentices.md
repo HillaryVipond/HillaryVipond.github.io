@@ -39,8 +39,9 @@ Promise.all([
 
   function updateMap(year) {
     const values = yearData[year];
-    const color = d3.scaleSequential(d3.interpolatePurples)
-      .domain([0.0, 5.5]);
+    const color = d3.scaleThreshold()
+      .domain([1, 2, 3, 4]) // Bins: 0–1, 1–2, 2–3, 3–4, 4+
+      .range(d3.schemePurples[5]);
 
     svg.selectAll("path")
       .data(geoData.features)
@@ -93,34 +94,26 @@ const legendSvg = d3.select("#legend svg");
 const legendWidth = +legendSvg.attr("width");
 const legendHeight = +legendSvg.attr("height");
 
-const legendGradient = legendSvg.append("defs")
-  .append("linearGradient")
-  .attr("id", "legend-gradient")
-  .attr("x1", "0%").attr("y1", "0%")
-  .attr("x2", "100%").attr("y2", "0%");
+const bins = [0, 1, 2, 3, 4, 5];
+const colors = d3.schemePurples[5];
+const binWidth = legendWidth / colors.length;
 
-const color = d3.scaleSequential(d3.interpolatePurples).domain([0.1, 0.9]);
+colors.forEach((color, i) => {
+  legendSvg.append("rect")
+    .attr("x", i * binWidth)
+    .attr("y", 10)
+    .attr("width", binWidth)
+    .attr("height", 10)
+    .attr("fill", color);
 
-legendGradient.selectAll("stop")
-  .data(d3.range(0, 1.01, 0.01))
-  .enter().append("stop")
-  .attr("offset", d => `${d * 100}%`)
-  .attr("stop-color", d => color(d * 0.8 + 0.1));
-
-legendSvg.append("rect")
-  .attr("x", 0).attr("y", 10)
-  .attr("width", legendWidth)
-  .attr("height", 10)
-  .style("fill", "url(#legend-gradient)");
-
-const legendScale = d3.scaleLinear().domain([0.1, 0.9]).range([0, legendWidth]);
-const legendAxis = d3.axisBottom(legendScale)
-  .tickValues([0.0, 1.0, 2.0, 3.0, 4.0, 5.0])
-  .tickFormat(d3.format(".2f"));
-
-legendSvg.append("g")
-  .attr("transform", "translate(0, 20)")
-  .call(legendAxis);
+  const label = i === colors.length - 1 ? "4+" : `${i}–${i+1}`;
+  legendSvg.append("text")
+    .attr("x", i * binWidth + binWidth / 2)
+    .attr("y", 35)
+    .attr("text-anchor", "middle")
+    .attr("font-size", "10px")
+    .text(label);
+});
 </script>
 
 
