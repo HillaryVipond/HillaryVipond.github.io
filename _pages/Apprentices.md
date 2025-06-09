@@ -13,34 +13,38 @@ Welcome to the Apprentices page. This map shows the spatial distribution of the 
 <label for="year-slider">Select year: <span id="year-label">1851</span></label>
 <input type="range" id="year-slider" min="1851" max="1911" step="10" value="1851" style="width: 300px;">
 
-<div id="map-container">
-  <svg width="960" height="600"></svg>
+<!-- 🧭 Flex container for map + legend -->
+<div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 40px;">
+  <svg id="total-map" width="960" height="600"></svg>
+
+  <div style="margin-top: 10px;">
+    <svg id="legend-svg" width="480" height="40"></svg>
+    <div style="font-size: 12px; text-align: center;">Share of adult male population</div>
+  </div>
 </div>
 
 <div id="tooltip" style="position:absolute; background:white; border:1px solid #aaa; padding:5px; visibility:hidden;"></div>
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
 <script>
-const width = 960, height = 600;
-const svg = d3.select("svg");
+const svg = d3.select("#total-map");
 const tooltip = d3.select("#tooltip");
 
 Promise.all([
   d3.json("/assets/maps/Counties1851.geojson"),
   d3.json("/assets/maps/share_total_by_county.json")
 ]).then(([geoData, yearData]) => {
-
-  const projection = d3.geoMercator().fitSize([width, height], geoData);
+  const projection = d3.geoMercator().fitSize([960, 600], geoData);
   const path = d3.geoPath().projection(projection);
-
   const slider = d3.select("#year-slider");
   const yearLabel = d3.select("#year-label");
 
   function updateMap(year) {
     const values = yearData[year];
     const color = d3.scaleThreshold()
-      .domain([1, 2, 3, 4]) // Bins: 0–1, 1–2, 2–3, 3–4, 4+
+      .domain([1, 2, 3, 4])
       .range(d3.schemePurples[5]);
 
     svg.selectAll("path")
@@ -79,24 +83,10 @@ Promise.all([
     updateMap(year);
   });
 });
-</script>
 
-<!-- 🧭 Legend container: neatly aligned under the map -->
-<div id="legend" style="margin-top: 10px; width: 480px; margin-left: auto; margin-right: auto;">
-  <svg width="480" height="40"></svg>
-  <div style="font-size: 12px; text-align: center;">Share of adult male population</div>
-</div>
-
-
-
-
-<script>
 {
-  const legendSvg = d3.select("#legend svg");
+  const legendSvg = d3.select("#legend-svg");
   const legendWidth = +legendSvg.attr("width");
-  const legendHeight = +legendSvg.attr("height");
-
-  const bins = [0, 1, 2, 3, 4, 5];
   const colors = d3.schemePurples[5];
   const binWidth = legendWidth / colors.length;
 
@@ -119,12 +109,7 @@ Promise.all([
 }
 </script>
 
-
-
-
 <h2>Apprenticeship System: Role Breakdown</h2>
-<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-
 
 <label for="role-select">Select role: </label>
 <select id="role-select">
@@ -135,9 +120,14 @@ Promise.all([
 
 <input type="range" id="role-slider" min="1851" max="1911" step="10" value="1851" style="width: 300px;">
 
-
-<div id="role-map-container">
+<!-- 🧭 Flex container for second map + legend -->
+<div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 40px;">
   <svg id="role-map" width="960" height="600"></svg>
+
+  <div style="margin-top: 10px;">
+    <svg id="role-legend-svg" width="480" height="50"></svg>
+    <div style="font-size: 12px; text-align: center;">Share of adult male population in this role</div>
+  </div>
 </div>
 
 <div id="role-tooltip" style="position:absolute; background:white; border:1px solid #aaa; padding:5px; visibility:hidden;"></div>
@@ -146,15 +136,12 @@ Promise.all([
 const roleSvg = d3.select("#role-map");
 const roleTooltip = d3.select("#role-tooltip");
 const roleSlider = d3.select("#role-slider");
-const roleYearLabel = d3.select("#role-year-label");
 const roleSelect = d3.select("#role-select");
 
-// Define shared scale and colors
 const roleThresholds = [0.2, 0.4, 0.6, 0.8, 1.0, 1.5, 2.0];
 const roleColors = d3.schemeBlues[8];
 const color = d3.scaleThreshold().domain(roleThresholds).range(roleColors);
 
-// Load map and role data
 Promise.all([
   d3.json("/assets/maps/Counties1851.geojson"),
   d3.json("/assets/maps/share_granrole_by_county.json")
@@ -193,49 +180,29 @@ Promise.all([
       });
   }
 
-  // Initial map draw
   updateRoleMap("1851", "master");
 
-  // Slider interaction
   roleSlider.on("input", function () {
     const year = this.value;
-    roleYearLabel.text(year);
     updateRoleMap(year, roleSelect.node().value);
   });
 
-  // Dropdown interaction
   roleSelect.on("change", function () {
     const year = roleSlider.node().value;
     updateRoleMap(year, this.value);
   });
 });
-</script>
 
-
-<!-- 🧭 Legend for Role Breakdown Map -->
-<div id="role-legend" style="margin-top: 10px; width: 480px; margin-left: auto; margin-right: auto;">
-  <svg width="480" height="50"></svg>
-  <div style="font-size: 12px; text-align: center;">Share of adult male population in this role</div>
-</div>
-
-<script>
 {
-  const roleLegendSvg = d3.select("#role-legend svg");
+  const roleLegendSvg = d3.select("#role-legend-svg");
   const legendWidth = +roleLegendSvg.attr("width");
   const binCount = 8;
   const binWidth = legendWidth / binCount;
-
-  const roleColors = [
-    "#f7fbff", "#deebf7", "#c6dbef", "#9ecae1",
-    "#6baed6", "#4292c6", "#2171b5", "#084594"
-  ];
 
   const roleLabels = [
     "<0.2", "0.2–0.4", "0.4–0.6", "0.6–0.8",
     "0.8–1.0", "1.0–1.5", "1.5–2.0", "2.0+"
   ];
-
-  roleLegendSvg.selectAll("*").remove();
 
   roleColors.forEach((color, i) => {
     roleLegendSvg.append("rect")
@@ -256,7 +223,3 @@ Promise.all([
   });
 }
 </script>
-
-
-
-
