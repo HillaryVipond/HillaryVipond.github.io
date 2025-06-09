@@ -16,6 +16,7 @@ header: false
 - World Economic History Congress, Lund
 - Inequalities Theory and Measurement Winter School, Canazei
 - Economic History Association Conference (*presented by co-author, Yannis Kastis)
+- NBER Summer Institute (*presented by co-author, Yannis Kastis)
  
 ### 2024
 - PSE Economic History Seminar  
