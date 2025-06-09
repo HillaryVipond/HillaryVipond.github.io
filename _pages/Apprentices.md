@@ -143,16 +143,18 @@ const roleSlider = d3.select("#role-slider");
 const roleYearLabel = d3.select("#role-year-label");
 const roleSelect = d3.select("#role-select");
 
+// Define shared scale and colors
+const roleThresholds = [0.2, 0.4, 0.6, 0.8, 1.0, 1.5, 2.0];
+const roleColors = d3.schemeBlues[8];
+const color = d3.scaleThreshold().domain(roleThresholds).range(roleColors);
+
+// Load map and role data
 Promise.all([
   d3.json("/assets/maps/Counties1851.geojson"),
-  d3.json("/assets/maps/share_granrole_by_county.json")  // <-- Your new cleaned data
+  d3.json("/assets/maps/share_granrole_by_county.json")
 ]).then(([geoData, roleData]) => {
   const projection = d3.geoMercator().fitSize([960, 600], geoData);
   const path = d3.geoPath().projection(projection);
-
-  const color = d3.scaleThreshold()
-  .domain([0.2, 0.4, 0.6, 0.8, 1.0, 1.5, 2.0])
-  .range(d3.schemeBlues[8]);
 
   function updateRoleMap(year, role) {
     const values = roleData[year][role];
@@ -185,7 +187,7 @@ Promise.all([
       });
   }
 
-  // Initial draw
+  // Initial map draw
   updateRoleMap("1851", "master");
 
   // Slider interaction
@@ -204,10 +206,6 @@ Promise.all([
 </script>
 
 <!-- 🧭 Legend for Role Breakdown Map -->
-<div id="role-legend" style="margin-top: 10px; width: 480px; margin-left: auto; margin-right: auto;">
-  <svg width="480" height="50"></svg>
-  <div style="font-size: 12px; text-align: center;">Share of adult male population in this role</div>
-</div>
-
+<div id="role-legend" style="margin-top: 10px; width: 480
 
 
