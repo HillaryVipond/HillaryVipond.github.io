@@ -24,7 +24,7 @@ Welcome to the Apprentices page. This map shows the spatial distribution of the 
 
   <div style="margin-top: 10px;">
     <svg id="legend-svg" width="480" height="50"></svg>
-    <div style="font-size: 12px; text-align: center;">Share of adult male population</div>
+    <div style="font-size: 12px; text-align: center;"> Percentage Share of Male Population</div>
   </div>
 </div>
 
@@ -119,7 +119,7 @@ Promise.all([
 <h2>Apprenticeship System: Role Breakdown</h2>
 
 <!-- 🎛️ Role + Year Controls: side-by-side -->
-<div style="display: flex; align-items: center; gap: 16px; margin-bottom: 10px;">
+<div style="display: flex; align-items: center; gap: 32px; margin-bottom: 10px;">
   <label for="role-select">Select role:</label>
   <select id="role-select">
     <option value="master">Master</option>
@@ -137,7 +137,7 @@ Promise.all([
 
   <div style="margin-top: 10px;">
     <svg id="role-legend-svg" width="480" height="50"></svg>
-    <div style="font-size: 12px; text-align: center;">Share of adult male population in this role</div>
+    <div style="font-size: 12px; text-align: center;">Percentage Share of Male Population in Role</div>
   </div>
 </div>
 
