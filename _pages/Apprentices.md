@@ -40,7 +40,7 @@ Promise.all([
   function updateMap(year) {
     const values = yearData[year];
     const color = d3.scaleSequential(d3.interpolatePurples)
-      .domain([0.4, 3.9]);
+      .domain([0.0, 5.5]);
 
     svg.selectAll("path")
       .data(geoData.features)
