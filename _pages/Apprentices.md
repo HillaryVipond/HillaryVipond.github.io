@@ -206,6 +206,7 @@ Promise.all([
 </script>
 
 <!-- 🧭 Legend for Role Breakdown Map -->
-<div id="role-legend" style="margin-top: 10px; width: 480
+<div id="role-legend" style="margin-top: 10px; width: 480px; margin-left: auto; margin-right: auto;">
+
 
 
