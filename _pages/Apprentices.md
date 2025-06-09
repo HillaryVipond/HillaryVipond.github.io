@@ -216,10 +216,10 @@ Promise.all([
 
 <script>
 const roleLegendSvg = d3.select("#role-legend svg");
-const legendWidth = +roleLegendSvg.attr("width");
+const roleLegendWidth = +roleLegendSvg.attr("width");
+const binCount = 8;
+const binWidth = roleLegendWidth / binCount;
 const roleColors = d3.schemeBlues[8];
-const binCount = roleColors.length;
-const binWidth = legendWidth / binCount;
 
 // Draw colored boxes
 roleColors.forEach((color, i) => {
