@@ -28,7 +28,7 @@ const tooltip = d3.select("#tooltip");
 
 Promise.all([
   d3.json("/assets/maps/Counties1851.geojson"),
-  d3.json("/assets/maps/total_by_year.json")
+  d3.json("/assets/maps/share_total_by_county.json")
 ]).then(([geoData, yearData]) => {
 
   const projection = d3.geoMercator().fitSize([width, height], geoData);
