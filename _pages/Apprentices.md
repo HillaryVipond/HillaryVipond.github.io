@@ -151,8 +151,8 @@ Promise.all([
   const path = d3.geoPath().projection(projection);
 
   const color = d3.scaleThreshold()
-    .domain([1, 2, 3, 4])
-    .range(d3.schemeBlues[5]); // You can change the palette if you like
+  .domain([0.2, 0.4, 0.6, 0.8, 1.0, 1.5, 2.0])
+  .range(d3.schemeBlues[8]);
 
   function updateRoleMap(year, role) {
     const values = roleData[year][role];
@@ -202,5 +202,12 @@ Promise.all([
   });
 });
 </script>
+
+<!-- 🧭 Legend for Role Breakdown Map -->
+<div id="role-legend" style="margin-top: 10px; width: 480px; margin-left: auto; margin-right: auto;">
+  <svg width="480" height="50"></svg>
+  <div style="font-size: 12px; text-align: center;">Share of adult male population in this role</div>
+</div>
+
 
 
