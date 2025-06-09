@@ -5,7 +5,9 @@ permalink: /apprentices/
 nav_exclude: false
 ---
 
-Welcome to the Apprentices page. This map shows the spatial distribution of the apprenticeship system in 1851 by county.
+Welcome to the Apprentices page. This map shows the spatial distribution of the apprenticeship system in England and Wales by county, between 1851-1911. All data is NLP processed text stored in the ICeM digitized historical census data project.
+
+The apprenticeship system declines everywhere between 1851-1911. The decline is more rapid after 1881. The less urban areas seem to retain more of the system than elsewhere. What is somewhat surprising is how different the decline is by level of skill. Apprenticeships decline only slightly over the period - it is Masters and Journeymen who disappear. 
 
 
 
