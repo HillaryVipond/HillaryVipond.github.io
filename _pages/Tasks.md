@@ -671,7 +671,7 @@ Promise.all([
   const yearLabel = d3.select("#year-label");
 
   function updateMap(year) {
-    const values = yearData[year];
+    const values = yearData[Year];
     const color = d3.scaleThreshold()
       .domain([1, 2, 3, 4])
       .range(d3.schemePurples[5]);
@@ -681,7 +681,7 @@ Promise.all([
       .join("path")
       .attr("d", path)
       .attr("fill", d => {
-        const name = d.properties.county_clean;
+        const name = d.properties.R_CTY;
         const v = values[name];
         return v != null ? color(v) : "#ccc";
       })
