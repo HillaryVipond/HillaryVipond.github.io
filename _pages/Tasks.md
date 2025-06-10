@@ -681,7 +681,7 @@ Promise.all([
       .join("path")
       .attr("d", path)
       .attr("fill", d => {
-        const name = d.properties.R_CTY;
+        const name = d.properties.county_clean;
         const v = values[name];
         return v != null ? color(v) : "#ccc";
       })
