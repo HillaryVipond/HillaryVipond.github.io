@@ -196,6 +196,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <!-- 1. Headings and explanation -->
 <h2>Growth by Industry: 1851–1911</h2>
+<p> Showing growth by industry over the period. Note that the extreme outliers are primarily in industries which were very small or non-existant in 1851 </p>
 
 <!-- 2. Container for the scatterplot -->
 <div id="scatterplot"></div>
