@@ -95,130 +95,102 @@ Welcome to the Tasks page. This will be a visualization of the changing occupati
 
 
 
-
-
-
-
-
-
-
+<!-- ===================== -->
+<!-- Section 2: Growth by Order -->
+<!-- ==================== -->
 
 <!-- D3.js library -->
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
-<h2> Occupation: Orders Over Time (1851-1911) </h2>
+<h2>Occupation: Orders Over Time (1851–1911)</h2>
 
-<div style="display: flex; gap: 2em; justify-content: center;">
-  <div>
-    <h3 style="text-align: center;">Below Population Growth</h3>
-    <div id="below-growth"></div>
-  </div>
-  <div>
-    <h3 style="text-align: center;">Above Population Growth</h3>
-    <div id="above-growth"></div>
-  </div>
-</div>
-
+<div id="growth-chart" style="margin-top: 2em;"></div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  const width = 400;
-  const height = 500;
+  const width = 800;
+  const height = 600;
   const margin = {top: 20, right: 20, bottom: 30, left: 150};
 
   d3.csv("/assets/data/Orders.csv", d3.autoType).then(data => {
-    const belowGrowth = data
-      .filter(d => d.fold_growth_1851_1911 < 2)
-      .sort((a, b) => d3.descending(a.fold_growth_1851_1911, b.fold_growth_1851_1911));
-    const aboveGrowth = data
-      .filter(d => d.fold_growth_1851_1911 >= 2)
-      .sort((a, b) => d3.descending(a.fold_growth_1851_1911, b.fold_growth_1851_1911));
+    // Sort all orders by growth
+    const allOrders = data.sort((a, b) => d3.descending(a.fold_growth_1851_1911, b.fold_growth_1851_1911));
 
+    const svg = d3.select("#growth-chart")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    function drawBarChart(containerId, dataset) {
-      const svg = d3.select(containerId)
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
+    const x = d3.scaleLinear()
+      .domain([0, d3.max(allOrders, d => d.fold_growth_1851_1911)]).nice()
+      .range([0, width - margin.left - margin.right]);
 
-      const x = d3.scaleLinear()
-        .domain([0, d3.max(dataset, d => d.fold_growth_1851_1911)]).nice()
-        .range([0, width - margin.left - margin.right]);
+    const y = d3.scaleBand()
+      .domain(allOrders.map(d => d.order))
+      .range([0, height - margin.top - margin.bottom])
+      .padding(0.2);
 
-      const y = d3.scaleBand()
-        .domain(dataset.map(d => d.order))
-        .range([0, height - margin.top - margin.bottom])
-        .padding(0.2);
+    // Y Axis
+    svg.append("g")
+      .call(d3.axisLeft(y).tickSize(0))
+      .selectAll("text")
+      .style("font-size", "13px")
+      .style("font-family", "sans-serif");
 
-      svg.append("g")
-        .call(d3.axisLeft(y).tickSize(0))
-        .selectAll("text")
-        .style("font-size", "13px")
-        .style("font-family", "sans-serif");
+    // X Axis
+    svg.append("g")
+      .attr("transform", `translate(0,${height - margin.top - margin.bottom})`)
+      .call(d3.axisBottom(x).ticks(4))
+      .selectAll("text")
+      .style("font-size", "12px")
+      .style("font-family", "sans-serif");
 
-      svg.append("g")
-        .attr("transform", `translate(0,${height - margin.top - margin.bottom})`)
-        .call(d3.axisBottom(x).ticks(4))
-        .selectAll("text")
-        .style("font-size", "12px")
-        .style("font-family", "sans-serif");
+    // Bars
+    const bars = svg.selectAll(".bar")
+      .data(allOrders)
+      .join("rect")
+      .attr("class", "bar")
+      .attr("y", d => y(d.order))
+      .attr("height", y.bandwidth())
+      .attr("x", 0)
+      .attr("width", d => x(d.fold_growth_1851_1911))
+      .attr("fill", d => d.fold_growth_1851_1911 >= 2 ? "#6BAED6" : "#FD8D3C"); // blue if above pop growth, orange otherwise
 
-      const bars = svg.selectAll(".bar")
-        .data(dataset)
-        .join("rect")
-        .attr("class", "bar")
-        .attr("y", d => y(d.order))
-        .attr("height", y.bandwidth())
-        .attr("x", 0)
-        .attr("width", d => x(d.fold_growth_1851_1911))
-        .attr("fill", "#6BAED6");
+    // Tooltip
+    const tooltip = d3.select("body")
+      .append("div")
+      .style("position", "absolute")
+      .style("background", "white")
+      .style("border", "1px solid #ccc")
+      .style("padding", "8px 12px")
+      .style("border-radius", "5px")
+      .style("pointer-events", "none")
+      .style("font-size", "14px")
+      .style("visibility", "hidden")
+      .style("box-shadow", "0 2px 6px rgba(0,0,0,0.2)");
 
-      const tooltip = d3.select("body")
-        .append("div")
-        .style("position", "absolute")
-        .style("background", "white")
-        .style("border", "1px solid #ccc")
-        .style("padding", "8px 12px")
-        .style("border-radius", "5px")
-        .style("pointer-events", "none")
-        .style("font-size", "14px")
-        .style("visibility", "hidden")
-        .style("box-shadow", "0 2px 6px rgba(0,0,0,0.2)");
-
-      bars.on("mouseover", function (event, d) {
-          tooltip.style("visibility", "visible").text(`${d.order}: ${d.fold_growth_1851_1911.toFixed(2)}×`);
-          d3.select(this).attr("fill", "#3182BD");
-        })
-        .on("mousemove", function (event) {
-          tooltip
-            .style("left", (event.pageX + 10) + "px")
-            .style("top", (event.pageY - 20) + "px");
-        })
-        .on("mouseout", function () {
-          tooltip.style("visibility", "hidden");
-          d3.select(this).attr("fill", "#6BAED6");
-        });
-    }
-
-    drawBarChart("#below-growth", belowGrowth);
-    drawBarChart("#above-growth", aboveGrowth);
+    bars.on("mouseover", function (event, d) {
+        tooltip.style("visibility", "visible").text(`${d.order}: ${d.fold_growth_1851_1911.toFixed(2)}×`);
+        d3.select(this).attr("fill", "#3182BD");
+      })
+      .on("mousemove", function (event) {
+        tooltip
+          .style("left", (event.pageX + 10) + "px")
+          .style("top", (event.pageY - 20) + "px");
+      })
+      .on("mouseout", function (event, d) {
+        tooltip.style("visibility", "hidden");
+        d3.select(this).attr("fill", d => d.fold_growth_1851_1911 >= 2 ? "#6BAED6" : "#FD8D3C");
+      });
   });
 });
 </script>
 
-
-
-
-
-
-
-
-
-
-
-
+<!-- ===================== -->
+<!-- Section 3: Growth by Industry -->
+<!-- ===================== -->
 
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
