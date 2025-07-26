@@ -494,7 +494,12 @@ document.addEventListener("DOMContentLoaded", function () {
       boxes.append("text")
         .attr("x", 4)
         .attr("y", 18)
-        .text(d => d.data.name)
+        .text(d => {
+         const name = d.data.name;
+         if (!name) return "";
+         const parts = name.split("_");
+         return parts.length > 1 ? parts[1] : name;
+         })
         .attr("fill", d => d === activeNode ? "white" : "#444")
         .style("pointer-events", "none");
 
