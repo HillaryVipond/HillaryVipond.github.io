@@ -8,15 +8,16 @@ header: false
 
   
 ### 2025
+- Economic History Association Conference
+- NBER Summer Institute (*presented by co-author, Yannis Kastis)
+- World Economic History Congress, Lund
 - University of Southern Denmark Economics Seminar
 - Vienna University of Economics and Business, Political Economy of Public Policy Seminar
 - Economic History Society Conference, Glasgow
 - Workshop on Disseminating Economic History, Stellenbosch
 - Economic History Gender Workshop, Lund  
-- World Economic History Congress, Lund
 - Inequalities Theory and Measurement Winter School, Canazei
-- Economic History Association Conference (*presented by co-author, Yannis Kastis)
-- NBER Summer Institute (*presented by co-author, Yannis Kastis)
+
  
 ### 2024
 - PSE Economic History Seminar  
