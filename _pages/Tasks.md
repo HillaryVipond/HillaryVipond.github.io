@@ -509,7 +509,7 @@ document.addEventListener("DOMContentLoaded", function () {
            } else {
              // Load PNG chart for task
              const taskCode = d.data.name;
-             const imagePath = `/assets/images/task_charts/${taskCode}.png`;
+             const imagePath = `/assets/images/task_charts/${taskCode}`;
 
              const img = document.getElementById("task-image");
              img.src = imagePath;
