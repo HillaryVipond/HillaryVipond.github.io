@@ -543,7 +543,19 @@ document.addEventListener("DOMContentLoaded", function () {
             g.append("text")
               .attr("x", 4)
               .attr("y", 18)
-              .text(d => d.data.name)
+              .text(d => {
+              const name = d.data.name;
+              if (!name) return "";
+
+              const width = d.x1 - d.x0;
+              const height = d.y1 - d.y0;
+
+              // Hide label if box is too small
+              if (width < 40 || height < 20) return "";
+
+              const parts = name.split("_");
+              return parts.length > 1 ? parts[1] : name;
+              })
               .attr("fill", "white")
               .style("font-size", "12px")
               .style("pointer-events", "none");
