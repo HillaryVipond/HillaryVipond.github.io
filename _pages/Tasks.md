@@ -551,7 +551,7 @@ document.addEventListener("DOMContentLoaded", function () {
               const height = d.y1 - d.y0;
 
               // Hide label if box is too small
-              if (width < 40 || height < 20) return "";
+              if (width < 20 || height < 12) return "";
 
               const parts = name.split("_");
               return parts.length > 1 ? parts[1] : name;
