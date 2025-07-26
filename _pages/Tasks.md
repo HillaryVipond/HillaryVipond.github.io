@@ -423,8 +423,9 @@ document.addEventListener("DOMContentLoaded", function () {
 <div id="treemap"></div>
 
 <!-- Line chart title and container -->
-<h3 id="line-title" style="margin-top: 2em;"></h3>
-<div id="linechart"></div>
+<div id="task-image-container" style="margin-top: 30px; text-align: center;">
+  <img id="task-image" src="" alt="" style="max-width: 100%; display: none; border: 1px solid #ccc;" />
+</div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -501,15 +502,26 @@ document.addEventListener("DOMContentLoaded", function () {
           .attr("transform", d => `translate(${d.x0},${d.y0})`)
           .style("cursor", d => d.children ? "pointer" : "default")
           .on("click", (event, d) => {
-            event.stopPropagation();
-            if (d.children) {
-              draw(d);
-            } else {
-              let industryCode = d.parent.data.name;
-              industryCode = industryCode.replace(/\s+/g, '_'); // 🛠 replace spaces with underscores
-              drawLineChartForIndustry(industryCode); // ✅ Now loads correct CSV
+           event.stopPropagation();
+
+           if (d.children) {
+            draw(d); // drill down if it's not a task yet
+           } else {
+             // Load PNG chart for task
+             const taskCode = d.data.name;
+             const imagePath = `/assets/images/task_charts/${taskCode}.png`;
+
+             const img = document.getElementById("task-image");
+             img.src = imagePath;
+             img.alt = `Chart for ${taskCode}`;
+             img.style.display = "block";
+
+             // Hide if image doesn't exist
+             img.onerror = () => {
+             img.style.display = "none";
+             };
             }
-          })
+          }) 
           .call(g => {
             g.append("rect")
               .attr("width", d => d.x1 - d.x0)
@@ -533,103 +545,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  function drawLineChartForIndustry(industryCode) {
-    d3.select("#linechart").selectAll("*").remove();
-    d3.select("#line-title").text(`Task Trends for Industry ${industryCode}`);
-
-    const margin = { top: 20, right: 30, bottom: 40, left: 60 };
-    const chartWidth = 600 - margin.left - margin.right;
-    const chartHeight = 300 - margin.top - margin.bottom;
-
-    const svg = d3.select("#linechart")
-      .append("svg")
-      .attr("width", chartWidth + margin.left + margin.right)
-      .attr("height", chartHeight + margin.top + margin.bottom)
-      .style("font-family", "sans-serif")
-      .style("font-size", "12px")
-      .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
-
-    d3.csv(`/assets/data/${industryCode}.csv`, d3.autoType).then(data => {
-      const tasks = Array.from(d3.group(data, d => d.task), ([key, values]) => ({ task: key, values }));
-
-      const allYears = d3.extent(data, d => d.year);
-      const maxCount = d3.max(data, d => d.count);
-
-      const x = d3.scaleLinear()
-        .domain(allYears)
-        .range([0, chartWidth]);
-
-      const y = d3.scaleLinear()
-        .domain([0, maxCount]).nice()
-        .range([chartHeight, 0]);
-
-      const color = d3.scaleOrdinal(d3.schemeCategory10)
-        .domain(tasks.map(d => d.task));
-
-      svg.append("g")
-        .attr("transform", `translate(0,${chartHeight})`)
-        .call(d3.axisBottom(x).tickFormat(d3.format("d")));
-
-      svg.append("g")
-        .call(d3.axisLeft(y));
-
-      const line = d3.line()
-        .x(d => x(d.year))
-        .y(d => y(d.count));
-
-      svg.selectAll(".line")
-        .data(tasks)
-        .join("path")
-        .attr("fill", "none")
-        .attr("stroke", d => color(d.task))
-        .attr("stroke-width", 2)
-        .attr("d", d => line(d.values));
-
-      // ✅ Add Legend
-      const legend = d3.select("#linechart svg")
-        .append("g")
-        .attr("transform", `translate(${margin.left}, ${margin.top - 10})`);
-      const legendSpacing = 100;
-
-      legend.selectAll("legend-item")
-        .data(tasks)
-        .join("g")
-        .attr("transform", (d, i) => `translate(${i * legendSpacing}, 0)`)
-        .call(g => {
-          g.append("rect")
-            .attr("width", 12)
-            .attr("height", 12)
-            .attr("fill", d => color(d.task));
-
-          g.append("text")
-            .attr("x", 18)
-            .attr("y", 10)
-            .text(d => d.task)
-            .style("font-size", "12px")
-            .attr("alignment-baseline", "middle");
-            });
-
-
-      tasks.forEach(task => {
-        svg.selectAll(`.dot-${task.task.replace(/\s+/g, '-')}`)
-          .data(task.values)
-          .join("circle")
-          .attr("cx", d => x(d.year))
-          .attr("cy", d => y(d.count))
-          .attr("r", 3)
-          .attr("fill", color(task.task));
-      });
-
-    }).catch(error => {
-      console.error("Failed to load CSV:", error);
-      svg.append("text")
-        .attr("x", chartWidth / 2)
-        .attr("y", chartHeight / 2)
-        .attr("text-anchor", "middle")
-        .text("Failed to load data");
-    });
-  }
-});
+ 
 </script>
 
