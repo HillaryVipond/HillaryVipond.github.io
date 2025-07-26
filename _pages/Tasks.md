@@ -454,6 +454,8 @@ document.addEventListener("DOMContentLoaded", function () {
       .paddingInner(2)(fullRoot);
 
     draw(fullRoot);
+    console.log("Calling draw() on fullRoot:", fullRoot);
+
 
     function draw(activeNode) {
       group.selectAll("*").remove();
@@ -461,6 +463,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const level = activeNode.depth;
       const parent = activeNode.parent;
       const siblings = parent ? parent.children : fullRoot.children;
+      console.log("Siblings at level", activeNode.depth, ":", siblings);
+
 
       const boxes = group.selectAll("g")
         .data(siblings)
