@@ -423,6 +423,7 @@ document.addEventListener("DOMContentLoaded", function () {
 <div id="treemap"></div>
 
 <!-- Line chart title and container -->
+<h3 id="image-title" style="margin-top: 2em; text-align: center;"></h3>
 <div id="task-image-container" style="margin-top: 30px; text-align: center;">
   <img id="task-image" src="" alt="" style="max-width: 100%; display: none; border: 1px solid #ccc;" />
 </div>
@@ -513,7 +514,7 @@ document.addEventListener("DOMContentLoaded", function () {
            } else {
              // Load PNG chart for task
              const taskCode = d.data.name;
-             const imagePath = `/assets/task_charts/${taskCode}`;
+             const imagePath = `/assets/task_charts/${taskCode}.png`;
 
              const img = document.getElementById("task-image");
              img.src = imagePath;
