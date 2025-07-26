@@ -5,15 +5,13 @@ permalink: /tasks/
 nav_exclude: false
 ---
 
-Welcome to the Tasks page. This will be a visualization of the changing occupational structure in Britain between 1851-1911, based on census data from the ICeM project. It is a work in progress. Please get in touch if you want to chat.
-
+Welcome to the Tasks page. This will be a visualization of the changing occupational structure in Britain between 1851-1911, based on census data from the ICeM project. It is a work in progress. Please email me to discuss. 
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
-
 <!-- 1. This section creates the heading and buttons for selecting the year -->
 <h2>Treemap: Orders Over Time</h2>
-<p>Click a year to view the treemap of Orders for that census year.</p>
+<p>Click a year to view the treemap of the different sectors of the British economy by census year.</p>
 
 <!-- 2. Year selection buttons - each one calls the loadYear(year) JavaScript function -->
 <div style="margin-bottom: 1em;">
@@ -103,6 +101,7 @@ Welcome to the Tasks page. This will be a visualization of the changing occupati
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <h2>Occupation: Orders Over Time (1851–1911)</h2>
+<p> Showing the growth in different sectors of the economy over the period. Sectors shown in blue are growing more rapidly than average population growth</p>
 
 <div id="growth-chart" style="margin-top: 2em;"></div>
 
