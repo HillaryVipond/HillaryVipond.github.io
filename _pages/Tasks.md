@@ -514,6 +514,7 @@ document.addEventListener("DOMContentLoaded", function () {
            } else {
              // Load PNG chart for task
              const taskCode = d.data.name;
+             document.getElementById("image-title").textContent = `Chart for ${taskCode}`;
              const imagePath = `/assets/task_charts/${taskCode}.png`;
 
              const img = document.getElementById("task-image");
