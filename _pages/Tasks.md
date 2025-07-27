@@ -387,8 +387,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-
-
 <h2>Treemap to Tasks Level: Orders → Industries → Tasks </h2>
 
 <!-- Treemap container -->
@@ -541,9 +539,12 @@ document.addEventListener("DOMContentLoaded", function () {
   }); 
 });
 
+<!-- ===================== -->
+<!-- Section 5: Complexity  -->
+<!-- ==================== -->
 
 
-<h2 style="margin-top: 3em;">Task Complexity in 1911</h2>
+<h2 style="margin-top: 3em;">Industry Complexity in 1911</h2>
 <p style="text-align: center; color: #555;">
   This scatterplot compares task complexity (entropy) with industry size in 1911.
 </p>
@@ -565,7 +566,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
-  d3.csv("/assets/data/industry_entropy.csv", d3.autoType).then(data => {
+  d3.csv("/assets/data/toy_data_entropy.csv", d3.autoType).then(data => {
     const x = d3.scaleLinear()
       .domain([0, d3.max(data, d => d.size_1911) * 1.1])
       .range([0, width]);
@@ -629,9 +630,6 @@ document.addEventListener("DOMContentLoaded", function () {
       .on("mouseout", () => tooltip.style("visibility", "hidden"));
   });
 });
-</script>
-
-
 </script>
 
 
