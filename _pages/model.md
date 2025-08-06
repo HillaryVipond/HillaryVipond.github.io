@@ -10,108 +10,120 @@ I model how a single process shaped mobility, migration, inequality, and regiona
 as observed in British historical census microdata
 
 
+---
+layout: single
+title: "Model"
+permalink: /model/
+nav_exclude: false
+---
 
-<h2>Apprenticeship System: Total Participation</h2>
+<h2>Tech Adoption Model: Toy Simulation</h2>
 
-<!-- 🎛️ Year control for total map -->
-<div style="display: flex; align-items: center; gap: 16px; margin-bottom: 10px;">
-  <label for="year-slider">Select year: <span id="year-label">1851</span></label>
-  <input type="range" id="year-slider" min="1851" max="1911" step="10" value="1851" style="width: 300px;">
+<!-- UI controls -->
+<div style="margin-bottom: 10px;">
+  <label for="view-select">View:</label>
+  <select id="view-select">
+    <option value="adoption">Adoption</option>
+    <option value="employment">Employment</option>
+    <option value="wages">Wages</option>
+    <option value="migration_out">Migration Out</option>
+  </select>
+  <button id="next-wave">Next Wave</button>
 </div>
 
-<!-- 🗺️ Total map and legend container -->
-<div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 40px;">
-  <svg id="total-map" width="960" height="600"></svg>
-
-  <div style="margin-top: 10px;">
-    <svg id="legend-svg" width="480" height="50"></svg>
-    <div style="font-size: 12px; text-align: center;"> Percentage Share of Male Population</div>
-  </div>
-</div>
-
+<!-- Map + Legend -->
+<svg id="model-map" width="960" height="600"></svg>
 <div id="tooltip" style="position:absolute; background:white; border:1px solid #aaa; padding:5px; visibility:hidden;"></div>
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
-<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
 <script>
-const svg = d3.select("#total-map");
+let geoData, modelState;
+const svg = d3.select("#model-map");
 const tooltip = d3.select("#tooltip");
 
 Promise.all([
   d3.json("/assets/maps/Counties1851.geojson"),
-  d3.json("/assets/maps/share_total_by_county.json")
-]).then(([geoData, yearData]) => {
+  d3.json("/assets/data/model_state.json")
+]).then(([geo, state]) => {
+  geoData = geo;
+  modelState = state;
+
   const projection = d3.geoMercator().fitSize([960, 600], geoData);
   const path = d3.geoPath().projection(projection);
-  const slider = d3.select("#year-slider");
-  const yearLabel = d3.select("#year-label");
 
-  function updateMap(year) {
-    const values = yearData[year];
-    const color = d3.scaleThreshold()
-      .domain([1, 2, 3, 4])
-      .range(d3.schemePurples[5]);
-
-    svg.selectAll("path")
-      .data(geoData.features)
-      .join("path")
-      .attr("d", path)
-      .attr("fill", d => {
-        const name = d.properties.R_CTY;
-        const v = values[name];
-        return v != null ? color(v) : "#ccc";
-      })
-      .attr("stroke", "#fff")
-      .attr("stroke-width", 0.5)
-      .on("mouseover", function (event, d) {
-        const name = d.properties.R_CTY;
-        const value = values[name];
-        tooltip.style("visibility", "visible")
-          .text(`${name}: ${value != null ? value.toFixed(2) : "N/A"}`);
-        d3.select(this).attr("stroke-width", 2);
-      })
-      .on("mousemove", function(event) {
-        tooltip.style("top", (event.pageY + 10) + "px")
-               .style("left", (event.pageX + 10) + "px");
-      })
-      .on("mouseout", function () {
-        tooltip.style("visibility", "hidden");
-        d3.select(this).attr("stroke-width", 0.5);
-      });
-  }
-
-  updateMap("1851");
-
-  slider.on("input", function() {
-    const year = this.value;
-    yearLabel.text(year);
-    updateMap(year);
+  d3.select("#view-select").on("change", () => updateMap(path));
+  d3.select("#next-wave").on("click", () => {
+    runModelStep();
+    updateMap(path);
   });
+
+  updateMap(path);
 });
 
-{
-  const legendSvg = d3.select("#legend-svg");
-  const legendWidth = +legendSvg.attr("width");
-  const colors = d3.schemePurples[5];
-  const binWidth = legendWidth / colors.length;
+function runModelStep() {
+  for (const name in modelState.counties) {
+    const c = modelState.counties[name];
+    if (!c.adopted_wave1 && Math.random() < 0.3) {
+      c.adopted_wave1 = true;
+      c.employment += 150;
+      c.wages *= 1.05;
+      c.migration_out = Math.max(0, c.migration_out - 0.02);
+    } else if (!c.adopted_wave1) {
+      c.employment = Math.max(0, c.employment - 100);
+      c.wages *= 0.98;
+      c.migration_out = Math.min(1, c.migration_out + 0.03);
+    }
+  }
+}
 
-  colors.forEach((color, i) => {
-    legendSvg.append("rect")
-      .attr("x", i * binWidth)
-      .attr("y", 10)
-      .attr("width", binWidth)
-      .attr("height", 10)
-      .attr("fill", color);
+function getColorScale(view) {
+  if (view === "employment") {
+    return d3.scaleSequential(d3.interpolateBlues).domain([500, 2000]);
+  } else if (view === "wages") {
+    return d3.scaleSequential(d3.interpolateGreens).domain([0.8, 1.2]);
+  } else if (view === "migration_out") {
+    return d3.scaleSequential(d3.interpolateOranges).domain([0, 0.3]);
+  } else {
+    return d3.scaleOrdinal().domain([true, false]).range(["green", "red"]);
+  }
+}
 
-    const label = i === colors.length - 1 ? "4+" : `${i}–${i + 1}`;
-    legendSvg.append("text")
-      .attr("x", i * binWidth + binWidth / 2)
-      .attr("y", 35)
-      .attr("text-anchor", "middle")
-      .attr("font-size", "10px")
-      .text(label);
-  });
+function updateMap(path) {
+  const view = d3.select("#view-select").property("value");
+  const color = getColorScale(view);
+
+  svg.selectAll("path")
+    .data(geoData.features)
+    .join("path")
+    .attr("d", path)
+    .attr("fill", d => {
+      const name = d.properties.R_CTY;
+      const c = modelState.counties[name];
+      if (!c) return "#ccc";
+      if (view === "adoption") return color(c.adopted_wave1);
+      return color(c[view]);
+    })
+    .attr("stroke", "#fff")
+    .attr("stroke-width", 0.5)
+    .on("mouseover", function (event, d) {
+      const name = d.properties.R_CTY;
+      const c = modelState.counties[name];
+      if (!c) return;
+      tooltip.style("visibility", "visible")
+        .html(`<b>${name}</b><br>
+               Jobs: ${c.employment}<br>
+               Wages: £${c.wages.toFixed(2)}<br>
+               Migration Out: ${(c.migration_out * 100).toFixed(1)}%`);
+      d3.select(this).attr("stroke-width", 2);
+    })
+    .on("mousemove", function(event) {
+      tooltip.style("top", (event.pageY + 10) + "px")
+             .style("left", (event.pageX + 10) + "px");
+    })
+    .on("mouseout", function () {
+      tooltip.style("visibility", "hidden");
+      d3.select(this).attr("stroke-width", 0.5);
+    });
 }
 </script>
-
