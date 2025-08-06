@@ -11,16 +11,30 @@ I model how a single process shaped mobility, migration, inequality, and regiona
 
 <h2>Tech Adoption Model: Toy Simulation</h2>
 
+---
+layout: single
+title: "Model"
+permalink: /model/
+nav_exclude: false
+---
+
+<h2>Simulation: Local Impacts of Technology Adoption</h2>
+
+<p>Click "NewTech" to simulate the effects of uneven technology adoption across counties. Observe adoption patterns and how they affect wages, employment, and migration.</p>
 
 <!-- Map grid -->
 <div style="display: flex; gap: 30px;">
   <div>
-    <h3>Employment</h3>
-    <svg id="map-employment" width="300" height="400"></svg>
+    <h3>Adoption</h3>
+    <svg id="map-adoption" width="300" height="400"></svg>
   </div>
   <div>
     <h3>Wages</h3>
     <svg id="map-wages" width="300" height="400"></svg>
+  </div>
+  <div>
+    <h3>Employment</h3>
+    <svg id="map-employment" width="300" height="400"></svg>
   </div>
   <div>
     <h3>Migration Out</h3>
@@ -28,10 +42,9 @@ I model how a single process shaped mobility, migration, inequality, and regiona
   </div>
 </div>
 
-<!-- Buttons -->
-<div style="margin-top: 20px; display: flex; gap: 20px;">
-  <button id="btn-before">Before Adoption</button>
-  <button id="btn-after">After Adoption</button>
+<!-- Button -->
+<div style="margin-top: 20px;">
+  <button id="btn-newtech">NewTech</button>
 </div>
 
 <!-- Tooltip -->
@@ -41,13 +54,14 @@ I model how a single process shaped mobility, migration, inequality, and regiona
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <script>
-const svgEmployment = d3.select("#map-employment");
+const svgAdoption = d3.select("#map-adoption");
 const svgWages = d3.select("#map-wages");
+const svgEmployment = d3.select("#map-employment");
 const svgMigration = d3.select("#map-migration");
 const tooltip = d3.select("#tooltip");
 
 let geoData, modelState;
-let viewState = "before"; // toggles between "before" and "after"
+let adopted = false;
 
 Promise.all([
   d3.json("/assets/maps/Counties1851.geojson"),
@@ -63,8 +77,9 @@ Promise.all([
 });
 
 function updateAllMaps() {
-  renderMap(svgEmployment, "employment", d3.interpolateBlues, [800, 1400]);
+  renderMap(svgAdoption, "adoption", d3.interpolateGreys, [0, 1]);
   renderMap(svgWages, "wages", d3.interpolateGreens, [0.9, 1.1]);
+  renderMap(svgEmployment, "employment", d3.interpolateBlues, [800, 1400]);
   renderMap(svgMigration, "migration_out", d3.interpolateOranges, [0.01, 0.10]);
 }
 
@@ -78,13 +93,20 @@ function renderMap(svg, variable, colorScaleFn, domain) {
     .attr("fill", d => {
       const name = d.properties.R_CTY;
       const c = modelState.counties[name];
-      if (!c) return "#ccc";
+      if (!c) return "#eee"; // county missing from model
 
-      let val = c[variable];
-      if (viewState === "after") {
-        if (variable === "employment" && c.adopted_wave1) val *= 1.2;
-        if (variable === "wages" && c.adopted_wave1) val *= 1.1;
-        if (variable === "migration_out" && c.adopted_wave1) val *= 0.6;
+      if (!adopted) return "#eee"; // pre-adoption: light grey
+
+      let val;
+      if (variable === "adoption") {
+        val = c.adopted_wave1 ? 1 : 0;
+      } else {
+        val = c[variable];
+        if (c.adopted_wave1) {
+          if (variable === "wages") val *= 1.1;
+          if (variable === "employment") val *= 1.2;
+          if (variable === "migration_out") val *= 0.6;
+        }
       }
 
       return color(val);
@@ -98,6 +120,7 @@ function renderMap(svg, variable, colorScaleFn, domain) {
 
       tooltip.style("visibility", "visible")
         .html(`<b>${name}</b><br>
+               Adopted: ${c.adopted_wave1 ? "Yes" : "No"}<br>
                Jobs: ${c.employment}<br>
                Wages: £${c.wages.toFixed(2)}<br>
                Migration Out: ${(c.migration_out * 100).toFixed(1)}%`);
@@ -113,14 +136,9 @@ function renderMap(svg, variable, colorScaleFn, domain) {
     });
 }
 
-// Button handlers
-d3.select("#btn-before").on("click", () => {
-  viewState = "before";
-  updateAllMaps();
-});
-
-d3.select("#btn-after").on("click", () => {
-  viewState = "after";
+// Button handler
+d3.select("#btn-newtech").on("click", () => {
+  adopted = true;
   updateAllMaps();
 });
 </script>
