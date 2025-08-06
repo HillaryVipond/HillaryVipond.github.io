@@ -64,14 +64,19 @@ Promise.all([
 });
 
 function updateAllMaps() {
-  renderMap(svgAdoption, "adoption", d3.interpolateGreys, [0, 1]);
-  renderMap(svgWages, "wages", d3.interpolateGreens, [0.9, 1.1]);
-  renderMap(svgEmployment, "employment", d3.interpolateBlues, [800, 1400]);
+  renderMap(svgAdoption, "adoption", null, null); // special handling
+  renderMap(svgWages, "wages", d3.interpolateRdYlGn, [0.5, 1.0, 1.5]);
+  renderMap(svgEmployment, "employment", d3.interpolatePiYG, [-4000, 0, 4000]);
   renderMap(svgMigration, "migration_out", d3.interpolateOranges, [0.01, 0.10]);
 }
 
 function renderMap(svg, variable, colorScaleFn, domain) {
-  const color = d3.scaleSequential(colorScaleFn).domain(domain);
+  let color = null;
+  if (colorScaleFn && domain.length === 3) {
+    color = d3.scaleDiverging(colorScaleFn).domain(domain);
+  } else if (colorScaleFn) {
+    color = d3.scaleSequential(colorScaleFn).domain(domain);
+  }
 
   svg.selectAll("path")
     .data(geoData.features)
@@ -84,9 +89,8 @@ function renderMap(svg, variable, colorScaleFn, domain) {
 
       if (!adopted) return "#eee";
 
-      // Special case for adoption map: fixed colors
       if (variable === "adoption") {
-        return c.adopted_wave1 ? "#2a9d8f" : "#cccccc";  // teal vs grey
+        return c.adopted_wave1 ? "#2a9d8f" : "#bbbbbb";
       }
 
       let val = c[variable];
@@ -96,7 +100,7 @@ function renderMap(svg, variable, colorScaleFn, domain) {
         if (variable === "migration_out") val *= 0.6;
       }
 
-      return color(val);
+      return color ? color(val) : "#ccc";
     })
     .attr("stroke", "#fff")
     .attr("stroke-width", 0.5)
@@ -123,7 +127,6 @@ function renderMap(svg, variable, colorScaleFn, domain) {
     });
 }
 
-// Button handler
 d3.select("#btn-newtech").on("click", () => {
   adopted = true;
   updateAllMaps();
