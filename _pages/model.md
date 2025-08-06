@@ -80,20 +80,20 @@ function renderMap(svg, variable, colorScaleFn, domain) {
     .attr("fill", d => {
       const name = d.properties.R_CTY;
       const c = modelState.counties[name];
-      if (!c) return "#eee"; // county missing from model
+      if (!c) return "#eee";
 
-      if (!adopted) return "#eee"; // pre-adoption: light grey
+      if (!adopted) return "#eee";
 
-      let val;
+      // Special case for adoption map: fixed colors
       if (variable === "adoption") {
-        val = c.adopted_wave1 ? 1 : 0;
-      } else {
-        val = c[variable];
-        if (c.adopted_wave1) {
-          if (variable === "wages") val *= 1.1;
-          if (variable === "employment") val *= 1.2;
-          if (variable === "migration_out") val *= 0.6;
-        }
+        return c.adopted_wave1 ? "#2a9d8f" : "#cccccc";  // teal vs grey
+      }
+
+      let val = c[variable];
+      if (c.adopted_wave1) {
+        if (variable === "wages") val *= 1.1;
+        if (variable === "employment") val *= 1.2;
+        if (variable === "migration_out") val *= 0.6;
       }
 
       return color(val);
