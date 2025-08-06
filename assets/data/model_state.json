@@ -3,408 +3,408 @@
     "ANGLESEY": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1068,
+      "employment": -100,
       "wages": 0.94,
-      "migration_out": 0.066
+      "migration_out":0.166
     },
     "BEDFORDSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 952,
-      "wages": 1.05,
+      "employment": -952,
+      "wages": 0.7,
       "migration_out": 0.054
     },
     "BERKSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 880,
-      "wages": 1.0,
-      "migration_out": 0.032
+      "employment": -880,
+      "wages": 0.6,
+      "migration_out": 0.232
     },
     "BRECKNOCKSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 804,
-      "wages": 1.03,
+      "employment": -804,
+      "wages": 0.73,
       "migration_out": 0.044
     },
     "BUCKINGHAMSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1210,
-      "wages": 0.9,
-      "migration_out": 0.024
+      "employment": -1210,
+      "wages": 0.6,
+      "migration_out": 0.324
     },
     "CAMBRIDGESHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1136,
-      "wages": 1.09,
-      "migration_out": 0.017
+      "employment": -1136,
+      "wages": 0.79,
+      "migration_out": 0.117
     },
     "CARDIGANSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 926,
-      "wages": 1.03,
+      "employment": -926,
+      "wages": 0.83,
       "migration_out": 0.047
     },
     "CARMARTHENSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1217,
+      "employment": -1217,
       "wages": 0.97,
       "migration_out": 0.096
     },
     "CARNARVONSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 810,
-      "wages": 1.05,
+      "employment": -810,
+      "wages": 0.75,
       "migration_out": 0.095
     },
     "CHESHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1286,
-      "wages": 1.05,
+      "employment": -2086,
+      "wages": 0.65,
       "migration_out": 0.042
     },
     "CORNWALL": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 930,
-      "wages": 1.09,
-      "migration_out": 0.084
+      "employment": -930,
+      "wages": 0.79,
+      "migration_out": 0.184
     },
     "CUMBERLAND": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1152,
-      "wages": 1.04,
-      "migration_out": 0.025
+      "employment": -1152,
+      "wages": 0.84,
+      "migration_out": 0.125
     },
     "DENBIGHSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1160,
+      "employment": -1160,
       "wages": 0.94,
       "migration_out": 0.088
     },
     "DERBYSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1229,
+      "employment": -1229,
       "wages": 0.96,
       "migration_out": 0.011
     },
     "DEVON": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1042,
-      "wages": 1.01,
-      "migration_out": 0.069
+      "employment": -3042,
+      "wages": 0.61,
+      "migration_out": 0.369
     },
     "DORSET": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1070,
-      "wages": 1.02,
-      "migration_out": 0.086
+      "employment": -1070,
+      "wages": 0.82,
+      "migration_out": 0.286
     },
     "DURHAM": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 864,
-      "wages": 1.01,
-      "migration_out": 0.029
+      "employment": -3864,
+      "wages": 0.81,
+      "migration_out": 0.329
     },
     "ESSEX": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1105,
-      "wages": 1.07,
+      "employment": -1105,
+      "wages": 0.87,
       "migration_out": 0.011
     },
     "FLINTSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1137,
+      "employment": -1137,
       "wages": 1.0,
       "migration_out": 0.098
     },
     "GLAMORGANSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1358,
+      "employment": -1358,
       "wages": 0.94,
       "migration_out": 0.076
     },
     "GLOUCESTERSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 927,
-      "wages": 0.97,
+      "employment": -927,
+      "wages": 0.90,
       "migration_out": 0.023
     },
     "GUERNSEY AND ADJACENT ISLES": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 891,
-      "wages": 1.01,
-      "migration_out": 0.056
+      "employment": -891,
+      "wages": 0.71,
+      "migration_out": 0.156
     },
     "HAMPSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1235,
+      "employment": -1235,
       "wages": 0.93,
       "migration_out": 0.083
     },
     "HEREFORDSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1119,
-      "wages": 1.09,
+      "employment": -1119,
+      "wages": 0.89,
       "migration_out": 0.076
     },
     "HERTFORDSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 918,
+      "employment": -918,
       "wages": 0.92,
       "migration_out": 0.043
     },
     "HUNTINGDONSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1259,
-      "wages": 1.0,
+      "employment": -1259,
+      "wages": 0.82,
       "migration_out": 0.029
     },
     "ISLE OF MAN": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 843,
+      "employment": -843,
       "wages": 0.93,
       "migration_out": 0.064
     },
     "JERSEY": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1048,
+      "employment": -1048,
       "wages": 0.94,
       "migration_out": 0.06
     },
     "KENT": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1302,
+      "employment": -1302,
       "wages": 0.96,
       "migration_out": 0.064
     },
     "LANCASHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1241,
-      "wages": 0.97,
-      "migration_out": 0.078
+      "employment": -3241,
+      "wages": 0.67,
+      "migration_out": 0.478
     },
     "LEICESTERSHIRE": {
-      "adopted_wave1": false,
+      "adopted_wave1": true,
       "adopted_wave2": false,
-      "employment": 1245,
-      "wages": 1.0,
-      "migration_out": 0.014
+      "employment": 5245,
+      "wages": 1.9,
+      "migration_out": -0.314
     },
     "LINCOLNSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1141,
+      "employment": -1141,
       "wages": 0.93,
       "migration_out": 0.086
     },
     "LONDON": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1120,
+      "employment": -1120,
       "wages": 0.98,
       "migration_out": 0.083
     },
     "MERIONETHSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1299,
-      "wages": 1.1,
+      "employment": -1299,
+      "wages": 0.9,
       "migration_out": 0.01
     },
     "MIDDLESEX": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1281,
+      "employment": -1281,
       "wages": 0.91,
       "migration_out": 0.078
     },
     "MONMOUTHSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 904,
-      "wages": 1.02,
+      "employment": -904,
+      "wages": 0.82,
       "migration_out": 0.092
     },
     "MONTGOMERYSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1392,
-      "wages": 1.07,
+      "employment": -1392,
+      "wages": 0.87,
       "migration_out": 0.023
     },
     "NORFOLK": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1323,
-      "wages": 1.02,
+      "employment": -1323,
+      "wages": 0.82,
       "migration_out": 0.073
     },
     "NORTHAMPTONSHIRE": {
-      "adopted_wave1": false,
+      "adopted_wave1": true,
       "adopted_wave2": false,
-      "employment": 1197,
-      "wages": 1.08,
-      "migration_out": 0.055
+      "employment": 4197,
+      "wages": 1.98,
+      "migration_out": -0.555
     },
     "NORTHUMBERLAND": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 824,
-      "wages": 1.05,
+      "employment": -824,
+      "wages": 0.85,
       "migration_out": 0.076
     },
     "NOTTINGHAMSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 859,
-      "wages": 1.05,
-      "migration_out": 0.027
+      "employment": -1859,
+      "wages": 0.75,
+      "migration_out": 0.270
     },
     "OXFORDSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1162,
+      "employment": -1162,
       "wages": 0.93,
-      "migration_out": 0.039
+      "migration_out": 0.139
     },
     "PEMBROKESHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1147,
-      "wages": 1.07,
+      "employment": -1147,
+      "wages": 0.87,
       "migration_out": 0.019
     },
     "RADNORSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1082,
-      "wages": 1.03,
+      "employment": -1082,
+      "wages": 0.93,
       "migration_out": 0.063
     },
     "RUTLAND": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1273,
-      "wages": 1.07,
+      "employment": -1273,
+      "wages": 0.770,
       "migration_out": 0.013
     },
     "SHROPSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 943,
-      "wages": 1.0,
+      "employment": -943,
+      "wages": 0.9,
       "migration_out": 0.013
     },
     "SOMERSET": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 931,
-      "wages": 1.07,
-      "migration_out": 0.018
+      "employment": -1931,
+      "wages": 0.87,
+      "migration_out": 0.108
     },
     "STAFFORDSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 953,
-      "wages": 1.05,
-      "migration_out": 0.042
+      "employment": -953,
+      "wages": 0.85,
+      "migration_out": 0.142
     },
     "SUFFOLK": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 976,
-      "wages": 0.97,
-      "migration_out": 0.036
+      "employment": -976,
+      "wages": 0.90,
+      "migration_out": 0.136
     },
     "SURREY": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 830,
+      "employment": -830,
       "wages": 0.92,
       "migration_out": 0.08
     },
     "SUSSEX": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1152,
+      "employment": -1152,
       "wages": 0.97,
       "migration_out": 0.047
     },
     "WARWICKSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1058,
-      "wages": 0.94,
-      "migration_out": 0.016
+      "employment": -1058,
+      "wages": 0.90,
+      "migration_out": 0.216
     },
     "WESTMORLAND": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1032,
-      "wages": 1.0,
-      "migration_out": 0.083
+      "employment": -1032,
+      "wages": 0.67,
+      "migration_out": 0.183
     },
     "WILTSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 923,
+      "employment": -923,
       "wages": 0.94,
       "migration_out": 0.042
     },
     "WORCESTERSHIRE": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1145,
-      "wages": 0.95,
-      "migration_out": 0.05
+      "employment": -2145,
+      "wages": 0.72,
+      "migration_out": 0.20
     },
     "YORKSHIRE, EAST RIDING": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1104,
-      "wages": 0.92,
-      "migration_out": 0.024
+      "employment": -1504,
+      "wages": 0.82,
+      "migration_out": 0.124
     },
     "YORKSHIRE, NORTH RIDING": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1358,
-      "wages": 1.04,
-      "migration_out": 0.083
+      "employment": -1358,
+      "wages": 0.84,
+      "migration_out": 0.183
     },
     "YORKSHIRE, WEST RIDING": {
       "adopted_wave1": false,
       "adopted_wave2": false,
-      "employment": 1230,
-      "wages": 1.0,
-      "migration_out": 0.052
+      "employment": -1230,
+      "wages": 0.81,
+      "migration_out": 0.152
     }
   }
 }
