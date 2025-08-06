@@ -5,35 +5,49 @@ permalink: /model/
 nav_exclude: false
 ---
 
-This project explores how uneven adoption of new technologies across space impacted on multiple domains of society. 
-I model how a single process shaped mobility, migration, inequality, and regional divergence, 
-as observed in British historical census microdata
+Uneven adoption of new technologies across space impacted on multiple domains of society. 
+I model how a single process shaped mobility, migration, inequality, and regional divergence. Data from full count British historical census microdata
 
 
 <h2>Tech Adoption Model: Toy Simulation</h2>
 
-<!-- UI controls -->
-<div style="margin-bottom: 10px;">
-  <label for="view-select">View:</label>
-  <select id="view-select">
-    <option value="adoption">Adoption</option>
-    <option value="employment">Employment</option>
-    <option value="wages">Wages</option>
-    <option value="migration_out">Migration Out</option>
-  </select>
-  <button id="next-wave">Next Wave</button>
+
+<!-- Map grid -->
+<div style="display: flex; gap: 30px;">
+  <div>
+    <h3>Employment</h3>
+    <svg id="map-employment" width="300" height="400"></svg>
+  </div>
+  <div>
+    <h3>Wages</h3>
+    <svg id="map-wages" width="300" height="400"></svg>
+  </div>
+  <div>
+    <h3>Migration Out</h3>
+    <svg id="map-migration" width="300" height="400"></svg>
+  </div>
 </div>
 
-<!-- Map + Legend -->
-<svg id="model-map" width="960" height="600"></svg>
+<!-- Buttons -->
+<div style="margin-top: 20px; display: flex; gap: 20px;">
+  <button id="btn-before">Before Adoption</button>
+  <button id="btn-after">After Adoption</button>
+</div>
+
+<!-- Tooltip -->
 <div id="tooltip" style="position:absolute; background:white; border:1px solid #aaa; padding:5px; visibility:hidden;"></div>
 
+<!-- D3 -->
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <script>
-let geoData, modelState;
-const svg = d3.select("#model-map");
+const svgEmployment = d3.select("#map-employment");
+const svgWages = d3.select("#map-wages");
+const svgMigration = d3.select("#map-migration");
 const tooltip = d3.select("#tooltip");
+
+let geoData, modelState;
+let viewState = "before"; // toggles between "before" and "after"
 
 Promise.all([
   d3.json("/assets/maps/Counties1851.geojson"),
@@ -42,49 +56,20 @@ Promise.all([
   geoData = geo;
   modelState = state;
 
-  const projection = d3.geoMercator().fitSize([960, 600], geoData);
-  const path = d3.geoPath().projection(projection);
+  const projection = d3.geoMercator().fitSize([300, 400], geoData);
+  path = d3.geoPath().projection(projection);
 
-  d3.select("#view-select").on("change", () => updateMap(path));
-  d3.select("#next-wave").on("click", () => {
-    runModelStep();
-    updateMap(path);
-  });
-
-  updateMap(path);
+  updateAllMaps();
 });
 
-function runModelStep() {
-  for (const name in modelState.counties) {
-    const c = modelState.counties[name];
-    if (!c.adopted_wave1 && Math.random() < 0.3) {
-      c.adopted_wave1 = true;
-      c.employment += 150;
-      c.wages *= 1.05;
-      c.migration_out = Math.max(0, c.migration_out - 0.02);
-    } else if (!c.adopted_wave1) {
-      c.employment = Math.max(0, c.employment - 100);
-      c.wages *= 0.98;
-      c.migration_out = Math.min(1, c.migration_out + 0.03);
-    }
-  }
+function updateAllMaps() {
+  renderMap(svgEmployment, "employment", d3.interpolateBlues, [800, 1400]);
+  renderMap(svgWages, "wages", d3.interpolateGreens, [0.9, 1.1]);
+  renderMap(svgMigration, "migration_out", d3.interpolateOranges, [0.01, 0.10]);
 }
 
-function getColorScale(view) {
-  if (view === "employment") {
-    return d3.scaleSequential(d3.interpolateBlues).domain([500, 2000]);
-  } else if (view === "wages") {
-    return d3.scaleSequential(d3.interpolateGreens).domain([0.8, 1.2]);
-  } else if (view === "migration_out") {
-    return d3.scaleSequential(d3.interpolateOranges).domain([0, 0.3]);
-  } else {
-    return d3.scaleOrdinal().domain([true, false]).range(["green", "red"]);
-  }
-}
-
-function updateMap(path) {
-  const view = d3.select("#view-select").property("value");
-  const color = getColorScale(view);
+function renderMap(svg, variable, colorScaleFn, domain) {
+  const color = d3.scaleSequential(colorScaleFn).domain(domain);
 
   svg.selectAll("path")
     .data(geoData.features)
@@ -94,8 +79,15 @@ function updateMap(path) {
       const name = d.properties.R_CTY;
       const c = modelState.counties[name];
       if (!c) return "#ccc";
-      if (view === "adoption") return color(c.adopted_wave1);
-      return color(c[view]);
+
+      let val = c[variable];
+      if (viewState === "after") {
+        if (variable === "employment" && c.adopted_wave1) val *= 1.2;
+        if (variable === "wages" && c.adopted_wave1) val *= 1.1;
+        if (variable === "migration_out" && c.adopted_wave1) val *= 0.6;
+      }
+
+      return color(val);
     })
     .attr("stroke", "#fff")
     .attr("stroke-width", 0.5)
@@ -103,6 +95,7 @@ function updateMap(path) {
       const name = d.properties.R_CTY;
       const c = modelState.counties[name];
       if (!c) return;
+
       tooltip.style("visibility", "visible")
         .html(`<b>${name}</b><br>
                Jobs: ${c.employment}<br>
@@ -119,4 +112,15 @@ function updateMap(path) {
       d3.select(this).attr("stroke-width", 0.5);
     });
 }
+
+// Button handlers
+d3.select("#btn-before").on("click", () => {
+  viewState = "before";
+  updateAllMaps();
+});
+
+d3.select("#btn-after").on("click", () => {
+  viewState = "after";
+  updateAllMaps();
+});
 </script>
