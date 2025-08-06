@@ -10,13 +10,6 @@ I model how a single process shaped mobility, migration, inequality, and regiona
 as observed in British historical census microdata
 
 
----
-layout: single
-title: "Model"
-permalink: /model/
-nav_exclude: false
----
-
 <h2>Tech Adoption Model: Toy Simulation</h2>
 
 <!-- UI controls -->
