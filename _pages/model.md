@@ -5,19 +5,6 @@ permalink: /model/
 nav_exclude: false
 ---
 
-Uneven adoption of new technologies across space impacted on multiple domains of society. 
-I model how a single process shaped mobility, migration, inequality, and regional divergence. Data from full count British historical census microdata
-
-
-<h2>Tech Adoption Model: Toy Simulation</h2>
-
----
-layout: single
-title: "Model"
-permalink: /model/
-nav_exclude: false
----
-
 <h2>Simulation: Local Impacts of Technology Adoption</h2>
 
 <p>Click "NewTech" to simulate the effects of uneven technology adoption across counties. Observe adoption patterns and how they affect wages, employment, and migration.</p>
