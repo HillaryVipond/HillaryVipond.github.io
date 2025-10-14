@@ -627,8 +627,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-
-<h2> Techn </h2>
+<!-- ===================== START: Technology block (commented out) =====================
+<h2> Technology </h2>
 
 <!-- Year control (map only) -->
 <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
@@ -677,7 +677,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const log = (...args) => {
     const line = args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' ');
     console.log('[MGMT]', ...args);
-    const el = dbgEl(); if (el) el.textContent += line + '\\n';
+    const el = dbgEl(); if (el) el.textContent += line + '\n';
   };
 
   log('[BOOT] inline script executed');
@@ -825,3 +825,5 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 })();
 </script>
+===================== END: Technology block (commented out) ===================== -->
+
