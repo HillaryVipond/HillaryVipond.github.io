@@ -546,7 +546,7 @@ document.addEventListener("DOMContentLoaded", function () {
 <!--<h2> Management</h2>  -->
 
 
-<h2>Apprenticeship System: Total Participation</h2>
+<h2>Management</h2>
 
 <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
   <label for="year-slider">Select year: <span id="year-label">1851</span></label>
