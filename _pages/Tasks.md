@@ -546,111 +546,152 @@ document.addEventListener("DOMContentLoaded", function () {
 <!--<h2> Management</h2>  -->
 
 
-<!-- 🎛️ Year control for total map -->
-<div style="display: flex; align-items: center; gap: 16px; margin-bottom: 10px;">
+<h2>Apprenticeship System: Total Participation</h2>
+
+<div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
   <label for="year-slider">Select year: <span id="year-label">1851</span></label>
-  <input type="range" id="year-slider" min="1851" max="1911" step="10" value="1851" style="width: 300px;">
+  <input type="range" id="year-slider" min="1851" max="1911" step="10" value="1851" style="width:300px;">
 </div>
 
-<!-- 🗺️ Total map and legend container -->
-<div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 40px;">
-  <svg id="total-map" width="960" height="600"></svg>
+<div style="display:flex;flex-direction:column;align-items:center;margin-bottom:40px;position:relative;">
+  <svg id="total-map" width="960" height="600" viewBox="0 0 960 600" style="max-width:100%;height:auto;"></svg>
 
-  <div style="margin-top: 10px;">
+  <div style="margin-top:10px;">
     <svg id="legend-svg" width="480" height="50"></svg>
-    <div style="font-size: 12px; text-align: center;"> Percentage Share of Male Population</div>
+    <div style="font-size:12px;text-align:center;">Percentage Share of Male Population</div>
   </div>
+
+  <div id="tooltip" style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);pointer-events:none;"></div>
 </div>
 
-<div id="tooltip" style="position:absolute; background:white; border:1px solid #aaa; padding:5px; visibility:hidden;"></div>
+<pre id="debug" style="background:#111;color:#0f0;padding:8px;font-size:12px;max-width:960px;white-space:pre-wrap"></pre>
 
-<script src="https://d3js.org/d3.v7.min.js"></script>
-<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="https://d3js.org/d3.v7.min.js" defer></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js" defer></script>
 
-<script>
-const svg = d3.select("#total-map");
-const tooltip = d3.select("#tooltip");
+<script defer>
+(function(){
+  // If CSP blocks inline scripts, this block won't run; you'll see no "BOOT" line.
+  const debug = document.getElementById('debug');
+  const log = (...a) => { console.log(...a); debug.textContent += a.join(' ') + '\n'; };
 
-Promise.all([
-  d3.json("/assets/maps/Counties1851.geojson"),
-  d3.json("/assets/maps/share_total_by_county.json")
-]).then(([geoData, yearData]) => {
-  const projection = d3.geoMercator().fitSize([960, 600], geoData);
-  const path = d3.geoPath().projection(projection);
-  const slider = d3.select("#year-slider");
-  const yearLabel = d3.select("#year-label");
+  log('[BOOT] Script tag executed');
 
-  function updateMap(year) {
-    const values = yearData[year];
-    const color = d3.scaleThreshold()
-      .domain([1, 2, 3, 4])
-      .range(d3.schemePurples[5]);
-
-    svg.selectAll("path")
-      .data(geoData.features)
-      .join("path")
-      .attr("d", path)
-      .attr("fill", d => {
-        const name = d.properties.R_CTY;
-        const v = values[name];
-        return v != null ? color(v) : "#ccc";
-      })
-      .attr("stroke", "#fff")
-      .attr("stroke-width", 0.5)
-      .on("mouseover", function (event, d) {
-        const name = d.properties.R_CTY;
-        const value = values[name];
-        tooltip.style("visibility", "visible")
-          .text(`${name}: ${value != null ? value.toFixed(2) : "N/A"}`);
-        d3.select(this).attr("stroke-width", 2);
-      })
-      .on("mousemove", function(event) {
-        tooltip.style("top", (event.pageY + 10) + "px")
-               .style("left", (event.pageX + 10) + "px");
-      })
-      .on("mouseout", function () {
-        tooltip.style("visibility", "hidden");
-        d3.select(this).attr("stroke-width", 0.5);
-      });
+  function onReady(fn){ 
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fn, {once:true});
+    } else { fn(); }
   }
 
-  updateMap("1851");
+  onReady(async function init(){
+    log('[DOM] Ready');
 
-  slider.on("input", function() {
-    const year = this.value;
-    yearLabel.text(year);
-    updateMap(year);
+    const svg = d3.select("#total-map");
+    const tooltip = d3.select("#tooltip");
+    const slider = d3.select("#year-slider");
+    const yearLabel = d3.select("#year-label");
+
+    if (svg.empty() || slider.empty()) {
+      log('[ERR] Missing required DOM nodes. Were scripts moved to <head> without defer?');
+      return;
+    }
+
+    const GEO_URL  = "/assets/maps/Counties1851.geojson";
+    const DATA_URL = "/assets/maps/share_total_by_county.json";
+    log('[FETCH] Will fetch:', location.origin + GEO_URL, location.origin + DATA_URL);
+
+    try {
+      const [geoData, yearData] = await Promise.all([
+        d3.json(GEO_URL),
+        d3.json(DATA_URL)
+      ]);
+
+      log('[FETCH] OK geo:', !!geoData, 'features:', geoData?.features?.length ?? 0);
+      log('[FETCH] OK data years:', Object.keys(yearData).slice(0,6).join(', ') + ' ...');
+
+      const projection = d3.geoMercator().fitSize([960, 600], geoData);
+      const path = d3.geoPath().projection(projection);
+
+      const thresholds = [1, 2, 3, 4];
+      const color = d3.scaleThreshold().domain(thresholds).range(d3.schemePurples[5]);
+
+      const countyKey = f => f.properties?.R_CTY;
+      const fmt = v => (v==null || isNaN(v)) ? 'N/A' : d3.format('.2f')(v) + '%';
+
+      function getYearValues(y) {
+        return yearData[y] ?? yearData[String(y)] ?? yearData[+y] ?? null;
+      }
+
+      function updateMap(year) {
+        const values = getYearValues(year);
+        if (!values) { log('[WARN] No values for year', year); return; }
+
+        // quick join audit
+        const miss = [];
+        for (const f of geoData.features) {
+          const k = countyKey(f);
+          if (!(k in values)) miss.push(k);
+        }
+        if (miss.length) log('[WARN] Missing counties in data (showing up to 10):', miss.slice(0,10).join(', '));
+
+        svg.selectAll("path")
+          .data(geoData.features, d => countyKey(d))
+          .join("path")
+            .attr("d", path)
+            .attr("fill", d => {
+              const name = countyKey(d);
+              const v = name ? values[name] : null;
+              return v != null ? color(v) : "#ccc";
+            })
+            .attr("stroke", "#fff")
+            .attr("stroke-width", 0.5)
+            .on("mouseover", function (event, d) {
+              const name = countyKey(d) ?? "Unknown";
+              const v = getYearValues(year)?.[name];
+              tooltip.style("visibility", "visible").text(`${name}: ${fmt(v)}`);
+              d3.select(this).attr("stroke-width", 2);
+            })
+            .on("mousemove", function (event) {
+              const bbox = this.ownerSVGElement.getBoundingClientRect();
+              tooltip.style("top", (event.clientY - bbox.top + 10) + "px")
+                     .style("left", (event.clientX - bbox.left + 10) + "px");
+            })
+            .on("mouseout", function () {
+              tooltip.style("visibility", "hidden");
+              d3.select(this).attr("stroke-width", 0.5);
+            });
+      }
+
+      // legend
+      (function legend(){
+        const legendSvg = d3.select("#legend-svg");
+        const legendWidth = +legendSvg.attr("width");
+        const colors = d3.schemePurples[5];
+        const binWidth = legendWidth / colors.length;
+        legendSvg.selectAll("*").remove();
+        colors.forEach((c, i) => {
+          legendSvg.append("rect").attr("x", i * binWidth).attr("y", 10).attr("width", binWidth).attr("height", 10).attr("fill", c);
+          const label = i === colors.length - 1 ? "4%+" : `${i}%–${i+1}%`;
+          legendSvg.append("text").attr("x", i * binWidth + binWidth / 2).attr("y", 35)
+            .attr("text-anchor", "middle").attr("font-size", "10px").text(label);
+        });
+      })();
+
+      updateMap("1851");
+      slider.on("input", function(){
+        const year = this.value;
+        yearLabel.text(year);
+        updateMap(year);
+      });
+
+      log('[DONE] Map rendered');
+    } catch (err) {
+      log('[ERR] Failed to load/render:', err && (err.stack || err.message || err));
+      log('Check Console/Network for CSP errors or 404s.');
+    }
   });
-});
-
-{
-  const legendSvg = d3.select("#legend-svg");
-  const legendWidth = +legendSvg.attr("width");
-  const colors = d3.schemePurples[5];
-  const binWidth = legendWidth / colors.length;
-
-  colors.forEach((color, i) => {
-    legendSvg.append("rect")
-      .attr("x", i * binWidth)
-      .attr("y", 10)
-      .attr("width", binWidth)
-      .attr("height", 10)
-      .attr("fill", color);
-
-    const label = i === colors.length - 1 ? "4+" : `${i}–${i + 1}`;
-    legendSvg.append("text")
-      .attr("x", i * binWidth + binWidth / 2)
-      .attr("y", 35)
-      .attr("text-anchor", "middle")
-      .attr("font-size", "10px")
-      .text(label);
-  });
-}
+})();
 </script>
-
-
-
-
 
 
 
