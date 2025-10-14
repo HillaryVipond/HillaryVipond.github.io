@@ -550,7 +550,7 @@ document.addEventListener("DOMContentLoaded", function () {
       alt="National Level: New and Old"
       loading="lazy"
     >
-    <figcaption>Fathers→sons by industry, 1851–1911</figcaption>
+    <figcaption> National Level, New and Old Jobs, 1851–1911</figcaption>
   </figure>
 
   <figure>
@@ -559,7 +559,7 @@ document.addEventListener("DOMContentLoaded", function () {
       alt="County Level: New and Old"
       loading="lazy"
     >
-    <figcaption>Fathers→sons by region, 1851–1911</figcaption>
+    <figcaption>County Level, New and Old Jobs, 1851–1911</figcaption>
   </figure>
 </div>
 
