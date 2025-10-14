@@ -542,6 +542,15 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 
+<figure style="text-align:center;">
+  <img src="/assets/images/AreaGraph.jpg" alt="Share of sons taking up their fathers’ occupation by industry" style="max-width:100%; height:auto; border:1px solid #ddd; border-radius:6px;">
+  <figcaption style="font-size:13px; color:#555; margin-top:4px;">
+    Share of sons taking up their fathers’ occupation by industry, 1851–1911.
+  </figcaption>
+</figure>
+
+
+
 <h2>Management — Part I: Geographic distribution</h2>
 
 <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
@@ -561,6 +570,8 @@ document.addEventListener("DOMContentLoaded", function () {
 </div>
 
 <hr style="margin:32px 0;">
+
+
 
 
 
