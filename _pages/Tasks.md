@@ -650,6 +650,4 @@ Promise.all([
   
 
 
-</script>
-
 
