@@ -586,7 +586,7 @@ document.addEventListener("DOMContentLoaded", function () {
   /* Same visible height for both images */
   .two-up img {
     width: 100%;
-    height: 360px;        /* pick a height you like */
+    height: 500px;        /* pick a height you like */
     object-fit: contain;  /* keep full image visible; use 'cover' to crop instead */
     border: 1px solid #ddd;
     border-radius: 6px;
