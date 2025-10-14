@@ -606,6 +606,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <h2>Management — Part I: Geographic distribution</h2>
 
+<script src="https://d3js.org/d3.v7.min.js" defer></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js" defer></script>
+
 <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
   <label for="mgmt-year">Select year: <span id="mgmt-year-label">1851</span></label>
   <input type="range" id="mgmt-year" min="1851" max="1911" step="10" value="1851" style="width:300px;">
