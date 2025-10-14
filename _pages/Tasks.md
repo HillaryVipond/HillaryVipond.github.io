@@ -542,10 +542,6 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 
-
-<!--<h2> Management</h2>  -->
-
-
 <h2>Management</h2>
 
 <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
@@ -564,50 +560,29 @@ document.addEventListener("DOMContentLoaded", function () {
   <div id="tooltip" style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);pointer-events:none;"></div>
 </div>
 
-<pre id="debug" style="background:#111;color:#0f0;padding:8px;font-size:12px;max-width:960px;white-space:pre-wrap"></pre>
-
 <script src="https://d3js.org/d3.v7.min.js" defer></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js" defer></script>
 
 <script defer>
 (function(){
-  // If CSP blocks inline scripts, this block won't run; you'll see no "BOOT" line.
-  const debug = document.getElementById('debug');
-  const log = (...a) => { console.log(...a); debug.textContent += a.join(' ') + '\n'; };
-
-  log('[BOOT] Script tag executed');
-
-  function onReady(fn){ 
+  function onReady(fn){
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', fn, {once:true});
     } else { fn(); }
   }
 
   onReady(async function init(){
-    log('[DOM] Ready');
-
     const svg = d3.select("#total-map");
     const tooltip = d3.select("#tooltip");
     const slider = d3.select("#year-slider");
     const yearLabel = d3.select("#year-label");
-
-    if (svg.empty() || slider.empty()) {
-      log('[ERR] Missing required DOM nodes. Were scripts moved to <head> without defer?');
-      return;
-    }
+    if (svg.empty() || slider.empty()) return;
 
     const GEO_URL  = "/assets/maps/Counties1851.geojson";
     const DATA_URL = "/assets/maps/share_management_by_county.json";
-    log('[FETCH] Will fetch:', location.origin + GEO_URL, location.origin + DATA_URL);
 
     try {
-      const [geoData, yearData] = await Promise.all([
-        d3.json(GEO_URL),
-        d3.json(DATA_URL)
-      ]);
-
-      log('[FETCH] OK geo:', !!geoData, 'features:', geoData?.features?.length ?? 0);
-      log('[FETCH] OK data years:', Object.keys(yearData).slice(0,6).join(', ') + ' ...');
+      const [geoData, yearData] = await Promise.all([ d3.json(GEO_URL), d3.json(DATA_URL) ]);
 
       const projection = d3.geoMercator().fitSize([960, 600], geoData);
       const path = d3.geoPath().projection(projection);
@@ -624,15 +599,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       function updateMap(year) {
         const values = getYearValues(year);
-        if (!values) { log('[WARN] No values for year', year); return; }
-
-        // quick join audit
-        const miss = [];
-        for (const f of geoData.features) {
-          const k = countyKey(f);
-          if (!(k in values)) miss.push(k);
-        }
-        if (miss.length) log('[WARN] Missing counties in data (showing up to 10):', miss.slice(0,10).join(', '));
+        if (!values) return;
 
         svg.selectAll("path")
           .data(geoData.features, d => countyKey(d))
@@ -683,23 +650,12 @@ document.addEventListener("DOMContentLoaded", function () {
         yearLabel.text(year);
         updateMap(year);
       });
-
-      log('[DONE] Map rendered');
-    } catch (err) {
-      log('[ERR] Failed to load/render:', err && (err.stack || err.message || err));
-      log('Check Console/Network for CSP errors or 404s.');
+    } catch (e) {
+      // Optional: keep one quiet error for console only
+      console.error("Map init failed:", e);
     }
   });
 })();
 </script>
-
-
-
-
-
-
-
-  
-
 
 
