@@ -659,49 +659,12 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 
-<h2>Management</h2>
-
-<!-- Controls (kept above, shared with map if you like) -->
-<div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
-  <label for="year-slider">Select year: <span id="year-label">1851</span></label>
-  <input type="range" id="year-slider" min="1851" max="1911" step="10" value="1851" style="width:300px;">
-</div>
-
-<!-- Row: map (left) + scatter (right) -->
-<div style="display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap;">
-  <!-- LEFT: Map + legend -->
-  <div style="flex: 2 1 640px; min-width:520px;">
-    <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:16px;position:relative;">
-      <svg id="total-map" width="960" height="600" viewBox="0 0 960 600" style="max-width:100%;height:auto;"></svg>
-
-      <div style="margin-top:10px;">
-        <svg id="legend-svg" width="480" height="50"></svg>
-        <div style="font-size:12px;text-align:center;">Percentage Share of Male Population</div>
-      </div>
-
-      <div id="tooltip" style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);pointer-events:none;"></div>
-    </div>
-  </div>
-
-  <!-- RIGHT: Scatter of industries (1911) -->
-  <div style="flex: 1 1 420px; min-width:380px;">
-    <h3 style="margin:0 0 8px;">Top management shares by industry (1911)</h3>
-    <svg id="scatter-svg" width="480" height="600" viewBox="0 0 480 600" style="max-width:100%;height:auto;"></svg>
-    <div style="font-size:12px;opacity:.7;margin-top:6px;">
-      Note: shows top N industries by management share in 1911.
-    </div>
-  </div>
-</div>
-
 <script src="https://d3js.org/d3.v7.min.js" defer></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js" defer></script>
 
 <script defer>
 (function(){
-  function onReady(fn){
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, {once:true});
-    else fn();
-  }
+  function onReady(fn){ if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', fn, {once:true}); else fn(); }
 
   onReady(async function init(){
     const svg = d3.select("#total-map");
@@ -710,23 +673,18 @@ document.addEventListener("DOMContentLoaded", function () {
     const yearLabel = d3.select("#year-label");
     if (svg.empty() || slider.empty()) return;
 
-    // DATA URLs
+    // URLs
     const GEO_URL      = "/assets/maps/Counties1851.geojson";
-    const COUNTY_DATA  = "/assets/maps/share_management_by_county.json"; // {1851:{county:share%}, ...}
-    const INDUSTRY_URL = "/assets/data/management_by_industry.csv";      // industry,year,share(%)
+    const COUNTY_DATA  = "/assets/maps/share_management_by_county.json";
+    const INDUSTRY_URL = "/assets/data/management_by_industry.csv"; // may not exist yet
 
+    // ---- 1) Render MAP (only depends on geo + county data) ----
     try {
-      const [geoData, yearData, industryRows] = await Promise.all([
+      const [geoData, yearData] = await Promise.all([
         d3.json(GEO_URL),
-        d3.json(COUNTY_DATA),
-        d3.csv(INDUSTRY_URL, d => ({
-          industry: d.industry,
-          year: +d.year,
-          share: +d.share  // if your share is 0–1, change to: share: (+d.share)*100
-        }))
+        d3.json(COUNTY_DATA)
       ]);
 
-      // ---------- MAP ----------
       const projection = d3.geoMercator().fitSize([960, 600], geoData);
       const path = d3.geoPath().projection(projection);
 
@@ -736,9 +694,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const countyKey = f => f.properties?.R_CTY;
       const fmtPct = v => (v==null || isNaN(v)) ? 'N/A' : d3.format('.2f')(v) + '%';
 
-      function getYearValues(y) {
-        return yearData[y] ?? yearData[String(y)] ?? yearData[+y] ?? null;
-      }
+      const getYearValues = y => yearData[y] ?? yearData[String(y)] ?? yearData[+y] ?? null;
 
       function updateMap(year) {
         const values = getYearValues(year);
@@ -772,7 +728,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
       }
 
-      // Legend (map)
+      // Legend
       (function legend(){
         const legendSvg = d3.select("#legend-svg");
         const legendWidth = +legendSvg.attr("width");
@@ -780,8 +736,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const binWidth = legendWidth / colors.length;
         legendSvg.selectAll("*").remove();
         colors.forEach((c, i) => {
-          legendSvg.append("rect").attr("x", i * binWidth).attr("y", 10)
-            .attr("width", binWidth).attr("height", 10).attr("fill", c);
+          legendSvg.append("rect").attr("x", i * binWidth).attr("y", 10).attr("width", binWidth).attr("height", 10).attr("fill", c);
           const label = i === colors.length - 1 ? "4%+" : `${i}%–${i+1}%`;
           legendSvg.append("text").attr("x", i * binWidth + binWidth / 2).attr("y", 35)
             .attr("text-anchor", "middle").attr("font-size", "10px").text(label);
@@ -795,26 +750,36 @@ document.addEventListener("DOMContentLoaded", function () {
         updateMap(year);
       });
 
-      // ---------- SCATTER (Top industries in 1911) ----------
+    } catch (e) {
+      console.error("Map init failed:", e);
+      return; // bail if core data missing
+    }
+
+    // ---- 2) Optionally render SCATTER (separate; won’t block the map) ----
+    try {
+      const rows = await d3.csv(INDUSTRY_URL, d => ({
+        industry: d.industry, year: +d.year, share: +d.share // if 0–1, use: +d.share * 100
+      }));
+      if (!rows?.length) return;
+
       const scatter = d3.select("#scatter-svg");
+      if (scatter.empty()) return;
+
       const margin = {top: 24, right: 24, bottom: 40, left: 160};
       const width  = 480 - margin.left - margin.right;
       const height = 600 - margin.top - margin.bottom;
-
       const g = scatter.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
-      // Filter to 1911 and take top N
       const yearTarget = 1911;
-      const topN = 20; // adjust if you want fewer/more
-      const data1911 = industryRows
-        .filter(d => d.year === yearTarget && isFinite(d.share))
-        .sort((a,b) => d3.descending(a.share, b.share))
-        .slice(0, topN);
+      const topN = 20;
+      const data1911 = rows.filter(d => d.year === yearTarget && isFinite(d.share))
+                           .sort((a,b) => d3.descending(a.share, b.share))
+                           .slice(0, topN);
 
-      // Scales
+      if (!data1911.length) return;
+
       const x = d3.scaleLinear()
-        .domain([0, d3.max(data1911, d => d.share) || 5]) // fallback domain
-        .nice()
+        .domain([0, d3.max(data1911, d => d.share) || 5]).nice()
         .range([0, width]);
 
       const y = d3.scaleBand()
@@ -822,55 +787,40 @@ document.addEventListener("DOMContentLoaded", function () {
         .range([0, height])
         .padding(0.2);
 
-      // Axes
-      const xAxis = g.append("g")
-        .attr("transform", `translate(0,${height})`)
+      g.append("g").attr("transform", `translate(0,${height})`)
         .call(d3.axisBottom(x).ticks(6).tickFormat(v => v + "%"));
 
-      const yAxis = g.append("g")
-        .call(d3.axisLeft(y).tickSize(0))
-        .selectAll("text")
-        .call(text => text.each(function() {
-          // optional: truncate long labels
-          const t = d3.select(this);
-          const s = t.text();
-          if (s.length > 32) t.text(s.slice(0, 29) + "…");
-        }));
+      g.append("g").call(d3.axisLeft(y).tickSize(0))
+        .selectAll("text").each(function(){
+          const t = d3.select(this), s = t.text();
+          if (s.length > 32) t.text(s.slice(0,29) + "…");
+        });
 
-      // Points + labels (scatter-ish: one point per industry)
       g.selectAll(".pt")
         .data(data1911)
         .join("circle")
-          .attr("class", "pt")
+          .attr("class","pt")
           .attr("cx", d => x(d.share))
           .attr("cy", d => y(d.industry) + y.bandwidth()/2)
           .attr("r", 4)
           .attr("fill", "#6a51a3");
 
-      // Value labels
       g.selectAll(".val")
         .data(data1911)
         .join("text")
-          .attr("class", "val")
+          .attr("class","val")
           .attr("x", d => x(d.share) + 6)
           .attr("y", d => y(d.industry) + y.bandwidth()/2 + 4)
-          .attr("font-size", "11px")
+          .attr("font-size","11px")
           .text(d => d3.format(".2f")(d.share) + "%");
 
-      // Optional subtle grid
       g.append("g")
-        .attr("class", "grid")
-        .call(d3.axisBottom(x).ticks(6).tickSize(-height).tickFormat(() => ""))
+        .call(d3.axisBottom(x).ticks(6).tickSize(-height).tickFormat(()=>""))
         .attr("transform", `translate(0,${height})`)
-        .selectAll("line")
-        .attr("stroke", "#eee");
-
-      // If your CSV has share as 0–1 instead of percent:
-      // - change the parser above to: share: (+d.share) * 100
-      // - keep everything else the same
-
+        .selectAll("line").attr("stroke","#eee");
     } catch (e) {
-      console.error("Init failed:", e);
+      // Industry CSV missing or 404 — that’s fine; map is already shown.
+      console.info("Skipping scatter (no data yet):", e?.message || e);
     }
   });
 })();
