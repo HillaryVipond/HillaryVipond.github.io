@@ -627,7 +627,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <hr style="margin:32px 0;">
 
-<!-- ===================== START: Technology block (commented out) =====================
+
+<h2> Technology by Industry </h2>
+
 <h2> Technology </h2>
 
 <!-- Year control (map only) -->
@@ -638,7 +640,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <!-- Two columns: LEFT = map, RIGHT = intentionally empty -->
 <div style="display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap;">
-  <!-- LEFT: Map + legend + debug -->
+  <!-- LEFT: Map + legend -->
   <div style="flex:2 1 640px; min-width:520px;">
     <div style="display:flex;flex-direction:column;align-items:center;position:relative;">
       <svg id="mgmt-map" width="960" height="600" viewBox="0 0 960 600"
@@ -654,11 +656,6 @@ document.addEventListener("DOMContentLoaded", function () {
                   visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);
                   pointer-events:none;"></div>
     </div>
-
-    <!-- DEBUG PANEL -->
-    <pre id="mgmt-debug"
-         style="background:#0b1220;color:#b4f1b4;padding:10px;margin-top:12px;font-size:12px;
-                max-width:960px;white-space:pre-wrap;border-radius:6px;line-height:1.35"></pre>
   </div>
 
   <!-- RIGHT: intentionally left empty -->
@@ -673,52 +670,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <script defer>
 (function(){
-  const dbgEl = () => document.getElementById('mgmt-debug');
-  const log = (...args) => {
-    const line = args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' ');
-    console.log('[MGMT]', ...args);
-    const el = dbgEl(); if (el) el.textContent += line + '\n';
-  };
-
-  log('[BOOT] inline script executed');
-
   function ready(fn){
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, {once:true});
     else fn();
   }
 
   ready(async function initMap(){
-    log('[DOM] ready state:', document.readyState);
-
-    // Basic DOM hooks
     const svg = d3.select('#mgmt-map');
     const tooltip = d3.select('#mgmt-tooltip');
     const slider = d3.select('#mgmt-year');
     const yearLabel = d3.select('#mgmt-year-label');
+    if (svg.empty()) return;
 
-    // Check D3 presence & DOM
-    log('[CHECK] d3 present:', !!window.d3, 'svg exists:', !svg.empty());
-    if (svg.empty()) { log('[ERR] #mgmt-map not found'); return; }
-
-    // URLs
     const GEO_URL  = '/assets/maps/Counties1851.geojson';
     const DATA_URL = '/assets/maps/share_management_by_county.json';
-    log('[FETCH] will fetch:', location.origin + GEO_URL, location.origin + DATA_URL);
 
-    // 1) Load GEO and draw OUTLINES immediately
-    let geoData = null;
-    try {
-      geoData = await d3.json(GEO_URL);
-      log('[FETCH] geo OK. features:', geoData?.features?.length ?? 0);
-    } catch (e) {
-      log('[ERR] geo fetch failed:', e && (e.message || e));
-      return;
-    }
+    let geoData;
+    try { geoData = await d3.json(GEO_URL); } catch { return; }
 
     const projection = d3.geoMercator().fitSize([960, 600], geoData);
     const path = d3.geoPath().projection(projection);
 
-    // Draw outlines (so you see the map even if data fails)
+    // Draw outlines first
     svg.selectAll('path')
       .data(geoData.features)
       .join('path')
@@ -727,57 +700,28 @@ document.addEventListener("DOMContentLoaded", function () {
       .attr('stroke', '#fff')
       .attr('stroke-width', 0.5);
 
-    // 2) Try to load the values JSON (but don't block rendering)
+    // Try to load values
     let yearData = null;
-    try {
-      yearData = await d3.json(DATA_URL);
-      const yearKeys = Object.keys(yearData || {});
-      log('[FETCH] data OK. years:', yearKeys.slice(0, 10).join(', '), '… total=', yearKeys.length);
-    } catch (e) {
-      log('[WARN] data fetch failed or missing. Showing outlines only. Reason:', e && (e.message || e));
-    }
+    try { yearData = await d3.json(DATA_URL); } catch {}
 
-    // Color, bins, helpers
-    const thresholds = [1, 2, 3, 4]; // if your values are fractions (0–1), use [0.01, 0.02, 0.03, 0.04]
+    const thresholds = [1, 2, 3, 4];
     const color = d3.scaleThreshold().domain(thresholds).range(d3.schemePurples[5]);
     const countyKey = f => f.properties?.R_CTY;
     const fmt = v => (v==null || isNaN(v)) ? 'N/A' : d3.format('.2f')(v) + '%';
     const getYearValues = y => yearData && (yearData[y] ?? yearData[String(y)] ?? yearData[+y] ?? null);
 
-    function auditYear(values) {
-      if (!values) { log('[AUDIT] no values for selected year'); return; }
-      const missing = [];
-      for (const f of geoData.features) {
-        const k = countyKey(f);
-        if (!(k in values)) missing.push(k);
-      }
-      if (missing.length) {
-        log('[AUDIT] counties with no data (first 12):', missing.slice(0,12).join(', '), '… total=', missing.length);
-      } else {
-        log('[AUDIT] data covers all counties for this year');
-      }
-    }
-
     function paint(year){
       const values = getYearValues(year);
-      if (!values) {
-        log('[INFO] painting outlines only for year:', year);
-      } else {
-        log('[INFO] painting choropleth for year:', year);
-        auditYear(values);
-      }
-
       svg.selectAll('path')
         .attr('fill', d => {
           if (!values) return '#eee';
-          const name = countyKey(d);
-          const v = name ? values[name] : null;
+          const v = values[countyKey(d)];
           return v != null ? color(v) : '#ccc';
         })
         .on('mouseover', function (event, d) {
-          const current = getYearValues(year);
+          const vals = getYearValues(year);
           const name = countyKey(d) ?? 'Unknown';
-          const v = current ? current[name] : null;
+          const v = vals ? vals[name] : null;
           tooltip.style('visibility','visible').text(`${name}: ${fmt(v)}`);
           d3.select(this).attr('stroke-width', 2);
         })
@@ -806,7 +750,6 @@ document.addEventListener("DOMContentLoaded", function () {
         legendSvg.append('text').attr('x', i * binWidth + binWidth/2).attr('y', 35)
           .attr('text-anchor','middle').attr('font-size','10px').text(label);
       });
-      log('[INIT] legend drawn');
     })();
 
     // Initial paint + slider
@@ -817,12 +760,7 @@ document.addEventListener("DOMContentLoaded", function () {
         yearLabel.text(y);
         paint(y);
       });
-    } else {
-      log('[INFO] no year slider found; fixed at 1851');
     }
-
-    log('[DONE] map initialised');
   });
 })();
 </script>
-===================== END: Technology block (commented out) ===================== -->
