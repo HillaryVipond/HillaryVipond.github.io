@@ -555,7 +555,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   <figure>
     <img
-      src="/assets/images/BoE_regionalFinal.png"
+      src="/assets/images/BoE_RegionalFinal.png"
       alt="County Level: New and Old"
       loading="lazy"
     >
