@@ -542,8 +542,13 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 
-<figure style="text-align:center;">
-  <img src="/assets/images/AreaGraph.jpg" alt="Share of sons taking up their fathers’ occupation by industry" style="max-width:100%; height:auto; border:1px solid #ddd; border-radius:6px;">
+<figure style="max-width:720px; margin:0 auto; text-align:center;">
+  <img
+    src="/assets/img/sons_by_industry.png"
+    alt="Share of sons taking up their fathers’ occupation by industry"
+    style="width:100%; height:auto; border:1px solid #ddd; border-radius:6px;"
+    loading="lazy"
+  >
   <figcaption style="font-size:13px; color:#555; margin-top:4px;">
     Share of sons taking up their fathers’ occupation by industry, 1851–1911.
   </figcaption>
