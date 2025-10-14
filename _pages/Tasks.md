@@ -542,44 +542,50 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 
-<h2>Management Part I</h2>
+<h2>Management — Part I: Geographic distribution</h2>
 
 <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
-  <label for="year-slider">Select year: <span id="year-label">1851</span></label>
-  <input type="range" id="year-slider" min="1851" max="1911" step="10" value="1851" style="width:300px;">
+  <label for="mgmt-year">Select year: <span id="mgmt-year-label">1851</span></label>
+  <input type="range" id="mgmt-year" min="1851" max="1911" step="10" value="1851" style="width:300px;">
 </div>
 
 <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:40px;position:relative;">
-  <svg id="total-map" width="960" height="600" viewBox="0 0 960 600" style="max-width:100%;height:auto;"></svg>
+  <svg id="mgmt-map" width="960" height="600" viewBox="0 0 960 600" style="max-width:100%;height:auto;"></svg>
 
   <div style="margin-top:10px;">
-    <svg id="legend-svg" width="480" height="50"></svg>
+    <svg id="mgmt-legend" width="480" height="50"></svg>
     <div style="font-size:12px;text-align:center;">Percentage Share of Male Population</div>
   </div>
 
-  <div id="tooltip" style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);pointer-events:none;"></div>
+  <div id="mgmt-tooltip" style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);pointer-events:none;"></div>
 </div>
+
+<hr style="margin:32px 0;">
+
+<h2>Management — Part II: Top industries in 1911</h2>
+<p style="margin-top:-8px;font-size:14px;opacity:.75;">Optional scatter. Loads only if data file is present.</p>
+
+<svg id="mgmt-scatter" width="960" height="600" viewBox="0 0 960 600" style="max-width:100%;height:auto;"></svg>
 
 <script src="https://d3js.org/d3.v7.min.js" defer></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js" defer></script>
 
 <script defer>
 (function(){
-  function onReady(fn){
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', fn, {once:true});
-    } else { fn(); }
-  }
+  function onReady(fn){ if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', fn, {once:true}); else fn(); }
 
-  onReady(async function init(){
-    const svg = d3.select("#total-map");
-    const tooltip = d3.select("#tooltip");
-    const slider = d3.select("#year-slider");
-    const yearLabel = d3.select("#year-label");
+  // ----------------------
+  // Part I: Map
+  // ----------------------
+  onReady(async function initMgmtMap(){
+    const svg = d3.select("#mgmt-map");
+    const tooltip = d3.select("#mgmt-tooltip");
+    const slider = d3.select("#mgmt-year");
+    const yearLabel = d3.select("#mgmt-year-label");
     if (svg.empty() || slider.empty()) return;
 
     const GEO_URL  = "/assets/maps/Counties1851.geojson";
-    const DATA_URL = "/assets/maps/share_management_by_county.json";
+    const DATA_URL = "/assets/maps/share_management_by_county.json"; // {1851:{county:percent}, ...}
 
     try {
       const [geoData, yearData] = await Promise.all([ d3.json(GEO_URL), d3.json(DATA_URL) ]);
@@ -592,10 +598,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const countyKey = f => f.properties?.R_CTY;
       const fmt = v => (v==null || isNaN(v)) ? 'N/A' : d3.format('.2f')(v) + '%';
-
-      function getYearValues(y) {
-        return yearData[y] ?? yearData[String(y)] ?? yearData[+y] ?? null;
-      }
+      const getYearValues = y => yearData[y] ?? yearData[String(y)] ?? yearData[+y] ?? null;
 
       function updateMap(year) {
         const values = getYearValues(year);
@@ -631,7 +634,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // legend
       (function legend(){
-        const legendSvg = d3.select("#legend-svg");
+        const legendSvg = d3.select("#mgmt-legend");
         const legendWidth = +legendSvg.attr("width");
         const colors = d3.schemePurples[5];
         const binWidth = legendWidth / colors.length;
@@ -651,130 +654,40 @@ document.addEventListener("DOMContentLoaded", function () {
         updateMap(year);
       });
     } catch (e) {
-      // Optional: keep one quiet error for console only
-      console.error("Map init failed:", e);
+      console.error("Management map failed:", e);
     }
   });
-})();
-</script>
 
+  // ----------------------
+  // Part II: Scatter (optional)
+  // ----------------------
+  onReady(async function initMgmtScatter(){
+    const scatter = d3.select("#mgmt-scatter");
+    if (scatter.empty()) return;
 
-<script src="https://d3js.org/d3.v7.min.js" defer></script>
-<script src="https://d3js.org/d3-scale-chromatic.v1.min.js" defer></script>
+    const INDUSTRY_URL = "/assets/data/management_by_industry.csv"; // industry,year,share (percent)
 
-<script defer>
-(function(){
-  function onReady(fn){ if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', fn, {once:true}); else fn(); }
-
-  onReady(async function init(){
-    const svg = d3.select("#total-map");
-    const tooltip = d3.select("#tooltip");
-    const slider = d3.select("#year-slider");
-    const yearLabel = d3.select("#year-label");
-    if (svg.empty() || slider.empty()) return;
-
-    // URLs
-    const GEO_URL      = "/assets/maps/Counties1851.geojson";
-    const COUNTY_DATA  = "/assets/maps/share_management_by_county.json";
-    const INDUSTRY_URL = "/assets/data/management_by_industry.csv"; // may not exist yet
-
-    // ---- 1) Render MAP (only depends on geo + county data) ----
-    try {
-      const [geoData, yearData] = await Promise.all([
-        d3.json(GEO_URL),
-        d3.json(COUNTY_DATA)
-      ]);
-
-      const projection = d3.geoMercator().fitSize([960, 600], geoData);
-      const path = d3.geoPath().projection(projection);
-
-      const thresholds = [1, 2, 3, 4];
-      const color = d3.scaleThreshold().domain(thresholds).range(d3.schemePurples[5]);
-
-      const countyKey = f => f.properties?.R_CTY;
-      const fmtPct = v => (v==null || isNaN(v)) ? 'N/A' : d3.format('.2f')(v) + '%';
-
-      const getYearValues = y => yearData[y] ?? yearData[String(y)] ?? yearData[+y] ?? null;
-
-      function updateMap(year) {
-        const values = getYearValues(year);
-        if (!values) return;
-
-        svg.selectAll("path")
-          .data(geoData.features, d => countyKey(d))
-          .join("path")
-            .attr("d", path)
-            .attr("fill", d => {
-              const name = countyKey(d);
-              const v = name ? values[name] : null;
-              return v != null ? color(v) : "#ccc";
-            })
-            .attr("stroke", "#fff")
-            .attr("stroke-width", 0.5)
-            .on("mouseover", function (event, d) {
-              const name = countyKey(d) ?? "Unknown";
-              const v = getYearValues(year)?.[name];
-              tooltip.style("visibility", "visible").text(`${name}: ${fmtPct(v)}`);
-              d3.select(this).attr("stroke-width", 2);
-            })
-            .on("mousemove", function (event) {
-              const bbox = this.ownerSVGElement.getBoundingClientRect();
-              tooltip.style("top", (event.clientY - bbox.top + 10) + "px")
-                     .style("left", (event.clientX - bbox.left + 10) + "px");
-            })
-            .on("mouseout", function () {
-              tooltip.style("visibility", "hidden");
-              d3.select(this).attr("stroke-width", 0.5);
-            });
-      }
-
-      // Legend
-      (function legend(){
-        const legendSvg = d3.select("#legend-svg");
-        const legendWidth = +legendSvg.attr("width");
-        const colors = d3.schemePurples[5];
-        const binWidth = legendWidth / colors.length;
-        legendSvg.selectAll("*").remove();
-        colors.forEach((c, i) => {
-          legendSvg.append("rect").attr("x", i * binWidth).attr("y", 10).attr("width", binWidth).attr("height", 10).attr("fill", c);
-          const label = i === colors.length - 1 ? "4%+" : `${i}%–${i+1}%`;
-          legendSvg.append("text").attr("x", i * binWidth + binWidth / 2).attr("y", 35)
-            .attr("text-anchor", "middle").attr("font-size", "10px").text(label);
-        });
-      })();
-
-      updateMap("1851");
-      slider.on("input", function(){
-        const year = this.value;
-        yearLabel.text(year);
-        updateMap(year);
-      });
-
-    } catch (e) {
-      console.error("Map init failed:", e);
-      return; // bail if core data missing
-    }
-
-    // ---- 2) Optionally render SCATTER (separate; won’t block the map) ----
     try {
       const rows = await d3.csv(INDUSTRY_URL, d => ({
-        industry: d.industry, year: +d.year, share: +d.share // if 0–1, use: +d.share * 100
+        industry: d.industry,
+        year: +d.year,
+        share: +d.share // if 0–1, use: (+d.share)*100
       }));
       if (!rows?.length) return;
 
-      const scatter = d3.select("#scatter-svg");
-      if (scatter.empty()) return;
+      const margin = {top: 24, right: 24, bottom: 40, left: 220};
+      const vb = scatter.attr("viewBox")?.split(" ").map(Number) || [0,0,960,600];
+      const width  = (vb[2] || 960) - margin.left - margin.right;
+      const height = (vb[3] || 600) - margin.top - margin.bottom;
 
-      const margin = {top: 24, right: 24, bottom: 40, left: 160};
-      const width  = 480 - margin.left - margin.right;
-      const height = 600 - margin.top - margin.bottom;
       const g = scatter.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
       const yearTarget = 1911;
       const topN = 20;
-      const data1911 = rows.filter(d => d.year === yearTarget && isFinite(d.share))
-                           .sort((a,b) => d3.descending(a.share, b.share))
-                           .slice(0, topN);
+      const data1911 = rows
+        .filter(d => d.year === yearTarget && isFinite(d.share))
+        .sort((a,b) => d3.descending(a.share, b.share))
+        .slice(0, topN);
 
       if (!data1911.length) return;
 
@@ -791,9 +704,10 @@ document.addEventListener("DOMContentLoaded", function () {
         .call(d3.axisBottom(x).ticks(6).tickFormat(v => v + "%"));
 
       g.append("g").call(d3.axisLeft(y).tickSize(0))
-        .selectAll("text").each(function(){
+        .selectAll("text")
+        .each(function(){
           const t = d3.select(this), s = t.text();
-          if (s.length > 32) t.text(s.slice(0,29) + "…");
+          if (s.length > 40) t.text(s.slice(0, 37) + "…");
         });
 
       g.selectAll(".pt")
@@ -819,11 +733,9 @@ document.addEventListener("DOMContentLoaded", function () {
         .attr("transform", `translate(0,${height})`)
         .selectAll("line").attr("stroke","#eee");
     } catch (e) {
-      // Industry CSV missing or 404 — that’s fine; map is already shown.
-      console.info("Skipping scatter (no data yet):", e?.message || e);
+      // Fine to skip if the CSV isn't present yet
+      console.info("Management scatter skipped:", e?.message || e);
     }
   });
 })();
 </script>
-
-
