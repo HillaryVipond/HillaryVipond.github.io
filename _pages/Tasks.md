@@ -564,200 +564,201 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-<h2>Management</h2>
 
-<!-- Shared control -->
+<h2> Techn </h2>
+
+<!-- Year control (map only) -->
 <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
   <label for="mgmt-year">Select year: <span id="mgmt-year-label">1851</span></label>
   <input type="range" id="mgmt-year" min="1851" max="1911" step="10" value="1851" style="width:300px;">
 </div>
 
-<!-- Two columns: map (left) + scatter (right) -->
+<!-- Two columns: LEFT = map, RIGHT = intentionally empty -->
 <div style="display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap;">
-  <!-- LEFT: Map + legend -->
+  <!-- LEFT: Map + legend + debug -->
   <div style="flex:2 1 640px; min-width:520px;">
     <div style="display:flex;flex-direction:column;align-items:center;position:relative;">
-      <!-- add a light border so you can SEE the map box even if nothing draws -->
-      <svg id="mgmt-map" width="960" height="600" viewBox="0 0 960 600" style="max-width:100%;height:auto;border:1px solid #eee;"></svg>
+      <svg id="mgmt-map" width="960" height="600" viewBox="0 0 960 600"
+           style="max-width:100%;height:auto;border:1px solid #eee;"></svg>
 
       <div style="margin-top:10px;">
         <svg id="mgmt-legend" width="480" height="50"></svg>
         <div style="font-size:12px;text-align:center;">Percentage share of male population</div>
       </div>
 
-      <div id="mgmt-tooltip" style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);pointer-events:none;"></div>
+      <div id="mgmt-tooltip"
+           style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;
+                  visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);
+                  pointer-events:none;"></div>
     </div>
+
+    <!-- DEBUG PANEL -->
+    <pre id="mgmt-debug"
+         style="background:#0b1220;color:#b4f1b4;padding:10px;margin-top:12px;font-size:12px;
+                max-width:960px;white-space:pre-wrap;border-radius:6px;line-height:1.35"></pre>
   </div>
 
-  <!-- RIGHT: Scatter (optional; won’t block the map) -->
+  <!-- RIGHT: intentionally left empty -->
   <div style="flex:1 1 420px; min-width:380px;">
-    <h3 style="margin:0 0 8px;">Top management shares by industry (1911)</h3>
-    <svg id="mgmt-scatter" width="480" height="600" viewBox="0 0 480 600" style="max-width:100%;height:auto;border:1px dashed #f0f0f0;"></svg>
-    <div style="font-size:12px;opacity:.7;margin-top:6px;">Loads only if /assets/data/management_by_industry.csv exists.</div>
+    <!-- (empty on purpose for now) -->
   </div>
 </div>
 
-<!-- D3 once -->
+<!-- D3 -->
 <script src="https://d3js.org/d3.v7.min.js" defer></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js" defer></script>
 
-<!-- 1) MAP ONLY (independent) -->
 <script defer>
 (function(){
-  function ready(fn){ document.readyState==='loading' ? document.addEventListener('DOMContentLoaded', fn, {once:true}) : fn(); }
+  const dbgEl = () => document.getElementById('mgmt-debug');
+  const log = (...args) => {
+    const line = args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' ');
+    console.log('[MGMT]', ...args);
+    const el = dbgEl(); if (el) el.textContent += line + '\\n';
+  };
+
+  log('[BOOT] inline script executed');
+
+  function ready(fn){
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, {once:true});
+    else fn();
+  }
 
   ready(async function initMap(){
-    const svg = d3.select("#mgmt-map");
-    const tooltip = d3.select("#mgmt-tooltip");
-    const slider = d3.select("#mgmt-year");
-    const yearLabel = d3.select("#mgmt-year-label");
-    if (svg.empty()) return;
+    log('[DOM] ready state:', document.readyState);
 
-    const GEO_URL  = "/assets/maps/Counties1851.geojson";
-    const DATA_URL = "/assets/maps/share_management_by_county.json"; // {1851:{county:percent}, ...}
+    // Basic DOM hooks
+    const svg = d3.select('#mgmt-map');
+    const tooltip = d3.select('#mgmt-tooltip');
+    const slider = d3.select('#mgmt-year');
+    const yearLabel = d3.select('#mgmt-year-label');
 
-    // 1) Draw outlines immediately (so layout is visibly OK even if data fails)
-    let geoData;
+    // Check D3 presence & DOM
+    log('[CHECK] d3 present:', !!window.d3, 'svg exists:', !svg.empty());
+    if (svg.empty()) { log('[ERR] #mgmt-map not found'); return; }
+
+    // URLs
+    const GEO_URL  = '/assets/maps/Counties1851.geojson';
+    const DATA_URL = '/assets/maps/share_management_by_county.json';
+    log('[FETCH] will fetch:', location.origin + GEO_URL, location.origin + DATA_URL);
+
+    // 1) Load GEO and draw OUTLINES immediately
+    let geoData = null;
     try {
       geoData = await d3.json(GEO_URL);
+      log('[FETCH] geo OK. features:', geoData?.features?.length ?? 0);
     } catch (e) {
-      console.error("GeoJSON load failed:", e);
+      log('[ERR] geo fetch failed:', e && (e.message || e));
       return;
     }
+
     const projection = d3.geoMercator().fitSize([960, 600], geoData);
     const path = d3.geoPath().projection(projection);
 
-    svg.selectAll("path")
+    // Draw outlines (so you see the map even if data fails)
+    svg.selectAll('path')
       .data(geoData.features)
-      .join("path")
-      .attr("d", path)
-      .attr("fill", "#eee")
-      .attr("stroke", "#fff")
-      .attr("stroke-width", 0.5);
+      .join('path')
+      .attr('d', path)
+      .attr('fill', '#eee')
+      .attr('stroke', '#fff')
+      .attr('stroke-width', 0.5);
 
-    // 2) Try to load the values (non-blocking for outlines)
+    // 2) Try to load the values JSON (but don't block rendering)
     let yearData = null;
     try {
       yearData = await d3.json(DATA_URL);
+      const yearKeys = Object.keys(yearData || {});
+      log('[FETCH] data OK. years:', yearKeys.slice(0, 10).join(', '), '… total=', yearKeys.length);
     } catch (e) {
-      // keep outlines only
+      log('[WARN] data fetch failed or missing. Showing outlines only. Reason:', e && (e.message || e));
     }
 
-    const thresholds = [1, 2, 3, 4]; // adjust if your data are fractions 0–1
+    // Color, bins, helpers
+    const thresholds = [1, 2, 3, 4]; // if your values are fractions (0–1), use [0.01, 0.02, 0.03, 0.04]
     const color = d3.scaleThreshold().domain(thresholds).range(d3.schemePurples[5]);
     const countyKey = f => f.properties?.R_CTY;
     const fmt = v => (v==null || isNaN(v)) ? 'N/A' : d3.format('.2f')(v) + '%';
     const getYearValues = y => yearData && (yearData[y] ?? yearData[String(y)] ?? yearData[+y] ?? null);
 
-    function updateMap(year){
+    function auditYear(values) {
+      if (!values) { log('[AUDIT] no values for selected year'); return; }
+      const missing = [];
+      for (const f of geoData.features) {
+        const k = countyKey(f);
+        if (!(k in values)) missing.push(k);
+      }
+      if (missing.length) {
+        log('[AUDIT] counties with no data (first 12):', missing.slice(0,12).join(', '), '… total=', missing.length);
+      } else {
+        log('[AUDIT] data covers all counties for this year');
+      }
+    }
+
+    function paint(year){
       const values = getYearValues(year);
-      svg.selectAll("path")
-        .attr("fill", d => {
-          if (!values) return "#eee"; // outlines-only if data missing
+      if (!values) {
+        log('[INFO] painting outlines only for year:', year);
+      } else {
+        log('[INFO] painting choropleth for year:', year);
+        auditYear(values);
+      }
+
+      svg.selectAll('path')
+        .attr('fill', d => {
+          if (!values) return '#eee';
           const name = countyKey(d);
           const v = name ? values[name] : null;
-          return v != null ? color(v) : "#ccc";
+          return v != null ? color(v) : '#ccc';
         })
-        .on("mouseover", function (event, d) {
-          const valuesNow = getYearValues(year);
-          const name = countyKey(d) ?? "Unknown";
-          const v = valuesNow ? valuesNow[name] : null;
-          tooltip.style("visibility","visible").text(`${name}: ${fmt(v)}`);
-          d3.select(this).attr("stroke-width", 2);
+        .on('mouseover', function (event, d) {
+          const current = getYearValues(year);
+          const name = countyKey(d) ?? 'Unknown';
+          const v = current ? current[name] : null;
+          tooltip.style('visibility','visible').text(`${name}: ${fmt(v)}`);
+          d3.select(this).attr('stroke-width', 2);
         })
-        .on("mousemove", function (event) {
+        .on('mousemove', function (event) {
           const bbox = this.ownerSVGElement.getBoundingClientRect();
-          tooltip.style("top", (event.clientY - bbox.top + 10) + "px")
-                 .style("left", (event.clientX - bbox.left + 10) + "px");
+          tooltip.style('top', (event.clientY - bbox.top + 10) + 'px')
+                 .style('left', (event.clientX - bbox.left + 10) + 'px');
         })
-        .on("mouseout", function () {
-          tooltip.style("visibility","hidden");
-          d3.select(this).attr("stroke-width", 0.5);
+        .on('mouseout', function () {
+          tooltip.style('visibility','hidden');
+          d3.select(this).attr('stroke-width', 0.5);
         });
     }
 
-    // legend
+    // Legend
     (function legend(){
-      const legendSvg = d3.select("#mgmt-legend");
-      const legendWidth = +legendSvg.attr("width");
+      const legendSvg = d3.select('#mgmt-legend');
+      const legendWidth = +legendSvg.attr('width');
       const colors = d3.schemePurples[5];
       const binWidth = legendWidth / colors.length;
-      legendSvg.selectAll("*").remove();
+      legendSvg.selectAll('*').remove();
       colors.forEach((c, i) => {
-        legendSvg.append("rect").attr("x", i * binWidth).attr("y", 10)
-          .attr("width", binWidth).attr("height", 10).attr("fill", c);
-        const label = i === colors.length - 1 ? "4%+" : `${i}%–${i+1}%`;
-        legendSvg.append("text").attr("x", i * binWidth + binWidth/2).attr("y", 35)
-          .attr("text-anchor","middle").attr("font-size","10px").text(label);
+        legendSvg.append('rect').attr('x', i * binWidth).attr('y', 10)
+          .attr('width', binWidth).attr('height', 10).attr('fill', c);
+        const label = i === colors.length - 1 ? '4%+' : `${i}%–${i+1}%`;
+        legendSvg.append('text').attr('x', i * binWidth + binWidth/2).attr('y', 35)
+          .attr('text-anchor','middle').attr('font-size','10px').text(label);
       });
+      log('[INIT] legend drawn');
     })();
 
-    // Initial paint; hook slider if present
-    updateMap(1851);
+    // Initial paint + slider
+    paint(1851);
     if (!slider.empty()) {
-      slider.on("input", function(){
+      slider.on('input', function(){
         const y = this.value;
         yearLabel.text(y);
-        updateMap(y);
+        paint(y);
       });
+    } else {
+      log('[INFO] no year slider found; fixed at 1851');
     }
-  });
-})();
-</script>
 
-<!-- 2) SCATTER ONLY (separate; safe to leave without data) -->
-<script defer>
-(function(){
-  function ready(fn){ document.readyState==='loading' ? document.addEventListener('DOMContentLoaded', fn, {once:true}) : fn(); }
-
-  ready(async function initScatter(){
-    const svg = d3.select("#mgmt-scatter");
-    if (svg.empty()) return;
-
-    const INDUSTRY_URL = "/assets/data/management_by_industry.csv"; // industry,year,share (percent)
-
-    try {
-      const rows = await d3.csv(INDUSTRY_URL, d => ({
-        industry: d.industry,
-        year: +d.year,
-        share: +d.share // if 0–1, use (+d.share)*100
-      }));
-      if (!rows?.length) return;
-
-      const margin = {top:24,right:24,bottom:40,left:220};
-      const vb = svg.attr("viewBox")?.split(" ").map(Number) || [0,0,480,600];
-      const width  = (vb[2] || 480) - margin.left - margin.right;
-      const height = (vb[3] || 600) - margin.top - margin.bottom;
-      const g = svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
-
-      const data1911 = rows
-        .filter(d => d.year === 1911 && isFinite(d.share))
-        .sort((a,b) => d3.descending(a.share, b.share))
-        .slice(0, 20);
-      if (!data1911.length) return;
-
-      const x = d3.scaleLinear().domain([0, d3.max(data1911, d => d.share) || 5]).nice().range([0,width]);
-      const y = d3.scaleBand().domain(data1911.map(d => d.industry)).range([0,height]).padding(0.2);
-
-      g.append("g").attr("transform",`translate(0,${height})`)
-        .call(d3.axisBottom(x).ticks(6).tickFormat(v => v + "%"));
-
-      g.append("g").call(d3.axisLeft(y).tickSize(0))
-        .selectAll("text").each(function(){
-          const t = d3.select(this), s = t.text();
-          if (s.length > 40) t.text(s.slice(0,37) + "…");
-        });
-
-      g.selectAll(".pt").data(data1911).join("circle")
-        .attr("class","pt").attr("cx",d=>x(d.share)).attr("cy",d=>y(d.industry)+y.bandwidth()/2)
-        .attr("r",4).attr("fill","#6a51a3");
-
-      g.selectAll(".val").data(data1911).join("text")
-        .attr("class","val").attr("x",d=>x(d.share)+6).attr("y",d=>y(d.industry)+y.bandwidth()/2+4)
-        .attr("font-size","11px").text(d=>d3.format(".2f")(d.share)+"%");
-    } catch {
-      // no CSV yet -> do nothing (map is already rendered)
-    }
+    log('[DONE] map initialised');
   });
 })();
 </script>
