@@ -569,7 +569,7 @@ document.addEventListener("DOMContentLoaded", function () {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
     align-items: start;
-    margin-top: 100px; /* 
+    margin-top: 40px; /* 
   }
 
   /* Stack on narrow screens */
@@ -587,7 +587,7 @@ document.addEventListener("DOMContentLoaded", function () {
   /* Same visible height for both images */
   .two-up img {
     width: 100%;
-    height: 450px;        /* pick a height you like */
+    height: 400px;        /* pick a height you like */
     object-fit: contain;  /* keep full image visible; use 'cover' to crop instead */
     border: 1px solid #ddd;
     border-radius: 6px;
