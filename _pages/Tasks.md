@@ -562,10 +562,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <hr style="margin:32px 0;">
 
-<h2>Management — Part II: Top industries in 1911</h2>
-<p style="margin-top:-8px;font-size:14px;opacity:.75;">Optional scatter. Loads only if data file is present.</p>
+<h2>Management</h2>
 
-<svg id="mgmt-scatter" width="960" height="600" viewBox="0 0 960 600" style="max-width:100%;height:auto;"></svg>
+<!-- Shared control -->
+<div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
+  <label for="mgmt-year">Select year: <span id="mgmt-year-label">1851</span></label>
+  <input type="range" id="mgmt-year" min="1851" max="1911" step="10" value="1851" style="width:300px;">
+</div>
+
+<!-- Two columns: map (left) + scatter (right) -->
+<div style="display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap;">
+  <!-- LEFT: Map + legend -->
+  <div style="flex: 2 1 640px; min-width:520px;">
+    <div style="display:flex;flex-direction:column;align-items:center;position:relative;">
+      <svg id="mgmt-map" width="960" height="600" viewBox="0 0 960 600" style="max-width:100%;height:auto;"></svg>
+
+      <div style="margin-top:10px;">
+        <svg id="mgmt-legend" width="480" height="50"></svg>
+        <div style="font-size:12px;text-align:center;">Percentage share of male population</div>
+      </div>
+
+      <div id="mgmt-tooltip" style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);pointer-events:none;"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Scatter (top industries in 1911) -->
+  <div style="flex: 1 1 420px; min-width:380px;">
+    <h3 style="margin:0 0 8px;">Top management shares by industry (1911)</h3>
+    <svg id="mgmt-scatter" width="480" height="600" viewBox="0 0 480 600" style="max-width:100%;height:auto;"></svg>
+    <div style="font-size:12px;opacity:.7;margin-top:6px;">Loads only if /assets/data/management_by_industry.csv is present.</div>
+  </div>
+</div>
 
 <script src="https://d3js.org/d3.v7.min.js" defer></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js" defer></script>
@@ -575,7 +602,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function onReady(fn){ if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', fn, {once:true}); else fn(); }
 
   // ----------------------
-  // Part I: Map
+  // Map (left column)
   // ----------------------
   onReady(async function initMgmtMap(){
     const svg = d3.select("#mgmt-map");
@@ -593,7 +620,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const projection = d3.geoMercator().fitSize([960, 600], geoData);
       const path = d3.geoPath().projection(projection);
 
-      const thresholds = [1, 2, 3, 4];
+      const thresholds = [1, 2, 3, 4]; // adjust if needed
       const color = d3.scaleThreshold().domain(thresholds).range(d3.schemePurples[5]);
 
       const countyKey = f => f.properties?.R_CTY;
@@ -659,25 +686,25 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // ----------------------
-  // Part II: Scatter (optional)
+  // Scatter (right column) — optional, won’t block the map
   // ----------------------
   onReady(async function initMgmtScatter(){
     const scatter = d3.select("#mgmt-scatter");
     if (scatter.empty()) return;
 
-    const INDUSTRY_URL = "/assets/data/management_by_industry.csv"; // industry,year,share (percent)
+    const INDUSTRY_URL = "/assets/data/management_by_industry.csv"; // industry,year,share (percent). If 0–1, multiply by 100 below.
 
     try {
       const rows = await d3.csv(INDUSTRY_URL, d => ({
         industry: d.industry,
         year: +d.year,
-        share: +d.share // if 0–1, use: (+d.share)*100
+        share: +d.share // if 0–1, use: (+d.share) * 100
       }));
       if (!rows?.length) return;
 
       const margin = {top: 24, right: 24, bottom: 40, left: 220};
-      const vb = scatter.attr("viewBox")?.split(" ").map(Number) || [0,0,960,600];
-      const width  = (vb[2] || 960) - margin.left - margin.right;
+      const vb = scatter.attr("viewBox")?.split(" ").map(Number) || [0,0,480,600];
+      const width  = (vb[2] || 480) - margin.left - margin.right;
       const height = (vb[3] || 600) - margin.top - margin.bottom;
 
       const g = scatter.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
@@ -733,7 +760,6 @@ document.addEventListener("DOMContentLoaded", function () {
         .attr("transform", `translate(0,${height})`)
         .selectAll("line").attr("stroke","#eee");
     } catch (e) {
-      // Fine to skip if the CSV isn't present yet
       console.info("Management scatter skipped:", e?.message || e);
     }
   });
