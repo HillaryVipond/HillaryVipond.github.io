@@ -544,7 +544,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <figure style="max-width:720px; margin:0 auto; text-align:center;">
   <img
-    src="/assets/img/sons_by_industry.png"
+    src="/assets/images/Graph1_AreaGraph.jpg"
     alt="Share of sons taking up their fathers’ occupation by industry"
     style="width:100%; height:auto; border:1px solid #ddd; border-radius:6px;"
     loading="lazy"
