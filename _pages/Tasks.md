@@ -624,7 +624,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <hr style="margin:32px 0;">
 
-<h2>Management — Part I: Geographic distribution</h2>
+<h2>Management — Part II: Geographic distribution</h2>
 
 <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
   <label for="mgmt-year">Select year: <span id="mgmt-year-label">1851</span></label>
