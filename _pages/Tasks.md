@@ -540,7 +540,10 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 </script>
-<h2> Management</h2>
+
+
+
+<!--<h2> Management</h2>  -->
 
 
 <!-- 🎛️ Year control for total map -->
@@ -570,7 +573,7 @@ const tooltip = d3.select("#tooltip");
 
 Promise.all([
   d3.json("/assets/maps/Counties1851.geojson"),
-  d3.json("/assets/maps/share_management_by_county.json")
+  d3.json("/assets/maps/share_total_by_county.json")
 ]).then(([geoData, yearData]) => {
   const projection = d3.geoMercator().fitSize([960, 600], geoData);
   const path = d3.geoPath().projection(projection);
