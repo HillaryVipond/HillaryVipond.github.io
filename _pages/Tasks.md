@@ -547,7 +547,7 @@ document.addEventListener("DOMContentLoaded", function () {
   <figure>
     <img
       src="/assets/images/AreaGraph.jpg"
-      alt="Share of sons taking up their fathers’ occupation by industry, 1851–1911"
+      alt="National Level: New and Old"
       loading="lazy"
     >
     <figcaption>Fathers→sons by industry, 1851–1911</figcaption>
@@ -555,8 +555,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   <figure>
     <img
-      src="/assets/images/BoE_regionalFinal(1).png"
-      alt="Share of sons taking up their fathers’ occupation by region, 1851–1911"
+      src="/assets/images/BoE_regionalFinal.png"
+      alt="County Level: New and Old"
       loading="lazy"
     >
     <figcaption>Fathers→sons by region, 1851–1911</figcaption>
