@@ -624,7 +624,79 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <hr style="margin:32px 0;">
 
+<h2>Management — Part I: Geographic distribution</h2>
 
+<div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
+  <label for="mgmt-year">Select year: <span id="mgmt-year-label">1851</span></label>
+  <input type="range" id="mgmt-year" min="1851" max="1911" step="10" value="1851" style="width:300px;">
+</div>
+
+<div style="display:flex;flex-direction:column;align-items:center;margin-bottom:40px;position:relative;">
+  <svg id="mgmt-map" width="960" height="600" viewBox="0 0 960 600" style="max-width:100%;height:auto;"></svg>
+
+  <div style="margin-top:10px;">
+    <svg id="mgmt-legend" width="480" height="50"></svg>
+    <div style="font-size:12px;text-align:center;">Percentage Share of Male Population</div>
+  </div>
+
+  <div id="mgmt-tooltip" style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);pointer-events:none;"></div>
+</div>
+
+<hr style="margin:32px 0;">
+
+<!-- only the essentials below -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script>
+const svg = d3.select("#mgmt-map");
+const tooltip = d3.select("#mgmt-tooltip");
+const slider = d3.select("#mgmt-year");
+const yearLabel = d3.select("#mgmt-year-label");
+
+Promise.all([
+  d3.json("/assets/maps/Counties1851.geojson"),
+  d3.json("/assets/maps/share_management_by_county.json")
+]).then(([geo, data]) => {
+  const projection = d3.geoMercator().fitSize([960, 600], geo);
+  const path = d3.geoPath().projection(projection);
+  const color = d3.scaleThreshold().domain([1,2,3,4]).range(d3.schemePurples[5]);
+  const key = d => d.properties.R_CTY;
+
+  function update(year){
+    const values = data[year] || {};
+    svg.selectAll("path")
+      .data(geo.features)
+      .join("path")
+        .attr("d", path)
+        .attr("fill", d => {
+          const v = values[key(d)];
+          return v != null ? color(v) : "#ccc";
+        })
+        .attr("stroke", "#fff")
+        .attr("stroke-width", 0.5)
+        .on("mouseover", function (event, d) {
+          const v = values[key(d)];
+          tooltip.style("visibility","visible")
+                 .text(`${key(d)}: ${v!=null ? d3.format(".2f")(v)+"%" : "N/A"}`);
+          d3.select(this).attr("stroke-width", 2);
+        })
+        .on("mousemove", function (event) {
+          tooltip.style("top", (event.pageY + 10) + "px")
+                 .style("left", (event.pageX + 10) + "px");
+        })
+        .on("mouseout", function () {
+          tooltip.style("visibility","hidden");
+          d3.select(this).attr("stroke-width", 0.5);
+        });
+  }
+
+  update("1851");
+  slider.on("input", function(){
+    yearLabel.text(this.value);
+    update(this.value);
+  });
+});
 </script>
+
 
 
