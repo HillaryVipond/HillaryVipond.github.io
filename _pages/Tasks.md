@@ -597,7 +597,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const GEO_URL  = "/assets/maps/Counties1851.geojson";
-    const DATA_URL = "/assets/maps/share_total_by_county.json";
+    const DATA_URL = "/assets/maps/share_management_by_county.json";
     log('[FETCH] Will fetch:', location.origin + GEO_URL, location.origin + DATA_URL);
 
     try {
