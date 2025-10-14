@@ -539,11 +539,11 @@ document.addEventListener("DOMContentLoaded", function () {
   }); 
 });
 
-
+</script>
 <h2>Apprenticeship System: Total Participation</h2>
 
 
-</script>
+
 
 
 
