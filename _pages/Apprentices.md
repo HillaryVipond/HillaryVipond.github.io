@@ -242,6 +242,7 @@ Promise.all([
 </script>
 
 
+<h2> Occupational Skills Inheritance</h2>
 <!-- Management: Intergenerational Occupation Table -->
 <style>
   /* Container: horizontal scroll on small screens */
