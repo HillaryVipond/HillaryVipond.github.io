@@ -542,17 +542,64 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 
-<figure style="max-width:720px; margin:0 auto; text-align:center;">
-  <img
-    src="/assets/images/Graph1_AreaGraph.jpg"
-    alt="Share of sons taking up their fathers’ occupation by industry"
-    style="width:100%; height:auto; border:1px solid #ddd; border-radius:6px;"
-    loading="lazy"
-  >
-  <figcaption style="font-size:13px; color:#555; margin-top:4px;">
-    Share of sons taking up their fathers’ occupation by industry, 1851–1911.
-  </figcaption>
-</figure>
+<!-- Two images side by side (same visible height) -->
+<div class="two-up">
+  <figure>
+    <img
+      src="/assets/images/AreaGraph.jpg"
+      alt="Share of sons taking up their fathers’ occupation by industry, 1851–1911"
+      loading="lazy"
+    >
+    <figcaption>Fathers→sons by industry, 1851–1911</figcaption>
+  </figure>
+
+  <figure>
+    <img
+      src="/assets/images/BoE_regionalFinal(1).png"
+      alt="Share of sons taking up their fathers’ occupation by region, 1851–1911"
+      loading="lazy"
+    >
+    <figcaption>Fathers→sons by region, 1851–1911</figcaption>
+  </figure>
+</div>
+
+<style>
+  .two-up {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    align-items: start;
+  }
+
+  /* Stack on narrow screens */
+  @media (max-width: 900px) {
+    .two-up { grid-template-columns: 1fr; }
+  }
+
+  .two-up figure {
+    margin: 0;
+    max-width: 720px;      /* cap each figure's max width */
+    justify-self: center;  /* center in its grid cell */
+    text-align: center;
+  }
+
+  /* Same visible height for both images */
+  .two-up img {
+    width: 100%;
+    height: 360px;        /* pick a height you like */
+    object-fit: contain;  /* keep full image visible; use 'cover' to crop instead */
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    display: block;
+    background: #fff;     /* optional: neutral backdrop behind transparent PNGs */
+  }
+
+  .two-up figcaption {
+    font-size: 13px;
+    color: #555;
+    margin-top: 6px;
+  }
+</style>
 
 
 
