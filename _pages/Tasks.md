@@ -569,7 +569,7 @@ document.addEventListener("DOMContentLoaded", function () {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
     align-items: start;
-    margin-top: 1000px; /* 
+    margin-top: 400px; /* 
   }
 
   /* Stack on narrow screens */
