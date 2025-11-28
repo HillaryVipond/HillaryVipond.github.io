@@ -7,4 +7,7 @@ main:
     url: /Seminars/
   - title: "Micro-Occupations"
     url: /tasks/
+  - title: "Apprentices"
+    url: /apprentices/
+    
     
