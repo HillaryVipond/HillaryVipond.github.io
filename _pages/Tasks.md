@@ -606,6 +606,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <h2>Management — Part I: Geographic distribution</h2>
 
+<!-- 3. Buttons below graph, side by side -->
+<h4 style="margin-top: 1em;">
+  An initial mapping of the rise of management jobs in the UK, by county.
+</h4>
+
 <script src="https://d3js.org/d3.v7.min.js" defer></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js" defer></script>
 
@@ -619,7 +624,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   <div style="margin-top:10px;">
     <svg id="mgmt-legend" width="480" height="50"></svg>
-    <div style="font-size:12px;text-align:center;">Percentage Share of Male Population</div>
+    <div style="font-size:12px;text-align:center;">Percentage Share of the Working Male Population</div>
   </div>
 
   <div id="mgmt-tooltip" style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);pointer-events:none;"></div>
@@ -631,6 +636,9 @@ document.addEventListener("DOMContentLoaded", function () {
 <h2> Technology by Industry </h2>
 
 <h2> Technology </h2>
+<h4 style="margin-top: 1em;">
+  An initial mapping of the emergence of new technologies in the UK, by county. *Coming soon.
+</h4>
 
 <!-- Year control (map only) -->
 <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
