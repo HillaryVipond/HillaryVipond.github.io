@@ -15,7 +15,8 @@ header: false  # 👈 This disables the large title
   </div>
 
   <div class="research-text">
-    <h4><a href="https://github.com/HillaryVipond/Dissertation"><strong>Technological Unemployment in Victorian Britain: A Tasks-Based Approach</strong></a> </h4>
+    <h4><a href="https://github.com/HillaryVipond/JMP"><strong>Technological Unemployment in Victorian Britain: A Tasks-Based Approach</strong></a> </h4>
+
 
     <p>Hillary Vipond (JMP)</p>
 
