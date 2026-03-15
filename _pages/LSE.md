@@ -610,12 +610,26 @@ Promise.all([
   hierarchy, and a substantial share fall far below their fathers.
 </p>
 
+
+<!-- ================================================ -->
+<!-- SECTION: THE PARENT CHANNEL                     -->
+<!-- ================================================ -->
+
+<h2>The Parent Channel</h2>
+
+<p>
+  Two very different industries — immigrant tailoring and domestic bootmaking — tell the same story.
+  Where the father's trade is thriving, sons are protected from downward mobility and channelled into
+  higher-status occupations when they leave. Where it is contracting, sons scatter across the full
+  hierarchy, and a substantial share fall far below their fathers.
+</p>
+
 <!-- ---- TAILORS ---- -->
 
 <!-- ╔══════════════════════════════════════╗ -->
 <!-- ║  SLIDE 1 — Image + bullets only      ║ -->
 <!-- ╚══════════════════════════════════════╝ -->
-<div style="border:1px solid #e0e0e0;border-radius:6px;padding:48px 40px;margin:24px 0;background:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;">
+<div id="tailor-slide-1" style="border:1px solid #e0e0e0;border-radius:6px;padding:48px 40px;margin:24px 0;background:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;">
 
   <h3 style="margin-top:0;">Tailors: Pale of Settlement Sons vs. English Sons</h3>
   <p style="color:#444;margin-bottom:20px;">
@@ -637,14 +651,15 @@ Promise.all([
     </ul>
   </div>
 
+  <button onclick="document.getElementById('tailor-slide-2').scrollIntoView({behavior:'smooth'})"
+    style="position:absolute;bottom:28px;left:50%;transform:translateX(-50%);background:none;border:1px solid #ccc;border-radius:20px;padding:6px 20px;font-size:13px;color:#888;cursor:pointer;letter-spacing:0.04em;">↓ next</button>
+
 </div>
 
 <!-- ╔══════════════════════════════════════════════════════╗ -->
 <!-- ║  SLIDE 2 — Key finding + bar charts + rank/direction ║ -->
 <!-- ╚══════════════════════════════════════════════════════╝ -->
-<div style="border:1px solid #e0e0e0;border-radius:6px;padding:48px 40px;margin:24px 0;background:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;">
-
-  <div style="background:#f0f6ff;border-left:4px solid #6BAED6;padding:14px 18px;margin-bottom:28px;font-size:0.95em;">
+<div id="tailor-slide-2" style="border:1px solid #e0e0e0;border-radius:6px;padding:48px 40px;margin:24px 0;background:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;">padding:14px 18px;margin-bottom:28px;font-size:0.95em;">
     <strong>Key finding:</strong> The share moving <em>up</em> is similar across both groups (38% vs 35%).
     The entire gap is driven by the <strong>downward tail</strong> — 52% of English sons fall below their
     father's position, compared to only 39% of Pale sons. The ethnic economy provides a
@@ -689,12 +704,15 @@ Promise.all([
     </div>
   </div>
 
+  <button onclick="document.getElementById('tailor-slide-3').scrollIntoView({behavior:'smooth'})"
+    style="position:absolute;bottom:28px;left:50%;transform:translateX(-50%);background:none;border:1px solid #ccc;border-radius:20px;padding:6px 20px;font-size:13px;color:#888;cursor:pointer;letter-spacing:0.04em;">↓ next</button>
+
 </div>
 
 <!-- ╔══════════════════════════════════╗ -->
 <!-- ║  SLIDE 3 — Sankey only           ║ -->
 <!-- ╚══════════════════════════════════╝ -->
-<div style="border:1px solid #e0e0e0;border-radius:6px;padding:48px 40px;margin:24px 0;background:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;">
+<div id="tailor-slide-3" style="border:1px solid #e0e0e0;border-radius:6px;padding:48px 40px;margin:24px 0;background:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;">
   <div style="font-size:13px;font-weight:500;text-align:center;margin-bottom:20px;color:#333;">
     Sons of tailors — occupational mobility, 1891 → 1911
   </div>
