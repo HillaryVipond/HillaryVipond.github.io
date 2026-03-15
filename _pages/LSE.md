@@ -5,7 +5,7 @@ permalink: /LSE/
 nav_exclude: false
 ---
  
-<p style="font-size:0.65em;font-style:italic;color:#666;margin-top:0.5rem;margin-bottom:2rem;">Inequalities Institute, March 2026</p>
+<p style="font-size:0.85em;font-style:italic;color:#666;margin-top:0.4rem;margin-bottom:2rem;">Inequalities Institute, March 2026</p>
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
@@ -612,24 +612,24 @@ Promise.all([
 
 <!-- ---- TAILORS ---- -->
 
-<!-- ╔══════════════════════════════════════╗ -->
-<!-- ║  SLIDE 1 — Image + bullets only      ║ -->
-<!-- ╚══════════════════════════════════════╝ -->
-<div id="tailor-slide-1" style="border:1px solid #e0e0e0;border-radius:6px;padding:48px 40px;margin:24px 0;background:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;">
+<!-- ╔═══════════════════════════════════════╗ -->
+<!-- ║  SLIDE 1 — Title + image + bullets    ║ -->
+<!-- ╚═══════════════════════════════════════╝ -->
+<div id="tailor-slide-1" style="border:1px solid #e0e0e0;border-radius:6px;padding:40px 40px 64px;margin:24px 0;background:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;">
 
   <h3 style="margin-top:0;">Tailors: Pale of Settlement Sons vs. English Sons</h3>
-  <p style="color:#444;margin-bottom:20px;">
+  <p style="color:#444;margin-bottom:24px;">
     Sons of Pale-born tailors (1891 census) linked forward to 1911. Every father is a tailor — the
     comparison is purely about what happens to the next generation, conditional on the same starting point.
     Tailors sit at the <strong>68th percentile</strong> of the 1911 workforce.
   </p>
 
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;">
-    <div style="line-height:0;border-radius:4px;overflow:hidden;">
+    <div style="border-radius:4px;overflow:hidden;">
       <img src="/assets/images/Tailors.jpg" alt="Tailors in Victorian England"
-           style="width:100%;display:block;object-fit:cover;object-position:center 20%;max-height:320px;">
+           style="width:100%;display:block;object-fit:cover;object-position:center 30%;height:380px;">
     </div>
-    <ul style="font-size:0.95em;line-height:1.85;padding-left:1.2em;margin:0;color:#333;">
+    <ul style="font-size:0.95em;line-height:1.9;padding-left:1.2em;margin:0;color:#333;">
       <li>Jewish immigrants from the Pale of Settlement entered the tailoring trade from the 1880s onwards, concentrated in London's East End, Leeds, and Manchester.</li>
       <li>They brought organisational practices — finer division of labour, subcontracting networks — that accelerated sewing machine adoption in ready-to-wear production.</li>
       <li>The ethnic economy provided both a <strong>floor</strong> (preventing falls into unskilled labour) and a <strong>ladder</strong> (channelling leavers into commercial and retail occupations).</li>
@@ -638,14 +638,16 @@ Promise.all([
   </div>
 
   <button onclick="document.getElementById('tailor-slide-2').scrollIntoView({behavior:'smooth'})"
-    style="position:absolute;bottom:28px;left:50%;transform:translateX(-50%);background:none;border:1px solid #ccc;border-radius:20px;padding:6px 20px;font-size:13px;color:#888;cursor:pointer;letter-spacing:0.04em;">↓ next</button>
+    style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:none;border:1px solid #ccc;border-radius:20px;padding:5px 20px;font-size:13px;color:#888;cursor:pointer;">↓ next</button>
 
 </div>
 
-<!-- ╔══════════════════════════════════════════════════════╗ -->
-<!-- ║  SLIDE 2 — Key finding + bar charts + rank/direction ║ -->
-<!-- ╚══════════════════════════════════════════════════════╝ -->
-<div id="tailor-slide-2" style="border:1px solid #e0e0e0;border-radius:6px;padding:48px 40px;margin:24px 0;background:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;">padding:14px 18px;margin-bottom:28px;font-size:0.95em;">
+<!-- ╔═══════════════════════════════════════╗ -->
+<!-- ║  SLIDE 2 — Key finding + bar charts   ║ -->
+<!-- ╚═══════════════════════════════════════╝ -->
+<div id="tailor-slide-2" style="border:1px solid #e0e0e0;border-radius:6px;padding:40px 40px 64px;margin:24px 0;background:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;">
+
+  <div style="background:#f0f6ff;border-left:4px solid #6BAED6;padding:14px 18px;margin-bottom:28px;font-size:0.95em;">
     <strong>Key finding:</strong> The share moving <em>up</em> is similar across both groups (38% vs 35%).
     The entire gap is driven by the <strong>downward tail</strong> — 52% of English sons fall below their
     father's position, compared to only 39% of Pale sons. The ethnic economy provides a
@@ -665,7 +667,7 @@ Promise.all([
     </div>
   </div>
 
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px;">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
     <div>
       <div style="font-size:12px;font-weight:500;margin-bottom:8px;color:#333;">Pale of Settlement sons</div>
       <svg id="pale-dest-chart" style="width:100%;display:block;"></svg>
@@ -675,30 +677,38 @@ Promise.all([
       <svg id="english-dest-chart" style="width:100%;display:block;"></svg>
     </div>
   </div>
-  <div style="font-size:11px;color:#888;margin-bottom:32px;">Bar width = number of sons. Hover for detail. Sorted by HISCAM score (high → low).</div>
+  <div style="font-size:11px;color:#888;margin-top:8px;">Bar width = number of sons. Hover for detail. Sorted by HISCAM score (high → low).</div>
 
-  <hr style="border:none;border-top:1px solid #eee;margin:0 0 28px;">
+  <button onclick="document.getElementById('tailor-slide-3').scrollIntoView({behavior:'smooth'})"
+    style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:none;border:1px solid #ccc;border-radius:20px;padding:5px 20px;font-size:13px;color:#888;cursor:pointer;">↓ next</button>
 
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;">
+</div>
+
+<!-- ╔═══════════════════════════════════════╗ -->
+<!-- ║  SLIDE 3 — Rank change + direction    ║ -->
+<!-- ╚═══════════════════════════════════════╝ -->
+<div id="tailor-slide-3" style="border:1px solid #e0e0e0;border-radius:6px;padding:40px 40px 64px;margin:24px 0;background:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;">
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;">
     <div>
-      <h4 style="margin:0 0 8px;font-size:0.82em;color:#666;text-transform:uppercase;letter-spacing:0.05em;">Mean rank change (percentile points)</h4>
+      <h4 style="margin:0 0 12px;font-size:0.82em;color:#666;text-transform:uppercase;letter-spacing:0.05em;">Mean rank change (percentile points)</h4>
       <div id="tailor-rank-chart"></div>
     </div>
     <div>
-      <h4 style="margin:0 0 8px;font-size:0.82em;color:#666;text-transform:uppercase;letter-spacing:0.05em;">Direction of movement</h4>
+      <h4 style="margin:0 0 12px;font-size:0.82em;color:#666;text-transform:uppercase;letter-spacing:0.05em;">Direction of movement</h4>
       <div id="tailor-direction-chart"></div>
     </div>
   </div>
 
-  <button onclick="document.getElementById('tailor-slide-3').scrollIntoView({behavior:'smooth'})"
-    style="position:absolute;bottom:28px;left:50%;transform:translateX(-50%);background:none;border:1px solid #ccc;border-radius:20px;padding:6px 20px;font-size:13px;color:#888;cursor:pointer;letter-spacing:0.04em;">↓ next</button>
+  <button onclick="document.getElementById('tailor-slide-4').scrollIntoView({behavior:'smooth'})"
+    style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:none;border:1px solid #ccc;border-radius:20px;padding:5px 20px;font-size:13px;color:#888;cursor:pointer;">↓ next</button>
 
 </div>
 
-<!-- ╔══════════════════════════════════╗ -->
-<!-- ║  SLIDE 3 — Sankey only           ║ -->
-<!-- ╚══════════════════════════════════╝ -->
-<div id="tailor-slide-3" style="border:1px solid #e0e0e0;border-radius:6px;padding:48px 40px;margin:24px 0;background:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;">
+<!-- ╔═══════════════════════════════════════╗ -->
+<!-- ║  SLIDE 4 — Sankey only                ║ -->
+<!-- ╚═══════════════════════════════════════╝ -->
+<div id="tailor-slide-4" style="border:1px solid #e0e0e0;border-radius:6px;padding:40px 40px;margin:24px 0;background:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;">
   <div style="font-size:13px;font-weight:500;text-align:center;margin-bottom:20px;color:#333;">
     Sons of tailors — occupational mobility, 1891 → 1911
   </div>
