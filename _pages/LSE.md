@@ -613,9 +613,9 @@ Promise.all([
 
 <!-- ---- TAILORS ---- -->
 
-<!-- ╔═══════════════════════════════════╗ -->
-<!-- ║  SLIDE 1: Context + Charts        ║ -->
-<!-- ╚═══════════════════════════════════╝ -->
+<!-- ╔══════════════════════════════════════╗ -->
+<!-- ║  SLIDE 1 — Image + bullets only      ║ -->
+<!-- ╚══════════════════════════════════════╝ -->
 <div style="border:1px solid #e0e0e0;border-radius:6px;padding:28px 32px;margin:24px 0;background:#fff;">
 
   <h3 style="margin-top:0;">Tailors: Pale of Settlement Sons vs. English Sons</h3>
@@ -625,11 +625,10 @@ Promise.all([
     Tailors sit at the <strong>68th percentile</strong> of the 1911 workforce.
   </p>
 
-  <!-- Image + bullets -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:28px;align-items:center;">
-    <div style="overflow:hidden;border-radius:4px;line-height:0;">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;">
+    <div style="line-height:0;border-radius:4px;overflow:hidden;">
       <img src="/assets/images/Tailors.jpg" alt="Tailors in Victorian England"
-           style="width:100%;display:block;object-fit:cover;">
+           style="width:100%;display:block;object-fit:cover;object-position:center 20%;max-height:320px;">
     </div>
     <ul style="font-size:0.95em;line-height:1.85;padding-left:1.2em;margin:0;color:#333;">
       <li>Jewish immigrants from the Pale of Settlement entered the tailoring trade from the 1880s onwards, concentrated in London's East End, Leeds, and Manchester.</li>
@@ -639,23 +638,11 @@ Promise.all([
     </ul>
   </div>
 
-  <!-- Charts -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;">
-    <div>
-      <h4 style="margin:0 0 8px;font-size:0.88em;color:#555;text-transform:uppercase;letter-spacing:0.04em;">Mean rank change (percentile points)</h4>
-      <div id="tailor-rank-chart"></div>
-    </div>
-    <div>
-      <h4 style="margin:0 0 8px;font-size:0.88em;color:#555;text-transform:uppercase;letter-spacing:0.04em;">Direction of movement</h4>
-      <div id="tailor-direction-chart"></div>
-    </div>
-  </div>
-
 </div>
 
-<!-- ╔═══════════════════════════════════╗ -->
-<!-- ║  SLIDE 2: Key finding + bar chart ║ -->
-<!-- ╚═══════════════════════════════════╝ -->
+<!-- ╔══════════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE 2 — Key finding + bar charts + rank/direction ║ -->
+<!-- ╚══════════════════════════════════════════════════════╝ -->
 <div style="border:1px solid #e0e0e0;border-radius:6px;padding:28px 32px;margin:24px 0;background:#fff;">
 
   <div style="background:#f0f6ff;border-left:4px solid #6BAED6;padding:14px 18px;margin-bottom:28px;font-size:0.95em;">
@@ -665,8 +652,8 @@ Promise.all([
     <strong>floor</strong> that prevents occupational collapse.
   </div>
 
-  <div style="font-size:13px;font-weight:500;margin-bottom:12px;color:#333;">Top occupational destinations — 1911</div>
-  <div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap;">
+  <div style="font-size:13px;font-weight:500;margin-bottom:10px;color:#333;">Top occupational destinations — 1911</div>
+  <div style="display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap;">
     <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555;">
       <div style="width:12px;height:12px;border-radius:2px;background:#1D9E75;flex-shrink:0;"></div>Above father (HISCAM &gt; 51.6)
     </div>
@@ -677,7 +664,8 @@ Promise.all([
       <div style="width:12px;height:12px;border-radius:2px;background:#D85A30;flex-shrink:0;"></div>Below father
     </div>
   </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px;">
     <div>
       <div style="font-size:12px;font-weight:500;margin-bottom:8px;color:#333;">Pale of Settlement sons</div>
       <svg id="pale-dest-chart" style="width:100%;display:block;"></svg>
@@ -687,83 +675,36 @@ Promise.all([
       <svg id="english-dest-chart" style="width:100%;display:block;"></svg>
     </div>
   </div>
-  <div style="font-size:11px;color:#888;margin-top:8px;">Bar width = number of sons. Sorted by HISCAM score (high → low).</div>
+  <div style="font-size:11px;color:#888;margin-bottom:32px;">Bar width = number of sons. Hover for detail. Sorted by HISCAM score (high → low).</div>
+
+  <hr style="border:none;border-top:1px solid #eee;margin:0 0 28px;">
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;">
+    <div>
+      <h4 style="margin:0 0 8px;font-size:0.82em;color:#666;text-transform:uppercase;letter-spacing:0.05em;">Mean rank change (percentile points)</h4>
+      <div id="tailor-rank-chart"></div>
+    </div>
+    <div>
+      <h4 style="margin:0 0 8px;font-size:0.82em;color:#666;text-transform:uppercase;letter-spacing:0.05em;">Direction of movement</h4>
+      <div id="tailor-direction-chart"></div>
+    </div>
+  </div>
 
 </div>
 
-<!-- ╔═══════════════════════════════════╗ -->
-<!-- ║  SLIDE 3: Sankey                  ║ -->
-<!-- ╚═══════════════════════════════════╝ -->
+<!-- ╔══════════════════════════════════╗ -->
+<!-- ║  SLIDE 3 — Sankey only           ║ -->
+<!-- ╚══════════════════════════════════╝ -->
 <div style="border:1px solid #e0e0e0;border-radius:6px;padding:28px 32px;margin:24px 0;background:#fff;">
-
   <div style="font-size:13px;font-weight:500;text-align:center;margin-bottom:20px;color:#333;">
     Sons of tailors — occupational mobility, 1891 → 1911
   </div>
   <div style="margin-bottom:24px;"><svg id="sk-pale" style="width:100%;display:block;"></svg></div>
   <div><svg id="sk-eng" style="width:100%;display:block;"></svg></div>
-
 </div>
 
-<script>
-(function(){
-  function ready(fn){
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, {once:true});
-    else fn();
-  }
-  ready(function(){
-    const W = 580, H = 200, PAD_TOP = 30, INNER = H - PAD_TOP - 10;
-    const SRC_X = 80, SRC_W = 14, BOX_X = W - 120, BOX_W = 108, BOX_GAP = 10;
-    const UP_C = "#619CFF", SAME_C = "#00BA38", DOWN_C = "#F8766D", SRC_C = "#C77CFF";
-
-    const sankeyData = [
-      { id:"sk-pale", label:"Pale of Settlement sons", n:"621",    up:38.3, same:22.4, down:39.3 },
-      { id:"sk-eng",  label:"English sons",            n:"20,093", up:34.9, same:12.9, down:52.2 }
-    ];
-
-    function drawSankey(d) {
-      const svg = d3.select(`#${d.id}`).attr("viewBox",`0 0 ${W} ${H}`).attr("height", H);
-      const upH = INNER * d.up / 100, sameH = INNER * d.same / 100;
-      const srcTop = PAD_TOP;
-      const segs = [
-        { color:UP_C,   pct:d.up,   label:"Moved up",   srcY1:srcTop,             srcY2:srcTop+upH },
-        { color:SAME_C, pct:d.same, label:"Same level",  srcY1:srcTop+upH,         srcY2:srcTop+upH+sameH },
-        { color:DOWN_C, pct:d.down, label:"Moved down",  srcY1:srcTop+upH+sameH,   srcY2:srcTop+INNER }
-      ];
-      const totalBoxH = INNER - BOX_GAP * 2;
-      const boxHeights = segs.map(s => Math.max(28, totalBoxH * s.pct / 100));
-      const boxTops = [];
-      let cursor = PAD_TOP;
-      boxHeights.forEach(h => { boxTops.push(cursor); cursor += h + BOX_GAP; });
-
-      segs.forEach((s, i) => {
-        const bY1 = boxTops[i], bH = boxHeights[i], bMid = bY1 + bH/2;
-        const cp = (SRC_X + SRC_W + BOX_X) / 2;
-        svg.append("path")
-          .attr("d",`M ${SRC_X+SRC_W} ${s.srcY1} C ${cp} ${s.srcY1},${cp} ${bY1},${BOX_X} ${bY1}
-                     L ${BOX_X} ${bY1+bH} C ${cp} ${bY1+bH},${cp} ${s.srcY2},${SRC_X+SRC_W} ${s.srcY2} Z`)
-          .attr("fill",s.color).attr("opacity",0.22);
-        svg.append("rect").attr("x",BOX_X).attr("y",bY1).attr("width",BOX_W).attr("height",bH)
-          .attr("rx",5).attr("fill",s.color).attr("opacity",0.18).attr("stroke",s.color).attr("stroke-width",1.5);
-        svg.append("text").attr("x",BOX_X+BOX_W/2).attr("y",bMid-(bH>32?4:-5))
-          .attr("text-anchor","middle").attr("font-size","14px").attr("font-weight","500")
-          .attr("fill",s.color).text(`${s.pct}%`);
-        if(bH>28) svg.append("text").attr("x",BOX_X+BOX_W/2).attr("y",bMid+13)
-          .attr("text-anchor","middle").attr("font-size","10px").attr("fill",s.color).text(s.label);
-      });
-
-      svg.append("rect").attr("x",SRC_X).attr("y",PAD_TOP).attr("width",SRC_W).attr("height",INNER)
-        .attr("fill",SRC_C).attr("opacity",0.5).attr("rx",2);
-      svg.append("text").attr("x",SRC_X+SRC_W/2).attr("y",PAD_TOP-14)
-        .attr("text-anchor","middle").attr("font-size","12px").attr("font-weight","500")
-        .attr("fill",SRC_C).text("Father: Tailor");
-      svg.append("text").attr("x",SRC_X+SRC_W/2).attr("y",PAD_TOP-2)
-        .attr("text-anchor","middle").attr("font-size","10px").attr("fill","#666")
-        .text(`${d.label}  (n = ${d.n})`);
-    }
-    sankeyData.forEach(drawSankey);
-  });
-})();
-</script>
+<!-- Tooltip div for bar charts -->
+<div id="dest-tooltip" style="position:fixed;background:#fff;border:1px solid #aaa;padding:7px 11px;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.12);pointer-events:none;font-size:12px;visibility:hidden;z-index:999;"></div>
 
 <script>
 (function(){
@@ -772,7 +713,10 @@ Promise.all([
     else fn();
   }
   ready(function(){
+
     const TAILOR_HISCAM = 51.56;
+    const TOTAL_PALE = 621, TOTAL_ENG = 20093;
+    const tooltip = d3.select("#dest-tooltip");
 
     const paleData = [
       { occ:"Clothiers & outfitters",   n:13,  hiscam:60.31 },
@@ -816,28 +760,45 @@ Promise.all([
       { occ:"Coal miners",              n:258,  hiscam:33.20 },
     ].sort((a,b) => b.hiscam - a.hiscam);
 
-    function drawDestChart(containerId, data) {
-      const margin = {top:4, right:50, bottom:24, left:160};
-      const rowH = 18;
+    function drawDestChart(containerId, data, total) {
+      const margin = {top:4, right:16, bottom:28, left:172};
+      const rowH = 22;
       const totalH = data.length * rowH + margin.top + margin.bottom;
-      const totalW = 380;
+      const totalW = 500;
       const innerW = totalW - margin.left - margin.right;
       const innerH = totalH - margin.top - margin.bottom;
 
       const svg = d3.select(`#${containerId}`)
-        .attr("width",totalW).attr("height",totalH)
-        .attr("viewBox",`0 0 ${totalW} ${totalH}`)
+        .attr("width", totalW).attr("height", totalH)
+        .attr("viewBox", `0 0 ${totalW} ${totalH}`)
         .style("max-width","100%");
 
-      const g = svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+      const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
       const maxN = d3.max(data, d => d.n);
       const x = d3.scaleLinear().domain([0, maxN]).range([0, innerW]);
-      const y = d3.scaleBand().domain(data.map(d => d.occ)).range([0, innerH]).padding(0.15);
+      const y = d3.scaleBand().domain(data.map(d => d.occ)).range([0, innerH]).padding(0.18);
+
+      const colorFn = d => d.hiscam > TAILOR_HISCAM + 0.5 ? "#1D9E75"
+                         : d.hiscam < TAILOR_HISCAM - 0.5 ? "#D85A30"
+                         : "#888780";
 
       g.selectAll(".bar").data(data).join("rect").attr("class","bar")
         .attr("y", d => y(d.occ)).attr("height", y.bandwidth())
         .attr("x", 0).attr("width", d => x(d.n)).attr("rx", 2)
-        .attr("fill", d => d.hiscam > TAILOR_HISCAM + 0.5 ? "#1D9E75" : d.hiscam < TAILOR_HISCAM - 0.5 ? "#D85A30" : "#888780");
+        .attr("fill", colorFn)
+        .on("mouseover", function(event, d) {
+          const pct = ((d.n / total) * 100).toFixed(1);
+          tooltip.style("visibility","visible")
+            .html(`<strong>${d.occ}</strong><br>${d.n.toLocaleString()} sons (${pct}%)<br>HISCAM: ${d.hiscam}`);
+          d3.select(this).attr("opacity", 0.75);
+        })
+        .on("mousemove", function(event) {
+          tooltip.style("left", (event.clientX + 14) + "px").style("top", (event.clientY - 28) + "px");
+        })
+        .on("mouseout", function() {
+          tooltip.style("visibility","hidden");
+          d3.select(this).attr("opacity", 1);
+        });
 
       g.selectAll(".n-label").data(data).join("text")
         .attr("y", d => y(d.occ) + y.bandwidth()/2 + 4)
@@ -848,7 +809,7 @@ Promise.all([
       g.selectAll(".occ-label").data(data).join("text")
         .attr("y", d => y(d.occ) + y.bandwidth()/2 + 4)
         .attr("x", -6).attr("text-anchor","end")
-        .attr("font-size","11px").attr("fill","#333")
+        .attr("font-size","12px").attr("fill","#333")
         .text(d => d.occ);
 
       g.append("g").attr("transform",`translate(0,${innerH})`)
@@ -858,108 +819,89 @@ Promise.all([
       g.select(".domain").attr("stroke","#ddd");
     }
 
-    drawDestChart("pale-dest-chart", paleData);
-    drawDestChart("english-dest-chart", englishData);
-  });
-})();
-</script>
+    drawDestChart("pale-dest-chart", paleData, TOTAL_PALE);
+    drawDestChart("english-dest-chart", englishData, TOTAL_ENG);
 
-<script>
-(function(){
-  function ready(fn){
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, {once:true});
-    else fn();
-  }
-
-  ready(function(){
-
-    // ── Rank change chart ──
+    // ── Rank change ──
     const rankData = [
-      { group: "Pale sons",    value: 1.3,  color: "#6BAED6" },
-      { group: "English sons", value: -8.6, color: "#FD8D3C" }
+      { group:"Pale sons",    value:1.3,  color:"#6BAED6" },
+      { group:"English sons", value:-8.6, color:"#FD8D3C" }
     ];
-
-    const rm = {top:20, right:20, bottom:40, left:100};
-    const rw = 340 - rm.left - rm.right;
-    const rh = 160 - rm.top - rm.bottom;
-
-    const rsvg = d3.select("#tailor-rank-chart")
-      .append("svg")
-      .attr("viewBox", [0, 0, rw + rm.left + rm.right, rh + rm.top + rm.bottom])
-      .append("g")
-      .attr("transform", `translate(${rm.left},${rm.top})`);
-
-    const rx = d3.scaleLinear().domain([-12, 6]).nice().range([0, rw]);
-    const ry = d3.scaleBand().domain(rankData.map(d => d.group)).range([0, rh]).padding(0.35);
-
-    rsvg.append("g").attr("transform", `translate(0,${rh})`).call(d3.axisBottom(rx).ticks(5));
+    const rm = {top:20,right:20,bottom:40,left:100};
+    const rw = 340-rm.left-rm.right, rh = 160-rm.top-rm.bottom;
+    const rsvg = d3.select("#tailor-rank-chart").append("svg")
+      .attr("viewBox",[0,0,rw+rm.left+rm.right,rh+rm.top+rm.bottom])
+      .append("g").attr("transform",`translate(${rm.left},${rm.top})`);
+    const rx = d3.scaleLinear().domain([-12,6]).nice().range([0,rw]);
+    const ry = d3.scaleBand().domain(rankData.map(d=>d.group)).range([0,rh]).padding(0.35);
+    rsvg.append("g").attr("transform",`translate(0,${rh})`).call(d3.axisBottom(rx).ticks(5));
     rsvg.append("g").call(d3.axisLeft(ry).tickSize(0)).select(".domain").remove();
+    rsvg.append("line").attr("x1",rx(0)).attr("x2",rx(0)).attr("y1",0).attr("y2",rh)
+      .attr("stroke","#999").attr("stroke-dasharray","4,3").attr("stroke-width",1);
+    rsvg.selectAll(".rbar").data(rankData).join("rect").attr("class","rbar")
+      .attr("y",d=>ry(d.group)).attr("height",ry.bandwidth())
+      .attr("x",d=>d.value>=0?rx(0):rx(d.value)).attr("width",d=>Math.abs(rx(d.value)-rx(0))).attr("fill",d=>d.color);
+    rsvg.selectAll(".rlabel").data(rankData).join("text").attr("class","rlabel")
+      .attr("y",d=>ry(d.group)+ry.bandwidth()/2+4)
+      .attr("x",d=>d.value>=0?rx(d.value)+4:rx(d.value)-4)
+      .attr("text-anchor",d=>d.value>=0?"start":"end")
+      .attr("font-size","12px").attr("font-weight","600")
+      .text(d=>(d.value>=0?"+":"")+d.value);
 
-    rsvg.append("line")
-      .attr("x1", rx(0)).attr("x2", rx(0))
-      .attr("y1", 0).attr("y2", rh)
-      .attr("stroke", "#999").attr("stroke-dasharray", "4,3").attr("stroke-width", 1);
-
-    rsvg.selectAll(".rbar")
-      .data(rankData)
-      .join("rect")
-      .attr("class", "rbar")
-      .attr("y", d => ry(d.group))
-      .attr("height", ry.bandwidth())
-      .attr("x", d => d.value >= 0 ? rx(0) : rx(d.value))
-      .attr("width", d => Math.abs(rx(d.value) - rx(0)))
-      .attr("fill", d => d.color);
-
-    rsvg.selectAll(".rlabel")
-      .data(rankData)
-      .join("text")
-      .attr("class", "rlabel")
-      .attr("y", d => ry(d.group) + ry.bandwidth() / 2 + 4)
-      .attr("x", d => d.value >= 0 ? rx(d.value) + 4 : rx(d.value) - 4)
-      .attr("text-anchor", d => d.value >= 0 ? "start" : "end")
-      .attr("font-size", "12px")
-      .attr("font-weight", "600")
-      .text(d => (d.value >= 0 ? "+" : "") + d.value);
-
-    // ── Direction of movement chart ──
+    // ── Direction of movement ──
     const dirData = [
-      { group: "Pale sons",    up: 38.3, stay: 22.4, down: 39.3 },
-      { group: "English sons", up: 34.9, stay: 12.9, down: 52.2 }
+      { group:"Pale sons",    up:38.3, stay:22.4, down:39.3 },
+      { group:"English sons", up:34.9, stay:12.9, down:52.2 }
     ];
-
-    const dm = {top:20, right:120, bottom:40, left:100};
-    const dw = 380 - dm.left - dm.right;
-    const dh = 160 - dm.top - dm.bottom;
-
-    const dsvg = d3.select("#tailor-direction-chart")
-      .append("svg")
-      .attr("viewBox", [0, 0, dw + dm.left + dm.right, dh + dm.top + dm.bottom])
-      .append("g")
-      .attr("transform", `translate(${dm.left},${dm.top})`);
-
-    const dy = d3.scaleBand().domain(dirData.map(d => d.group)).range([0, dh]).padding(0.35);
-    const dx = d3.scaleLinear().domain([0, 100]).range([0, dw]);
-
-    dsvg.append("g").attr("transform", `translate(0,${dh})`).call(d3.axisBottom(dx).ticks(4).tickFormat(d => d + "%"));
+    const dm = {top:20,right:120,bottom:40,left:100};
+    const dw = 380-dm.left-dm.right, dh = 160-dm.top-dm.bottom;
+    const dsvg = d3.select("#tailor-direction-chart").append("svg")
+      .attr("viewBox",[0,0,dw+dm.left+dm.right,dh+dm.top+dm.bottom])
+      .append("g").attr("transform",`translate(${dm.left},${dm.top})`);
+    const dy = d3.scaleBand().domain(dirData.map(d=>d.group)).range([0,dh]).padding(0.35);
+    const dx = d3.scaleLinear().domain([0,100]).range([0,dw]);
+    dsvg.append("g").attr("transform",`translate(0,${dh})`).call(d3.axisBottom(dx).ticks(4).tickFormat(d=>d+"%"));
     dsvg.append("g").call(d3.axisLeft(dy).tickSize(0)).select(".domain").remove();
-
-    const stackColors = { up: "#74C476", stay: "#bbb", down: "#FB6A4A" };
-    const stacked = d3.stack().keys(["up","stay","down"])(dirData);
-
-    stacked.forEach(layer => {
-      dsvg.selectAll(`.bar-${layer.key}`)
-        .data(layer)
-        .join("rect")
-        .attr("y", d => dy(d.data.group))
-        .attr("height", dy.bandwidth())
-        .attr("x", d => dx(d[0]))
-        .attr("width", d => dx(d[1]) - dx(d[0]))
-        .attr("fill", stackColors[layer.key]);
+    const stackColors = {up:"#74C476",stay:"#bbb",down:"#FB6A4A"};
+    d3.stack().keys(["up","stay","down"])(dirData).forEach(layer=>{
+      dsvg.selectAll(`.bar-${layer.key}`).data(layer).join("rect")
+        .attr("y",d=>dy(d.data.group)).attr("height",dy.bandwidth())
+        .attr("x",d=>dx(d[0])).attr("width",d=>dx(d[1])-dx(d[0])).attr("fill",stackColors[layer.key]);
+    });
+    [{label:"Moved up",color:"#74C476"},{label:"Same",color:"#bbb"},{label:"Moved down",color:"#FB6A4A"}].forEach((item,i)=>{
+      dsvg.append("rect").attr("x",dw+8).attr("y",i*18).attr("width",12).attr("height",12).attr("fill",item.color);
+      dsvg.append("text").attr("x",dw+24).attr("y",i*18+10).attr("font-size","11px").text(item.label);
     });
 
-    [{label:"Moved up",color:"#74C476"},{label:"Same",color:"#bbb"},{label:"Moved down",color:"#FB6A4A"}].forEach((item, i) => {
-      dsvg.append("rect").attr("x", dw + 8).attr("y", i * 18).attr("width", 12).attr("height", 12).attr("fill", item.color);
-      dsvg.append("text").attr("x", dw + 24).attr("y", i * 18 + 10).attr("font-size","11px").text(item.label);
+    // ── Sankey ──
+    const W=580,H=200,PAD_TOP=30,INNER=H-PAD_TOP-10;
+    const SRC_X=80,SRC_W=14,BOX_X=W-120,BOX_W=108,BOX_GAP=10;
+    const UP_C="#619CFF",SAME_C="#00BA38",DOWN_C="#F8766D",SRC_C="#C77CFF";
+    [{id:"sk-pale",label:"Pale of Settlement sons",n:"621",up:38.3,same:22.4,down:39.3},
+     {id:"sk-eng", label:"English sons",n:"20,093",up:34.9,same:12.9,down:52.2}
+    ].forEach(d=>{
+      const svg=d3.select(`#${d.id}`).attr("viewBox",`0 0 ${W} ${H}`).attr("height",H);
+      const upH=INNER*d.up/100,sameH=INNER*d.same/100;
+      const segs=[
+        {color:UP_C,  pct:d.up,  label:"Moved up",  srcY1:PAD_TOP,             srcY2:PAD_TOP+upH},
+        {color:SAME_C,pct:d.same,label:"Same level", srcY1:PAD_TOP+upH,         srcY2:PAD_TOP+upH+sameH},
+        {color:DOWN_C,pct:d.down,label:"Moved down", srcY1:PAD_TOP+upH+sameH,   srcY2:PAD_TOP+INNER}
+      ];
+      const totBH=INNER-BOX_GAP*2;
+      const bH=segs.map(s=>Math.max(28,totBH*s.pct/100));
+      const bT=[]; let cur=PAD_TOP; bH.forEach(h=>{bT.push(cur);cur+=h+BOX_GAP;});
+      segs.forEach((s,i)=>{
+        const y1=bT[i],h=bH[i],mid=y1+h/2,cp=(SRC_X+SRC_W+BOX_X)/2;
+        svg.append("path").attr("d",`M ${SRC_X+SRC_W} ${s.srcY1} C ${cp} ${s.srcY1},${cp} ${y1},${BOX_X} ${y1} L ${BOX_X} ${y1+h} C ${cp} ${y1+h},${cp} ${s.srcY2},${SRC_X+SRC_W} ${s.srcY2} Z`)
+          .attr("fill",s.color).attr("opacity",0.22);
+        svg.append("rect").attr("x",BOX_X).attr("y",y1).attr("width",BOX_W).attr("height",h)
+          .attr("rx",5).attr("fill",s.color).attr("opacity",0.18).attr("stroke",s.color).attr("stroke-width",1.5);
+        svg.append("text").attr("x",BOX_X+BOX_W/2).attr("y",mid-(h>32?4:-5)).attr("text-anchor","middle").attr("font-size","14px").attr("font-weight","500").attr("fill",s.color).text(`${s.pct}%`);
+        if(h>28) svg.append("text").attr("x",BOX_X+BOX_W/2).attr("y",mid+13).attr("text-anchor","middle").attr("font-size","10px").attr("fill",s.color).text(s.label);
+      });
+      svg.append("rect").attr("x",SRC_X).attr("y",PAD_TOP).attr("width",SRC_W).attr("height",INNER).attr("fill",SRC_C).attr("opacity",0.5).attr("rx",2);
+      svg.append("text").attr("x",SRC_X+SRC_W/2).attr("y",PAD_TOP-14).attr("text-anchor","middle").attr("font-size","12px").attr("font-weight","500").attr("fill",SRC_C).text("Father: Tailor");
+      svg.append("text").attr("x",SRC_X+SRC_W/2).attr("y",PAD_TOP-2).attr("text-anchor","middle").attr("font-size","10px").attr("fill","#666").text(`${d.label}  (n = ${d.n})`);
     });
 
   });
