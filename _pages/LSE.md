@@ -1,9 +1,12 @@
 ---
 layout: single
-title: "LSE"
-permalink: /lse/
+title: "Mapping the Industrial Revolution"
+permalink: /LSE/
 nav_exclude: false
 ---
+ 
+<p style="font-size:0.95em;font-style:italic;color:#666;margin-top:-1rem;margin-bottom:2rem;">Inequalities Institute, March 2026</p>
+
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
