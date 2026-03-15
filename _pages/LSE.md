@@ -1,7 +1,7 @@
 ---
 layout: single
-title: "Mapping the Industrial Revolution. Inequalities Institute LSE"
-permalink: /LSE/
+title: "LSE"
+permalink: /lse/
 nav_exclude: false
 ---
 
@@ -556,7 +556,6 @@ Promise.all([
   })();
 </script>
 
-
 <!-- ================================================ -->
 <!-- VISUAL BREAK + CHANNEL INTRO                    -->
 <!-- ================================================ -->
@@ -619,28 +618,235 @@ Promise.all([
   Tailors sit at the <strong>68th percentile</strong> of the 1911 workforce.
 </p>
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:24px 0 40px;align-items:start;">
+<!-- Image + bullets block -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:24px 0 36px;align-items:center;">
+  <div>
+    <img src="/assets/images/Tailors.jpg" alt="Tailors in Victorian England"
+         style="width:100%;border-radius:4px;display:block;">
+  </div>
+  <div>
+    <ul style="font-size:0.95em;line-height:1.8;padding-left:1.2em;margin:0;color:#333;">
+      <li>Jewish immigrants from the Pale of Settlement entered the tailoring trade in large numbers from the 1880s onwards, concentrated in London's East End, Leeds, and Manchester.</li>
+      <li>They brought with them organisational practices — finer division of labour, subcontracting networks — that accelerated the adoption of sewing machines in ready-to-wear production.</li>
+      <li>The ethnic economy provided both a <strong>floor</strong> (preventing sons from falling into unskilled labour) and a <strong>ladder</strong> (channelling leavers into commercial and retail occupations).</li>
+      <li>Every father in both samples is a tailor. The comparison is clean: same occupation, same time, different origin.</li>
+    </ul>
+  </div>
+</div>
 
-  <!-- Rank change bar chart -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:24px 0 40px;align-items:start;">
   <div>
     <h4 style="margin-bottom:8px;">Mean Rank Change (percentile points)</h4>
     <div id="tailor-rank-chart"></div>
   </div>
-
-  <!-- Direction of movement -->
   <div>
     <h4 style="margin-bottom:8px;">Direction of Movement</h4>
     <div id="tailor-direction-chart"></div>
   </div>
-
 </div>
 
-<div style="background:#f7f7f7;border-left:4px solid #6BAED6;padding:14px 18px;margin:0 0 40px;font-size:0.92em;">
+<div style="background:#f7f7f7;border-left:4px solid #6BAED6;padding:14px 18px;margin:0 0 32px;font-size:0.92em;">
   <strong>Key finding:</strong> The share moving <em>up</em> is similar across both groups (38% vs 35%).
   The entire gap is driven by the <strong>downward tail</strong> — 52% of English sons fall below their
   father's position, compared to only 39% of Pale sons. The ethnic economy provides a
   <strong>floor</strong> that prevents occupational collapse.
 </div>
+
+<!-- Sankey: mobility flows -->
+<div style="font-family:sans-serif;margin:0 0 40px;">
+  <div style="font-size:13px;font-weight:500;text-align:center;margin-bottom:16px;">
+    Sons of tailors — occupational mobility, 1891 → 1911
+  </div>
+  <div style="margin-bottom:24px;"><svg id="sk-pale" style="width:100%;display:block;"></svg></div>
+  <div><svg id="sk-eng" style="width:100%;display:block;"></svg></div>
+</div>
+
+<script>
+(function(){
+  function ready(fn){
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, {once:true});
+    else fn();
+  }
+  ready(function(){
+    const W = 580, H = 200, PAD_TOP = 30, INNER = H - PAD_TOP - 10;
+    const SRC_X = 80, SRC_W = 14, BOX_X = W - 120, BOX_W = 108, BOX_GAP = 10;
+    const UP_C = "#619CFF", SAME_C = "#00BA38", DOWN_C = "#F8766D", SRC_C = "#C77CFF";
+
+    const sankeyData = [
+      { id:"sk-pale", label:"Pale of Settlement sons", n:"621",    up:38.3, same:22.4, down:39.3 },
+      { id:"sk-eng",  label:"English sons",            n:"20,093", up:34.9, same:12.9, down:52.2 }
+    ];
+
+    function drawSankey(d) {
+      const svg = d3.select(`#${d.id}`).attr("viewBox",`0 0 ${W} ${H}`).attr("height", H);
+      const upH = INNER * d.up / 100, sameH = INNER * d.same / 100;
+      const srcTop = PAD_TOP;
+      const segs = [
+        { color:UP_C,   pct:d.up,   label:"Moved up",   srcY1:srcTop,             srcY2:srcTop+upH },
+        { color:SAME_C, pct:d.same, label:"Same level",  srcY1:srcTop+upH,         srcY2:srcTop+upH+sameH },
+        { color:DOWN_C, pct:d.down, label:"Moved down",  srcY1:srcTop+upH+sameH,   srcY2:srcTop+INNER }
+      ];
+      const totalBoxH = INNER - BOX_GAP * 2;
+      const boxHeights = segs.map(s => Math.max(28, totalBoxH * s.pct / 100));
+      const boxTops = [];
+      let cursor = PAD_TOP;
+      boxHeights.forEach(h => { boxTops.push(cursor); cursor += h + BOX_GAP; });
+
+      segs.forEach((s, i) => {
+        const bY1 = boxTops[i], bH = boxHeights[i], bMid = bY1 + bH/2;
+        const cp = (SRC_X + SRC_W + BOX_X) / 2;
+        svg.append("path")
+          .attr("d",`M ${SRC_X+SRC_W} ${s.srcY1} C ${cp} ${s.srcY1},${cp} ${bY1},${BOX_X} ${bY1}
+                     L ${BOX_X} ${bY1+bH} C ${cp} ${bY1+bH},${cp} ${s.srcY2},${SRC_X+SRC_W} ${s.srcY2} Z`)
+          .attr("fill",s.color).attr("opacity",0.22);
+        svg.append("rect").attr("x",BOX_X).attr("y",bY1).attr("width",BOX_W).attr("height",bH)
+          .attr("rx",5).attr("fill",s.color).attr("opacity",0.18).attr("stroke",s.color).attr("stroke-width",1.5);
+        svg.append("text").attr("x",BOX_X+BOX_W/2).attr("y",bMid-(bH>32?4:-5))
+          .attr("text-anchor","middle").attr("font-size","14px").attr("font-weight","500")
+          .attr("fill",s.color).text(`${s.pct}%`);
+        if(bH>28) svg.append("text").attr("x",BOX_X+BOX_W/2).attr("y",bMid+13)
+          .attr("text-anchor","middle").attr("font-size","10px").attr("fill",s.color).text(s.label);
+      });
+
+      svg.append("rect").attr("x",SRC_X).attr("y",PAD_TOP).attr("width",SRC_W).attr("height",INNER)
+        .attr("fill",SRC_C).attr("opacity",0.5).attr("rx",2);
+      svg.append("text").attr("x",SRC_X+SRC_W/2).attr("y",PAD_TOP-14)
+        .attr("text-anchor","middle").attr("font-size","12px").attr("font-weight","500")
+        .attr("fill",SRC_C).text("Father: Tailor");
+      svg.append("text").attr("x",SRC_X+SRC_W/2).attr("y",PAD_TOP-2)
+        .attr("text-anchor","middle").attr("font-size","10px").attr("fill","#666")
+        .text(`${d.label}  (n = ${d.n})`);
+    }
+    sankeyData.forEach(drawSankey);
+  });
+})();
+</script>
+
+<!-- Occupational destinations bar chart -->
+<div style="font-family:sans-serif;margin:40px 0;">
+  <div style="font-size:13px;font-weight:500;text-align:center;margin-bottom:8px;">Top occupational destinations — 1911</div>
+  <div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555;">
+      <div style="width:12px;height:12px;border-radius:2px;background:#1D9E75;flex-shrink:0;"></div>Above father (HISCAM &gt; 51.6)
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555;">
+      <div style="width:12px;height:12px;border-radius:2px;background:#888780;flex-shrink:0;"></div>Same level
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555;">
+      <div style="width:12px;height:12px;border-radius:2px;background:#D85A30;flex-shrink:0;"></div>Below father
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+    <div>
+      <div style="font-size:12px;font-weight:500;margin-bottom:8px;color:#333;">Pale of Settlement sons</div>
+      <svg id="pale-dest-chart" style="width:100%;display:block;"></svg>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:500;margin-bottom:8px;color:#333;">English sons</div>
+      <svg id="english-dest-chart" style="width:100%;display:block;"></svg>
+    </div>
+  </div>
+  <div style="font-size:11px;color:#888;margin-top:8px;">Bar width = number of sons. Sorted by HISCAM score (high → low).</div>
+</div>
+
+<script>
+(function(){
+  function ready(fn){
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, {once:true});
+    else fn();
+  }
+  ready(function(){
+    const TAILOR_HISCAM = 51.56;
+
+    const paleData = [
+      { occ:"Clothiers & outfitters",   n:13,  hiscam:60.31 },
+      { occ:"General shopkeepers",      n:11,  hiscam:60.31 },
+      { occ:"Commercial travellers",    n:21,  hiscam:59.88 },
+      { occ:"Furniture and fittings",   n:16,  hiscam:59.27 },
+      { occ:"Commercial clerks",        n:18,  hiscam:58.68 },
+      { occ:"Schoolmasters & teachers", n:7,   hiscam:58.13 },
+      { occ:"Hairdressers",             n:8,   hiscam:54.13 },
+      { occ:"Machinists",               n:8,   hiscam:53.76 },
+      { occ:"Waterproof goods makers",  n:13,  hiscam:51.85 },
+      { occ:"Tailors (default)",        n:139, hiscam:51.56 },
+      { occ:"Tobacco manufacture",      n:6,   hiscam:50.81 },
+      { occ:"Skinners & furriers",      n:7,   hiscam:50.53 },
+      { occ:"Other clothing mfrs",      n:102, hiscam:50.31 },
+      { occ:"Grocers & tea dealers",    n:7,   hiscam:50.04 },
+      { occ:"Greengrocers",             n:6,   hiscam:50.04 },
+      { occ:"Shoe & boot makers",       n:17,  hiscam:47.38 },
+    ].sort((a,b) => b.hiscam - a.hiscam);
+
+    const englishData = [
+      { occ:"Railway officials/clerks", n:188,  hiscam:64.56 },
+      { occ:"Clothiers & outfitters",   n:281,  hiscam:60.31 },
+      { occ:"General shopkeepers",      n:182,  hiscam:60.31 },
+      { occ:"Bakers (dealers)",         n:173,  hiscam:60.31 },
+      { occ:"Commercial travellers",    n:274,  hiscam:59.88 },
+      { occ:"Commercial clerks",        n:818,  hiscam:58.68 },
+      { occ:"Schoolmasters & teachers", n:213,  hiscam:58.13 },
+      { occ:"Tailors (default)",        n:2520, hiscam:51.56 },
+      { occ:"Butchers",                 n:186,  hiscam:51.30 },
+      { occ:"Other clothing mfrs",      n:758,  hiscam:50.31 },
+      { occ:"Grocers & tea dealers",    n:318,  hiscam:50.04 },
+      { occ:"Carpenter, joiner",        n:387,  hiscam:50.00 },
+      { occ:"Messengers & porters",     n:167,  hiscam:49.99 },
+      { occ:"Warehousemen",             n:176,  hiscam:47.15 },
+      { occ:"Shoe & boot makers",       n:279,  hiscam:47.38 },
+      { occ:"Postmen",                  n:212,  hiscam:45.47 },
+      { occ:"Painters & decorators",    n:432,  hiscam:38.33 },
+      { occ:"Carmen & carters",         n:275,  hiscam:35.20 },
+      { occ:"General labourers",        n:665,  hiscam:34.52 },
+      { occ:"Coal miners",              n:258,  hiscam:33.20 },
+    ].sort((a,b) => b.hiscam - a.hiscam);
+
+    function drawDestChart(containerId, data) {
+      const margin = {top:4, right:50, bottom:24, left:160};
+      const rowH = 18;
+      const totalH = data.length * rowH + margin.top + margin.bottom;
+      const totalW = 380;
+      const innerW = totalW - margin.left - margin.right;
+      const innerH = totalH - margin.top - margin.bottom;
+
+      const svg = d3.select(`#${containerId}`)
+        .attr("width",totalW).attr("height",totalH)
+        .attr("viewBox",`0 0 ${totalW} ${totalH}`)
+        .style("max-width","100%");
+
+      const g = svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+      const maxN = d3.max(data, d => d.n);
+      const x = d3.scaleLinear().domain([0, maxN]).range([0, innerW]);
+      const y = d3.scaleBand().domain(data.map(d => d.occ)).range([0, innerH]).padding(0.15);
+
+      g.selectAll(".bar").data(data).join("rect").attr("class","bar")
+        .attr("y", d => y(d.occ)).attr("height", y.bandwidth())
+        .attr("x", 0).attr("width", d => x(d.n)).attr("rx", 2)
+        .attr("fill", d => d.hiscam > TAILOR_HISCAM + 0.5 ? "#1D9E75" : d.hiscam < TAILOR_HISCAM - 0.5 ? "#D85A30" : "#888780");
+
+      g.selectAll(".n-label").data(data).join("text")
+        .attr("y", d => y(d.occ) + y.bandwidth()/2 + 4)
+        .attr("x", d => x(d.n) + 4)
+        .attr("font-size","10px").attr("fill","#888")
+        .text(d => d.n.toLocaleString());
+
+      g.selectAll(".occ-label").data(data).join("text")
+        .attr("y", d => y(d.occ) + y.bandwidth()/2 + 4)
+        .attr("x", -6).attr("text-anchor","end")
+        .attr("font-size","11px").attr("fill","#333")
+        .text(d => d.occ);
+
+      g.append("g").attr("transform",`translate(0,${innerH})`)
+        .call(d3.axisBottom(x).ticks(4).tickSize(3))
+        .selectAll("text").attr("font-size","10px").attr("fill","#888");
+
+      g.select(".domain").attr("stroke","#ddd");
+    }
+
+    drawDestChart("pale-dest-chart", paleData);
+    drawDestChart("english-dest-chart", englishData);
+  });
+})();
+</script>
 
 <script>
 (function(){
@@ -667,25 +873,17 @@ Promise.all([
       .append("g")
       .attr("transform", `translate(${rm.left},${rm.top})`);
 
-    const rx = d3.scaleLinear()
-      .domain([-12, 6]).nice()
-      .range([0, rw]);
-
-    const ry = d3.scaleBand()
-      .domain(rankData.map(d => d.group))
-      .range([0, rh])
-      .padding(0.35);
+    const rx = d3.scaleLinear().domain([-12, 6]).nice().range([0, rw]);
+    const ry = d3.scaleBand().domain(rankData.map(d => d.group)).range([0, rh]).padding(0.35);
 
     rsvg.append("g").attr("transform", `translate(0,${rh})`).call(d3.axisBottom(rx).ticks(5));
     rsvg.append("g").call(d3.axisLeft(ry).tickSize(0)).select(".domain").remove();
 
-    // Zero line
     rsvg.append("line")
       .attr("x1", rx(0)).attr("x2", rx(0))
       .attr("y1", 0).attr("y2", rh)
       .attr("stroke", "#999").attr("stroke-dasharray", "4,3").attr("stroke-width", 1);
 
-    // Bars
     rsvg.selectAll(".rbar")
       .data(rankData)
       .join("rect")
@@ -696,7 +894,6 @@ Promise.all([
       .attr("width", d => Math.abs(rx(d.value) - rx(0)))
       .attr("fill", d => d.color);
 
-    // Value labels
     rsvg.selectAll(".rlabel")
       .data(rankData)
       .join("text")
@@ -710,8 +907,8 @@ Promise.all([
 
     // ── Direction of movement chart ──
     const dirData = [
-      { group: "Pale sons",    up: 38.3, down: 39.3, stay: 22.4, color: "#6BAED6" },
-      { group: "English sons", up: 34.9, down: 52.2, stay: 12.9, color: "#FD8D3C" }
+      { group: "Pale sons",    up: 38.3, stay: 22.4, down: 39.3 },
+      { group: "English sons", up: 34.9, stay: 12.9, down: 52.2 }
     ];
 
     const dm = {top:20, right:120, bottom:40, left:100};
@@ -724,20 +921,14 @@ Promise.all([
       .append("g")
       .attr("transform", `translate(${dm.left},${dm.top})`);
 
-    const dy = d3.scaleBand()
-      .domain(dirData.map(d => d.group))
-      .range([0, dh])
-      .padding(0.35);
-
+    const dy = d3.scaleBand().domain(dirData.map(d => d.group)).range([0, dh]).padding(0.35);
     const dx = d3.scaleLinear().domain([0, 100]).range([0, dw]);
 
     dsvg.append("g").attr("transform", `translate(0,${dh})`).call(d3.axisBottom(dx).ticks(4).tickFormat(d => d + "%"));
     dsvg.append("g").call(d3.axisLeft(dy).tickSize(0)).select(".domain").remove();
 
-    const stack = d3.stack().keys(["up","stay","down"]);
-    const stackColors = {"up":"#74C476","stay":"#bbb","down":"#FB6A4A"};
-
-    const stacked = stack(dirData.map(d => ({group: d.group, up: d.up, stay: d.stay, down: d.down})));
+    const stackColors = { up: "#74C476", stay: "#bbb", down: "#FB6A4A" };
+    const stacked = d3.stack().keys(["up","stay","down"])(dirData);
 
     stacked.forEach(layer => {
       dsvg.selectAll(`.bar-${layer.key}`)
@@ -750,9 +941,7 @@ Promise.all([
         .attr("fill", stackColors[layer.key]);
     });
 
-    // Legend
-    const legendItems = [{label:"Moved up", color:"#74C476"},{label:"Same",color:"#bbb"},{label:"Moved down",color:"#FB6A4A"}];
-    legendItems.forEach((item, i) => {
+    [{label:"Moved up",color:"#74C476"},{label:"Same",color:"#bbb"},{label:"Moved down",color:"#FB6A4A"}].forEach((item, i) => {
       dsvg.append("rect").attr("x", dw + 8).attr("y", i * 18).attr("width", 12).attr("height", 12).attr("fill", item.color);
       dsvg.append("text").attr("x", dw + 24).attr("y", i * 18 + 10).attr("font-size","11px").text(item.label);
     });
@@ -773,19 +962,14 @@ Promise.all([
 </p>
 
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:24px 0 16px;align-items:start;">
-
-  <!-- Inheritance rates -->
   <div>
     <h4 style="margin-bottom:8px;">Occupational Inheritance Rate</h4>
     <div id="boot-inherit-chart"></div>
   </div>
-
-  <!-- General labourer rate -->
   <div>
     <h4 style="margin-bottom:8px;">Share Becoming General Labourers</h4>
     <div id="boot-labourer-chart"></div>
   </div>
-
 </div>
 
 <div style="background:#f7f7f7;border-left:4px solid #FD8D3C;padding:14px 18px;margin:0 0 40px;font-size:0.92em;">
@@ -804,6 +988,8 @@ Promise.all([
 
   ready(function(){
 
+    const cohortColors = { c1851: "#6BAED6", c1861: "#2171B5" };
+
     // ── Inheritance rates ──
     const inheritData = [
       { group: "Growth",  c1851: 54.4, c1861: 54.2 },
@@ -821,20 +1007,12 @@ Promise.all([
       .append("g")
       .attr("transform", `translate(${im.left},${im.top})`);
 
-    const ix = d3.scaleBand()
-      .domain(inheritData.map(d => d.group))
-      .range([0, iw]).padding(0.25);
-
-    const ix2 = d3.scaleBand()
-      .domain(["c1851","c1861"])
-      .range([0, ix.bandwidth()]).padding(0.1);
-
+    const ix = d3.scaleBand().domain(inheritData.map(d => d.group)).range([0, iw]).padding(0.25);
+    const ix2 = d3.scaleBand().domain(["c1851","c1861"]).range([0, ix.bandwidth()]).padding(0.1);
     const iy = d3.scaleLinear().domain([0, 65]).range([ih, 0]);
 
     isvg.append("g").attr("transform",`translate(0,${ih})`).call(d3.axisBottom(ix).tickSize(0));
     isvg.append("g").call(d3.axisLeft(iy).ticks(5).tickFormat(d => d + "%"));
-
-    const cohortColors = {"c1851":"#6BAED6","c1861":"#2171B5"};
 
     inheritData.forEach(d => {
       ["c1851","c1861"].forEach(cohort => {
@@ -847,10 +1025,9 @@ Promise.all([
       });
     });
 
-    // Legend
-    [["c1851","#6BAED6","1851→1881"],["c1861","#2171B5","1861→1891"]].forEach(([k,c,l], i) => {
-      isvg.append("rect").attr("x", 0).attr("y", ih + 28 + i * 14 - 28).attr("width",10).attr("height",10).attr("fill",c);
-      isvg.append("text").attr("x",14).attr("y", ih + 28 + i * 14 - 19).attr("font-size","10px").text(l);
+    [["#6BAED6","1851→1881"],["#2171B5","1861→1891"]].forEach(([c,l], i) => {
+      isvg.append("rect").attr("x", 0).attr("y", ih + 10 + i * 14).attr("width",10).attr("height",10).attr("fill",c);
+      isvg.append("text").attr("x",14).attr("y", ih + 19 + i * 14).attr("font-size","10px").text(l);
     });
 
     // ── General labourer rate ──
@@ -870,14 +1047,8 @@ Promise.all([
       .append("g")
       .attr("transform", `translate(${lm.left},${lm.top})`);
 
-    const lx = d3.scaleBand()
-      .domain(labData.map(d => d.group))
-      .range([0, lw]).padding(0.25);
-
-    const lx2 = d3.scaleBand()
-      .domain(["c1851","c1861"])
-      .range([0, lx.bandwidth()]).padding(0.1);
-
+    const lx = d3.scaleBand().domain(labData.map(d => d.group)).range([0, lw]).padding(0.25);
+    const lx2 = d3.scaleBand().domain(["c1851","c1861"]).range([0, lx.bandwidth()]).padding(0.1);
     const ly = d3.scaleLinear().domain([0, 7]).range([lh, 0]);
 
     lsvg.append("g").attr("transform",`translate(0,${lh})`).call(d3.axisBottom(lx).tickSize(0));
@@ -894,9 +1065,9 @@ Promise.all([
       });
     });
 
-    [["c1851","#6BAED6","1851→1881"],["c1861","#2171B5","1861→1891"]].forEach(([k,c,l], i) => {
-      lsvg.append("rect").attr("x", 0).attr("y", lh + 28 + i * 14 - 28).attr("width",10).attr("height",10).attr("fill",c);
-      lsvg.append("text").attr("x",14).attr("y", lh + 28 + i * 14 - 19).attr("font-size","10px").text(l);
+    [["#6BAED6","1851→1881"],["#2171B5","1861→1891"]].forEach(([c,l], i) => {
+      lsvg.append("rect").attr("x", 0).attr("y", lh + 10 + i * 14).attr("width",10).attr("height",10).attr("fill",c);
+      lsvg.append("text").attr("x",14).attr("y", lh + 19 + i * 14).attr("font-size","10px").text(l);
     });
 
   });
@@ -985,7 +1156,6 @@ Promise.all([
   Father occupation breakdown coming soon.
 </div>
 
-<!-- Placeholder map renderer for all three -->
 <script>
 (function(){
   function ready(fn){
@@ -999,12 +1169,12 @@ Promise.all([
     try { geoData = await d3.json(GEO_URL); } catch { return; }
 
     const placeholders = [
-      { mapId: 'boot-occ-map',  legendId: 'boot-occ-legend',  label: 'Data coming soon', colors: d3.schemePurples[5] },
-      { mapId: 'mgmt2-map',     legendId: 'mgmt2-legend',      label: 'Data coming soon', colors: d3.schemePurples[5] },
-      { mapId: 'elec-map',      legendId: 'elec-legend',       label: 'Data coming soon', colors: d3.schemeOranges[5] }
+      { mapId: 'boot-occ-map', legendId: 'boot-occ-legend', colors: d3.schemePurples[5] },
+      { mapId: 'mgmt2-map',    legendId: 'mgmt2-legend',    colors: d3.schemePurples[5] },
+      { mapId: 'elec-map',     legendId: 'elec-legend',     colors: d3.schemeOranges[5] }
     ];
 
-    placeholders.forEach(({ mapId, legendId, label, colors }) => {
+    placeholders.forEach(({ mapId, legendId, colors }) => {
       const svg = d3.select(`#${mapId}`);
       if (svg.empty()) return;
 
@@ -1024,7 +1194,7 @@ Promise.all([
         .attr('text-anchor', 'middle')
         .attr('font-size', '18px')
         .attr('fill', '#999')
-        .text(label);
+        .text('Data coming soon');
 
       const legendSvg = d3.select(`#${legendId}`);
       const binWidth = 480 / colors.length;
