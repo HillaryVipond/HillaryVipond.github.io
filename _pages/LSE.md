@@ -610,20 +610,6 @@ Promise.all([
   hierarchy, and a substantial share fall far below their fathers.
 </p>
 
-
-<!-- ================================================ -->
-<!-- SECTION: THE PARENT CHANNEL                     -->
-<!-- ================================================ -->
-
-<h2>The Parent Channel</h2>
-
-<p>
-  Two very different industries — immigrant tailoring and domestic bootmaking — tell the same story.
-  Where the father's trade is thriving, sons are protected from downward mobility and channelled into
-  higher-status occupations when they leave. Where it is contracting, sons scatter across the full
-  hierarchy, and a substantial share fall far below their fathers.
-</p>
-
 <!-- ---- TAILORS ---- -->
 
 <!-- ╔══════════════════════════════════════╗ -->
