@@ -48,7 +48,8 @@ nav_exclude: false
     const yearLabel = d3.select('#tech-year-label');
     if (svg.empty()) return;
 
-    const GEO_URL = '/assets/maps/Counties1851.geojson';
+    const GEO_URL  = '/assets/maps/Counties1851.geojson';
+    const DATA_URL = '/assets/maps/share_totalmech_by_county.json';
 
     let geoData;
     try { geoData = await d3.json(GEO_URL); } catch { return; }
@@ -56,41 +57,68 @@ nav_exclude: false
     const projection = d3.geoMercator().fitSize([960, 600], geoData);
     const path = d3.geoPath().projection(projection);
 
-    // Draw placeholder outlines only — data coming soon
     svg.selectAll('path')
       .data(geoData.features)
       .join('path')
       .attr('d', path)
-      .attr('fill', '#ddd')
+      .attr('fill', '#eee')
       .attr('stroke', '#fff')
       .attr('stroke-width', 0.5);
 
-    // Placeholder label
-    svg.append('text')
-      .attr('x', 480)
-      .attr('y', 310)
-      .attr('text-anchor', 'middle')
-      .attr('font-size', '18px')
-      .attr('fill', '#999')
-      .text('Data coming soon');
+    let yearData = null;
+    try { yearData = await d3.json(DATA_URL); } catch {}
 
-    // Legend placeholder
-    const legendSvg = d3.select('#tech-legend');
-    const colors = d3.schemeGreens[5];
-    const binWidth = 480 / colors.length;
-    colors.forEach((c, i) => {
-      legendSvg.append('rect').attr('x', i * binWidth).attr('y', 10)
-        .attr('width', binWidth).attr('height', 10).attr('fill', c);
-      const label = i === colors.length - 1 ? '4%+' : `${i}%–${i+1}%`;
-      legendSvg.append('text').attr('x', i * binWidth + binWidth / 2).attr('y', 35)
-        .attr('text-anchor', 'middle').attr('font-size', '10px').text(label);
-    });
+    const thresholds = [2, 4, 6, 8];
+    const color = d3.scaleThreshold().domain(thresholds).range(d3.schemeGreens[5]);
+    const countyKey = f => f.properties?.R_CTY;
+    const fmt = v => (v == null || isNaN(v)) ? 'N/A' : d3.format('.2f')(v) + '%';
+    const getYearValues = y => yearData && (yearData[y] ?? yearData[String(y)] ?? yearData[+y] ?? null);
 
-    // Slider wired up but no-op until data arrives
+    function paint(year){
+      const values = getYearValues(year);
+      svg.selectAll('path')
+        .attr('fill', d => {
+          if (!values) return '#eee';
+          const v = values[countyKey(d)];
+          return v != null ? color(v) : '#ccc';
+        })
+        .on('mouseover', function(event, d){
+          const name = countyKey(d) ?? 'Unknown';
+          const v = getYearValues(year)?.[name];
+          tooltip.style('visibility','visible').text(`${name}: ${fmt(v)}`);
+          d3.select(this).attr('stroke-width', 2);
+        })
+        .on('mousemove', function(event){
+          const bbox = this.ownerSVGElement.getBoundingClientRect();
+          tooltip.style('top', (event.clientY - bbox.top + 10) + 'px')
+                 .style('left', (event.clientX - bbox.left + 10) + 'px');
+        })
+        .on('mouseout', function(){
+          tooltip.style('visibility','hidden');
+          d3.select(this).attr('stroke-width', 0.5);
+        });
+    }
+
+    (function legend(){
+      const legendSvg = d3.select('#tech-legend');
+      const colors = d3.schemeGreens[5];
+      const binWidth = 480 / colors.length;
+      legendSvg.selectAll('*').remove();
+      const labels = ['0–2%', '2–4%', '4–6%', '6–8%', '8%+'];
+      colors.forEach((c, i) => {
+        legendSvg.append('rect').attr('x', i * binWidth).attr('y', 10)
+          .attr('width', binWidth).attr('height', 10).attr('fill', c);
+        legendSvg.append('text').attr('x', i * binWidth + binWidth / 2).attr('y', 35)
+          .attr('text-anchor', 'middle').attr('font-size', '10px').text(labels[i]);
+      });
+    })();
+
+    paint(1851);
     if (!slider.empty()) {
       slider.on('input', function(){
-        yearLabel.text(this.value);
-        // paint(this.value) — uncomment when data is ready
+        const y = this.value;
+        yearLabel.text(y);
+        paint(y);
       });
     }
   });
