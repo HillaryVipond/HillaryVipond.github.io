@@ -5,7 +5,7 @@ permalink: /LSE/
 nav_exclude: false
 ---
  
-<p style="font-size:0.95em;font-style:italic;color:#666;margin-top:0.5rem;margin-bottom:2rem;">Inequalities Institute, March 2026</p>
+<p style="font-size:0.65em;font-style:italic;color:#666;margin-top:0.5rem;margin-bottom:2rem;">Inequalities Institute, March 2026</p>
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
@@ -610,57 +610,98 @@ Promise.all([
   hierarchy, and a substantial share fall far below their fathers.
 </p>
 
+
 <!-- ---- TAILORS ---- -->
 
-<h3>Tailors: Pale of Settlement Sons vs. English Sons</h3>
+<!-- ╔═══════════════════════════════════╗ -->
+<!-- ║  SLIDE 1: Context + Charts        ║ -->
+<!-- ╚═══════════════════════════════════╝ -->
+<div style="border:1px solid #e0e0e0;border-radius:6px;padding:28px 32px;margin:24px 0;background:#fff;">
 
-<p>
-  Sons of Pale-born tailors (1891 census) linked forward to 1911. Every father is a tailor — the
-  comparison is purely about what happens to the next generation, conditional on the same starting point.
-  Tailors sit at the <strong>68th percentile</strong> of the 1911 workforce.
-</p>
+  <h3 style="margin-top:0;">Tailors: Pale of Settlement Sons vs. English Sons</h3>
+  <p style="color:#444;margin-bottom:20px;">
+    Sons of Pale-born tailors (1891 census) linked forward to 1911. Every father is a tailor — the
+    comparison is purely about what happens to the next generation, conditional on the same starting point.
+    Tailors sit at the <strong>68th percentile</strong> of the 1911 workforce.
+  </p>
 
-<!-- Image + bullets block -->
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:24px 0 36px;align-items:center;">
-  <div>
-    <img src="/assets/images/Tailors.jpg" alt="Tailors in Victorian England"
-         style="width:100%;border-radius:4px;display:block;">
-  </div>
-  <div>
-    <ul style="font-size:0.95em;line-height:1.8;padding-left:1.2em;margin:0;color:#333;">
-      <li>Jewish immigrants from the Pale of Settlement entered the tailoring trade in large numbers from the 1880s onwards, concentrated in London's East End, Leeds, and Manchester.</li>
-      <li>They brought with them organisational practices — finer division of labour, subcontracting networks — that accelerated the adoption of sewing machines in ready-to-wear production.</li>
-      <li>The ethnic economy provided both a <strong>floor</strong> (preventing sons from falling into unskilled labour) and a <strong>ladder</strong> (channelling leavers into commercial and retail occupations).</li>
-      <li>Every father in both samples is a tailor. The comparison is clean: same occupation, same time, different origin.</li>
+  <!-- Image + bullets -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:28px;align-items:center;">
+    <div style="overflow:hidden;border-radius:4px;line-height:0;">
+      <img src="/assets/images/Tailors.jpg" alt="Tailors in Victorian England"
+           style="width:100%;display:block;object-fit:cover;">
+    </div>
+    <ul style="font-size:0.95em;line-height:1.85;padding-left:1.2em;margin:0;color:#333;">
+      <li>Jewish immigrants from the Pale of Settlement entered the tailoring trade from the 1880s onwards, concentrated in London's East End, Leeds, and Manchester.</li>
+      <li>They brought organisational practices — finer division of labour, subcontracting networks — that accelerated sewing machine adoption in ready-to-wear production.</li>
+      <li>The ethnic economy provided both a <strong>floor</strong> (preventing falls into unskilled labour) and a <strong>ladder</strong> (channelling leavers into commercial and retail occupations).</li>
+      <li>Every father in both samples is a tailor. Same occupation, same time, different origin.</li>
     </ul>
   </div>
-</div>
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:24px 0 40px;align-items:start;">
-  <div>
-    <h4 style="margin-bottom:8px;">Mean Rank Change (percentile points)</h4>
-    <div id="tailor-rank-chart"></div>
+  <!-- Charts -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;">
+    <div>
+      <h4 style="margin:0 0 8px;font-size:0.88em;color:#555;text-transform:uppercase;letter-spacing:0.04em;">Mean rank change (percentile points)</h4>
+      <div id="tailor-rank-chart"></div>
+    </div>
+    <div>
+      <h4 style="margin:0 0 8px;font-size:0.88em;color:#555;text-transform:uppercase;letter-spacing:0.04em;">Direction of movement</h4>
+      <div id="tailor-direction-chart"></div>
+    </div>
   </div>
-  <div>
-    <h4 style="margin-bottom:8px;">Direction of Movement</h4>
-    <div id="tailor-direction-chart"></div>
+
+</div>
+
+<!-- ╔═══════════════════════════════════╗ -->
+<!-- ║  SLIDE 2: Key finding + bar chart ║ -->
+<!-- ╚═══════════════════════════════════╝ -->
+<div style="border:1px solid #e0e0e0;border-radius:6px;padding:28px 32px;margin:24px 0;background:#fff;">
+
+  <div style="background:#f0f6ff;border-left:4px solid #6BAED6;padding:14px 18px;margin-bottom:28px;font-size:0.95em;">
+    <strong>Key finding:</strong> The share moving <em>up</em> is similar across both groups (38% vs 35%).
+    The entire gap is driven by the <strong>downward tail</strong> — 52% of English sons fall below their
+    father's position, compared to only 39% of Pale sons. The ethnic economy provides a
+    <strong>floor</strong> that prevents occupational collapse.
   </div>
+
+  <div style="font-size:13px;font-weight:500;margin-bottom:12px;color:#333;">Top occupational destinations — 1911</div>
+  <div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555;">
+      <div style="width:12px;height:12px;border-radius:2px;background:#1D9E75;flex-shrink:0;"></div>Above father (HISCAM &gt; 51.6)
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555;">
+      <div style="width:12px;height:12px;border-radius:2px;background:#888780;flex-shrink:0;"></div>Same level
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555;">
+      <div style="width:12px;height:12px;border-radius:2px;background:#D85A30;flex-shrink:0;"></div>Below father
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+    <div>
+      <div style="font-size:12px;font-weight:500;margin-bottom:8px;color:#333;">Pale of Settlement sons</div>
+      <svg id="pale-dest-chart" style="width:100%;display:block;"></svg>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:500;margin-bottom:8px;color:#333;">English sons</div>
+      <svg id="english-dest-chart" style="width:100%;display:block;"></svg>
+    </div>
+  </div>
+  <div style="font-size:11px;color:#888;margin-top:8px;">Bar width = number of sons. Sorted by HISCAM score (high → low).</div>
+
 </div>
 
-<div style="background:#f7f7f7;border-left:4px solid #6BAED6;padding:14px 18px;margin:0 0 32px;font-size:0.92em;">
-  <strong>Key finding:</strong> The share moving <em>up</em> is similar across both groups (38% vs 35%).
-  The entire gap is driven by the <strong>downward tail</strong> — 52% of English sons fall below their
-  father's position, compared to only 39% of Pale sons. The ethnic economy provides a
-  <strong>floor</strong> that prevents occupational collapse.
-</div>
+<!-- ╔═══════════════════════════════════╗ -->
+<!-- ║  SLIDE 3: Sankey                  ║ -->
+<!-- ╚═══════════════════════════════════╝ -->
+<div style="border:1px solid #e0e0e0;border-radius:6px;padding:28px 32px;margin:24px 0;background:#fff;">
 
-<!-- Sankey: mobility flows -->
-<div style="font-family:sans-serif;margin:0 0 40px;">
-  <div style="font-size:13px;font-weight:500;text-align:center;margin-bottom:16px;">
+  <div style="font-size:13px;font-weight:500;text-align:center;margin-bottom:20px;color:#333;">
     Sons of tailors — occupational mobility, 1891 → 1911
   </div>
   <div style="margin-bottom:24px;"><svg id="sk-pale" style="width:100%;display:block;"></svg></div>
   <div><svg id="sk-eng" style="width:100%;display:block;"></svg></div>
+
 </div>
 
 <script>
@@ -723,33 +764,6 @@ Promise.all([
   });
 })();
 </script>
-
-<!-- Occupational destinations bar chart -->
-<div style="font-family:sans-serif;margin:40px 0;">
-  <div style="font-size:13px;font-weight:500;text-align:center;margin-bottom:8px;">Top occupational destinations — 1911</div>
-  <div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap;">
-    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555;">
-      <div style="width:12px;height:12px;border-radius:2px;background:#1D9E75;flex-shrink:0;"></div>Above father (HISCAM &gt; 51.6)
-    </div>
-    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555;">
-      <div style="width:12px;height:12px;border-radius:2px;background:#888780;flex-shrink:0;"></div>Same level
-    </div>
-    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555;">
-      <div style="width:12px;height:12px;border-radius:2px;background:#D85A30;flex-shrink:0;"></div>Below father
-    </div>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
-    <div>
-      <div style="font-size:12px;font-weight:500;margin-bottom:8px;color:#333;">Pale of Settlement sons</div>
-      <svg id="pale-dest-chart" style="width:100%;display:block;"></svg>
-    </div>
-    <div>
-      <div style="font-size:12px;font-weight:500;margin-bottom:8px;color:#333;">English sons</div>
-      <svg id="english-dest-chart" style="width:100%;display:block;"></svg>
-    </div>
-  </div>
-  <div style="font-size:11px;color:#888;margin-top:8px;">Bar width = number of sons. Sorted by HISCAM score (high → low).</div>
-</div>
 
 <script>
 (function(){
