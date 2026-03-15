@@ -1,6 +1,6 @@
 ---
 layout: single
-title: "LSE"
+title: "Mapping the Industrial Revolution. Inequalities Institute LSE"
 permalink: /LSE/
 nav_exclude: false
 ---
@@ -554,4 +554,488 @@ Promise.all([
       });
     });
   })();
+</script>
+
+
+<!-- ================================================ -->
+<!-- VISUAL BREAK + CHANNEL INTRO                    -->
+<!-- ================================================ -->
+
+<hr style="border:none;border-top:3px solid #333;margin:60px 0 40px;">
+
+<h2>Two Channels of Intergenerational Mobility</h2>
+
+<p>
+  The evidence points to two distinct mechanisms through which a father's position in the occupational
+  structure shapes his son's outcomes — and they work very differently.
+</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:32px 0 48px;">
+
+  <div style="border-left:4px solid #6BAED6;padding:16px 20px;background:#f7faff;">
+    <h3 style="margin-top:0;font-size:1.1em;color:#2171B5;">The Parent Channel</h3>
+    <p style="font-size:0.95em;margin-bottom:0;">
+      The father's position in a thriving trade transmits directly to the son: skills, capital, networks,
+      connections within the ethnic economy or the local industry. Sons inherit not just the occupation
+      but the platform the father built. This is the <strong>Kastis &amp; Vipond</strong> mechanism —
+      organisational practices and community resources create opportunities the son can leverage.
+    </p>
+  </div>
+
+  <div style="border-left:4px solid #FD8D3C;padding:16px 20px;background:#fff8f2;">
+    <h3 style="margin-top:0;font-size:1.1em;color:#D94801;">The Local Labour Market Channel</h3>
+    <p style="font-size:0.95em;margin-bottom:0;">
+      Being in an area where a trade is booming creates better opportunities locally, regardless of what
+      the father specifically passes on. The <em>place</em> is doing the work, not the family.
+      This is the <strong>Abramitzky et al. (2021)</strong> mechanism — immigrants sort into better
+      locations, and it is geography that drives the mobility advantage.
+    </p>
+  </div>
+
+</div>
+
+<hr style="border:none;border-top:1px solid #ddd;margin:0 0 48px;">
+
+<!-- ================================================ -->
+<!-- SECTION: THE PARENT CHANNEL                     -->
+<!-- ================================================ -->
+
+<h2>The Parent Channel</h2>
+
+<p>
+  Two very different industries — immigrant tailoring and domestic bootmaking — tell the same story.
+  Where the father's trade is thriving, sons are protected from downward mobility and channelled into
+  higher-status occupations when they leave. Where it is contracting, sons scatter across the full
+  hierarchy, and a substantial share fall far below their fathers.
+</p>
+
+<!-- ---- TAILORS ---- -->
+
+<h3>Tailors: Pale of Settlement Sons vs. English Sons</h3>
+
+<p>
+  Sons of Pale-born tailors (1891 census) linked forward to 1911. Every father is a tailor — the
+  comparison is purely about what happens to the next generation, conditional on the same starting point.
+  Tailors sit at the <strong>68th percentile</strong> of the 1911 workforce.
+</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:24px 0 40px;align-items:start;">
+
+  <!-- Rank change bar chart -->
+  <div>
+    <h4 style="margin-bottom:8px;">Mean Rank Change (percentile points)</h4>
+    <div id="tailor-rank-chart"></div>
+  </div>
+
+  <!-- Direction of movement -->
+  <div>
+    <h4 style="margin-bottom:8px;">Direction of Movement</h4>
+    <div id="tailor-direction-chart"></div>
+  </div>
+
+</div>
+
+<div style="background:#f7f7f7;border-left:4px solid #6BAED6;padding:14px 18px;margin:0 0 40px;font-size:0.92em;">
+  <strong>Key finding:</strong> The share moving <em>up</em> is similar across both groups (38% vs 35%).
+  The entire gap is driven by the <strong>downward tail</strong> — 52% of English sons fall below their
+  father's position, compared to only 39% of Pale sons. The ethnic economy provides a
+  <strong>floor</strong> that prevents occupational collapse.
+</div>
+
+<script>
+(function(){
+  function ready(fn){
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, {once:true});
+    else fn();
+  }
+
+  ready(function(){
+
+    // ── Rank change chart ──
+    const rankData = [
+      { group: "Pale sons",    value: 1.3,  color: "#6BAED6" },
+      { group: "English sons", value: -8.6, color: "#FD8D3C" }
+    ];
+
+    const rm = {top:20, right:20, bottom:40, left:100};
+    const rw = 340 - rm.left - rm.right;
+    const rh = 160 - rm.top - rm.bottom;
+
+    const rsvg = d3.select("#tailor-rank-chart")
+      .append("svg")
+      .attr("viewBox", [0, 0, rw + rm.left + rm.right, rh + rm.top + rm.bottom])
+      .append("g")
+      .attr("transform", `translate(${rm.left},${rm.top})`);
+
+    const rx = d3.scaleLinear()
+      .domain([-12, 6]).nice()
+      .range([0, rw]);
+
+    const ry = d3.scaleBand()
+      .domain(rankData.map(d => d.group))
+      .range([0, rh])
+      .padding(0.35);
+
+    rsvg.append("g").attr("transform", `translate(0,${rh})`).call(d3.axisBottom(rx).ticks(5));
+    rsvg.append("g").call(d3.axisLeft(ry).tickSize(0)).select(".domain").remove();
+
+    // Zero line
+    rsvg.append("line")
+      .attr("x1", rx(0)).attr("x2", rx(0))
+      .attr("y1", 0).attr("y2", rh)
+      .attr("stroke", "#999").attr("stroke-dasharray", "4,3").attr("stroke-width", 1);
+
+    // Bars
+    rsvg.selectAll(".rbar")
+      .data(rankData)
+      .join("rect")
+      .attr("class", "rbar")
+      .attr("y", d => ry(d.group))
+      .attr("height", ry.bandwidth())
+      .attr("x", d => d.value >= 0 ? rx(0) : rx(d.value))
+      .attr("width", d => Math.abs(rx(d.value) - rx(0)))
+      .attr("fill", d => d.color);
+
+    // Value labels
+    rsvg.selectAll(".rlabel")
+      .data(rankData)
+      .join("text")
+      .attr("class", "rlabel")
+      .attr("y", d => ry(d.group) + ry.bandwidth() / 2 + 4)
+      .attr("x", d => d.value >= 0 ? rx(d.value) + 4 : rx(d.value) - 4)
+      .attr("text-anchor", d => d.value >= 0 ? "start" : "end")
+      .attr("font-size", "12px")
+      .attr("font-weight", "600")
+      .text(d => (d.value >= 0 ? "+" : "") + d.value);
+
+    // ── Direction of movement chart ──
+    const dirData = [
+      { group: "Pale sons",    up: 38.3, down: 39.3, stay: 22.4, color: "#6BAED6" },
+      { group: "English sons", up: 34.9, down: 52.2, stay: 12.9, color: "#FD8D3C" }
+    ];
+
+    const dm = {top:20, right:120, bottom:40, left:100};
+    const dw = 380 - dm.left - dm.right;
+    const dh = 160 - dm.top - dm.bottom;
+
+    const dsvg = d3.select("#tailor-direction-chart")
+      .append("svg")
+      .attr("viewBox", [0, 0, dw + dm.left + dm.right, dh + dm.top + dm.bottom])
+      .append("g")
+      .attr("transform", `translate(${dm.left},${dm.top})`);
+
+    const dy = d3.scaleBand()
+      .domain(dirData.map(d => d.group))
+      .range([0, dh])
+      .padding(0.35);
+
+    const dx = d3.scaleLinear().domain([0, 100]).range([0, dw]);
+
+    dsvg.append("g").attr("transform", `translate(0,${dh})`).call(d3.axisBottom(dx).ticks(4).tickFormat(d => d + "%"));
+    dsvg.append("g").call(d3.axisLeft(dy).tickSize(0)).select(".domain").remove();
+
+    const stack = d3.stack().keys(["up","stay","down"]);
+    const stackColors = {"up":"#74C476","stay":"#bbb","down":"#FB6A4A"};
+
+    const stacked = stack(dirData.map(d => ({group: d.group, up: d.up, stay: d.stay, down: d.down})));
+
+    stacked.forEach(layer => {
+      dsvg.selectAll(`.bar-${layer.key}`)
+        .data(layer)
+        .join("rect")
+        .attr("y", d => dy(d.data.group))
+        .attr("height", dy.bandwidth())
+        .attr("x", d => dx(d[0]))
+        .attr("width", d => dx(d[1]) - dx(d[0]))
+        .attr("fill", stackColors[layer.key]);
+    });
+
+    // Legend
+    const legendItems = [{label:"Moved up", color:"#74C476"},{label:"Same",color:"#bbb"},{label:"Moved down",color:"#FB6A4A"}];
+    legendItems.forEach((item, i) => {
+      dsvg.append("rect").attr("x", dw + 8).attr("y", i * 18).attr("width", 12).attr("height", 12).attr("fill", item.color);
+      dsvg.append("text").attr("x", dw + 24).attr("y", i * 18 + 10).attr("font-size","11px").text(item.label);
+    });
+
+  });
+})();
+</script>
+
+<!-- ---- BOOTMAKERS ---- -->
+
+<h3>Bootmakers: Growth vs. Decline Counties</h3>
+
+<p>
+  Sons of bootmaker-headed households linked forward 30 years (1851→1881 and 1861→1891).
+  Counties classified by employment change in bootmaking: <strong>Growth</strong>
+  (Northamptonshire, Leicestershire), <strong>Steady</strong>, and <strong>Decline</strong>
+  (38 of 42 counties). Bootmakers sit at the <strong>54th percentile</strong> of the workforce.
+</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:24px 0 16px;align-items:start;">
+
+  <!-- Inheritance rates -->
+  <div>
+    <h4 style="margin-bottom:8px;">Occupational Inheritance Rate</h4>
+    <div id="boot-inherit-chart"></div>
+  </div>
+
+  <!-- General labourer rate -->
+  <div>
+    <h4 style="margin-bottom:8px;">Share Becoming General Labourers</h4>
+    <div id="boot-labourer-chart"></div>
+  </div>
+
+</div>
+
+<div style="background:#f7f7f7;border-left:4px solid #FD8D3C;padding:14px 18px;margin:0 0 40px;font-size:0.92em;">
+  <strong>Key finding:</strong> Where the trade is thriving, sons stay and are protected — inheritance
+  in Growth counties is more than double that in Decline counties, and sons in Growth counties are
+  <strong>half as likely to become general labourers</strong>. The same floor-and-ladder mechanism
+  as in the tailor case, driven by local industrial geography rather than ethnic community.
+</div>
+
+<script>
+(function(){
+  function ready(fn){
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, {once:true});
+    else fn();
+  }
+
+  ready(function(){
+
+    // ── Inheritance rates ──
+    const inheritData = [
+      { group: "Growth",  c1851: 54.4, c1861: 54.2 },
+      { group: "Steady",  c1851: 21.9, c1861: 18.1 },
+      { group: "Decline", c1851: 24.5, c1861: 19.6 }
+    ];
+
+    const im = {top:20, right:20, bottom:50, left:70};
+    const iw = 340 - im.left - im.right;
+    const ih = 200 - im.top - im.bottom;
+
+    const isvg = d3.select("#boot-inherit-chart")
+      .append("svg")
+      .attr("viewBox", [0, 0, iw + im.left + im.right, ih + im.top + im.bottom])
+      .append("g")
+      .attr("transform", `translate(${im.left},${im.top})`);
+
+    const ix = d3.scaleBand()
+      .domain(inheritData.map(d => d.group))
+      .range([0, iw]).padding(0.25);
+
+    const ix2 = d3.scaleBand()
+      .domain(["c1851","c1861"])
+      .range([0, ix.bandwidth()]).padding(0.1);
+
+    const iy = d3.scaleLinear().domain([0, 65]).range([ih, 0]);
+
+    isvg.append("g").attr("transform",`translate(0,${ih})`).call(d3.axisBottom(ix).tickSize(0));
+    isvg.append("g").call(d3.axisLeft(iy).ticks(5).tickFormat(d => d + "%"));
+
+    const cohortColors = {"c1851":"#6BAED6","c1861":"#2171B5"};
+
+    inheritData.forEach(d => {
+      ["c1851","c1861"].forEach(cohort => {
+        isvg.append("rect")
+          .attr("x", ix(d.group) + ix2(cohort))
+          .attr("y", iy(d[cohort]))
+          .attr("width", ix2.bandwidth())
+          .attr("height", ih - iy(d[cohort]))
+          .attr("fill", cohortColors[cohort]);
+      });
+    });
+
+    // Legend
+    [["c1851","#6BAED6","1851→1881"],["c1861","#2171B5","1861→1891"]].forEach(([k,c,l], i) => {
+      isvg.append("rect").attr("x", 0).attr("y", ih + 28 + i * 14 - 28).attr("width",10).attr("height",10).attr("fill",c);
+      isvg.append("text").attr("x",14).attr("y", ih + 28 + i * 14 - 19).attr("font-size","10px").text(l);
+    });
+
+    // ── General labourer rate ──
+    const labData = [
+      { group: "Growth",  c1851: 2.0, c1861: 2.4 },
+      { group: "Steady",  c1851: 5.0, c1861: 3.8 },
+      { group: "Decline", c1851: 4.5, c1861: 5.0 }
+    ];
+
+    const lm = {top:20, right:20, bottom:50, left:70};
+    const lw = 340 - lm.left - lm.right;
+    const lh = 200 - lm.top - lm.bottom;
+
+    const lsvg = d3.select("#boot-labourer-chart")
+      .append("svg")
+      .attr("viewBox", [0, 0, lw + lm.left + lm.right, lh + lm.top + lm.bottom])
+      .append("g")
+      .attr("transform", `translate(${lm.left},${lm.top})`);
+
+    const lx = d3.scaleBand()
+      .domain(labData.map(d => d.group))
+      .range([0, lw]).padding(0.25);
+
+    const lx2 = d3.scaleBand()
+      .domain(["c1851","c1861"])
+      .range([0, lx.bandwidth()]).padding(0.1);
+
+    const ly = d3.scaleLinear().domain([0, 7]).range([lh, 0]);
+
+    lsvg.append("g").attr("transform",`translate(0,${lh})`).call(d3.axisBottom(lx).tickSize(0));
+    lsvg.append("g").call(d3.axisLeft(ly).ticks(5).tickFormat(d => d + "%"));
+
+    labData.forEach(d => {
+      ["c1851","c1861"].forEach(cohort => {
+        lsvg.append("rect")
+          .attr("x", lx(d.group) + lx2(cohort))
+          .attr("y", ly(d[cohort]))
+          .attr("width", lx2.bandwidth())
+          .attr("height", lh - ly(d[cohort]))
+          .attr("fill", cohortColors[cohort]);
+      });
+    });
+
+    [["c1851","#6BAED6","1851→1881"],["c1861","#2171B5","1861→1891"]].forEach(([k,c,l], i) => {
+      lsvg.append("rect").attr("x", 0).attr("y", lh + 28 + i * 14 - 28).attr("width",10).attr("height",10).attr("fill",c);
+      lsvg.append("text").attr("x",14).attr("y", lh + 28 + i * 14 - 19).attr("font-size","10px").text(l);
+    });
+
+  });
+})();
+</script>
+
+<hr style="border:none;border-top:1px solid #ddd;margin:48px 0;">
+
+<!-- ================================================ -->
+<!-- SECTION: THE LOCAL LABOUR MARKET CHANNEL        -->
+<!-- ================================================ -->
+
+<h2>The Local Labour Market Channel</h2>
+
+<p>
+  Who fills the new jobs when an industry grows? The maps below show where new jobs emerged
+  in three sectors — bootmaking, management, and electrical trades — and who the fathers of
+  those workers were. If geography is doing the work rather than family transmission, we expect
+  to see the new workers drawn from a wide range of father occupations, not concentrated in the
+  same trade as their fathers.
+</p>
+
+<!-- ---- BOOTMAKERS MAP ---- -->
+
+<h3>Bootmaking: Where New Jobs Emerged</h3>
+
+<div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
+  <label for="boot-occ-year">Select year: <span id="boot-occ-year-label">1851</span></label>
+  <input type="range" id="boot-occ-year" min="1851" max="1911" step="10" value="1851" style="width:300px;">
+</div>
+
+<div style="display:flex;flex-direction:column;align-items:center;margin-bottom:16px;position:relative;">
+  <svg id="boot-occ-map" width="960" height="600" viewBox="0 0 960 600" style="max-width:100%;height:auto;"></svg>
+  <div style="margin-top:10px;">
+    <svg id="boot-occ-legend" width="480" height="50"></svg>
+    <div style="font-size:12px;text-align:center;">Share of male workforce in bootmaking</div>
+  </div>
+  <div id="boot-occ-tooltip" style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);pointer-events:none;"></div>
+</div>
+
+<div style="background:#f0f0f0;border-left:4px solid #bbb;padding:12px 16px;margin:0 0 48px;font-size:0.9em;color:#666;">
+  Father occupation breakdown coming soon.
+</div>
+
+<!-- ---- MANAGEMENT MAP ---- -->
+
+<h3>Management: Where New Jobs Emerged</h3>
+
+<div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
+  <label for="mgmt2-year">Select year: <span id="mgmt2-year-label">1851</span></label>
+  <input type="range" id="mgmt2-year" min="1851" max="1911" step="10" value="1851" style="width:300px;">
+</div>
+
+<div style="display:flex;flex-direction:column;align-items:center;margin-bottom:16px;position:relative;">
+  <svg id="mgmt2-map" width="960" height="600" viewBox="0 0 960 600" style="max-width:100%;height:auto;"></svg>
+  <div style="margin-top:10px;">
+    <svg id="mgmt2-legend" width="480" height="50"></svg>
+    <div style="font-size:12px;text-align:center;">Share of male workforce in management</div>
+  </div>
+  <div id="mgmt2-tooltip" style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);pointer-events:none;"></div>
+</div>
+
+<div style="background:#f0f0f0;border-left:4px solid #bbb;padding:12px 16px;margin:0 0 48px;font-size:0.9em;color:#666;">
+  Father occupation breakdown coming soon.
+</div>
+
+<!-- ---- ELECTRICIANS MAP ---- -->
+
+<h3>Electrical Trades: Where New Jobs Emerged</h3>
+
+<div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
+  <label for="elec-year">Select year: <span id="elec-year-label">1851</span></label>
+  <input type="range" id="elec-year" min="1851" max="1911" step="10" value="1851" style="width:300px;">
+</div>
+
+<div style="display:flex;flex-direction:column;align-items:center;margin-bottom:16px;position:relative;">
+  <svg id="elec-map" width="960" height="600" viewBox="0 0 960 600" style="max-width:100%;height:auto;"></svg>
+  <div style="margin-top:10px;">
+    <svg id="elec-legend" width="480" height="50"></svg>
+    <div style="font-size:12px;text-align:center;">Share of male workforce in electrical trades</div>
+  </div>
+  <div id="elec-tooltip" style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);pointer-events:none;"></div>
+</div>
+
+<div style="background:#f0f0f0;border-left:4px solid #bbb;padding:12px 16px;margin:0 0 48px;font-size:0.9em;color:#666;">
+  Father occupation breakdown coming soon.
+</div>
+
+<!-- Placeholder map renderer for all three -->
+<script>
+(function(){
+  function ready(fn){
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, {once:true});
+    else fn();
+  }
+
+  ready(async function(){
+    const GEO_URL = '/assets/maps/Counties1851.geojson';
+    let geoData;
+    try { geoData = await d3.json(GEO_URL); } catch { return; }
+
+    const placeholders = [
+      { mapId: 'boot-occ-map',  legendId: 'boot-occ-legend',  label: 'Data coming soon', colors: d3.schemePurples[5] },
+      { mapId: 'mgmt2-map',     legendId: 'mgmt2-legend',      label: 'Data coming soon', colors: d3.schemePurples[5] },
+      { mapId: 'elec-map',      legendId: 'elec-legend',       label: 'Data coming soon', colors: d3.schemeOranges[5] }
+    ];
+
+    placeholders.forEach(({ mapId, legendId, label, colors }) => {
+      const svg = d3.select(`#${mapId}`);
+      if (svg.empty()) return;
+
+      const projection = d3.geoMercator().fitSize([960, 600], geoData);
+      const path = d3.geoPath().projection(projection);
+
+      svg.selectAll('path')
+        .data(geoData.features)
+        .join('path')
+        .attr('d', path)
+        .attr('fill', '#ddd')
+        .attr('stroke', '#fff')
+        .attr('stroke-width', 0.5);
+
+      svg.append('text')
+        .attr('x', 480).attr('y', 310)
+        .attr('text-anchor', 'middle')
+        .attr('font-size', '18px')
+        .attr('fill', '#999')
+        .text(label);
+
+      const legendSvg = d3.select(`#${legendId}`);
+      const binWidth = 480 / colors.length;
+      colors.forEach((c, i) => {
+        legendSvg.append('rect').attr('x', i * binWidth).attr('y', 10)
+          .attr('width', binWidth).attr('height', 10).attr('fill', c);
+        const lbl = i === colors.length - 1 ? '4%+' : `${i}%–${i+1}%`;
+        legendSvg.append('text').attr('x', i * binWidth + binWidth / 2).attr('y', 35)
+          .attr('text-anchor', 'middle').attr('font-size', '10px').text(lbl);
+      });
+    });
+  });
+})();
 </script>
