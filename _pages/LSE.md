@@ -610,13 +610,12 @@ Promise.all([
   hierarchy, and a substantial share fall far below their fathers.
 </p>
 
-
 <!-- ---- TAILORS ---- -->
 
 <!-- ╔══════════════════════════════════════╗ -->
 <!-- ║  SLIDE 1 — Image + bullets only      ║ -->
 <!-- ╚══════════════════════════════════════╝ -->
-<div style="border:1px solid #e0e0e0;border-radius:6px;padding:28px 32px;margin:24px 0;background:#fff;">
+<div style="border:1px solid #e0e0e0;border-radius:6px;padding:48px 40px;margin:24px 0;background:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;">
 
   <h3 style="margin-top:0;">Tailors: Pale of Settlement Sons vs. English Sons</h3>
   <p style="color:#444;margin-bottom:20px;">
@@ -643,7 +642,7 @@ Promise.all([
 <!-- ╔══════════════════════════════════════════════════════╗ -->
 <!-- ║  SLIDE 2 — Key finding + bar charts + rank/direction ║ -->
 <!-- ╚══════════════════════════════════════════════════════╝ -->
-<div style="border:1px solid #e0e0e0;border-radius:6px;padding:28px 32px;margin:24px 0;background:#fff;">
+<div style="border:1px solid #e0e0e0;border-radius:6px;padding:48px 40px;margin:24px 0;background:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;">
 
   <div style="background:#f0f6ff;border-left:4px solid #6BAED6;padding:14px 18px;margin-bottom:28px;font-size:0.95em;">
     <strong>Key finding:</strong> The share moving <em>up</em> is similar across both groups (38% vs 35%).
@@ -695,7 +694,7 @@ Promise.all([
 <!-- ╔══════════════════════════════════╗ -->
 <!-- ║  SLIDE 3 — Sankey only           ║ -->
 <!-- ╚══════════════════════════════════╝ -->
-<div style="border:1px solid #e0e0e0;border-radius:6px;padding:28px 32px;margin:24px 0;background:#fff;">
+<div style="border:1px solid #e0e0e0;border-radius:6px;padding:48px 40px;margin:24px 0;background:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;">
   <div style="font-size:13px;font-weight:500;text-align:center;margin-bottom:20px;color:#333;">
     Sons of tailors — occupational mobility, 1891 → 1911
   </div>
