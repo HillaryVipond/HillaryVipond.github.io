@@ -525,17 +525,19 @@ Promise.all([
   })();
 </script>
 
+
 <!-- ================================================ -->
 <!-- VISUAL BREAK + CHANNEL INTRO                    -->
 <!-- ================================================ -->
 
 <hr style="border:none;border-top:3px solid #333;margin:60px 0 40px;">
 
-<h2>Two Channels of Intergenerational Mobility</h2>
+<h2>Two Channels: Technology, Transition, and the Next Generation</h2>
 
 <p>
-  The evidence points to two distinct mechanisms through which a father's position in the occupational
-  structure shapes his son's outcomes — and they work very differently.
+  Both settings — tailors and bootmakers — tell a story about the same underlying mechanism.
+  When an industry transitions from artisanal to mechanised production, it creates winners and losers.
+  How a family is positioned relative to that transition directly shapes what the next generation can access.
 </p>
 
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:32px 0 48px;">
@@ -543,20 +545,22 @@ Promise.all([
   <div style="border-left:4px solid #6BAED6;padding:16px 20px;background:#f7faff;">
     <h3 style="margin-top:0;font-size:1.1em;color:#2171B5;">The Parent Channel</h3>
     <p style="font-size:0.95em;margin-bottom:0;">
-      The father's position in a thriving trade transmits directly to the son: skills, capital, networks,
-      connections within the ethnic economy or the local industry. Sons inherit not just the occupation
-      but the platform the father built. This is the <strong>Kastis &amp; Vipond</strong> mechanism —
-      organisational practices and community resources create opportunities the son can leverage.
+      If your father's trade is thriving — because it adopted the new technology successfully — you
+      inherit a platform: access to the networks, capital, and organisational knowledge of a growing
+      industry. If his trade is contracting, that constraint passes down too. This is the
+      <strong>Kastis &amp; Vipond</strong> mechanism: in tailoring, Jewish immigrants adopted the
+      sewing machine more rapidly, and their sons were embedded in the winning side of the transition.
     </p>
   </div>
 
   <div style="border-left:4px solid #FD8D3C;padding:16px 20px;background:#fff8f2;">
     <h3 style="margin-top:0;font-size:1.1em;color:#D94801;">The Local Labour Market Channel</h3>
     <p style="font-size:0.95em;margin-bottom:0;">
-      Being in an area where a trade is booming creates better opportunities locally, regardless of what
-      the father specifically passes on. The <em>place</em> is doing the work, not the family.
-      This is the <strong>Abramitzky et al. (2021)</strong> mechanism — immigrants sort into better
-      locations, and it is geography that drives the mobility advantage.
+      Where you live when the technology arrives determines which opportunities are locally accessible.
+      Sons growing up in counties where bootmaking mechanised successfully had a very different
+      set of options than sons in the 38 counties where the trade contracted. The place is doing
+      the work — not family transmission. This echoes the <strong>Abramitzky et al. (2021)</strong>
+      finding that geography, not culture, drives much of the mobility advantage.
     </p>
   </div>
 
