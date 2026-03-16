@@ -49,7 +49,7 @@ nav_exclude: false
     if (svg.empty()) return;
 
     const GEO_URL  = '/assets/maps/Counties1851.geojson';
-    const DATA_URL = '/assets/maps/share_totalmech_by_county.json';
+    const DATA_URL = '/assets/maps/share_machine_by_county2.json';
 
     let geoData;
     try { geoData = await d3.json(GEO_URL); } catch { return; }
