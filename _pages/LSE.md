@@ -638,6 +638,7 @@ Promise.all([
   hierarchy, and a substantial share fall far below their fathers.
 </p>
 
+
 <!-- ---- TAILORS ---- -->
 
 <!-- ╔═══════════════════════════════════════╗ -->
@@ -658,10 +659,11 @@ Promise.all([
            style="width:100%;display:block;object-fit:cover;object-position:center 30%;height:380px;">
     </div>
     <ul style="font-size:0.95em;line-height:1.9;padding-left:1.2em;margin:0;color:#333;">
+      <li>Pogroms and the May Laws triggered a large wave of Jewish emigration from the Russian Empire — more than 2 million Jewish people fled between 1881 and 1920.</li>
       <li>Jewish immigrants from the Pale of Settlement entered the tailoring trade from the 1880s onwards, concentrated in London's East End, Leeds, and Manchester.</li>
-      <li>They brought organisational practices — finer division of labour, subcontracting networks — that accelerated sewing machine adoption in ready-to-wear production.</li>
+      <li>They brought organisational practices that accelerated sewing machine adoption in ready-to-wear production.</li>
+      <li>Jewish tailors adopted the sewing machine more rapidly than their English counterparts.</li>
       <li>The ethnic economy provided both a <strong>floor</strong> (preventing falls into unskilled labour) and a <strong>ladder</strong> (channelling leavers into commercial and retail occupations).</li>
-      <li>Every father in both samples is a tailor. Same occupation, same time, different origin.</li>
     </ul>
   </div>
 
@@ -947,6 +949,7 @@ Promise.all([
 
   });
 })();
+</script>
 </script>
 
 <!-- ---- BOOTMAKERS ---- -->
