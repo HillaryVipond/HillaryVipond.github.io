@@ -247,28 +247,58 @@ nav_exclude: false
 })();
 </script>
 
+
 <!-- ========================= -->
 <!-- Section 3: Apprenticeships -->
 <!-- ========================= -->
 
-<h2>Apprenticeship System: Total Participation</h2>
+<h2>Apprenticeship System</h2>
 
 <p>The apprenticeship system declines everywhere between 1851–1911. The decline is more rapid after 1881. Less urban areas seem to retain more of the system than elsewhere. What is somewhat surprising is how different the decline is by level of skill — apprenticeships decline only slightly over the period; it is Masters and Journeymen who disappear.</p>
 
-<div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
-  <label for="year-slider">Select year: <span id="year-label">1851</span></label>
-  <input type="range" id="year-slider" min="1851" max="1911" step="10" value="1851" style="width:300px;">
-</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px;">
 
-<div style="display:flex;flex-direction:column;align-items:center;margin-bottom:40px;">
-  <svg id="total-map" width="960" height="600"></svg>
-  <div style="margin-top:10px;">
-    <svg id="legend-svg" width="480" height="50"></svg>
-    <div style="font-size:12px;text-align:center;">Percentage Share of Male Population</div>
+  <!-- LEFT: Total participation -->
+  <div>
+    <h3 style="font-size:1em;margin-bottom:10px;">Total Participation</h3>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap;">
+      <label for="year-slider" style="font-size:13px;">Year: <span id="year-label">1851</span></label>
+      <input type="range" id="year-slider" min="1851" max="1911" step="10" value="1851" style="width:180px;">
+    </div>
+    <div style="position:relative;">
+      <svg id="total-map" style="width:100%;display:block;" viewBox="0 0 480 300"></svg>
+      <div style="margin-top:6px;">
+        <svg id="legend-svg" width="100%" height="50"></svg>
+        <div style="font-size:11px;text-align:center;">% Share of Male Population</div>
+      </div>
+      <div id="tooltip" style="position:absolute;background:white;border:1px solid #aaa;padding:5px;visibility:hidden;font-size:12px;border-radius:4px;pointer-events:none;"></div>
+    </div>
   </div>
-</div>
 
-<div id="tooltip" style="position:absolute;background:white;border:1px solid #aaa;padding:5px;visibility:hidden;"></div>
+  <!-- RIGHT: Role breakdown -->
+  <div>
+    <h3 style="font-size:1em;margin-bottom:10px;">Role Breakdown</h3>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap;">
+      <label for="role-select" style="font-size:13px;">Role:</label>
+      <select id="role-select" style="font-size:13px;">
+        <option value="master">Master</option>
+        <option value="journeyman">Journeyman</option>
+        <option value="apprentice">Apprentice</option>
+      </select>
+      <label for="role-slider" style="font-size:13px;">Year: <span id="role-year-label">1851</span></label>
+      <input type="range" id="role-slider" min="1851" max="1911" step="10" value="1851" style="width:180px;">
+    </div>
+    <div style="position:relative;">
+      <svg id="role-map" style="width:100%;display:block;" viewBox="0 0 480 300"></svg>
+      <div style="margin-top:6px;">
+        <svg id="role-legend-svg" width="100%" height="50"></svg>
+        <div style="font-size:11px;text-align:center;">% Share of Male Population in Role</div>
+      </div>
+      <div id="role-tooltip" style="position:absolute;background:white;border:1px solid #aaa;padding:5px;visibility:hidden;font-size:12px;border-radius:4px;pointer-events:none;"></div>
+    </div>
+  </div>
+
+</div>
 
 <script>
 const svg_total = d3.select("#total-map");
@@ -278,106 +308,51 @@ Promise.all([
   d3.json("/assets/maps/Counties1851.geojson"),
   d3.json("/assets/maps/share_total_by_county.json")
 ]).then(([geoData, yearData]) => {
-  const projection = d3.geoMercator().fitSize([960, 600], geoData);
+  const projection = d3.geoMercator().fitSize([480, 300], geoData);
   const path = d3.geoPath().projection(projection);
   const slider = d3.select("#year-slider");
   const yearLabel = d3.select("#year-label");
 
   function updateMap(year) {
     const values = yearData[year];
-    const color = d3.scaleThreshold()
-      .domain([1, 2, 3, 4])
-      .range(d3.schemePurples[5]);
-
-    svg_total.selectAll("path")
-      .data(geoData.features)
-      .join("path")
+    const color = d3.scaleThreshold().domain([1, 2, 3, 4]).range(d3.schemePurples[5]);
+    svg_total.selectAll("path").data(geoData.features).join("path")
       .attr("d", path)
-      .attr("fill", d => {
-        const name = d.properties.R_CTY;
-        const v = values[name];
-        return v != null ? color(v) : "#ccc";
-      })
-      .attr("stroke", "#fff")
-      .attr("stroke-width", 0.5)
+      .attr("fill", d => { const v = values[d.properties.R_CTY]; return v != null ? color(v) : "#ccc"; })
+      .attr("stroke", "#fff").attr("stroke-width", 0.5)
       .on("mouseover", function(event, d) {
-        const name = d.properties.R_CTY;
-        const value = values[name];
-        tooltip_total.style("visibility", "visible")
-          .text(`${name}: ${value != null ? value.toFixed(2) : "N/A"}`);
+        const value = values[d.properties.R_CTY];
+        tooltip_total.style("visibility", "visible").text(`${d.properties.R_CTY}: ${value != null ? value.toFixed(2) : "N/A"}`);
         d3.select(this).attr("stroke-width", 2);
       })
       .on("mousemove", function(event) {
-        tooltip_total.style("top", (event.pageY + 10) + "px")
-                     .style("left", (event.pageX + 10) + "px");
+        const bbox = this.ownerSVGElement.getBoundingClientRect();
+        tooltip_total.style("top", (event.clientY - bbox.top + 10) + "px").style("left", (event.clientX - bbox.left + 10) + "px");
       })
-      .on("mouseout", function() {
-        tooltip_total.style("visibility", "hidden");
-        d3.select(this).attr("stroke-width", 0.5);
-      });
+      .on("mouseout", function() { tooltip_total.style("visibility", "hidden"); d3.select(this).attr("stroke-width", 0.5); });
   }
 
   updateMap("1851");
-
-  slider.on("input", function() {
-    const year = this.value;
-    yearLabel.text(year);
-    updateMap(year);
-  });
+  slider.on("input", function() { yearLabel.text(this.value); updateMap(this.value); });
 });
 
 {
   const legendSvg = d3.select("#legend-svg");
-  const legendWidth = +legendSvg.attr("width");
   const colors = d3.schemePurples[5];
-  const binWidth = legendWidth / colors.length;
-
+  const binWidth = 100 / colors.length;
   colors.forEach((color, i) => {
-    legendSvg.append("rect")
-      .attr("x", i * binWidth).attr("y", 10)
-      .attr("width", binWidth).attr("height", 10)
-      .attr("fill", color);
-    const label = i === colors.length - 1 ? "4+" : `${i}–${i+1}`;
-    legendSvg.append("text")
-      .attr("x", i * binWidth + binWidth / 2).attr("y", 35)
-      .attr("text-anchor", "middle").attr("font-size", "10px")
-      .text(label);
+    legendSvg.append("rect").attr("x", i * binWidth + "%").attr("y", 10).attr("width", binWidth + "%").attr("height", 10).attr("fill", color);
+    legendSvg.append("text").attr("x", (i * binWidth + binWidth / 2) + "%").attr("y", 35).attr("text-anchor", "middle").attr("font-size", "10px")
+      .text(i === colors.length - 1 ? "4+" : `${i}–${i+1}`);
   });
 }
 </script>
-
-<hr style="margin:32px 0;">
-
-<h2>Apprenticeship System: Role Breakdown</h2>
-
-<div style="display:flex;align-items:center;gap:48px;margin-bottom:10px;">
-  <label for="role-select">Select role:</label>
-  <select id="role-select">
-    <option value="master">Master</option>
-    <option value="journeyman">Journeyman</option>
-    <option value="apprentice">Apprentice</option>
-  </select>
-
-  <label for="role-slider">Select year: <span id="role-year-label">1851</span></label>
-  <input type="range" id="role-slider" min="1851" max="1911" step="10" value="1851" style="width:300px;">
-</div>
-
-<div style="display:flex;flex-direction:column;align-items:center;margin-bottom:40px;">
-  <svg id="role-map" width="960" height="600"></svg>
-  <div style="margin-top:10px;">
-    <svg id="role-legend-svg" width="480" height="50"></svg>
-    <div style="font-size:12px;text-align:center;">Percentage Share of Male Population in Role</div>
-  </div>
-</div>
-
-<div id="role-tooltip" style="position:absolute;background:white;border:1px solid #aaa;padding:5px;visibility:hidden;"></div>
 
 <script>
 const roleSvg = d3.select("#role-map");
 const roleTooltip = d3.select("#role-tooltip");
 const roleSlider = d3.select("#role-slider");
 const roleSelect = d3.select("#role-select");
-
 const roleThresholds = [0.2, 0.4, 0.6, 0.8, 1.0, 1.5, 2.0];
 const roleColors = d3.schemeBlues[8];
 const roleColor = d3.scaleThreshold().domain(roleThresholds).range(roleColors);
@@ -386,84 +361,48 @@ Promise.all([
   d3.json("/assets/maps/Counties1851.geojson"),
   d3.json("/assets/maps/share_granrole_by_county.json")
 ]).then(([geoData, roleData]) => {
-  const projection = d3.geoMercator().fitSize([960, 600], geoData);
+  const projection = d3.geoMercator().fitSize([480, 300], geoData);
   const path = d3.geoPath().projection(projection);
 
   function updateRoleMap(year, role) {
     const values = roleData[year][role];
-
-    roleSvg.selectAll("path")
-      .data(geoData.features)
-      .join("path")
+    roleSvg.selectAll("path").data(geoData.features).join("path")
       .attr("d", path)
-      .attr("fill", d => {
-        const name = d.properties.R_CTY;
-        const v = values[name];
-        return v != null ? roleColor(v) : "#ccc";
-      })
-      .attr("stroke", "#fff")
-      .attr("stroke-width", 0.5)
+      .attr("fill", d => { const v = values[d.properties.R_CTY]; return v != null ? roleColor(v) : "#ccc"; })
+      .attr("stroke", "#fff").attr("stroke-width", 0.5)
       .on("mouseover", function(event, d) {
-        const name = d.properties.R_CTY;
-        const value = values[name];
-        roleTooltip.style("visibility", "visible")
-          .text(`${name}: ${value != null ? value.toFixed(2) : "N/A"}`);
+        const value = values[d.properties.R_CTY];
+        roleTooltip.style("visibility", "visible").text(`${d.properties.R_CTY}: ${value != null ? value.toFixed(2) : "N/A"}`);
         d3.select(this).attr("stroke-width", 2);
       })
       .on("mousemove", function(event) {
-        roleTooltip.style("top", (event.pageY + 10) + "px")
-                   .style("left", (event.pageX + 10) + "px");
+        const bbox = this.ownerSVGElement.getBoundingClientRect();
+        roleTooltip.style("top", (event.clientY - bbox.top + 10) + "px").style("left", (event.clientX - bbox.left + 10) + "px");
       })
-      .on("mouseout", function() {
-        roleTooltip.style("visibility", "hidden");
-        d3.select(this).attr("stroke-width", 0.5);
-      });
+      .on("mouseout", function() { roleTooltip.style("visibility", "hidden"); d3.select(this).attr("stroke-width", 0.5); });
   }
 
   updateRoleMap("1851", "master");
-
   const roleYearLabel = d3.select("#role-year-label");
-
-  roleSlider.on("input", function() {
-    const year = this.value;
-    roleYearLabel.text(year);
-    updateRoleMap(year, roleSelect.node().value);
-  });
-
-  roleSelect.on("change", function() {
-    const year = roleSlider.node().value;
-    updateRoleMap(year, this.value);
-  });
+  roleSlider.on("input", function() { roleYearLabel.text(this.value); updateRoleMap(this.value, roleSelect.node().value); });
+  roleSelect.on("change", function() { updateRoleMap(roleSlider.node().value, this.value); });
 });
 
 {
   const roleLegendSvg = d3.select("#role-legend-svg");
-  const legendWidth = +roleLegendSvg.attr("width");
-  const binCount = 8;
-  const binWidth = legendWidth / binCount;
-
-  const roleLabels = [
-    "<0.2", "0.2–0.4", "0.4–0.6", "0.6–0.8",
-    "0.8–1.0", "1.0–1.5", "1.5–2.0", "2.0+"
-  ];
-
+  const binWidth = 100 / 8;
+  const roleLabels = ["<0.2","0.2–0.4","0.4–0.6","0.6–0.8","0.8–1.0","1.0–1.5","1.5–2.0","2.0+"];
   roleColors.forEach((color, i) => {
-    roleLegendSvg.append("rect")
-      .attr("x", i * binWidth).attr("y", 10)
-      .attr("width", binWidth).attr("height", 10)
-      .attr("fill", color);
+    roleLegendSvg.append("rect").attr("x", i * binWidth + "%").attr("y", 10).attr("width", binWidth + "%").attr("height", 10).attr("fill", color);
   });
-
   roleLabels.forEach((label, i) => {
-    roleLegendSvg.append("text")
-      .attr("x", i * binWidth + binWidth / 2).attr("y", 35)
-      .attr("text-anchor", "middle").attr("font-size", "10px")
-      .text(label);
+    roleLegendSvg.append("text").attr("x", (i * binWidth + binWidth / 2) + "%").attr("y", 35).attr("text-anchor", "middle").attr("font-size", "9px").text(label);
   });
 }
 </script>
 
 <hr style="margin:32px 0;">
+
 
 <!-- ================================= -->
 <!-- Section 4: Occupational Inheritance -->
