@@ -1,11 +1,11 @@
 ---
 layout: single
-title: "Mapping the Industrial Revolution"
+title: "Mapping the Second Industrial Revolution"
 permalink: /LSE/
 nav_exclude: false
 ---
  
-<p style="font-size:0.85em;font-style:italic;color:#666;margin-top:0.4rem;margin-bottom:2rem;">Inequalities Institute, March 2026</p>
+<p style="font-size:1.2em;font-style:italic;color:#666;margin-top:0.2rem;margin-bottom:2rem;">Inequalities Institute, March 2026</p>
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
