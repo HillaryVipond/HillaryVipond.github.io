@@ -891,20 +891,19 @@ Promise.all([
 
 <!-- ---- BOOTMAKERS ---- -->
 
+<!-- ---- BOOTMAKERS ---- -->
 <!-- ╔══════════════════════════════════════════════════╗ -->
 <!-- ║  SLIDE — Bootmakers intro: image + bullets       ║ -->
 <!-- ╚══════════════════════════════════════════════════╝ -->
 <div style="border:1px solid #e0e0e0;border-radius:6px;padding:40px 40px 64px;margin:24px 0;background:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;">
-
   <h3 style="margin-top:0;">Bootmakers: Decline Region Sons vs. Flourishing Region Sons</h3>
   <p style="color:#444;margin-bottom:24px;">
     Sons of bootmaker-headed households linked forward 30 years (1851→1881 and 1861→1891).
   </p>
-
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;">
-    <div style="border-radius:4px;overflow:hidden;">
+    <div style="border-radius:4px;overflow:hidden;background:#f5f5f5;">
       <img src="/assets/images/AreaGraph.jpg" alt="National Level: New and Old"
-           style="width:100%;display:block;object-fit:cover;object-position:center;height:1040px;">
+           style="width:100%;display:block;object-fit:contain;object-position:center;height:520px;background:#f5f5f5;">
       <div style="font-size:11px;color:#888;text-align:center;padding:6px 0;">National Level, New and Old Jobs, 1851–1911</div>
     </div>
     <ul style="font-size:0.95em;line-height:1.9;padding-left:1.2em;margin:0;color:#333;">
@@ -915,7 +914,6 @@ Promise.all([
       <li>Every father in both samples is a bootmaker. Same occupation, but different geography.</li>
     </ul>
   </div>
-
 </div>
 
 <h3>Bootmakers: Growth vs. Decline Counties</h3>
