@@ -783,12 +783,7 @@ Promise.all([
           tooltip.style("visibility","hidden");
           d3.select(this).attr("opacity", 1);
         });
-
-      g.selectAll(".n-label").data(data).join("text")
-        .attr("y", d => y(d.occ) + y.bandwidth()/2 + 4)
-        .attr("x", d => x(d.n) + 4)
-        .attr("font-size","10px").attr("fill","#888")
-        .text(d => d.n.toLocaleString());
+;
 
       g.selectAll(".occ-label").data(data).join("text")
         .attr("y", d => y(d.occ) + y.bandwidth()/2 + 4)
