@@ -10,6 +10,390 @@ nav_exclude: false
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
+<!-- ================================================ -->
+<!-- D3 — load once at the top                       -->
+<!-- ================================================ -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+
+<!-- ================================================ -->
+<!-- SECTION 1: Treemap — Orders Over Time            -->
+<!-- ================================================ -->
+
+<h2>Treemap: Orders Over Time</h2>
+<p>Click a year to view the treemap of the different sectors of the British economy by census year.</p>
+
+<div style="margin-bottom: 1em;">
+  <button onclick="loadYear(1851)">1851</button>
+  <button onclick="loadYear(1861)">1861</button>
+  <button onclick="loadYear(1881)">1881</button>
+  <button onclick="loadYear(1891)">1891</button>
+  <button onclick="loadYear(1901)">1901</button>
+  <button onclick="loadYear(1911)">1911</button>
+</div>
+
+<div id="treemap-time"></div>
+
+<script>
+(function(){
+  const width = 960;
+  const height = 600;
+
+  const color = d3.scaleOrdinal([
+    "#5C6BC0", "#42A5F5", "#26A69A", "#9CCC65", "#FFCA28",
+    "#EF5350", "#AB47BC", "#8D6E63", "#78909C", "#FF7043",
+    "#66BB6A", "#D4E157", "#FFA726", "#29B6F6", "#BDBDBD"
+  ]);
+
+  const svg = d3.select("#treemap-time")
+    .append("svg")
+    .attr("viewBox", [0, 0, width, height])
+    .style("font-family", "sans-serif")
+    .style("font-size", "14px");
+
+  // Load a year's JSON and render the treemap
+  window.loadYear = function(year) {
+    d3.json(`/assets/data/orders_${year}.json`).then(data => {
+      const root = d3.hierarchy(data)
+        .sum(d => d.size || 0)
+        .sort((a, b) => b.value - a.value);
+
+      d3.treemap().size([width, height]).paddingInner(2)(root);
+
+      svg.selectAll("*").remove();
+
+      const nodes = svg.selectAll("g")
+        .data(root.children)
+        .join("g")
+        .attr("transform", d => `translate(${d.x0},${d.y0})`);
+
+      nodes.append("rect")
+        .attr("width",  d => d.x1 - d.x0)
+        .attr("height", d => d.y1 - d.y0)
+        .attr("fill", d => color(d.data.name));
+
+      nodes.append("text")
+        .attr("x", 4).attr("y", 18)
+        .text(d => d.data.name)
+        .attr("fill", "white");
+
+    }).catch(err => console.error("Error loading JSON:", err));
+  };
+
+  // Default load on page ready
+  document.addEventListener("DOMContentLoaded", () => loadYear(1851), { once: true });
+})();
+</script>
+
+<!-- ================================================ -->
+<!-- SECTION 2: Growth by Order (bar chart)           -->
+<!-- ================================================ -->
+
+<h2>Occupation: Orders Over Time (1851–1911)</h2>
+<p>Showing the growth in different sectors of the economy over the period. Sectors shown in blue are growing more rapidly than average population growth.</p>
+
+<div id="growth-chart" style="margin-top: 2em;"></div>
+
+<script>
+(function(){
+  document.addEventListener("DOMContentLoaded", function() {
+    const width  = 800;
+    const height = 600;
+    const margin = { top: 20, right: 20, bottom: 30, left: 150 };
+
+    d3.csv("/assets/data/Orders.csv", d3.autoType).then(data => {
+      const allOrders = data.sort((a, b) =>
+        d3.descending(a.fold_growth_1851_1911, b.fold_growth_1851_1911));
+
+      const svg = d3.select("#growth-chart").append("svg")
+        .attr("width", width).attr("height", height)
+        .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+      const innerW = width  - margin.left - margin.right;
+      const innerH = height - margin.top  - margin.bottom;
+
+      const x = d3.scaleLinear()
+        .domain([0, d3.max(allOrders, d => d.fold_growth_1851_1911)]).nice()
+        .range([0, innerW]);
+
+      const y = d3.scaleBand()
+        .domain(allOrders.map(d => d.order))
+        .range([0, innerH]).padding(0.2);
+
+      svg.append("g").call(d3.axisLeft(y).tickSize(0))
+        .selectAll("text").style("font-size", "13px");
+
+      svg.append("g").attr("transform", `translate(0,${innerH})`)
+        .call(d3.axisBottom(x).ticks(4))
+        .selectAll("text").style("font-size", "12px");
+
+      // Blue = above population growth threshold (2×), orange = below
+      const colorFn = d => d.fold_growth_1851_1911 >= 2 ? "#6BAED6" : "#FD8D3C";
+
+      const bars = svg.selectAll(".bar").data(allOrders).join("rect")
+        .attr("class", "bar")
+        .attr("y", d => y(d.order)).attr("height", y.bandwidth())
+        .attr("x", 0).attr("width", d => x(d.fold_growth_1851_1911))
+        .attr("fill", colorFn);
+
+      const tooltip = d3.select("body").append("div")
+        .style("position", "absolute").style("background", "white")
+        .style("border", "1px solid #ccc").style("padding", "8px 12px")
+        .style("border-radius", "5px").style("pointer-events", "none")
+        .style("font-size", "14px").style("visibility", "hidden")
+        .style("box-shadow", "0 2px 6px rgba(0,0,0,0.2)");
+
+      bars.on("mouseover", function(event, d) {
+          tooltip.style("visibility", "visible")
+            .text(`${d.order}: ${d.fold_growth_1851_1911.toFixed(2)}×`);
+          d3.select(this).attr("fill", "#3182BD");
+        })
+        .on("mousemove", event => {
+          tooltip.style("left", (event.pageX + 10) + "px")
+                 .style("top",  (event.pageY - 20) + "px");
+        })
+        .on("mouseout", function(event, d) {
+          tooltip.style("visibility", "hidden");
+          d3.select(this).attr("fill", colorFn(d));
+        });
+    });
+  }, { once: true });
+})();
+</script>
+
+<!-- ================================================ -->
+<!-- SECTION 3: Growth by Industry (scatter plot)     -->
+<!-- ================================================ -->
+
+<h2>Growth by Industry: 1851–1911</h2>
+<p>Showing growth by industry over the period. Note that the extreme outliers are primarily in industries which were very small or non-existent in 1851.</p>
+
+<div id="scatterplot"></div>
+
+<h4 style="margin-top: 1em;">
+  Population doubled over the period: any industry growing more than 100% outpaced population growth, industries which grew less lagged.
+</h4>
+
+<div style="display:flex;gap:10px;margin-top:1em;">
+  <button onclick="showThreshold()" style="padding:6px 12px;font-size:14px;">Show Population Threshold</button>
+  <button onclick="toggleZoom()"    style="padding:6px 12px;font-size:14px;">Toggle Zoom to 0–10 Fold Growth</button>
+</div>
+
+<script>
+(function(){
+  document.addEventListener("DOMContentLoaded", function() {
+    const margin = { top: 20, right: 30, bottom: 50, left: 60 };
+    const width  = 960 - margin.left - margin.right;
+    const height = 500 - margin.top  - margin.bottom;
+
+    const svg = d3.select("#scatterplot").append("svg")
+      .attr("viewBox", [0, 0, width + margin.left + margin.right, height + margin.top + margin.bottom])
+      .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const tooltip = d3.select("body").append("div")
+      .style("position", "absolute").style("background", "white")
+      .style("border", "1px solid #ccc").style("padding", "8px 12px")
+      .style("border-radius", "5px").style("pointer-events", "none")
+      .style("font-size", "15px").style("font-weight", "bold")
+      .style("visibility", "hidden")
+      .style("box-shadow", "0 2px 6px rgba(0,0,0,0.2)");
+
+    d3.csv("/assets/data/Industry.csv", d3.autoType).then(data => {
+      data = data.filter(d => d.fold_growth != null && !isNaN(d.fold_growth));
+
+      const x = d3.scaleLog()
+        .domain(d3.extent(data, d => d.final_size).map(d => d > 0 ? d : 1))
+        .nice().range([0, width]);
+
+      const y = d3.scaleLinear()
+        .domain(d3.extent(data, d => d.fold_growth)).nice()
+        .range([height, 0]);
+
+      // Stash globally so zoom/threshold buttons can access them
+      window._scatter_x    = x;
+      window._scatter_y    = y;
+      window._scatter_svg  = svg;
+      window._scatter_data = data;
+
+      svg.append("g").attr("transform", `translate(0,${height})`)
+        .attr("class", "x-axis").call(d3.axisBottom(x).ticks(10, "~s"));
+
+      svg.append("g").attr("class", "y-axis").call(d3.axisLeft(y));
+
+      svg.append("text").attr("x", width / 2).attr("y", height + 40)
+        .attr("text-anchor", "middle").text("Log of Final Size of Industry");
+
+      svg.append("text").attr("transform", "rotate(-90)")
+        .attr("x", -height / 2).attr("y", -45)
+        .attr("text-anchor", "middle").text("Fold Increase (1851–1911)");
+
+      // Population-doubling reference line (hidden until button clicked)
+      svg.append("line").attr("class", "threshold-line")
+        .attr("x1", 0).attr("x2", width)
+        .attr("y1", y(2)).attr("y2", y(2))
+        .attr("stroke", "grey").attr("stroke-width", 1.5)
+        .attr("stroke-dasharray", "5,5").style("visibility", "hidden");
+
+      svg.append("text").attr("class", "threshold-text")
+        .attr("x", width - 10).attr("y", y(2) - 6)
+        .attr("text-anchor", "end").style("fill", "grey")
+        .style("font-size", "12px").style("visibility", "hidden")
+        .text("Population doubled");
+
+      svg.selectAll("circle").data(data).join("circle")
+        .attr("cx", d => x(d.final_size))
+        .attr("cy", d => y(d.fold_growth))
+        .attr("r", 6).attr("fill", "#6BAED6")
+        .on("mouseover", function(event, d) {
+          // Use industry name if available, otherwise fall back to order
+          const label = (d.industry && d.industry !== "NaN") ? d.industry
+                      : (d.order   && d.order   !== "NaN") ? d.order
+                      : `Occ ${d.occode}`;
+          tooltip.style("visibility", "visible").text(label);
+          d3.select(this).attr("stroke", "black").attr("stroke-width", 1.5);
+        })
+        .on("mousemove", event => {
+          tooltip.style("left", (event.pageX + 10) + "px")
+                 .style("top",  (event.pageY - 20) + "px");
+        })
+        .on("mouseout", function() {
+          tooltip.style("visibility", "hidden");
+          d3.select(this).attr("stroke", null);
+        });
+    });
+
+    // Show population-doubling line
+    window.showThreshold = function() {
+      d3.selectAll(".threshold-line").style("visibility", "visible");
+      d3.selectAll(".threshold-text").style("visibility", "visible");
+    };
+
+    // Toggle y-axis zoom between full range and 0–10×
+    let zoomed = false;
+    window.toggleZoom = function() {
+      const y    = window._scatter_y;
+      const svg  = window._scatter_svg;
+      const data = window._scatter_data;
+
+      y.domain(zoomed ? d3.extent(data, d => d.fold_growth) : [0, 10]);
+      zoomed = !zoomed;
+
+      svg.select(".y-axis").transition().duration(750).call(d3.axisLeft(y));
+      svg.selectAll("circle").transition().duration(750).attr("cy", d => y(d.fold_growth));
+      svg.selectAll(".threshold-line").transition().duration(750).attr("y1", y(2)).attr("y2", y(2));
+      svg.selectAll(".threshold-text").transition().duration(750).attr("y", y(2) - 6);
+    };
+
+  }, { once: true });
+})();
+</script>
+
+<!-- ================================================ -->
+<!-- SECTION 4: Treemap drill-down — Orders → Industries → Tasks -->
+<!-- ================================================ -->
+
+<h2>Treemap to Tasks Level: Orders → Industries → Tasks</h2>
+
+<div id="treemap"></div>
+
+<h3 id="image-title" style="margin-top:2em;text-align:center;"></h3>
+<div id="task-image-container" style="margin-top:30px;text-align:center;">
+  <img id="task-image" src="" alt="" style="max-width:100%;display:none;border:1px solid #ccc;">
+</div>
+
+<script>
+(function(){
+  document.addEventListener("DOMContentLoaded", function() {
+    const width  = 960;
+    const height = 600;
+    const color  = d3.scaleOrdinal(d3.schemeCategory10);
+
+    const svg = d3.select("#treemap").append("svg")
+      .attr("viewBox", [0, 0, width, height])
+      .style("font-family", "sans-serif").style("font-size", "14px");
+
+    const group = svg.append("g");
+
+    d3.json("/assets/data/Tasks.json").then(treemapData => {
+      const fullRoot = d3.hierarchy(treemapData)
+        .sum(d => d.size || 0)
+        .sort((a, b) => b.value - a.value);
+
+      d3.treemap().size([width, height]).paddingInner(2)(fullRoot);
+
+      draw(fullRoot);
+
+      function draw(activeNode) {
+        group.selectAll("*").remove();
+
+        const parent   = activeNode.parent;
+        const siblings = parent ? parent.children : fullRoot.children;
+
+        // Draw sibling/context boxes
+        const boxes = group.selectAll("g").data(siblings).join("g")
+          .attr("transform", d => `translate(${d.x0},${d.y0})`)
+          .style("cursor", d => d.children ? "pointer" : "default")
+          .on("click", (event, d) => { event.stopPropagation(); if (d.children) draw(d); });
+
+        boxes.append("rect")
+          .attr("width",  d => d.x1 - d.x0).attr("height", d => d.y1 - d.y0)
+          .attr("fill", d => {
+            if (d === activeNode) return color(d.ancestors().slice(-2)[0]?.data.name || d.data.name);
+            return activeNode.depth === 1 ? "#ddd" : "#aaa";
+          })
+          .attr("stroke", "#fff");
+
+        boxes.append("text").attr("x", 4).attr("y", 18)
+          .text(d => { const p = d.data.name?.split("_"); return p?.length > 1 ? p[1] : d.data.name; })
+          .attr("fill", d => d === activeNode ? "white" : "#444")
+          .style("pointer-events", "none");
+
+        // Draw children of the active node
+        if (activeNode.children) {
+          const inner = group.append("g");
+
+          inner.selectAll("g").data(activeNode.children).join("g")
+            .attr("transform", d => `translate(${d.x0},${d.y0})`)
+            .style("cursor", d => d.children ? "pointer" : "default")
+            .on("click", (event, d) => {
+              event.stopPropagation();
+              if (d.children) {
+                draw(d); // drill deeper
+              } else {
+                // Leaf node: show task chart image
+                const taskCode = d.data.name;
+                document.getElementById("image-title").textContent = `Chart for ${taskCode}`;
+                const img = document.getElementById("task-image");
+                img.src = `/assets/task_charts/${taskCode}.png`;
+                img.alt = `Chart for ${taskCode}`;
+                img.style.display = "block";
+                img.onerror = () => { img.style.display = "none"; };
+              }
+            })
+            .call(g => {
+              g.append("rect")
+                .attr("width",  d => d.x1 - d.x0).attr("height", d => d.y1 - d.y0)
+                .attr("fill", () => color(activeNode.data.name)).attr("stroke", "#fff");
+
+              g.append("text").attr("x", 4).attr("y", 18)
+                .text(d => {
+                  if ((d.x1 - d.x0) < 20 || (d.y1 - d.y0) < 12) return "";
+                  const p = d.data.name?.split("_");
+                  return p?.length > 1 ? p[1] : d.data.name;
+                })
+                .attr("fill", "white").style("font-size", "12px")
+                .style("pointer-events", "none");
+            });
+
+          // Click background to go up one level
+          svg.on("click", () => { if (activeNode.parent) draw(activeNode.parent); });
+        }
+      }
+    });
+  }, { once: true });
+})();
+</script>
+
+
 <!-- ===================== -->
 <!-- Section 1: Technology -->
 <!-- ===================== -->
