@@ -529,10 +529,10 @@ Promise.all([
 <!-- ================================================ -->
 <!-- VISUAL BREAK + CHANNEL INTRO                    -->
 <!-- ================================================ -->
-
 <hr style="border:none;border-top:3px solid #333;margin:60px 0 40px;">
 
-<h2>Two Channels: Technology, Transition, and the Next Generation</h2>
+<h2>Beneficiaries of Transition: Intergenerational Mobility and Technological Change in Victorian England</h2>
+<h3>Two Channels: Technology, Transition, and the Next Generation</h3>
 
 <p>
   Both settings — tailors and bootmakers — tell a story about the same underlying mechanism.
