@@ -914,7 +914,8 @@ Promise.all([
 <!-- ================================================ -->
 <hr style="border:none;border-top:3px solid #333;margin:60px 0 40px;">
 <h2>Beneficiaries of Transition: Intergenerational Mobility and Technological Change in Victorian England</h2>
-<h3>Two Channels: Technology, Transition, and the Next Generation</h3>
+
+<h3>Two Channels: </h3>
 
 <p>
   Technological change in Victorian England impacted on social mobility through two channels.
@@ -925,10 +926,11 @@ Promise.all([
   <div style="border-left:4px solid #6BAED6;padding:16px 20px;background:#f7faff;">
     <h3 style="margin-top:0;font-size:1.1em;color:#2171B5;">The Incumbent Channel</h3>
     <p style="font-size:0.95em;margin-bottom:0;">
-      Whether a father's trade is on the winning or losing side of a technological transition shapes
-      what the next generation can access. Jewish immigrant tailors adopted the sewing machine
-      more rapidly than their English counterparts, and their sons inherited that advantage. For
-      bootmakers, geography determined which side of the transition a family was on. New factory
+      Two case studies: tailors and bootmakers. Whether a father's trade is on the winning 
+      or losing side of a technological transition shapes what the next generation can access. 
+      Jewish immigrant tailors adopted the sewing machine more rapidly than their English counterparts, 
+      and their sons inherited that advantage. For bootmakers, geography determined 
+      which side of the transition a family was on. New factory
       jobs concentrated in Northamptonshire and Leicestershire, and sons born there had very
       different outcomes from sons in the 38 counties where the trade contracted.
     </p>
@@ -951,10 +953,10 @@ Promise.all([
 <!-- SECTION: THE PARENT CHANNEL                     -->
 <!-- ================================================ -->
 
-<h2>The Parent Channel</h2>
+<h2>The Parent Channel (impact on incumbents) </h2>
 
 <p>
-  Two very different industries — immigrant tailoring and domestic bootmaking — tell the same story.
+  Two different industries. tailoring and domestic bootmaking, seem to tell a similar story.
   Where the father's trade is thriving, sons are protected from downward mobility and channelled into
   higher-status occupations when they leave. Where it is contracting, sons scatter across the full
   hierarchy, and a substantial share fall far below their fathers.
