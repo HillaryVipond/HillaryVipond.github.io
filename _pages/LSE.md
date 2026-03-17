@@ -1669,7 +1669,7 @@ Promise.all([
     </div>
 
     <div style="margin-bottom:32px;">
-      <h4 style="margin:0 0 8px;font-size:0.82em;color:#666;text-transform:uppercase;letter-spacing:0.05em;">2. Three types of new jobs</h4>
+      <h4 style="margin:0 0 8px;font-size:0.82em;color:#666;text-transform:uppercase;letter-spacing:0.05em;">2. Four types of new jobs</h4>
       <div style="font-size:0.95em;color:#333;line-height:1.75;padding-left:1.2em;">
         <p style="margin:0 0 8px;">— New jobs in brand new industries: approximately 500,000 workers in occupations that did not exist before.</p>
         <p style="margin:0 0 8px;">— New jobs common across many industries: contractors, agents, supervisors, foremen, operators, managers, factory workers, manufacturing workers.</p>
