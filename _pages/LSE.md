@@ -980,7 +980,7 @@ Promise.all([
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;">
     <div style="border-radius:4px;overflow:hidden;">
       <img src="/assets/images/Tailors.jpg" alt="Tailors in Victorian England"
-           style="width:100%;display:block;object-fit:cover;object-position:center 30%;height:380px;">
+           style="width:100%;display:block;object-fit:cover;object-position:center 30%;height:540px;">
     </div>
     <ul style="font-size:0.95em;line-height:1.9;padding-left:1.2em;margin:0;color:#333;">
       <li>Pogroms and the May Laws triggered a large wave of Jewish emigration from the Russian Empire — more than 2 million Jewish people fled between 1881 and 1920.</li>
