@@ -899,23 +899,20 @@ Promise.all([
   <h3 style="margin-top:0;">Bootmakers: Decline Region Sons vs. Flourishing Region Sons</h3>
   <p style="color:#444;margin-bottom:24px;">
     Sons of bootmaker-headed households linked forward 30 years (1851→1881 and 1861→1891).
-    Counties classified by employment change in bootmaking: <strong>Growth</strong>
-    (Northamptonshire, Leicestershire), <strong>Steady</strong>, and <strong>Decline</strong>
-    (38 of 42 counties). Bootmakers sit at the <strong>54th percentile</strong> of the workforce.
   </p>
 
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;">
     <div style="border-radius:4px;overflow:hidden;">
       <img src="/assets/images/AreaGraph.jpg" alt="National Level: New and Old"
-           style="width:100%;display:block;object-fit:cover;object-position:center;height:520px;">
+           style="width:100%;display:block;object-fit:cover;object-position:center;height:1040px;">
       <div style="font-size:11px;color:#888;text-align:center;padding:6px 0;">National Level, New and Old Jobs, 1851–1911</div>
     </div>
     <ul style="font-size:0.95em;line-height:1.9;padding-left:1.2em;margin:0;color:#333;">
-      <li>The English bootmaking industry mechanised rapidly after the introduction of the sewing machine in 1858, shifting from artisanal craft production to factory-based manufacturing.</li>
+      <li>The English bootmaking industry mechanised with the sewing machine in 1858, shifting from artisanal craft production to factory-based manufacturing.</li>
       <li>The new factory jobs were geographically concentrated: nearly half of all new bootmaking employment emerged in just two counties, Northamptonshire and Leicestershire.</li>
-      <li>Artisanal jobs declined in 38 of 42 counties — sons inheriting the trade in these places entered a contracting industry.</li>
+      <li>Artisanal jobs declined in 38 of 42 counties. Sons inheriting the trade in these places entered a contracting industry.</li>
       <li>Sons in Growth counties are protected from downward mobility and half as likely to become general labourers as sons in Decline counties.</li>
-      <li>Every father in both samples is a bootmaker. Same occupation, same time, different geography.</li>
+      <li>Every father in both samples is a bootmaker. Same occupation, but different geography.</li>
     </ul>
   </div>
 
