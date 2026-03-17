@@ -5,7 +5,7 @@ permalink: /LSE/
 nav_exclude: false
 ---
  
-<p style="font-size:1.0em;font-style:italic;color:#666;margin-top:0.2rem;margin-bottom:2rem;">Inequalities Institute, March 2026</p>
+<p style="font-size:1.0em;font-style:italic;color:#666;margin-top:0.1rem;margin-bottom:2rem;">Inequalities Institute, March 2026</p>
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
@@ -525,17 +525,15 @@ Promise.all([
   })();
 </script>
 
-
 <!-- ================================================ -->
 <!-- VISUAL BREAK + CHANNEL INTRO                    -->
 <!-- ================================================ -->
-
 <hr style="border:none;border-top:3px solid #333;margin:60px 0 40px;">
-
-<h2>Two Channels: How Technological Change Reshapes Opportunity</h2>
+<h2>Beneficiaries of Transition: Intergenerational Mobility and Technological Change in Victorian England</h2>
+<h3>Two Channels: Technology, Transition, and the Next Generation</h3>
 
 <p>
-  Technological change in Victorian England impacted on social mobility through two distinct channels.
+  Technological change in Victorian England impacted on social mobility through two channels.
 </p>
 
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin:32px 0 48px;">
