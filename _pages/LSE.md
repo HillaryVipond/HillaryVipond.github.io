@@ -888,7 +888,36 @@ Promise.all([
 </script>
 </script>
 
+
 <!-- ---- BOOTMAKERS ---- -->
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE — Bootmakers intro: image + bullets       ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div style="border:1px solid #e0e0e0;border-radius:6px;padding:40px 40px 64px;margin:24px 0;background:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;">
+
+  <h3 style="margin-top:0;">Bootmakers: Decline Region Sons vs. Flourishing Region Sons</h3>
+  <p style="color:#444;margin-bottom:24px;">
+    Sons of bootmaker-headed households linked forward 30 years (1851→1881 and 1861→1891).
+    Counties classified by employment change in bootmaking: <strong>Growth</strong>
+    (Northamptonshire, Leicestershire), <strong>Steady</strong>, and <strong>Decline</strong>
+    (38 of 42 counties). Bootmakers sit at the <strong>54th percentile</strong> of the workforce.
+  </p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;">
+    <div style="border-radius:4px;overflow:hidden;background:#f5f5f5;height:380px;display:flex;align-items:center;justify-content:center;">
+      <span style="color:#aaa;font-size:13px;">Image coming soon</span>
+    </div>
+    <ul style="font-size:0.95em;line-height:1.9;padding-left:1.2em;margin:0;color:#333;">
+      <li>The English bootmaking industry mechanised rapidly after the introduction of the sewing machine in 1858, shifting from artisanal craft production to factory-based manufacturing.</li>
+      <li>The new factory jobs were geographically concentrated: nearly half of all new bootmaking employment emerged in just two counties, Northamptonshire and Leicestershire.</li>
+      <li>Artisanal jobs declined in 38 of 42 counties — sons inheriting the trade in these places entered a contracting industry.</li>
+      <li>Sons in Growth counties are protected from downward mobility and half as likely to become general labourers as sons in Decline counties.</li>
+      <li>Every father in both samples is a bootmaker. Same occupation, same time, different geography.</li>
+    </ul>
+  </div>
+
+</div>
 
 <h3>Bootmakers: Growth vs. Decline Counties</h3>
 
@@ -1013,99 +1042,6 @@ Promise.all([
 </script>
 
 <hr style="border:none;border-top:1px solid #ddd;margin:48px 0;">
-
-<script>
-(function(){
-  function ready(fn){
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, {once:true});
-    else fn();
-  }
-
-  ready(async function(){
-    const GEO_URL = '/assets/maps/Counties1851.geojson';
-    let geoData;
-    try { geoData = await d3.json(GEO_URL); } catch { return; }
-
-    const projection = d3.geoMercator().fitSize([960, 600], geoData);
-    const path = d3.geoPath().projection(projection);
-    const countyKey = f => f.properties?.R_CTY;
-    const fmt = v => (v == null || isNaN(v)) ? 'N/A' : d3.format('.2f')(v) + '%';
-    const getYearValues = (data, y) => data && (data[y] ?? data[String(y)] ?? data[+y] ?? null);
-
-    function buildMap({ svgId, tooltipId, sliderId, labelId, legendId, dataUrl, thresholds, colors, labels }) {
-      const svg      = d3.select(`#${svgId}`);
-      const tooltip  = d3.select(`#${tooltipId}`);
-      const slider   = d3.select(`#${sliderId}`);
-      const label    = d3.select(`#${labelId}`);
-      if (svg.empty()) return;
-
-      svg.selectAll('path').data(geoData.features).join('path')
-        .attr('d', path).attr('fill', '#eee').attr('stroke', '#fff').attr('stroke-width', 0.5);
-
-      const color = d3.scaleThreshold().domain(thresholds).range(colors);
-
-      d3.json(dataUrl).then(yearData => {
-        function paint(year) {
-          const values = getYearValues(yearData, year);
-          svg.selectAll('path')
-            .attr('fill', d => {
-              if (!values) return '#eee';
-              const v = values[countyKey(d)];
-              return v != null ? color(v) : '#ccc';
-            })
-            .on('mouseover', function(event, d){
-              const name = countyKey(d) ?? 'Unknown';
-              const v = getYearValues(yearData, year)?.[name];
-              tooltip.style('visibility','visible').text(`${name}: ${fmt(v)}`);
-              d3.select(this).attr('stroke-width', 2);
-            })
-            .on('mousemove', function(event){
-              const bbox = this.ownerSVGElement.getBoundingClientRect();
-              tooltip.style('top', (event.clientY - bbox.top + 10) + 'px')
-                     .style('left', (event.clientX - bbox.left + 10) + 'px');
-            })
-            .on('mouseout', function(){
-              tooltip.style('visibility','hidden');
-              d3.select(this).attr('stroke-width', 0.5);
-            });
-        }
-
-        const legendSvg = d3.select(`#${legendId}`);
-        const binWidth = 480 / colors.length;
-        legendSvg.selectAll('*').remove();
-        colors.forEach((c, i) => {
-          legendSvg.append('rect').attr('x', i * binWidth).attr('y', 10)
-            .attr('width', binWidth).attr('height', 10).attr('fill', c);
-          legendSvg.append('text').attr('x', i * binWidth + binWidth / 2).attr('y', 35)
-            .attr('text-anchor', 'middle').attr('font-size', '10px').text(labels[i]);
-        });
-
-        paint(1851);
-        if (!slider.empty()) {
-          slider.on('input', function(){ label.text(this.value); paint(this.value); });
-        }
-      }).catch(() => {});
-    }
-
-    buildMap({
-      svgId: 'elec-map', tooltipId: 'elec-tooltip', sliderId: 'elec-year', labelId: 'elec-year-label', legendId: 'elec-legend',
-      dataUrl: '/assets/maps/share_electric_by_county.json',
-      thresholds: [0.1, 0.3, 0.6, 1.0],
-      colors: d3.schemeOranges[5],
-      labels: ['0–0.1%', '0.1–0.3%', '0.3–0.6%', '0.6–1%', '1%+']
-    });
-
-    buildMap({
-      svgId: 'bike-map', tooltipId: 'bike-tooltip', sliderId: 'bike-year', labelId: 'bike-year-label', legendId: 'bike-legend',
-      dataUrl: '/assets/maps/share_bicycle_by_county.json',
-      thresholds: [0.05, 0.1, 0.3, 0.6],
-      colors: d3.schemePurples[5],
-      labels: ['0–0.05%', '0.05–0.1%', '0.1–0.3%', '0.3–0.6%', '0.6%+']
-    });
-
-  });
-})();
-</script>
 
 <!-- ================================================ -->
 <!-- SECTION: THE LOCAL LABOUR MARKET CHANNEL        -->
