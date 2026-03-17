@@ -1060,16 +1060,7 @@ Promise.all([
 
 </div>
 
-<!-- ╔═══════════════════════════════════════╗ -->
-<!-- ║  SLIDE 4 — Sankey only                ║ -->
-<!-- ╚═══════════════════════════════════════╝ -->
-<div id="tailor-slide-4" style="border:1px solid #e0e0e0;border-radius:6px;padding:40px 40px;margin:24px 0;background:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;">
-  <div style="font-size:13px;font-weight:500;text-align:center;margin-bottom:20px;color:#333;">
-    Sons of tailors — occupational mobility, 1891 → 1911
-  </div>
-  <div style="margin-bottom:24px;"><svg id="sk-pale" style="width:100%;display:block;"></svg></div>
-  <div><svg id="sk-eng" style="width:100%;display:block;"></svg></div>
-</div>
+
 
 <!-- Tooltip div for bar charts -->
 <div id="dest-tooltip" style="position:fixed;background:#fff;border:1px solid #aaa;padding:7px 11px;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.12);pointer-events:none;font-size:12px;visibility:hidden;z-index:999;"></div>
@@ -1273,7 +1264,6 @@ Promise.all([
 </script>
 
 
-<!-- ---- BOOTMAKERS ---- -->
 
 <!-- ---- BOOTMAKERS ---- -->
 <!-- ╔══════════════════════════════════════════════════╗ -->
