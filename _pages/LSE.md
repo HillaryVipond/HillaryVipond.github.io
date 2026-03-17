@@ -1292,6 +1292,32 @@ Promise.all([
   </div>
 </div>
 
+
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║  SLIDE — Bootmakers: geography of creative destruction    ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div style="border:1px solid #e0e0e0;border-radius:6px;padding:40px 40px 64px;margin:24px 0;background:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;">
+
+  <h3 style="margin-top:0;">The Geography of Creative Destruction</h3>
+
+  <div style="display:grid;grid-template-columns:3fr 1fr;gap:32px;align-items:center;">
+    <div style="border-radius:4px;overflow:hidden;">
+      <img src="/assets/images/BoE_RegionalFinal.png" alt="County Level: New and Old"
+           style="width:100%;display:block;object-fit:contain;object-position:center;background:#f5f5f5;">
+      <div style="font-size:11px;color:#888;text-align:center;padding:6px 0;">County Level, New and Old Jobs, 1851–1911</div>
+    </div>
+    <ul style="font-size:0.95em;line-height:2.2;padding-left:1.2em;margin:0;color:#333;">
+      <li>Old jobs disappeared everywhere.</li>
+      <li>New jobs emerged almost exclusively in Northamptonshire and Leicestershire.</li>
+      <li>38 of 42 counties saw net job loss.</li>
+      <li>The industry relocated to the East Midlands.</li>
+      <li>Same trade, different futures depending on where you were born.</li>
+    </ul>
+  </div>
+
+</div>
+
 <h3>Bootmakers: Growth vs. Decline Counties</h3>
 
 <p>
