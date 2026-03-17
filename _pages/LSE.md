@@ -907,7 +907,7 @@ Promise.all([
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;">
     <div style="border-radius:4px;overflow:hidden;">
       <img src="/assets/images/AreaGraph.jpg" alt="National Level: New and Old"
-           style="width:100%;display:block;object-fit:cover;object-position:center;height:380px;">
+           style="width:100%;display:block;object-fit:cover;object-position:center;height:520px;">
       <div style="font-size:11px;color:#888;text-align:center;padding:6px 0;">National Level, New and Old Jobs, 1851–1911</div>
     </div>
     <ul style="font-size:0.95em;line-height:1.9;padding-left:1.2em;margin:0;color:#333;">
