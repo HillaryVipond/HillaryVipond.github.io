@@ -610,6 +610,8 @@ Promise.all([
 
 </div>
 
+
+
 <!-- ╔═══════════════════════════════════════╗ -->
 <!-- ║  SLIDE 2 — Key finding + bar charts   ║ -->
 <!-- ╚═══════════════════════════════════════╝ -->
@@ -651,6 +653,7 @@ Promise.all([
     style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:none;border:1px solid #ccc;border-radius:20px;padding:5px 20px;font-size:13px;color:#888;cursor:pointer;">↓ next</button>
 
 </div>
+
 
 <!-- ╔═══════════════════════════════════════╗ -->
 <!-- ║  SLIDE 3 — Rank change + direction    ║ -->
