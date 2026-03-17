@@ -1172,6 +1172,101 @@ Promise.all([
   Father occupation breakdown coming soon.
 </div>
 
+<script>
+(function(){
+  function ready(fn){
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, {once:true});
+    else fn();
+  }
+
+  ready(async function(){
+    const GEO_URL = '/assets/maps/Counties1851.geojson';
+    let geoData;
+    try { geoData = await d3.json(GEO_URL); } catch { return; }
+
+    const projection = d3.geoMercator().fitSize([960, 600], geoData);
+    const path = d3.geoPath().projection(projection);
+    const countyKey = f => f.properties?.R_CTY;
+    const fmt = v => (v == null || isNaN(v)) ? 'N/A' : d3.format('.2f')(v) + '%';
+    const getYearValues = (data, y) => data && (data[y] ?? data[String(y)] ?? data[+y] ?? null);
+
+    function buildMap({ svgId, tooltipId, sliderId, labelId, legendId, dataUrl, thresholds, colors, labels }) {
+      const svg      = d3.select(`#${svgId}`);
+      const tooltip  = d3.select(`#${tooltipId}`);
+      const slider   = d3.select(`#${sliderId}`);
+      const label    = d3.select(`#${labelId}`);
+      if (svg.empty()) return;
+
+      svg.selectAll('path').data(geoData.features).join('path')
+        .attr('d', path).attr('fill', '#eee').attr('stroke', '#fff').attr('stroke-width', 0.5);
+
+      const color = d3.scaleThreshold().domain(thresholds).range(colors);
+
+      d3.json(dataUrl).then(yearData => {
+        function paint(year) {
+          const values = getYearValues(yearData, year);
+          svg.selectAll('path')
+            .attr('fill', d => {
+              if (!values) return '#eee';
+              const v = values[countyKey(d)];
+              return v != null ? color(v) : '#ccc';
+            })
+            .on('mouseover', function(event, d){
+              const name = countyKey(d) ?? 'Unknown';
+              const v = getYearValues(yearData, year)?.[name];
+              tooltip.style('visibility','visible').text(`${name}: ${fmt(v)}`);
+              d3.select(this).attr('stroke-width', 2);
+            })
+            .on('mousemove', function(event){
+              const bbox = this.ownerSVGElement.getBoundingClientRect();
+              tooltip.style('top', (event.clientY - bbox.top + 10) + 'px')
+                     .style('left', (event.clientX - bbox.left + 10) + 'px');
+            })
+            .on('mouseout', function(){
+              tooltip.style('visibility','hidden');
+              d3.select(this).attr('stroke-width', 0.5);
+            });
+        }
+
+        const legendSvg = d3.select(`#${legendId}`);
+        const binWidth = 480 / colors.length;
+        legendSvg.selectAll('*').remove();
+        colors.forEach((c, i) => {
+          legendSvg.append('rect').attr('x', i * binWidth).attr('y', 10)
+            .attr('width', binWidth).attr('height', 10).attr('fill', c);
+          legendSvg.append('text').attr('x', i * binWidth + binWidth / 2).attr('y', 35)
+            .attr('text-anchor', 'middle').attr('font-size', '10px').text(labels[i]);
+        });
+
+        paint(1851);
+        if (!slider.empty()) {
+          slider.on('input', function(){ label.text(this.value); paint(this.value); });
+        }
+      }).catch(() => {});
+    }
+
+    buildMap({
+      svgId: 'elec-map', tooltipId: 'elec-tooltip', sliderId: 'elec-year', labelId: 'elec-year-label', legendId: 'elec-legend',
+      dataUrl: '/assets/maps/share_electric_by_county.json',
+      thresholds: [0.1, 0.3, 0.6, 1.0],
+      colors: d3.schemeOranges[5],
+      labels: ['0–0.1%', '0.1–0.3%', '0.3–0.6%', '0.6–1%', '1%+']
+    });
+
+    buildMap({
+      svgId: 'bike-map', tooltipId: 'bike-tooltip', sliderId: 'bike-year', labelId: 'bike-year-label', legendId: 'bike-legend',
+      dataUrl: '/assets/maps/share_bicycle_by_county.json',
+      thresholds: [0.05, 0.1, 0.3, 0.6],
+      colors: d3.schemePurples[5],
+      labels: ['0–0.05%', '0.05–0.1%', '0.1–0.3%', '0.3–0.6%', '0.6%+']
+    });
+
+  });
+})();
+</script>
+
+<hr style="border:none;border-top:3px solid #333;margin:60px 0 40px;">
+
 <!-- ================================================ -->
 <!-- DISCUSSION                                       -->
 <!-- ================================================ -->
@@ -1247,11 +1342,11 @@ Promise.all([
 
     <div style="margin-bottom:32px;">
       <h4 style="margin:0 0 8px;font-size:0.82em;color:#666;text-transform:uppercase;letter-spacing:0.05em;">2. Three types of new jobs</h4>
-      <div style="font-size:0.95em;color:#333;line-height:1.75;">
-        <p style="margin:0 0 12px;"><strong>New jobs in brand new industries</strong> — approximately 500,000 workers in occupations that did not exist before.</p>
-        <p style="margin:0 0 12px;"><strong>New jobs common across many industries</strong> — contractors, agents, supervisors, foremen, operators, managers, factory workers, manufacturing workers.</p>
-        <p style="margin:0 0 12px;"><strong>New jobs that are industry-specific</strong> — ashphalter, sewing machinist, welter, motorcar driver, railway signalman, electric engineer, telephone operator.</p>
-        <p style="margin:0;"><strong>New jobs by expansion of existing professions</strong> — teaching, dentistry, medicine.</p>
+      <div style="font-size:0.95em;color:#333;line-height:1.75;padding-left:1.2em;">
+        <p style="margin:0 0 8px;">— New jobs in brand new industries: approximately 500,000 workers in occupations that did not exist before.</p>
+        <p style="margin:0 0 8px;">— New jobs common across many industries: contractors, agents, supervisors, foremen, operators, managers, factory workers, manufacturing workers.</p>
+        <p style="margin:0 0 8px;">— New jobs that are industry-specific: ashphalter, sewing machinist, welter, motorcar driver, railway signalman, electric engineer, telephone operator.</p>
+        <p style="margin:0;">— New jobs by expansion of existing professions: teaching, dentistry, medicine.</p>
       </div>
     </div>
 
