@@ -195,7 +195,13 @@ nav_exclude: false
       .style("visibility", "hidden")
       .style("box-shadow", "0 2px 6px rgba(0,0,0,0.2)");
 
-    d3.csv("/assets/data/Industry.csv", d3.autoType).then(data => {
+    Promise.all([
+      d3.csv("/assets/data/Industry.csv", d3.autoType),
+      d3.csv("/assets/data/occode_names.csv")
+    ]).then(([data, names]) => {
+      // occode -> occupation (Level3) name lookup, for the hover tooltip
+      const nameByOccode = new Map(names.map(n => [String(n.occode), n.occ_name]));
+
       data = data.filter(d => d.fold_growth != null && !isNaN(d.fold_growth));
 
       const x = d3.scaleLog()
@@ -242,10 +248,8 @@ nav_exclude: false
         .attr("cy", d => y(d.fold_growth))
         .attr("r", 6).attr("fill", "#6BAED6")
         .on("mouseover", function(event, d) {
-          // Use industry name if available, otherwise fall back to order
-          const label = (d.industry && d.industry !== "NaN") ? d.industry
-                      : (d.order   && d.order   !== "NaN") ? d.order
-                      : `Occ ${d.occode}`;
+          // Show the occode (Level3 occupation) name on every dot
+          const label = nameByOccode.get(String(d.occode)) || `Occ ${d.occode}`;
           tooltip.style("visibility", "visible").text(label);
           d3.select(this).attr("stroke", "black").attr("stroke-width", 1.5);
         })
