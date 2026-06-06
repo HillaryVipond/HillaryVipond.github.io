@@ -5,6 +5,13 @@ permalink: /CEPH/
 nav_exclude: false
 ---
 
+<p style="font-size:1.05em;line-height:1.7;max-width:820px;margin-top:0.5rem;margin-bottom:2.5rem;">
+  This project maps the changing occupational structure of Great Britain across the
+  Second Industrial Revolution, tracking both job loss and job creation. We explore this
+  transformation at three levels of granularity: changes at the <strong>Order</strong> level,
+  at the <strong>Industry</strong> level, and at the <strong>Micro-Occupations</strong> level.
+</p>
+
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
