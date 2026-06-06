@@ -323,7 +323,11 @@ nav_exclude: false
 <!-- SECTION 4: Treemap drill-down — Orders → Industries → Tasks -->
 <!-- ================================================ -->
 
-<h2>Treemap to Tasks Level: Orders → Industries → Tasks</h2>
+<h2>3. Micro-Occupations: Growth and Decline</h2>
+
+<p>Each industry is itself made up of many different jobs: micro-occupations. In moving one level deeper, we can see the distinct occupations within each industry. This makes it possible to track how they grew and declined over the 2nd Industrial Revolution.</p>
+
+<p style="font-size:0.9em;color:#666;margin-top:-0.4em;">Click a box to zoom in, and the background to step back out.</p>
 
 <div id="treemap"></div>
 
