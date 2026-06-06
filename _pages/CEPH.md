@@ -167,6 +167,17 @@ nav_exclude: false
 
 <div id="scatterplot"></div>
 
+<div style="display:flex;gap:24px;align-items:center;margin-top:12px;font-size:0.92em;">
+  <span style="display:inline-flex;align-items:center;gap:7px;">
+    <span style="width:13px;height:13px;border-radius:50%;background:#238B45;display:inline-block;"></span>
+    New occupations (new to the 19th century)
+  </span>
+  <span style="display:inline-flex;align-items:center;gap:7px;">
+    <span style="width:13px;height:13px;border-radius:50%;background:#fff;border:1.5px solid #6BAED6;display:inline-block;"></span>
+    Established occupations
+  </span>
+</div>
+
 <h4 style="margin-top: 1em;">
   Population doubled over the period: any industry growing more than 100% outpaced population growth, industries which grew less lagged.
 </h4>
@@ -201,6 +212,12 @@ nav_exclude: false
     ]).then(([data, names]) => {
       // occode -> occupation (Level3) name lookup, for the hover tooltip
       const nameByOccode = new Map(names.map(n => [String(n.occode), n.occ_name]));
+
+      // occodes flagged as new-to-the-19th-century: filled green; the rest hollow
+      const newOccodes  = new Set(names.filter(n => +n.is_new === 1).map(n => String(n.occode)));
+      const isNew       = d => newOccodes.has(String(d.occode));
+      const NEW_FILL    = "#238B45";   // dark green from "Change in Number of New Tasks"
+      const OLD_OUTLINE = "#6BAED6";   // blue outline for established occupations
 
       data = data.filter(d => d.fold_growth != null && !isNaN(d.fold_growth));
 
@@ -246,7 +263,10 @@ nav_exclude: false
       svg.selectAll("circle").data(data).join("circle")
         .attr("cx", d => x(d.final_size))
         .attr("cy", d => y(d.fold_growth))
-        .attr("r", 6).attr("fill", "#6BAED6")
+        .attr("r", 6)
+        .attr("fill",         d => isNew(d) ? NEW_FILL : "none")
+        .attr("stroke",       d => isNew(d) ? "none" : OLD_OUTLINE)
+        .attr("stroke-width", 1.5)
         .on("mouseover", function(event, d) {
           // Show the occode (Level3 occupation) name on every dot
           const label = nameByOccode.get(String(d.occode)) || `Occ ${d.occode}`;
@@ -257,9 +277,11 @@ nav_exclude: false
           tooltip.style("left", (event.pageX + 10) + "px")
                  .style("top",  (event.pageY - 20) + "px");
         })
-        .on("mouseout", function() {
+        .on("mouseout", function(event, d) {
           tooltip.style("visibility", "hidden");
-          d3.select(this).attr("stroke", null);
+          d3.select(this)
+            .attr("stroke", isNew(d) ? "none" : OLD_OUTLINE)
+            .attr("stroke-width", 1.5);
         });
     });
 
