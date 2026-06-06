@@ -169,7 +169,7 @@ nav_exclude: false
 <!-- SECTION 3: Growth by Industry (scatter plot)     -->
 <!-- ================================================ -->
 
-<h2>Growth by Industry: 1851–1911</h2>
+<h2>2. Occupational Industries: Growth and Decline</h2>
 <p>Showing growth by industry over the period. Note that the extreme outliers are primarily in industries which were very small or non-existent in 1851.</p>
 
 <div id="scatterplot"></div>
