@@ -353,6 +353,15 @@ nav_exclude: false
     const imgEl   = document.getElementById("task-image");
     const backBtn = document.getElementById("treemap-back");
 
+    // Larger styled hover tooltip (replaces the tiny native browser tooltip)
+    const tooltip = d3.select("body").append("div")
+      .style("position","absolute").style("background","white")
+      .style("border","1px solid #ccc").style("padding","8px 12px")
+      .style("border-radius","5px").style("pointer-events","none")
+      .style("font-size","15px").style("font-weight","bold")
+      .style("max-width","340px").style("line-height","1.35")
+      .style("visibility","hidden").style("box-shadow","0 2px 6px rgba(0,0,0,0.2)");
+
     d3.json("/assets/data/dress_micro.json").then(rootData => {
       // View A: all orders (Dress highlighted, sized by 1911)
       const ordersRoot = d3.hierarchy(rootData).sum(d => d.size || 0).sort((a,b)=>b.value-a.value);
@@ -368,29 +377,48 @@ nav_exclude: false
 
       function clearImage(){ imgEl.style.display="none"; imgEl.removeAttribute("src"); if (titleEl) titleEl.textContent=""; }
 
-      // Show the full occupation name only when it fits the box (word-wrapped);
-      // otherwise leave the box blank and rely on the hover tooltip (<title>).
-      function wrapLabel(textSel){
+      // Word-wrap a string to a given character width; null if any word can't fit.
+      function wrapText(str, maxChars){
+        const words = String(str).split(/\s+/);
+        if (words.some(w => w.length > maxChars)) return null;
+        const lines = []; let line = "";
+        for (const word of words){
+          const test = line ? line + " " + word : word;
+          if (test.length <= maxChars) line = test;
+          else { lines.push(line); line = word; }
+        }
+        if (line) lines.push(line);
+        return lines;
+      }
+
+      // Show getFull(d) word-wrapped if it fits the box; else show getShort(d)
+      // (e.g. the occode) if that fits; else leave blank and rely on the tooltip.
+      function drawLabel(textSel, getFull, getShort){
         textSel.each(function(d){
-          const self = d3.select(this);
-          self.text(null);
-          const w = d.x1 - d.x0, h = d.y1 - d.y0, name = d.data.name || "";
+          const self = d3.select(this); self.text(null);
+          const w = d.x1 - d.x0, h = d.y1 - d.y0;
           const lineH = 13, padX = 5;
           const maxChars = Math.floor((w - padX*2) / 7.3);
           const maxLines = Math.floor((h - 4) / lineH);
-          if (maxChars < 3 || maxLines < 1) return;
-          const words = name.split(/\s+/);
-          if (words.some(word => word.length > maxChars)) return;   // a single word won't fit → hover only
-          const lines = []; let line = "";
-          for (const word of words){
-            const test = line ? line + " " + word : word;
-            if (test.length <= maxChars) line = test;
-            else { lines.push(line); line = word; }
+          if (maxChars < 2 || maxLines < 1) return;                 // too small for any text
+          const lines = wrapText(getFull(d), maxChars);
+          if (lines && lines.length <= maxLines){
+            lines.forEach((ln,i) => self.append("tspan").attr("x", padX).attr("y", 15 + i*lineH).text(ln));
+            return;
           }
-          if (line) lines.push(line);
-          if (lines.length > maxLines) return;                      // full name won't fit → hover only
-          lines.forEach((ln,i) => self.append("tspan").attr("x", padX).attr("y", 15 + i*lineH).text(ln));
+          const short = getShort ? getShort(d) : null;              // fallback: occode only
+          if (short && short.length <= maxChars){
+            self.append("tspan").attr("x", padX).attr("y", 15).text(short);
+          }
         });
+      }
+
+      // Attach the larger hover tooltip (+ subtle stroke emphasis) to boxes.
+      function addTip(node, getText){
+        node
+          .on("mouseover", function(e,d){ tooltip.style("visibility","visible").text(getText(d)); d3.select(this).select("rect").attr("stroke","#333"); })
+          .on("mousemove", e => tooltip.style("left",(e.pageX+12)+"px").style("top",(e.pageY-10)+"px"))
+          .on("mouseout", function(){ tooltip.style("visibility","hidden"); d3.select(this).select("rect").attr("stroke","#fff"); });
       }
 
       // --- View A: all orders ---
@@ -401,13 +429,13 @@ nav_exclude: false
           .attr("transform", d => `translate(${d.x0},${d.y0})`)
           .style("cursor", d => d.data.name==="Dress" ? "pointer" : "default")
           .on("click", (e,d) => { e.stopPropagation(); if (d.data.name==="Dress") expandToDress(); });
-        node.append("title").text(d => d.data.name);
         node.append("rect")
           .attr("width", d=>d.x1-d.x0).attr("height", d=>d.y1-d.y0)
           .attr("fill", d => d.data.name==="Dress" ? HILITE : GREY).attr("stroke","#fff");
         node.append("text").style("pointer-events","none")
           .attr("fill", d => d.data.name==="Dress" ? "#fff" : "#8a8a8a")
-          .call(wrapLabel);
+          .call(s => drawLabel(s, d => d.data.name, null));
+        addTip(node, d => d.data.name);
       }
 
       // --- Transition: Dress grows to fill, then show its occupations ---
@@ -430,14 +458,14 @@ nav_exclude: false
           .attr("transform", d => `translate(${d.x0},${d.y0})`)
           .style("cursor", d => d.data.chart ? "pointer" : "default")
           .on("click", (e,d) => { e.stopPropagation(); if (d.data.chart) showChart(d); });
-        node.append("title").text(d => d.data.name);
         node.append("rect")
           .attr("width", d=>d.x1-d.x0).attr("height", d=>d.y1-d.y0)
           .attr("fill", d => d.data.chart ? HILITE : GREY).attr("stroke","#fff")
           .style("opacity",0).transition().duration(450).style("opacity",1);
         node.append("text").style("pointer-events","none")
           .attr("fill", d => d.data.chart ? "#fff" : "#6f6f6f")
-          .call(wrapLabel);
+          .call(s => drawLabel(s, d => d.data.occode + ": " + d.data.name, d => String(d.data.occode)));
+        addTip(node, d => d.data.occode + ": " + d.data.name);
         svg.on("click", () => drawOrders());   // background click → back to orders
       }
 
