@@ -327,7 +327,9 @@ nav_exclude: false
 
 <p>Each industry is itself made up of many different jobs: micro-occupations. In moving one level deeper, we can see the distinct occupations within each industry. This makes it possible to track how they grew and declined over the 2nd Industrial Revolution.</p>
 
-<p style="font-size:0.9em;color:#666;margin-top:-0.4em;">Click a box to zoom in, and the background to step back out.</p>
+<p style="font-size:0.9em;color:#666;margin-top:-0.4em;">Click the <strong>Dress</strong> order to open it up, then click a highlighted occupation to see how its tasks changed over time. Click the background to step back out.</p>
+
+<button id="treemap-back" style="display:none;margin:0 0 10px;padding:5px 12px;font-size:13px;cursor:pointer;">← Back to all orders</button>
 
 <div id="treemap"></div>
 
@@ -339,90 +341,89 @@ nav_exclude: false
 <script>
 (function(){
   document.addEventListener("DOMContentLoaded", function() {
-    const width  = 960;
-    const height = 600;
-    const color  = d3.scaleOrdinal(d3.schemeCategory10);
+    const W = 960, H = 600;
+    const GREY = "#dcdcdc", HILITE = "#6BAED6";   // grey = inactive, blue = highlighted / clickable
 
     const svg = d3.select("#treemap").append("svg")
-      .attr("viewBox", [0, 0, width, height])
-      .style("font-family", "sans-serif").style("font-size", "14px");
+      .attr("viewBox", [0, 0, W, H])
+      .style("font-family", "sans-serif").style("font-size", "13px");
+    const g = svg.append("g");
 
-    const group = svg.append("g");
+    const titleEl = document.getElementById("image-title");
+    const imgEl   = document.getElementById("task-image");
+    const backBtn = document.getElementById("treemap-back");
+    backBtn.onclick = () => drawOrders();
 
-    d3.json("/assets/data/Tasks.json").then(treemapData => {
-      const fullRoot = d3.hierarchy(treemapData)
-        .sum(d => d.size || 0)
-        .sort((a, b) => b.value - a.value);
+    d3.json("/assets/data/dress_micro.json").then(rootData => {
+      // View A: all orders (Dress highlighted, sized by 1911)
+      const ordersRoot = d3.hierarchy(rootData).sum(d => d.size || 0).sort((a,b)=>b.value-a.value);
+      d3.treemap().size([W,H]).paddingInner(2)(ordersRoot);
 
-      d3.treemap().size([width, height]).paddingInner(2)(fullRoot);
+      // View B: Dress expanded to fill the whole box
+      const dressData = rootData.children.find(c => c.name === "Dress");
+      const dressRoot = d3.hierarchy(dressData).sum(d => d.size || 0).sort((a,b)=>b.value-a.value);
+      d3.treemap().size([W,H]).paddingInner(2)(dressRoot);
 
-      draw(fullRoot);
+      drawOrders();
 
-      function draw(activeNode) {
-        group.selectAll("*").remove();
+      function clearImage(){ imgEl.style.display="none"; imgEl.removeAttribute("src"); if (titleEl) titleEl.textContent=""; }
+      function fit(s, w){ const max = Math.floor(w/7.2); return s.length > max ? s.slice(0, Math.max(1, max-1)) + "…" : s; }
+      function labelFor(d){ const w=d.x1-d.x0, h=d.y1-d.y0; return (w<34 || h<16) ? "" : fit(d.data.name, w); }
 
-        const parent   = activeNode.parent;
-        const siblings = parent ? parent.children : fullRoot.children;
-
-        // Draw sibling/context boxes
-        const boxes = group.selectAll("g").data(siblings).join("g")
+      // --- View A: all orders ---
+      function drawOrders(){
+        clearImage(); backBtn.style.display="none"; svg.on("click", null);
+        g.selectAll("*").remove();
+        const node = g.selectAll("g").data(ordersRoot.children).join("g")
           .attr("transform", d => `translate(${d.x0},${d.y0})`)
-          .style("cursor", d => d.children ? "pointer" : "default")
-          .on("click", (event, d) => { event.stopPropagation(); if (d.children) draw(d); });
+          .style("cursor", d => d.data.name==="Dress" ? "pointer" : "default")
+          .on("click", (e,d) => { e.stopPropagation(); if (d.data.name==="Dress") expandToDress(); });
+        node.append("title").text(d => d.data.name);
+        node.append("rect")
+          .attr("width", d=>d.x1-d.x0).attr("height", d=>d.y1-d.y0)
+          .attr("fill", d => d.data.name==="Dress" ? HILITE : GREY).attr("stroke","#fff");
+        node.append("text").attr("x",5).attr("y",19).style("pointer-events","none")
+          .attr("fill", d => d.data.name==="Dress" ? "#fff" : "#8a8a8a")
+          .text(d => labelFor(d));
+      }
 
-        boxes.append("rect")
-          .attr("width",  d => d.x1 - d.x0).attr("height", d => d.y1 - d.y0)
-          .attr("fill", d => {
-            if (d === activeNode) return color(d.ancestors().slice(-2)[0]?.data.name || d.data.name);
-            return activeNode.depth === 1 ? "#ddd" : "#aaa";
-          })
-          .attr("stroke", "#fff");
+      // --- Transition: Dress grows to fill, then show its occupations ---
+      function expandToDress(){
+        const sel = g.selectAll("g");
+        sel.filter(d => d.data.name!=="Dress").transition().duration(450).style("opacity",0).remove();
+        const dg = sel.filter(d => d.data.name==="Dress");
+        dg.select("text").transition().duration(250).style("opacity",0);
+        dg.transition().duration(600).attr("transform","translate(0,0)");
+        dg.select("rect").transition().duration(600)
+          .attr("width", W).attr("height", H)
+          .on("end", drawDress);
+      }
 
-        boxes.append("text").attr("x", 4).attr("y", 18)
-          .text(d => { const p = d.data.name?.split("_"); return p?.length > 1 ? p[1] : d.data.name; })
-          .attr("fill", d => d === activeNode ? "white" : "#444")
-          .style("pointer-events", "none");
+      // --- View B: Dress occupations (charted ones highlighted) ---
+      function drawDress(){
+        clearImage(); backBtn.style.display="inline-block";
+        g.selectAll("*").remove();
+        const node = g.selectAll("g").data(dressRoot.children).join("g")
+          .attr("transform", d => `translate(${d.x0},${d.y0})`)
+          .style("cursor", d => d.data.chart ? "pointer" : "default")
+          .on("click", (e,d) => { e.stopPropagation(); if (d.data.chart) showChart(d); });
+        node.append("title").text(d => d.data.name);
+        node.append("rect")
+          .attr("width", d=>d.x1-d.x0).attr("height", d=>d.y1-d.y0)
+          .attr("fill", d => d.data.chart ? HILITE : GREY).attr("stroke","#fff")
+          .style("opacity",0).transition().duration(450).style("opacity",1);
+        node.append("text").attr("x",5).attr("y",19).style("pointer-events","none")
+          .attr("fill", d => d.data.chart ? "#fff" : "#6f6f6f")
+          .text(d => labelFor(d));
+        svg.on("click", () => drawOrders());   // background click → back to orders
+      }
 
-        // Draw children of the active node
-        if (activeNode.children) {
-          const inner = group.append("g");
-
-          inner.selectAll("g").data(activeNode.children).join("g")
-            .attr("transform", d => `translate(${d.x0},${d.y0})`)
-            .style("cursor", d => d.children ? "pointer" : "default")
-            .on("click", (event, d) => {
-              event.stopPropagation();
-              if (d.children) {
-                draw(d); // drill deeper
-              } else {
-                // Leaf node: show task chart image
-                const taskCode = d.data.name;
-                document.getElementById("image-title").textContent = `Chart for ${taskCode}`;
-                const img = document.getElementById("task-image");
-                img.src = `/assets/task_charts/${taskCode}.png`;
-                img.alt = `Chart for ${taskCode}`;
-                img.style.display = "block";
-                img.onerror = () => { img.style.display = "none"; };
-              }
-            })
-            .call(g => {
-              g.append("rect")
-                .attr("width",  d => d.x1 - d.x0).attr("height", d => d.y1 - d.y0)
-                .attr("fill", () => color(activeNode.data.name)).attr("stroke", "#fff");
-
-              g.append("text").attr("x", 4).attr("y", 18)
-                .text(d => {
-                  if ((d.x1 - d.x0) < 20 || (d.y1 - d.y0) < 12) return "";
-                  const p = d.data.name?.split("_");
-                  return p?.length > 1 ? p[1] : d.data.name;
-                })
-                .attr("fill", "white").style("font-size", "12px")
-                .style("pointer-events", "none");
-            });
-
-          // Click background to go up one level
-          svg.on("click", () => { if (activeNode.parent) draw(activeNode.parent); });
-        }
+      function showChart(d){
+        if (titleEl) titleEl.textContent = d.data.name;
+        imgEl.src = `/assets/task_charts/${d.data.chart}.png`;
+        imgEl.alt = d.data.name;
+        imgEl.style.display = "block";
+        imgEl.onerror = () => { imgEl.style.display = "none"; };
       }
     });
   }, { once: true });
