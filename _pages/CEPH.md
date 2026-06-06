@@ -333,9 +333,13 @@ nav_exclude: false
 
 <div id="treemap"></div>
 
-<h3 id="image-title" style="margin-top:2em;text-align:center;"></h3>
-<div id="task-image-container" style="margin-top:30px;text-align:center;">
-  <img id="task-image" src="" alt="" style="max-width:100%;display:none;border:1px solid #ccc;">
+<!-- Lightbox overlay for task charts -->
+<div id="chart-lightbox" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;padding:24px;">
+  <div style="position:relative;background:#fff;border-radius:8px;padding:16px 16px 12px;max-width:92vw;max-height:90vh;box-shadow:0 8px 30px rgba(0,0,0,0.35);">
+    <button id="chart-lightbox-close" aria-label="Close" style="position:absolute;top:4px;right:12px;border:none;background:none;font-size:28px;line-height:1;cursor:pointer;color:#888;">&times;</button>
+    <h3 id="chart-lightbox-title" style="margin:0 28px 10px 0;font-size:1.05em;"></h3>
+    <img id="chart-lightbox-img" src="" alt="" style="max-width:88vw;max-height:78vh;object-fit:contain;display:block;">
+  </div>
 </div>
 
 <script>
@@ -349,9 +353,15 @@ nav_exclude: false
       .style("font-family", "sans-serif").style("font-size", "13px");
     const g = svg.append("g");
 
-    const titleEl = document.getElementById("image-title");
-    const imgEl   = document.getElementById("task-image");
-    const backBtn = document.getElementById("treemap-back");
+    const backBtn   = document.getElementById("treemap-back");
+    const lbox      = document.getElementById("chart-lightbox");
+    const lboxImg   = document.getElementById("chart-lightbox-img");
+    const lboxTitle = document.getElementById("chart-lightbox-title");
+
+    function closeLightbox(){ lbox.style.display = "none"; lboxImg.removeAttribute("src"); }
+    document.getElementById("chart-lightbox-close").onclick = closeLightbox;
+    lbox.addEventListener("click", e => { if (e.target === lbox) closeLightbox(); });        // click backdrop
+    document.addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); }); // Esc to close
 
     // Larger styled hover tooltip (replaces the tiny native browser tooltip)
     const tooltip = d3.select("body").append("div")
@@ -375,7 +385,7 @@ nav_exclude: false
       backBtn.onclick = drawOrders;
       drawOrders();
 
-      function clearImage(){ imgEl.style.display="none"; imgEl.removeAttribute("src"); if (titleEl) titleEl.textContent=""; }
+      function clearImage(){ closeLightbox(); }
 
       // Word-wrap a string to a given character width; null if any word can't fit.
       function wrapText(str, maxChars){
@@ -473,11 +483,11 @@ nav_exclude: false
       }
 
       function showChart(d){
-        if (titleEl) titleEl.textContent = d.data.name;
-        imgEl.src = `/assets/task_charts/${d.data.chart}.png`;
-        imgEl.alt = d.data.name;
-        imgEl.style.display = "block";
-        imgEl.onerror = () => { imgEl.style.display = "none"; };
+        lboxTitle.textContent = d.data.occode + ": " + d.data.name;
+        lboxImg.alt = d.data.name;
+        lboxImg.onerror = () => { lboxImg.alt = "Chart not available"; };
+        lboxImg.src = `/assets/task_charts/${d.data.chart}.png`;
+        lbox.style.display = "flex";
       }
     });
   }, { once: true });
