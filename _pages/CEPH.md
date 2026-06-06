@@ -208,7 +208,7 @@ nav_exclude: false
 
     Promise.all([
       d3.csv("/assets/data/Industry.csv", d3.autoType),
-      d3.csv("/assets/data/occode_names.csv")
+      d3.csv("/assets/data/occode_names.csv?v=2")
     ]).then(([data, names]) => {
       // occode -> occupation (Level3) name lookup, for the hover tooltip
       const nameByOccode = new Map(names.map(n => [String(n.occode), n.occ_name]));
@@ -267,6 +267,7 @@ nav_exclude: false
         .attr("fill",         d => isNew(d) ? NEW_FILL : "none")
         .attr("stroke",       d => isNew(d) ? "none" : OLD_OUTLINE)
         .attr("stroke-width", 1.5)
+        .attr("pointer-events", "all")   // make the whole disc hoverable, even when fill is none
         .on("mouseover", function(event, d) {
           // Show the occode (Level3 occupation) name on every dot
           const label = nameByOccode.get(String(d.occode)) || `Occ ${d.occode}`;
