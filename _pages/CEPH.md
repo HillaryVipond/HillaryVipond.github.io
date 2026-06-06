@@ -352,7 +352,6 @@ nav_exclude: false
     const titleEl = document.getElementById("image-title");
     const imgEl   = document.getElementById("task-image");
     const backBtn = document.getElementById("treemap-back");
-    backBtn.onclick = () => drawOrders();
 
     d3.json("/assets/data/dress_micro.json").then(rootData => {
       // View A: all orders (Dress highlighted, sized by 1911)
@@ -364,11 +363,35 @@ nav_exclude: false
       const dressRoot = d3.hierarchy(dressData).sum(d => d.size || 0).sort((a,b)=>b.value-a.value);
       d3.treemap().size([W,H]).paddingInner(2)(dressRoot);
 
+      backBtn.onclick = drawOrders;
       drawOrders();
 
       function clearImage(){ imgEl.style.display="none"; imgEl.removeAttribute("src"); if (titleEl) titleEl.textContent=""; }
-      function fit(s, w){ const max = Math.floor(w/7.2); return s.length > max ? s.slice(0, Math.max(1, max-1)) + "…" : s; }
-      function labelFor(d){ const w=d.x1-d.x0, h=d.y1-d.y0; return (w<34 || h<16) ? "" : fit(d.data.name, w); }
+
+      // Show the full occupation name only when it fits the box (word-wrapped);
+      // otherwise leave the box blank and rely on the hover tooltip (<title>).
+      function wrapLabel(textSel){
+        textSel.each(function(d){
+          const self = d3.select(this);
+          self.text(null);
+          const w = d.x1 - d.x0, h = d.y1 - d.y0, name = d.data.name || "";
+          const lineH = 13, padX = 5;
+          const maxChars = Math.floor((w - padX*2) / 7.3);
+          const maxLines = Math.floor((h - 4) / lineH);
+          if (maxChars < 3 || maxLines < 1) return;
+          const words = name.split(/\s+/);
+          if (words.some(word => word.length > maxChars)) return;   // a single word won't fit → hover only
+          const lines = []; let line = "";
+          for (const word of words){
+            const test = line ? line + " " + word : word;
+            if (test.length <= maxChars) line = test;
+            else { lines.push(line); line = word; }
+          }
+          if (line) lines.push(line);
+          if (lines.length > maxLines) return;                      // full name won't fit → hover only
+          lines.forEach((ln,i) => self.append("tspan").attr("x", padX).attr("y", 15 + i*lineH).text(ln));
+        });
+      }
 
       // --- View A: all orders ---
       function drawOrders(){
@@ -382,9 +405,9 @@ nav_exclude: false
         node.append("rect")
           .attr("width", d=>d.x1-d.x0).attr("height", d=>d.y1-d.y0)
           .attr("fill", d => d.data.name==="Dress" ? HILITE : GREY).attr("stroke","#fff");
-        node.append("text").attr("x",5).attr("y",19).style("pointer-events","none")
+        node.append("text").style("pointer-events","none")
           .attr("fill", d => d.data.name==="Dress" ? "#fff" : "#8a8a8a")
-          .text(d => labelFor(d));
+          .call(wrapLabel);
       }
 
       // --- Transition: Dress grows to fill, then show its occupations ---
@@ -412,9 +435,9 @@ nav_exclude: false
           .attr("width", d=>d.x1-d.x0).attr("height", d=>d.y1-d.y0)
           .attr("fill", d => d.data.chart ? HILITE : GREY).attr("stroke","#fff")
           .style("opacity",0).transition().duration(450).style("opacity",1);
-        node.append("text").attr("x",5).attr("y",19).style("pointer-events","none")
+        node.append("text").style("pointer-events","none")
           .attr("fill", d => d.data.chart ? "#fff" : "#6f6f6f")
-          .text(d => labelFor(d));
+          .call(wrapLabel);
         svg.on("click", () => drawOrders());   // background click → back to orders
       }
 
