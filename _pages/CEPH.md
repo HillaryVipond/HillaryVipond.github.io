@@ -393,9 +393,11 @@ nav_exclude: false
 
       // Show getFull(d) word-wrapped if it fits the box; else show getShort(d)
       // (e.g. the occode) if that fits; else leave blank and rely on the tooltip.
+      // Records d._full = true when the box shows its full name inline.
       function drawLabel(textSel, getFull, getShort){
         textSel.each(function(d){
           const self = d3.select(this); self.text(null);
+          d._full = false;
           const w = d.x1 - d.x0, h = d.y1 - d.y0;
           const lineH = 13, padX = 5;
           const maxChars = Math.floor((w - padX*2) / 7.3);
@@ -404,6 +406,7 @@ nav_exclude: false
           const lines = wrapText(getFull(d), maxChars);
           if (lines && lines.length <= maxLines){
             lines.forEach((ln,i) => self.append("tspan").attr("x", padX).attr("y", 15 + i*lineH).text(ln));
+            d._full = true;
             return;
           }
           const short = getShort ? getShort(d) : null;              // fallback: occode only
@@ -413,11 +416,11 @@ nav_exclude: false
         });
       }
 
-      // Attach the larger hover tooltip (+ subtle stroke emphasis) to boxes.
+      // Larger hover tooltip — only for boxes that aren't already showing their full name.
       function addTip(node, getText){
         node
-          .on("mouseover", function(e,d){ tooltip.style("visibility","visible").text(getText(d)); d3.select(this).select("rect").attr("stroke","#333"); })
-          .on("mousemove", e => tooltip.style("left",(e.pageX+12)+"px").style("top",(e.pageY-10)+"px"))
+          .on("mouseover", function(e,d){ if (d._full) return; tooltip.style("visibility","visible").text(getText(d)); d3.select(this).select("rect").attr("stroke","#333"); })
+          .on("mousemove", function(e,d){ if (d._full) return; tooltip.style("left",(e.pageX+12)+"px").style("top",(e.pageY-10)+"px"); })
           .on("mouseout", function(){ tooltip.style("visibility","hidden"); d3.select(this).select("rect").attr("stroke","#fff"); });
       }
 
@@ -465,7 +468,7 @@ nav_exclude: false
         node.append("text").style("pointer-events","none")
           .attr("fill", d => d.data.chart ? "#fff" : "#6f6f6f")
           .call(s => drawLabel(s, d => d.data.occode + ": " + d.data.name, d => String(d.data.occode)));
-        addTip(node, d => d.data.occode + ": " + d.data.name);
+        addTip(node, d => d.data.name);
         svg.on("click", () => drawOrders());   // background click → back to orders
       }
 
