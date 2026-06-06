@@ -495,11 +495,167 @@ nav_exclude: false
 </script>
 
 
+<hr style="border:none;border-top:1px solid #ddd;margin:48px 0;">
+
+<h2>4. Results</h2>
+
+<h3 style="margin-top:1.4em;font-size:1.25em;color:#238B45;border-bottom:3px solid #238B45;padding-bottom:6px;letter-spacing:0.02em;">Growth</h3>
+
+<!-- ================================================ -->
+<!-- SECTION: THE LOCAL LABOUR MARKET CHANNEL        -->
+<!-- ================================================ -->
+
+<h3>4.1 Map of New Jobs</h3>
+
+<p>
+  Who fills the new jobs when an industry grows? The maps below show where new jobs emerged
+  in three sectors — electrical trades, bicycles, and bootmaking — and who the fathers of
+  those workers were. If geography is doing the work rather than family transmission, we expect
+  to see the new workers drawn from a wide range of father occupations, not concentrated in the
+  same trade as their fathers.
+</p>
+
+<!-- ---- ELECTRICAL MAP ---- -->
+
+<h4>Electrical Trades: Where New Jobs Emerged</h4>
+
+<div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
+  <label for="elec-year">Select year: <span id="elec-year-label">1851</span></label>
+  <input type="range" id="elec-year" min="1851" max="1911" step="10" value="1851" style="width:300px;">
+</div>
+
+<div style="display:flex;flex-direction:column;align-items:center;margin-bottom:16px;position:relative;">
+  <svg id="elec-map" width="960" height="600" viewBox="0 0 960 600" style="max-width:100%;height:auto;"></svg>
+  <div style="margin-top:10px;">
+    <svg id="elec-legend" width="480" height="50"></svg>
+    <div style="font-size:12px;text-align:center;">Share of male workforce in electrical trades</div>
+  </div>
+  <div id="elec-tooltip" style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);pointer-events:none;"></div>
+</div>
+
+<div style="background:#f0f0f0;border-left:4px solid #bbb;padding:12px 16px;margin:0 0 48px;font-size:0.9em;color:#666;">
+  Father occupation breakdown coming soon.
+</div>
+
+<!-- ---- BICYCLES MAP ---- -->
+
+<h4>Bicycles: Where New Jobs Emerged</h4>
+
+<div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
+  <label for="bike-year">Select year: <span id="bike-year-label">1851</span></label>
+  <input type="range" id="bike-year" min="1851" max="1911" step="10" value="1851" style="width:300px;">
+</div>
+
+<div style="display:flex;flex-direction:column;align-items:center;margin-bottom:16px;position:relative;">
+  <svg id="bike-map" width="960" height="600" viewBox="0 0 960 600" style="max-width:100%;height:auto;"></svg>
+  <div style="margin-top:10px;">
+    <svg id="bike-legend" width="480" height="50"></svg>
+    <div style="font-size:12px;text-align:center;">Share of male workforce in bicycle trades</div>
+  </div>
+  <div id="bike-tooltip" style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);pointer-events:none;"></div>
+</div>
+
+<div style="background:#f0f0f0;border-left:4px solid #bbb;padding:12px 16px;margin:0 0 48px;font-size:0.9em;color:#666;">
+  Father occupation breakdown coming soon.
+</div>
+
+<script>
+(function(){
+  function ready(fn){
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, {once:true});
+    else fn();
+  }
+
+  ready(async function(){
+    const GEO_URL = '/assets/maps/Counties1851.geojson';
+    let geoData;
+    try { geoData = await d3.json(GEO_URL); } catch { return; }
+
+    const projection = d3.geoMercator().fitSize([960, 600], geoData);
+    const path = d3.geoPath().projection(projection);
+    const countyKey = f => f.properties?.R_CTY;
+    const fmt = v => (v == null || isNaN(v)) ? 'N/A' : d3.format('.2f')(v) + '%';
+    const getYearValues = (data, y) => data && (data[y] ?? data[String(y)] ?? data[+y] ?? null);
+
+    function buildMap({ svgId, tooltipId, sliderId, labelId, legendId, dataUrl, thresholds, colors, labels }) {
+      const svg      = d3.select(`#${svgId}`);
+      const tooltip  = d3.select(`#${tooltipId}`);
+      const slider   = d3.select(`#${sliderId}`);
+      const label    = d3.select(`#${labelId}`);
+      if (svg.empty()) return;
+
+      svg.selectAll('path').data(geoData.features).join('path')
+        .attr('d', path).attr('fill', '#eee').attr('stroke', '#fff').attr('stroke-width', 0.5);
+
+      const color = d3.scaleThreshold().domain(thresholds).range(colors);
+
+      d3.json(dataUrl).then(yearData => {
+        function paint(year) {
+          const values = getYearValues(yearData, year);
+          svg.selectAll('path')
+            .attr('fill', d => {
+              if (!values) return '#eee';
+              const v = values[countyKey(d)];
+              return v != null ? color(v) : '#ccc';
+            })
+            .on('mouseover', function(event, d){
+              const name = countyKey(d) ?? 'Unknown';
+              const v = getYearValues(yearData, year)?.[name];
+              tooltip.style('visibility','visible').text(`${name}: ${fmt(v)}`);
+              d3.select(this).attr('stroke-width', 2);
+            })
+            .on('mousemove', function(event){
+              const bbox = this.ownerSVGElement.getBoundingClientRect();
+              tooltip.style('top', (event.clientY - bbox.top + 10) + 'px')
+                     .style('left', (event.clientX - bbox.left + 10) + 'px');
+            })
+            .on('mouseout', function(){
+              tooltip.style('visibility','hidden');
+              d3.select(this).attr('stroke-width', 0.5);
+            });
+        }
+
+        const legendSvg = d3.select(`#${legendId}`);
+        const binWidth = 480 / colors.length;
+        legendSvg.selectAll('*').remove();
+        colors.forEach((c, i) => {
+          legendSvg.append('rect').attr('x', i * binWidth).attr('y', 10)
+            .attr('width', binWidth).attr('height', 10).attr('fill', c);
+          legendSvg.append('text').attr('x', i * binWidth + binWidth / 2).attr('y', 35)
+            .attr('text-anchor', 'middle').attr('font-size', '10px').text(labels[i]);
+        });
+
+        paint(1851);
+        if (!slider.empty()) {
+          slider.on('input', function(){ label.text(this.value); paint(this.value); });
+        }
+      }).catch(() => {});
+    }
+
+    buildMap({
+      svgId: 'elec-map', tooltipId: 'elec-tooltip', sliderId: 'elec-year', labelId: 'elec-year-label', legendId: 'elec-legend',
+      dataUrl: '/assets/maps/share_electric_by_county.json',
+      thresholds: [0.1, 0.3, 0.6, 1.0],
+      colors: d3.schemeOranges[5],
+      labels: ['0–0.1%', '0.1–0.3%', '0.3–0.6%', '0.6–1%', '1%+']
+    });
+
+    buildMap({
+      svgId: 'bike-map', tooltipId: 'bike-tooltip', sliderId: 'bike-year', labelId: 'bike-year-label', legendId: 'bike-legend',
+      dataUrl: '/assets/maps/share_bicycle_by_county.json',
+      thresholds: [0.05, 0.1, 0.3, 0.6],
+      colors: d3.schemePurples[5],
+      labels: ['0–0.05%', '0.05–0.1%', '0.1–0.3%', '0.3–0.6%', '0.6%+']
+    });
+
+  });
+})();
+</script>
 <!-- ===================== -->
 <!-- Section 1: Technology -->
 <!-- ===================== -->
 
-<h2>Technology: Geographic Distribution</h2>
+<h3>4.2 Map of mechanization</h3>
 
 <h4 style="margin-top: 1em;">
   An initial mapping of the emergence of new technologies in the UK, by county.
@@ -616,7 +772,7 @@ nav_exclude: false
 <!-- Section 2: Management -->
 <!-- ===================== -->
 
-<h2>Management: Geographic Distribution</h2>
+<h3>4.3 Mapping of management jobs</h3>
 
 <h4 style="margin-top: 1em;">
   An initial mapping of the rise of management jobs in the UK, by county.
@@ -733,11 +889,13 @@ nav_exclude: false
 </script>
 
 
+<h3 style="margin-top:1.6em;font-size:1.25em;color:#D94801;border-bottom:3px solid #D94801;padding-bottom:6px;letter-spacing:0.02em;">Decline</h3>
+
 <!-- ========================= -->
 <!-- Section 3: Apprenticeships -->
 <!-- ========================= -->
 
-<h2>Apprenticeship System</h2>
+<h3>4.4 Mapping of the apprenticeship system</h3>
 
 <p>The apprenticeship system declines everywhere between 1851–1911. The decline is more rapid after 1881. Less urban areas seem to retain more of the system than elsewhere. What is somewhat surprising is how different the decline is by level of skill — apprenticeships decline only slightly over the period; it is Masters and Journeymen who disappear.</p>
 
@@ -893,7 +1051,7 @@ Promise.all([
 <!-- Section 4: Occupational Inheritance -->
 <!-- ================================= -->
 
-<h2>Occupational Skills Inheritance</h2>
+<h2>5. Discussion</h2>
 
 <style>
   .table-wrap { overflow-x:auto; margin: 0 0 12px; }
@@ -1011,155 +1169,3 @@ Promise.all([
 </script>
 
 
-<hr style="border:none;border-top:1px solid #ddd;margin:48px 0;">
-
-<!-- ================================================ -->
-<!-- SECTION: THE LOCAL LABOUR MARKET CHANNEL        -->
-<!-- ================================================ -->
-
-<h2>The Local Labour Market Channel</h2>
-
-<p>
-  Who fills the new jobs when an industry grows? The maps below show where new jobs emerged
-  in three sectors — electrical trades, bicycles, and bootmaking — and who the fathers of
-  those workers were. If geography is doing the work rather than family transmission, we expect
-  to see the new workers drawn from a wide range of father occupations, not concentrated in the
-  same trade as their fathers.
-</p>
-
-<!-- ---- ELECTRICAL MAP ---- -->
-
-<h3>Electrical Trades: Where New Jobs Emerged</h3>
-
-<div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
-  <label for="elec-year">Select year: <span id="elec-year-label">1851</span></label>
-  <input type="range" id="elec-year" min="1851" max="1911" step="10" value="1851" style="width:300px;">
-</div>
-
-<div style="display:flex;flex-direction:column;align-items:center;margin-bottom:16px;position:relative;">
-  <svg id="elec-map" width="960" height="600" viewBox="0 0 960 600" style="max-width:100%;height:auto;"></svg>
-  <div style="margin-top:10px;">
-    <svg id="elec-legend" width="480" height="50"></svg>
-    <div style="font-size:12px;text-align:center;">Share of male workforce in electrical trades</div>
-  </div>
-  <div id="elec-tooltip" style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);pointer-events:none;"></div>
-</div>
-
-<div style="background:#f0f0f0;border-left:4px solid #bbb;padding:12px 16px;margin:0 0 48px;font-size:0.9em;color:#666;">
-  Father occupation breakdown coming soon.
-</div>
-
-<!-- ---- BICYCLES MAP ---- -->
-
-<h3>Bicycles: Where New Jobs Emerged</h3>
-
-<div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
-  <label for="bike-year">Select year: <span id="bike-year-label">1851</span></label>
-  <input type="range" id="bike-year" min="1851" max="1911" step="10" value="1851" style="width:300px;">
-</div>
-
-<div style="display:flex;flex-direction:column;align-items:center;margin-bottom:16px;position:relative;">
-  <svg id="bike-map" width="960" height="600" viewBox="0 0 960 600" style="max-width:100%;height:auto;"></svg>
-  <div style="margin-top:10px;">
-    <svg id="bike-legend" width="480" height="50"></svg>
-    <div style="font-size:12px;text-align:center;">Share of male workforce in bicycle trades</div>
-  </div>
-  <div id="bike-tooltip" style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);pointer-events:none;"></div>
-</div>
-
-<div style="background:#f0f0f0;border-left:4px solid #bbb;padding:12px 16px;margin:0 0 48px;font-size:0.9em;color:#666;">
-  Father occupation breakdown coming soon.
-</div>
-
-<script>
-(function(){
-  function ready(fn){
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, {once:true});
-    else fn();
-  }
-
-  ready(async function(){
-    const GEO_URL = '/assets/maps/Counties1851.geojson';
-    let geoData;
-    try { geoData = await d3.json(GEO_URL); } catch { return; }
-
-    const projection = d3.geoMercator().fitSize([960, 600], geoData);
-    const path = d3.geoPath().projection(projection);
-    const countyKey = f => f.properties?.R_CTY;
-    const fmt = v => (v == null || isNaN(v)) ? 'N/A' : d3.format('.2f')(v) + '%';
-    const getYearValues = (data, y) => data && (data[y] ?? data[String(y)] ?? data[+y] ?? null);
-
-    function buildMap({ svgId, tooltipId, sliderId, labelId, legendId, dataUrl, thresholds, colors, labels }) {
-      const svg      = d3.select(`#${svgId}`);
-      const tooltip  = d3.select(`#${tooltipId}`);
-      const slider   = d3.select(`#${sliderId}`);
-      const label    = d3.select(`#${labelId}`);
-      if (svg.empty()) return;
-
-      svg.selectAll('path').data(geoData.features).join('path')
-        .attr('d', path).attr('fill', '#eee').attr('stroke', '#fff').attr('stroke-width', 0.5);
-
-      const color = d3.scaleThreshold().domain(thresholds).range(colors);
-
-      d3.json(dataUrl).then(yearData => {
-        function paint(year) {
-          const values = getYearValues(yearData, year);
-          svg.selectAll('path')
-            .attr('fill', d => {
-              if (!values) return '#eee';
-              const v = values[countyKey(d)];
-              return v != null ? color(v) : '#ccc';
-            })
-            .on('mouseover', function(event, d){
-              const name = countyKey(d) ?? 'Unknown';
-              const v = getYearValues(yearData, year)?.[name];
-              tooltip.style('visibility','visible').text(`${name}: ${fmt(v)}`);
-              d3.select(this).attr('stroke-width', 2);
-            })
-            .on('mousemove', function(event){
-              const bbox = this.ownerSVGElement.getBoundingClientRect();
-              tooltip.style('top', (event.clientY - bbox.top + 10) + 'px')
-                     .style('left', (event.clientX - bbox.left + 10) + 'px');
-            })
-            .on('mouseout', function(){
-              tooltip.style('visibility','hidden');
-              d3.select(this).attr('stroke-width', 0.5);
-            });
-        }
-
-        const legendSvg = d3.select(`#${legendId}`);
-        const binWidth = 480 / colors.length;
-        legendSvg.selectAll('*').remove();
-        colors.forEach((c, i) => {
-          legendSvg.append('rect').attr('x', i * binWidth).attr('y', 10)
-            .attr('width', binWidth).attr('height', 10).attr('fill', c);
-          legendSvg.append('text').attr('x', i * binWidth + binWidth / 2).attr('y', 35)
-            .attr('text-anchor', 'middle').attr('font-size', '10px').text(labels[i]);
-        });
-
-        paint(1851);
-        if (!slider.empty()) {
-          slider.on('input', function(){ label.text(this.value); paint(this.value); });
-        }
-      }).catch(() => {});
-    }
-
-    buildMap({
-      svgId: 'elec-map', tooltipId: 'elec-tooltip', sliderId: 'elec-year', labelId: 'elec-year-label', legendId: 'elec-legend',
-      dataUrl: '/assets/maps/share_electric_by_county.json',
-      thresholds: [0.1, 0.3, 0.6, 1.0],
-      colors: d3.schemeOranges[5],
-      labels: ['0–0.1%', '0.1–0.3%', '0.3–0.6%', '0.6–1%', '1%+']
-    });
-
-    buildMap({
-      svgId: 'bike-map', tooltipId: 'bike-tooltip', sliderId: 'bike-year', labelId: 'bike-year-label', legendId: 'bike-legend',
-      dataUrl: '/assets/maps/share_bicycle_by_county.json',
-      thresholds: [0.05, 0.1, 0.3, 0.6],
-      colors: d3.schemePurples[5],
-      labels: ['0–0.05%', '0.05–0.1%', '0.1–0.3%', '0.3–0.6%', '0.6%+']
-    });
-
-  });
-})();
-</script>
