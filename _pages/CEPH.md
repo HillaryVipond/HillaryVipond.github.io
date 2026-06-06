@@ -24,7 +24,7 @@ nav_exclude: false
 <!-- SECTION 1: Treemap — Orders Over Time            -->
 <!-- ================================================ -->
 
-<h2>Treemap: Orders Over Time</h2>
+<h2>1. Occupational Orders over Time</h2>
 <p>Click a year to view the treemap of the different sectors of the British economy by census year.</p>
 
 <div style="margin-bottom: 1em;">
@@ -93,7 +93,7 @@ nav_exclude: false
 <!-- SECTION 2: Growth by Order (bar chart)           -->
 <!-- ================================================ -->
 
-<h2>Occupation: Orders Over Time (1851–1911)</h2>
+<h3>Orders ranked by growth, 1851–1911</h3>
 <p>Showing the growth in different sectors of the economy over the period. Sectors shown in blue are growing more rapidly than average population growth.</p>
 
 <div id="growth-chart" style="margin-top: 2em;"></div>
