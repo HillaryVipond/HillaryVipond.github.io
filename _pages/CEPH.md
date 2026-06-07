@@ -660,18 +660,19 @@ nav_exclude: false
       <thead>
         <tr style="text-align:left;border-bottom:2px solid #238B45;">
           <th style="padding:7px 8px;font-weight:600;">Occupation</th>
+          <th style="padding:7px 8px;font-weight:600;text-align:right;">Workers, 1911</th>
           <th style="padding:7px 8px;font-weight:600;text-align:right;">Growth</th>
         </tr>
       </thead>
       <tbody>
-        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Electricians</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">1,648×</td></tr>
-        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Motor car drivers</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">1,260×</td></tr>
-        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Tramway conductors</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">402×</td></tr>
-        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Bicycle makers &amp; repairers</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">256×</td></tr>
-        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Photographers</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">192×</td></tr>
-        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Electrical cable makers</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">175×</td></tr>
-        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Telegraph &amp; telephone operators</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">151×</td></tr>
-        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Electrical lamp makers</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">129×</td></tr>
+        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Electricians</td><td style="padding:7px 8px;text-align:right;">19,774</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">1,648×</td></tr>
+        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Motor car drivers</td><td style="padding:7px 8px;text-align:right;">18,904</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">1,260×</td></tr>
+        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Tramway conductors</td><td style="padding:7px 8px;text-align:right;">12,452</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">402×</td></tr>
+        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Bicycle makers &amp; repairers</td><td style="padding:7px 8px;text-align:right;">18,953</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">256×</td></tr>
+        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Photographers</td><td style="padding:7px 8px;text-align:right;">14,611</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">192×</td></tr>
+        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Electrical cable makers</td><td style="padding:7px 8px;text-align:right;">17,975</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">175×</td></tr>
+        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Telegraph &amp; telephone operators</td><td style="padding:7px 8px;text-align:right;">21,993</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">151×</td></tr>
+        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Electrical lamp makers</td><td style="padding:7px 8px;text-align:right;">5,657</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">129×</td></tr>
       </tbody>
     </table>
   </div>
