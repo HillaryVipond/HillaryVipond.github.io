@@ -513,7 +513,7 @@ nav_exclude: false
 
 <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
   <label for="tech-year-slider">Select year: <span id="tech-year-label">1851</span></label>
-  <input type="range" id="tech-year-slider" min="1851" max="1911" step="10" value="1851" style="width:300px;">
+  <input type="range" id="tech-year-slider" min="0" max="5" step="1" value="0" style="width:300px;">
 </div>
 
 <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:40px;position:relative;">
@@ -537,6 +537,7 @@ nav_exclude: false
     const tooltip = d3.select('#tech-tooltip');
     const slider = d3.select('#tech-year-slider');
     const yearLabel = d3.select('#tech-year-label');
+    const YEARS = [1851, 1861, 1881, 1891, 1901, 1911];   // 1871 skipped (no census snapshot)
     if (svg.empty()) return;
 
     const GEO_URL  = '/assets/maps/Counties1851.geojson';
@@ -604,10 +605,10 @@ nav_exclude: false
       });
     })();
 
-    paint(1851);
+    paint(YEARS[0]);
     if (!slider.empty()) {
       slider.on('input', function(){
-        const y = this.value;
+        const y = YEARS[+this.value];
         yearLabel.text(y);
         paint(y);
       });
@@ -638,7 +639,7 @@ nav_exclude: false
         </select>
       </label>
       <label>Select year: <span id="newjob-year-label">1851</span>
-        <input type="range" id="newjob-year" min="1851" max="1911" step="10" value="1851" style="width:240px;vertical-align:middle;">
+        <input type="range" id="newjob-year" min="0" max="5" step="1" value="0" style="width:240px;vertical-align:middle;">
       </label>
     </div>
 
@@ -722,6 +723,7 @@ nav_exclude: false
     const legendSvg = d3.select('#newjob-legend');
     const caption   = d3.select('#newjob-legend-caption');
     const select    = d3.select('#newjob-select');
+    const YEARS     = [1851, 1861, 1881, 1891, 1901, 1911];   // 1871 skipped (no census snapshot)
 
     svg.selectAll('path').data(geoData.features).join('path')
       .attr('d', path).attr('fill', '#eee').attr('stroke', '#fff').attr('stroke-width', 0.5);
@@ -774,10 +776,10 @@ nav_exclude: false
       }
       current = dataCache[key];
       drawLegend(cfg);
-      paint(+slider.property('value'));
+      paint(YEARS[+slider.property('value')]);
     }
 
-    slider.on('input', function(){ label.text(this.value); paint(this.value); });
+    slider.on('input', function(){ const yr = YEARS[+this.value]; label.text(yr); paint(yr); });
     select.on('change', function(){ loadJob(this.value); });
 
     loadJob('bicycle');   // default selection
@@ -799,7 +801,7 @@ nav_exclude: false
 
 <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
   <label for="mgmt-year-slider">Select year: <span id="mgmt-year-label">1851</span></label>
-  <input type="range" id="mgmt-year-slider" min="1851" max="1911" step="10" value="1851" style="width:300px;">
+  <input type="range" id="mgmt-year-slider" min="0" max="5" step="1" value="0" style="width:300px;">
 </div>
 
 <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:40px;position:relative;">
@@ -825,6 +827,7 @@ nav_exclude: false
     const tooltip = d3.select('#mgmt-tooltip');
     const slider = d3.select('#mgmt-year-slider');
     const yearLabel = d3.select('#mgmt-year-label');
+    const YEARS = [1851, 1861, 1881, 1891, 1901, 1911];   // 1871 skipped (no census snapshot)
     if (svg.empty()) return;
 
     const GEO_URL  = '/assets/maps/Counties1851.geojson';
@@ -895,10 +898,10 @@ nav_exclude: false
       });
     })();
 
-    paint(1851);
+    paint(YEARS[0]);
     if (!slider.empty()) {
       slider.on('input', function(){
-        const y = this.value;
+        const y = YEARS[+this.value];
         yearLabel.text(y);
         paint(y);
       });
