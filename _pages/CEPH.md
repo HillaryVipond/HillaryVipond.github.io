@@ -626,25 +626,56 @@ nav_exclude: false
   year to see the share of the male workforce it accounted for in each county.
 </p>
 
-<div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-bottom:10px;">
-  <label>Job:
-    <select id="newjob-select" style="font-size:14px;padding:3px 6px;">
-      <option value="bicycle" selected>Bicycle trades</option>
-      <option value="electric">Electrical trades</option>
-    </select>
-  </label>
-  <label>Select year: <span id="newjob-year-label">1851</span>
-    <input type="range" id="newjob-year" min="1851" max="1911" step="10" value="1851" style="width:300px;vertical-align:middle;">
-  </label>
-</div>
+<div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
 
-<div style="display:flex;flex-direction:column;align-items:center;margin-bottom:16px;position:relative;">
-  <svg id="newjob-map" width="960" height="600" viewBox="0 0 960 600" style="max-width:100%;height:auto;"></svg>
-  <div style="margin-top:10px;">
-    <svg id="newjob-legend" width="480" height="50"></svg>
-    <div id="newjob-legend-caption" style="font-size:12px;text-align:center;"></div>
+  <!-- LEFT: controls + map -->
+  <div style="flex:2 1 520px;min-width:320px;">
+    <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-bottom:10px;">
+      <label>Job:
+        <select id="newjob-select" style="font-size:14px;padding:3px 6px;">
+          <option value="bicycle" selected>Bicycle trades</option>
+          <option value="electric">Electrical trades</option>
+        </select>
+      </label>
+      <label>Select year: <span id="newjob-year-label">1851</span>
+        <input type="range" id="newjob-year" min="1851" max="1911" step="10" value="1851" style="width:240px;vertical-align:middle;">
+      </label>
+    </div>
+
+    <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:16px;position:relative;">
+      <svg id="newjob-map" width="960" height="600" viewBox="0 0 960 600" style="max-width:100%;height:auto;"></svg>
+      <div style="margin-top:10px;">
+        <svg id="newjob-legend" width="480" height="50" style="max-width:100%;height:auto;"></svg>
+        <div id="newjob-legend-caption" style="font-size:12px;text-align:center;"></div>
+      </div>
+      <div id="newjob-tooltip" style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);pointer-events:none;"></div>
+    </div>
   </div>
-  <div id="newjob-tooltip" style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);pointer-events:none;"></div>
+
+  <!-- RIGHT: biggest new jobs table -->
+  <div style="flex:1 1 300px;min-width:280px;">
+    <h4 style="margin:0 0 4px;">The biggest new jobs of the 19th century</h4>
+    <p style="font-size:0.82em;color:#888;margin:0 0 12px;">Ranked by growth in the workforce, 1851–1911.</p>
+    <table style="border-collapse:collapse;width:100%;font-size:0.9em;">
+      <thead>
+        <tr style="text-align:left;border-bottom:2px solid #238B45;">
+          <th style="padding:7px 8px;font-weight:600;">Occupation</th>
+          <th style="padding:7px 8px;font-weight:600;text-align:right;">Growth</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Electricians</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">1,648×</td></tr>
+        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Motor car drivers</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">1,260×</td></tr>
+        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Tramway conductors</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">402×</td></tr>
+        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Bicycle makers &amp; repairers</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">256×</td></tr>
+        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Photographers</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">192×</td></tr>
+        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Electrical cable makers</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">175×</td></tr>
+        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Telegraph &amp; telephone operators</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">151×</td></tr>
+        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Electrical lamp makers</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">129×</td></tr>
+      </tbody>
+    </table>
+  </div>
+
 </div>
 
 <script>
