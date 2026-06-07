@@ -928,7 +928,7 @@ nav_exclude: false
     <h3 style="font-size:1em;margin-bottom:10px;">Total Participation</h3>
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap;">
       <label for="year-slider" style="font-size:13px;">Year: <span id="year-label">1851</span></label>
-      <input type="range" id="year-slider" min="1851" max="1911" step="10" value="1851" style="width:180px;">
+      <input type="range" id="year-slider" min="0" max="5" step="1" value="0" style="width:180px;">
     </div>
     <div style="position:relative;">
       <svg id="total-map" style="width:100%;display:block;" viewBox="0 0 480 300"></svg>
@@ -951,7 +951,7 @@ nav_exclude: false
         <option value="apprentice">Apprentice</option>
       </select>
       <label for="role-slider" style="font-size:13px;">Year: <span id="role-year-label">1851</span></label>
-      <input type="range" id="role-slider" min="1851" max="1911" step="10" value="1851" style="width:180px;">
+      <input type="range" id="role-slider" min="0" max="5" step="1" value="0" style="width:180px;">
     </div>
     <div style="position:relative;">
       <svg id="role-map" style="width:100%;display:block;" viewBox="0 0 480 300"></svg>
@@ -977,6 +977,7 @@ Promise.all([
   const path = d3.geoPath().projection(projection);
   const slider = d3.select("#year-slider");
   const yearLabel = d3.select("#year-label");
+  const YEARS = [1851, 1861, 1881, 1891, 1901, 1911];   // 1871 skipped (no census snapshot)
 
   function updateMap(year) {
     const values = yearData[year];
@@ -997,8 +998,8 @@ Promise.all([
       .on("mouseout", function() { tooltip_total.style("visibility", "hidden"); d3.select(this).attr("stroke-width", 0.5); });
   }
 
-  updateMap("1851");
-  slider.on("input", function() { yearLabel.text(this.value); updateMap(this.value); });
+  updateMap(YEARS[0]);
+  slider.on("input", function() { const yr = YEARS[+this.value]; yearLabel.text(yr); updateMap(yr); });
 });
 
 {
@@ -1028,6 +1029,7 @@ Promise.all([
 ]).then(([geoData, roleData]) => {
   const projection = d3.geoMercator().fitSize([480, 300], geoData);
   const path = d3.geoPath().projection(projection);
+  const YEARS = [1851, 1861, 1881, 1891, 1901, 1911];   // 1871 skipped (no census snapshot)
 
   function updateRoleMap(year, role) {
     const values = roleData[year][role];
@@ -1047,10 +1049,10 @@ Promise.all([
       .on("mouseout", function() { roleTooltip.style("visibility", "hidden"); d3.select(this).attr("stroke-width", 0.5); });
   }
 
-  updateRoleMap("1851", "master");
   const roleYearLabel = d3.select("#role-year-label");
-  roleSlider.on("input", function() { roleYearLabel.text(this.value); updateRoleMap(this.value, roleSelect.node().value); });
-  roleSelect.on("change", function() { updateRoleMap(roleSlider.node().value, this.value); });
+  updateRoleMap(YEARS[0], "master");
+  roleSlider.on("input", function() { const yr = YEARS[+this.value]; roleYearLabel.text(yr); updateRoleMap(yr, roleSelect.node().value); });
+  roleSelect.on("change", function() { updateRoleMap(YEARS[+roleSlider.node().value], this.value); });
 });
 
 {
