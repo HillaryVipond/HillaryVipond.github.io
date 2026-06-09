@@ -807,11 +807,10 @@ nav_exclude: false
       const vals = [];
       if (current) for (const y in current) for (const c in current[y]) { const v = current[y][c]; if (v > 0) vals.push(v); }
       vals.sort(d3.ascending);
-      const raw = vals.length >= 5
-        ? [0.2,0.4,0.6,0.8].map(p => d3.quantileSorted(vals, p))
-        : (() => { const mx = d3.max(vals) || 1; return [0.2,0.4,0.6,0.8].map(p => mx * p); })();
-      let thr = Array.from(new Set(raw.map(niceNum))).filter(v => v > 0).sort(d3.ascending);
-      if (!thr.length) thr = [0.1];
+      const hi = d3.max(vals) || 1;
+      const raw = [hi/16, hi/8, hi/4, hi/2];   // step down from the peak so standout counties pop
+      let thr = Array.from(new Set(raw.map(niceNum))).filter(v => v > 0 && v < hi).sort(d3.ascending);
+      if (!thr.length) thr = [niceNum(hi / 2) || 0.1];
       const ramp = d3.schemeGreens[Math.min(9, Math.max(3, thr.length + 1))];
       color = d3.scaleThreshold().domain(thr).range(ramp);
       drawLegend(thr, ramp, cfg.caption);
