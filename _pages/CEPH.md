@@ -1234,19 +1234,24 @@ Promise.all([
       const orderRoot = d3.hierarchy({ children: orderTotals.map(([o,t]) => ({ order:o, value:t })) }).sum(d => d.value || 0).sort((a,b)=>b.value-a.value);
       d3.pack().size([W,H]).padding(6)(orderRoot);
 
-      // occode -> {x,y,r} for a year, packed INSIDE its fixed Order circle
-      function positionsFor(yr){
-        const pos = {};
+      // For a year: occode positions + the census-category bubbles (>=2 members),
+      // each packed INSIDE its fixed Order circle.
+      function layoutFor(yr){
+        const occ = {}, cats = [];
         orderRoot.children.forEach(oc => {
           const members = nodes.filter(n => n.order === oc.data.order);
           const groups = d3.groups(members, n => codeOf(n, yr));
-          const sub = d3.hierarchy({ children: groups.map(([c, ms]) => ({ children: ms.map(m => ({ leaf:m })) })) })
+          const sub = d3.hierarchy({ children: groups.map(([c, ms]) => ({ code:c, children: ms.map(m => ({ leaf:m })) })) })
             .sum(d => d.leaf ? Math.max(d.leaf.size,1) : 0).sort((a,b)=>b.value-a.value);
           const R = Math.max(oc.r - 2, 1);
           d3.pack().size([2*R, 2*R]).padding(1.5)(sub);
-          sub.leaves().forEach(lf => { pos[lf.data.leaf.occode] = { x: oc.x - R + lf.x, y: oc.y - R + lf.y, r: lf.r }; });
+          (sub.children || []).forEach(c => {
+            if ((c.children ? c.children.length : 0) >= 2)
+              cats.push({ key: oc.data.order + '|' + c.data.code, x: oc.x - R + c.x, y: oc.y - R + c.y, r: c.r });
+          });
+          sub.leaves().forEach(lf => { occ[lf.data.leaf.occode] = { x: oc.x - R + lf.x, y: oc.y - R + lf.y, r: lf.r }; });
         });
-        return pos;
+        return { occ, cats };
       }
 
       const svg = d3.select("#cc-pack").append("svg")
@@ -1267,14 +1272,15 @@ Promise.all([
         .style("border-radius","5px").style("font-size","13px").style("max-width","280px")
         .style("box-shadow","0 2px 6px rgba(0,0,0,.2)");
 
+      const catG  = svg.append("g");
       const leafG = svg.append("g");
-      const posByYear = { '1851': positionsFor('1851'), '1861': positionsFor('1861') };
+      const layoutByYear = { '1851': layoutFor('1851'), '1861': layoutFor('1861') };
 
       const sel = leafG.selectAll("circle").data(nodes, d => d.occode)
         .join("circle")
-          .attr("cx", d => posByYear['1851'][d.occode].x)
-          .attr("cy", d => posByYear['1851'][d.occode].y)
-          .attr("r",  d => posByYear['1851'][d.occode].r)
+          .attr("cx", d => layoutByYear['1851'].occ[d.occode].x)
+          .attr("cy", d => layoutByYear['1851'].occ[d.occode].y)
+          .attr("r",  d => layoutByYear['1851'].occ[d.occode].r)
           .attr("fill", d => MCOL[moveType[d.occode]])
           .attr("fill-opacity", d => moveType[d.occode]==='stable' ? 0.5 : 0.9)
           .attr("stroke","#fff").attr("stroke-width",0.4)
@@ -1286,9 +1292,18 @@ Promise.all([
           .on("mouseout", function(){ tip.style("visibility","hidden"); d3.select(this).attr("stroke","#fff").attr("stroke-width",0.4); });
 
       function show(yr){
-        const pos = posByYear[yr];
+        const L = layoutByYear[yr];
+        // census-category bubbles (the lumps) grow / shrink / move so splits & merges are visible
+        const cs = catG.selectAll("circle").data(L.cats, d => d.key);
+        cs.exit().transition().duration(2000).ease(d3.easeCubicInOut).attr("r",0).style("opacity",0).remove();
+        cs.enter().append("circle")
+            .attr("fill","#000").attr("fill-opacity",0.045).attr("stroke","#aaa").attr("stroke-width",0.8)
+            .attr("cx",d=>d.x).attr("cy",d=>d.y).attr("r",0).style("opacity",0)
+          .merge(cs).transition().duration(2000).ease(d3.easeCubicInOut)
+            .attr("cx",d=>d.x).attr("cy",d=>d.y).attr("r",d=>d.r).style("opacity",1);
+        // occupations glide into their new groups
         sel.transition().duration(2000).ease(d3.easeCubicInOut)
-          .attr("cx", d => pos[d.occode].x).attr("cy", d => pos[d.occode].y).attr("r", d => pos[d.occode].r);
+          .attr("cx", d => L.occ[d.occode].x).attr("cy", d => L.occ[d.occode].y).attr("r", d => L.occ[d.occode].r);
         d3.select("#cc-btn-1851").classed("active", yr==='1851');
         d3.select("#cc-btn-1861").classed("active", yr==='1861');
         d3.select("#cc-count").text(`${(yr==='1851'?g51:g61).size} census categories in ${yr}`);
