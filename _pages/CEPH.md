@@ -667,7 +667,7 @@ nav_exclude: false
         <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Motor driver</td><td style="padding:7px 8px;text-align:right;">44,947</td></tr>
         <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Typist</td><td style="padding:7px 8px;text-align:right;">41,927</td></tr>
         <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Bicycle maker</td><td style="padding:7px 8px;text-align:right;">33,461</td></tr>
-        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Telegraph</td><td style="padding:7px 8px;text-align:right;">31,289</td></tr>
+        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Telegraph</td><td style="padding:7px 8px;text-align:right;">33,129</td></tr>
         <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Telephonist</td><td style="padding:7px 8px;text-align:right;">19,230</td></tr>
         <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Photographer</td><td style="padding:7px 8px;text-align:right;">17,134</td></tr>
         <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Asphalter</td><td style="padding:7px 8px;text-align:right;">1,612</td></tr>
