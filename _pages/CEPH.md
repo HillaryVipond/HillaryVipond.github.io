@@ -1178,163 +1178,86 @@ Promise.all([
 </script>
 
 <!-- ================================================================ -->
-<!-- ================================================================ -->
-<!-- 1851->1861 structural transition: movers within fixed Orders      -->
+<!-- Diff from 1911: grey 1911 treemap holding-space + census overlay  -->
 <!-- ================================================================ -->
 
-<h3>The structure underneath: what moved between 1851 and 1861</h3>
+<h3>The 1911 structure as a holding space</h3>
 
-<p>The packing above rests on a fixed, time-invariant set of Orders — a useful fiction. Underneath, the census kept redrawing the lines. Here the 22 Orders stay put as the outer bubbles; inside each, occupations are grouped by the <em>real census category</em> of the chosen year. Flip between 1851 and 1861 and watch them move: occupations that <strong style="color:#E6550D;">split</strong> out of a shared category, <strong style="color:#3182BD;">merge</strong> into one, or <strong style="color:#756BB1;">reshuffle</strong>. Unchanged occupations stay grey.</p>
+<p>The grey treemap is the <strong>1911 classification</strong> — Orders, their sub-Orders, and the occupations within them: the structure everything eventually settled into. Pick an earlier census and <strong>hover any occupation</strong> to light up the others it was lumped with <em>that</em> year — wherever they ended up on the 1911 map. The more scattered the highlight, the more that early census cut across the modern Orders.</p>
 
 <div style="display:flex;align-items:center;gap:10px;margin:8px 0;flex-wrap:wrap;">
   <span>Census year:</span>
-  <button id="cc-btn-1851" class="cc-yrbtn">1851</button>
-  <button id="cc-btn-1861" class="cc-yrbtn">1861</button>
-  <span id="cc-count" style="font-size:0.85em;color:#888;margin-left:6px;"></span>
+  <button id="tm-btn-1851" class="tm-yrbtn">1851</button>
+  <button id="tm-btn-1861" class="tm-yrbtn">1861</button>
+  <span id="tm-info" style="font-size:0.85em;color:#888;margin-left:6px;">hover an occupation</span>
 </div>
 <style>
-  .cc-yrbtn { padding:5px 14px; font-size:14px; cursor:pointer; border:1px solid #bbb; background:#fff; border-radius:4px; }
-  .cc-yrbtn.active { background:#333; color:#fff; border-color:#333; }
+  .tm-yrbtn { padding:5px 14px; font-size:14px; cursor:pointer; border:1px solid #bbb; background:#fff; border-radius:4px; }
+  .tm-yrbtn.active { background:#333; color:#fff; border-color:#333; }
 </style>
 
-<div id="cc-legend" style="font-size:0.85em;margin:2px 0 8px;line-height:1.8;">
-  <span style="margin-right:14px;white-space:nowrap;"><span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#E6550D;margin-right:4px;"></span>Split apart</span>
-  <span style="margin-right:14px;white-space:nowrap;"><span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#3182BD;margin-right:4px;"></span>Merged together</span>
-  <span style="margin-right:14px;white-space:nowrap;"><span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#756BB1;margin-right:4px;"></span>Reshuffled</span>
-  <span style="white-space:nowrap;"><span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#dcdcdc;margin-right:4px;"></span>Unchanged</span>
-</div>
-
-<div id="cc-pack" style="max-width:820px;margin:0 auto;"></div>
+<div id="tm-pack" style="max-width:920px;margin:0 auto;"></div>
 
 <script>
 (function(){
   function ready(fn){ if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, {once:true}); else fn(); }
   ready(function(){
-    const W = 820, H = 820;
-    d3.json("/assets/data/occ_census_codes.json").then(D => {
-      const nodes = D.nodes;
-      const codeOf = (n, yr) => n.codes[yr] || '(none)';
+    const W = 920, H = 620, HI = '#E6550D';
+    Promise.all([
+      d3.json("/assets/data/occ_hierarchy.json"),
+      d3.json("/assets/data/occ_census_codes.json")
+    ]).then(([hier, census]) => {
+      const byOcc = new Map(census.nodes.map(n => [n.occode, n]));
+      function gby(yr){ const m = new Map(); census.nodes.forEach(n => { const c = n.codes[yr] || '(none)'; if (!m.has(c)) m.set(c, []); m.get(c).push(n.occode); }); return m; }
+      const groups = { '1851': gby('1851'), '1861': gby('1861') };
+      let curYear = '1851';
 
-      // classify each occupation's move 1851 -> 1861 by the change in its category companions
-      function groupsByYear(yr){ const m = new Map(); nodes.forEach(n => { const c = codeOf(n, yr); if (!m.has(c)) m.set(c, []); m.get(c).push(n.occode); }); return m; }
-      const g51 = groupsByYear('1851'), g61 = groupsByYear('1861');
-      const MCOL = { stable:'#dcdcdc', merge:'#3182BD', split:'#E6550D', reshuffle:'#756BB1' };
-      const moveType = {};
-      nodes.forEach(n => {
-        const c51 = new Set(g51.get(codeOf(n,'1851')).filter(o => o !== n.occode));
-        const c61 = new Set(g61.get(codeOf(n,'1861')).filter(o => o !== n.occode));
-        let lost = 0, gained = 0;
-        c51.forEach(o => { if (!c61.has(o)) lost++; });
-        c61.forEach(o => { if (!c51.has(o)) gained++; });
-        moveType[n.occode] = (lost===0 && gained===0) ? 'stable' : (gained>0 && lost===0) ? 'merge' : (lost>0 && gained===0) ? 'split' : 'reshuffle';
-      });
+      const root = d3.hierarchy(hier).sum(d => d.value || 0).sort((a,b)=>b.value-a.value);
+      d3.treemap().size([W,H]).paddingInner(1).paddingTop(d => d.depth === 1 ? 14 : 1).round(true)(root);
 
-      // fixed Order layout (sized by total 1911 workforce), computed once
-      const orderTotals = d3.rollups(nodes, v => d3.sum(v, d => Math.max(d.size,1)), d => d.order);
-      const orderRoot = d3.hierarchy({ children: orderTotals.map(([o,t]) => ({ order:o, value:t })) }).sum(d => d.value || 0).sort((a,b)=>b.value-a.value);
-      d3.pack().size([W,H]).padding(6)(orderRoot);
-
-      // For a year: occode positions + the census-category bubbles (>=2 members),
-      // each packed INSIDE its fixed Order circle.
-      function layoutFor(yr){
-        const occ = {}, cats = [];
-        orderRoot.children.forEach(oc => {
-          const members = nodes.filter(n => n.order === oc.data.order);
-          const groups = d3.groups(members, n => codeOf(n, yr));
-          const sub = d3.hierarchy({ children: groups.map(([c, ms]) => ({ code:c, children: ms.map(m => ({ leaf:m })) })) })
-            .sum(d => d.leaf ? Math.max(d.leaf.size,1) : 0).sort((a,b)=>b.value-a.value);
-          const R = Math.max(oc.r - 2, 1);
-          d3.pack().size([2*R, 2*R]).padding(1.5)(sub);
-          (sub.children || []).forEach(c => {
-            if ((c.children ? c.children.length : 0) >= 2)
-              cats.push({ key: oc.data.order + '|' + c.data.code, x: oc.x - R + c.x, y: oc.y - R + c.y, r: c.r });
-          });
-          sub.leaves().forEach(lf => { occ[lf.data.leaf.occode] = { x: oc.x - R + lf.x, y: oc.y - R + lf.y, r: lf.r }; });
-        });
-        return { occ, cats };
-      }
-
-      const svg = d3.select("#cc-pack").append("svg")
+      const svg = d3.select("#tm-pack").append("svg")
         .attr("viewBox", `0 0 ${W} ${H}`).attr("width","100%").style("height","auto")
-        .style("display","block").style("font","10px sans-serif").style("background","#fcfcfc");
+        .style("display","block").style("font","10px sans-serif");
 
-      // fixed Order outlines + labels (never move)
-      svg.append("g").selectAll("circle").data(orderRoot.children).join("circle")
-        .attr("cx",d=>d.x).attr("cy",d=>d.y).attr("r",d=>d.r)
-        .attr("fill","none").attr("stroke","#d0d0d0").attr("stroke-width",1.2);
-      svg.append("g").attr("text-anchor","middle").style("pointer-events","none").style("fill","#999")
-        .selectAll("text").data(orderRoot.children).join("text")
-        .attr("x",d=>d.x).attr("y",d=>d.y-d.r+12).style("font-size","11px").style("font-weight","600").text(d=>d.data.order);
+      // Order rectangles (depth 1): grey frame + label
+      const og = svg.append("g");
+      og.selectAll("rect").data(root.children).join("rect")
+        .attr("x",d=>d.x0).attr("y",d=>d.y0).attr("width",d=>Math.max(0,d.x1-d.x0)).attr("height",d=>Math.max(0,d.y1-d.y0))
+        .attr("fill","#f4f4f4").attr("stroke","#c8c8c8").attr("stroke-width",1);
+      og.selectAll("text").data(root.children).join("text")
+        .attr("x",d=>d.x0+4).attr("y",d=>d.y0+11).style("font-size","10px").style("font-weight","600")
+        .style("fill","#999").style("pointer-events","none").text(d=>d.data.name);
 
       const tip = d3.select("body").append("div")
         .style("position","absolute").style("pointer-events","none").style("visibility","hidden")
         .style("background","#fff").style("border","1px solid #ccc").style("padding","6px 10px")
         .style("border-radius","5px").style("font-size","13px").style("max-width","280px")
         .style("box-shadow","0 2px 6px rgba(0,0,0,.2)");
+      const info = d3.select("#tm-info");
 
-      const catG  = svg.append("g");
-      const leafG = svg.append("g");
-      const layoutByYear = { '1851': layoutFor('1851'), '1861': layoutFor('1861') };
+      // occupation cells (leaves) — the grey holding space
+      const cell = svg.append("g").selectAll("rect").data(root.leaves()).join("rect")
+        .attr("x",d=>d.x0).attr("y",d=>d.y0).attr("width",d=>Math.max(0,d.x1-d.x0)).attr("height",d=>Math.max(0,d.y1-d.y0))
+        .attr("fill","#e0e0e0").attr("stroke","#fff").attr("stroke-width",0.5)
+        .on("mouseover", function(e,d){ hi(d); })
+        .on("mousemove", e => tip.style("left",(e.pageX+12)+"px").style("top",(e.pageY-10)+"px"))
+        .on("mouseout", clear);
 
-      // overlay: hovering a dot links every member of its census category (current year),
-      // wherever they sit across the Order bubbles — revealing cross-Order categories.
-      const linkG = svg.insert("g", () => leafG.node()).style("pointer-events","none");
-      let curYear = '1851';
-      function showLinks(d){
-        const members = (curYear==='1851'?g51:g61).get(codeOf(d,curYear)) || [];
-        if (members.length < 2) return;
-        const ms = new Set(members);
-        sel.attr("fill-opacity", o => ms.has(o.occode) ? 0.95 : 0.1);
-        const occ = layoutByYear[curYear].occ, src = occ[d.occode];
-        linkG.selectAll("line").data(members.filter(o => o !== d.occode)).join("line")
-          .attr("x1", src.x).attr("y1", src.y)
-          .attr("x2", o => occ[o].x).attr("y2", o => occ[o].y)
-          .attr("stroke", "#222").attr("stroke-width", 0.7).attr("stroke-opacity", 0.45);
+      function hi(d){
+        const oc = d.data.occode, n = byOcc.get(oc);
+        const code = n ? n.codes[curYear] : null;
+        const members = new Set(code ? (groups[curYear].get(code) || [oc]) : [oc]);
+        cell.attr("fill", c => members.has(c.data.occode) ? HI : "#e8e8e8")
+            .attr("fill-opacity", c => members.has(c.data.occode) ? 0.95 : 0.5);
+        tip.style("visibility","visible").html(`<strong>${d.data.name}</strong>` + (n ? `<br>${n.order}<br><span style="color:#888">${curYear} census code ${code}</span>` : ''));
+        info.html(`<strong style="color:${HI}">${members.size}</strong> occupations shared this census category in ${curYear}`);
       }
-      function clearLinks(){
-        linkG.selectAll("line").remove();
-        sel.attr("fill-opacity", o => moveType[o.occode]==='stable' ? 0.5 : 0.9);
-      }
+      function clear(){ cell.attr("fill","#e0e0e0").attr("fill-opacity",1); tip.style("visibility","hidden"); info.text("hover an occupation"); }
 
-      const sel = leafG.selectAll("circle").data(nodes, d => d.occode)
-        .join("circle")
-          .attr("cx", d => layoutByYear['1851'].occ[d.occode].x)
-          .attr("cy", d => layoutByYear['1851'].occ[d.occode].y)
-          .attr("r",  d => layoutByYear['1851'].occ[d.occode].r)
-          .attr("fill", d => MCOL[moveType[d.occode]])
-          .attr("fill-opacity", d => moveType[d.occode]==='stable' ? 0.5 : 0.9)
-          .attr("stroke","#fff").attr("stroke-width",0.4)
-          .on("mouseover", function(e,d){
-            tip.style("visibility","visible").html(`<strong>${d.name}</strong><br>${d.order}<br><span style="color:#888">1851 code ${codeOf(d,'1851')} &rarr; 1861 code ${codeOf(d,'1861')}</span><br><em>${moveType[d.occode]}</em>`);
-            d3.select(this).attr("stroke","#222").attr("stroke-width",1.2).raise();
-            showLinks(d);
-          })
-          .on("mousemove", e => tip.style("left",(e.pageX+12)+"px").style("top",(e.pageY-10)+"px"))
-          .on("mouseout", function(){ tip.style("visibility","hidden"); d3.select(this).attr("stroke","#fff").attr("stroke-width",0.4); clearLinks(); });
-
-      function show(yr){
-        curYear = yr;
-        linkG.selectAll("line").remove();
-        const L = layoutByYear[yr];
-        // census-category bubbles (the lumps) grow / shrink / move so splits & merges are visible
-        const cs = catG.selectAll("circle").data(L.cats, d => d.key);
-        cs.exit().transition().duration(2000).ease(d3.easeCubicInOut).attr("r",0).style("opacity",0).remove();
-        cs.enter().append("circle")
-            .attr("fill","#000").attr("fill-opacity",0.045).attr("stroke","#aaa").attr("stroke-width",0.8)
-            .attr("cx",d=>d.x).attr("cy",d=>d.y).attr("r",0).style("opacity",0)
-          .merge(cs).transition().duration(2000).ease(d3.easeCubicInOut)
-            .attr("cx",d=>d.x).attr("cy",d=>d.y).attr("r",d=>d.r).style("opacity",1);
-        // occupations glide into their new groups
-        sel.transition().duration(2000).ease(d3.easeCubicInOut)
-          .attr("cx", d => L.occ[d.occode].x).attr("cy", d => L.occ[d.occode].y).attr("r", d => L.occ[d.occode].r)
-          .attr("fill-opacity", d => moveType[d.occode]==='stable' ? 0.5 : 0.9);
-        d3.select("#cc-btn-1851").classed("active", yr==='1851');
-        d3.select("#cc-btn-1861").classed("active", yr==='1861');
-        d3.select("#cc-count").text(`${(yr==='1851'?g51:g61).size} census categories in ${yr}`);
-      }
-      d3.select("#cc-btn-1851").on("click", () => show('1851'));
-      d3.select("#cc-btn-1861").on("click", () => show('1861'));
-      show('1851');
+      function setYear(yr){ curYear = yr; d3.select("#tm-btn-1851").classed("active", yr==='1851'); d3.select("#tm-btn-1861").classed("active", yr==='1861'); clear(); }
+      d3.select("#tm-btn-1851").on("click", () => setYear('1851'));
+      d3.select("#tm-btn-1861").on("click", () => setYear('1861'));
+      setYear('1851');
     });
   });
 })();
