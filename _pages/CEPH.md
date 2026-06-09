@@ -43,11 +43,9 @@ nav_exclude: false
   const width = 960;
   const height = 600;
 
-  const color = d3.scaleOrdinal([
-    "#5C6BC0", "#42A5F5", "#26A69A", "#9CCC65", "#FFCA28",
-    "#EF5350", "#AB47BC", "#8D6E63", "#78909C", "#FF7043",
-    "#66BB6A", "#D4E157", "#FFA726", "#29B6F6", "#BDBDBD"
-  ]);
+  // Same rainbow palette as the circle packs (consistent Order colours across the page)
+  const ORDERS = ["Agriculture","Brick","Building","Chemicals","Commerce","Conveyancing","Defence","Domestic","Dress","Fishing","Food","Gas and Electric","General","Government","Leather","Machines","Mining","Paper","Precious Metals","Professions","Textiles","Wood"];
+  const color = d3.scaleOrdinal(ORDERS, d3.quantize(t => d3.interpolateRainbow(t * 0.92 + 0.02), ORDERS.length));
 
   const svg = d3.select("#treemap-time")
     .append("svg")
