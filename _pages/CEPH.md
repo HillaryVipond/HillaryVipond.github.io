@@ -1181,7 +1181,7 @@ Promise.all([
 <!-- Diff from 1911: grey 1911 treemap holding-space + census overlay  -->
 <!-- ================================================================ -->
 
-<h3>The 1911 structure as a holding space</h3>
+<h3>Changing Taxonomies: Census Waves 1851–1911</h3>
 
 <p>The grey treemap is the <strong>1911 classification</strong> — Orders, their sub-Orders, and the occupations within them: the structure everything eventually settled into. Pick an earlier census and <strong>hover any occupation</strong> to light up the others it was lumped with <em>that</em> year — wherever they ended up on the 1911 map. The more scattered the highlight, the more that early census cut across the modern Orders.</p>
 
