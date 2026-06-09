@@ -652,12 +652,17 @@ nav_exclude: false
     <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-bottom:10px;">
       <label>Job:
         <select id="newjob-select" style="font-size:14px;padding:3px 6px;">
-          <option value="bicycle" selected>Bicycle trades</option>
-          <option value="electric">Electrical trades</option>
+          <option value="electrician" selected>Electrician</option>
+          <option value="motor_driver">Motor driver</option>
+          <option value="typist">Typist</option>
+          <option value="bicycle_maker">Bicycle maker</option>
+          <option value="telegraph">Telegraph</option>
+          <option value="telephonist">Telephonist</option>
+          <option value="photographer">Photographer</option>
         </select>
       </label>
-      <label>Select year: <span id="newjob-year-label">1851</span>
-        <input type="range" id="newjob-year" min="0" max="5" step="1" value="0" style="width:240px;vertical-align:middle;">
+      <label>Select year: <span id="newjob-year-label">1911</span>
+        <input type="range" id="newjob-year" min="0" max="5" step="1" value="5" style="width:240px;vertical-align:middle;">
       </label>
     </div>
 
@@ -706,22 +711,16 @@ nav_exclude: false
     else fn();
   }
 
-  // Config for each selectable new job
+  // One consistent colour ramp; thresholds are auto-computed per job from its own data.
+  const RAMP = d3.schemeGreens[5];
   const JOBS = {
-    bicycle: {
-      dataUrl: '/assets/maps/share_bicycle_by_county.json',
-      thresholds: [0.05, 0.1, 0.3, 0.6],
-      colors: d3.schemePurples[5],
-      labels: ['0–0.05%', '0.05–0.1%', '0.1–0.3%', '0.3–0.6%', '0.6%+'],
-      caption: 'Share of male workforce in bicycle trades'
-    },
-    electric: {
-      dataUrl: '/assets/maps/share_electric_by_county.json',
-      thresholds: [0.1, 0.3, 0.6, 1.0],
-      colors: d3.schemeOranges[5],
-      labels: ['0–0.1%', '0.1–0.3%', '0.3–0.6%', '0.6–1%', '1%+'],
-      caption: 'Share of male workforce in electrical trades'
-    }
+    electrician:   { dataUrl: '/assets/maps/share_electrician_by_county.json',   caption: 'Share of male workforce: electricians' },
+    motor_driver:  { dataUrl: '/assets/maps/share_motor_driver_by_county.json',  caption: 'Share of male workforce: motor drivers' },
+    typist:        { dataUrl: '/assets/maps/share_typist_by_county.json',        caption: 'Share of male workforce: typists' },
+    bicycle_maker: { dataUrl: '/assets/maps/share_bicycle_maker_by_county.json', caption: 'Share of male workforce: bicycle makers' },
+    telegraph:     { dataUrl: '/assets/maps/share_telegraph_by_county.json',     caption: 'Share of male workforce: telegraph workers' },
+    telephonist:   { dataUrl: '/assets/maps/share_telephonist_by_county.json',   caption: 'Share of male workforce: telephonists' },
+    photographer:  { dataUrl: '/assets/maps/share_photographer_by_county.json',  caption: 'Share of male workforce: photographers' }
   };
 
   ready(async function(){
@@ -775,33 +774,45 @@ nav_exclude: false
         });
     }
 
-    function drawLegend(cfg){
-      const binWidth = 480 / cfg.colors.length;
+    const pct = d3.format('.3~f');
+    function drawLegend(thr, captionText){
+      const binWidth = 480 / RAMP.length;
       legendSvg.selectAll('*').remove();
-      cfg.colors.forEach((c, i) => {
+      RAMP.forEach((c, i) => {
+        const lab = (i === 0) ? '0–' + pct(thr[0]) + '%'
+                  : (i === RAMP.length - 1) ? pct(thr[thr.length-1]) + '%+'
+                  : pct(thr[i-1]) + '–' + pct(thr[i]) + '%';
         legendSvg.append('rect').attr('x', i * binWidth).attr('y', 10)
           .attr('width', binWidth).attr('height', 10).attr('fill', c);
         legendSvg.append('text').attr('x', i * binWidth + binWidth / 2).attr('y', 35)
-          .attr('text-anchor', 'middle').attr('font-size', '10px').text(cfg.labels[i]);
+          .attr('text-anchor', 'middle').attr('font-size', '9px').text(lab);
       });
-      caption.text(cfg.caption);
+      caption.text(captionText);
     }
 
     async function loadJob(key){
       const cfg = JOBS[key];
-      color = d3.scaleThreshold().domain(cfg.thresholds).range(cfg.colors);
       if (!dataCache[key]) {
         try { dataCache[key] = await d3.json(cfg.dataUrl); } catch { dataCache[key] = null; }
       }
       current = dataCache[key];
-      drawLegend(cfg);
+      // auto thresholds: quintiles of the positive values across all years
+      const vals = [];
+      if (current) for (const y in current) for (const c in current[y]) { const v = current[y][c]; if (v > 0) vals.push(v); }
+      vals.sort(d3.ascending);
+      let thr;
+      if (vals.length >= 5) thr = [0.2,0.4,0.6,0.8].map(p => d3.quantileSorted(vals, p));
+      else { const mx = d3.max(vals) || 1; thr = [0.2,0.4,0.6,0.8].map(p => mx * p); }
+      for (let i = 1; i < thr.length; i++) if (thr[i] <= thr[i-1]) thr[i] = thr[i-1] + 1e-4;
+      color = d3.scaleThreshold().domain(thr).range(RAMP);
+      drawLegend(thr, cfg.caption);
       paint(YEARS[+slider.property('value')]);
     }
 
     slider.on('input', function(){ const yr = YEARS[+this.value]; label.text(yr); paint(yr); });
     select.on('change', function(){ loadJob(this.value); });
 
-    loadJob('bicycle');   // default selection
+    loadJob('electrician');   // default selection
   });
 })();
 </script>
