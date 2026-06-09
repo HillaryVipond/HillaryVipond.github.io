@@ -774,13 +774,13 @@ nav_exclude: false
         });
     }
 
-    const pct = d3.format('.3~f');
-    function drawLegend(thr, captionText){
-      const binWidth = 480 / RAMP.length;
+    const pct = d3.format('~r');
+    function drawLegend(thr, ramp, captionText){
+      const binWidth = 480 / ramp.length;
       legendSvg.selectAll('*').remove();
-      RAMP.forEach((c, i) => {
+      ramp.forEach((c, i) => {
         const lab = (i === 0) ? '0–' + pct(thr[0]) + '%'
-                  : (i === RAMP.length - 1) ? pct(thr[thr.length-1]) + '%+'
+                  : (i === ramp.length - 1) ? pct(thr[thr.length-1]) + '%+'
                   : pct(thr[i-1]) + '–' + pct(thr[i]) + '%';
         legendSvg.append('rect').attr('x', i * binWidth).attr('y', 10)
           .attr('width', binWidth).attr('height', 10).attr('fill', c);
@@ -790,22 +790,31 @@ nav_exclude: false
       caption.text(captionText);
     }
 
+    // round up to a "nice" 1 / 2 / 5 x 10^k value
+    function niceNum(x){
+      if (x <= 0) return 0;
+      const b = Math.pow(10, Math.floor(Math.log10(x))), f = x / b;
+      const n = f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10;
+      return +(n * b).toPrecision(2);
+    }
     async function loadJob(key){
       const cfg = JOBS[key];
       if (!dataCache[key]) {
         try { dataCache[key] = await d3.json(cfg.dataUrl); } catch { dataCache[key] = null; }
       }
       current = dataCache[key];
-      // auto thresholds: quintiles of the positive values across all years
+      // quintiles of the positive values, rounded to nice round bands
       const vals = [];
       if (current) for (const y in current) for (const c in current[y]) { const v = current[y][c]; if (v > 0) vals.push(v); }
       vals.sort(d3.ascending);
-      let thr;
-      if (vals.length >= 5) thr = [0.2,0.4,0.6,0.8].map(p => d3.quantileSorted(vals, p));
-      else { const mx = d3.max(vals) || 1; thr = [0.2,0.4,0.6,0.8].map(p => mx * p); }
-      for (let i = 1; i < thr.length; i++) if (thr[i] <= thr[i-1]) thr[i] = thr[i-1] + 1e-4;
-      color = d3.scaleThreshold().domain(thr).range(RAMP);
-      drawLegend(thr, cfg.caption);
+      const raw = vals.length >= 5
+        ? [0.2,0.4,0.6,0.8].map(p => d3.quantileSorted(vals, p))
+        : (() => { const mx = d3.max(vals) || 1; return [0.2,0.4,0.6,0.8].map(p => mx * p); })();
+      let thr = Array.from(new Set(raw.map(niceNum))).filter(v => v > 0).sort(d3.ascending);
+      if (!thr.length) thr = [0.1];
+      const ramp = d3.schemeGreens[Math.min(9, Math.max(3, thr.length + 1))];
+      color = d3.scaleThreshold().domain(thr).range(ramp);
+      drawLegend(thr, ramp, cfg.caption);
       paint(YEARS[+slider.property('value')]);
     }
 
