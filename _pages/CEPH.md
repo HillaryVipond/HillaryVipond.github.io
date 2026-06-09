@@ -1187,8 +1187,7 @@ Promise.all([
 
 <div style="display:flex;align-items:center;gap:10px;margin:8px 0;flex-wrap:wrap;">
   <span>Census year:</span>
-  <button id="tm-btn-1851" class="tm-yrbtn">1851</button>
-  <button id="tm-btn-1861" class="tm-yrbtn">1861</button>
+  <span id="tm-buttons" style="display:inline-flex;gap:6px;flex-wrap:wrap;"></span>
   <span id="tm-info" style="font-size:0.85em;color:#888;margin-left:6px;">hover an occupation</span>
 </div>
 <style>
@@ -1209,8 +1208,9 @@ Promise.all([
     ]).then(([hier, census]) => {
       const byOcc = new Map(census.nodes.map(n => [n.occode, n]));
       function gby(yr){ const m = new Map(); census.nodes.forEach(n => { const c = n.codes[yr] || '(none)'; if (!m.has(c)) m.set(c, []); m.get(c).push(n.occode); }); return m; }
-      const groups = { '1851': gby('1851'), '1861': gby('1861') };
-      let curYear = '1851';
+      const YEARS = census.years.map(String);
+      const groups = {}; YEARS.forEach(y => groups[y] = gby(y));
+      let curYear = YEARS[0];
 
       const root = d3.hierarchy(hier).sum(d => d.value || 0).sort((a,b)=>b.value-a.value);
       d3.treemap().size([W,H]).paddingInner(1).paddingTop(d => d.depth === 1 ? 14 : 1).round(true)(root);
@@ -1254,10 +1254,10 @@ Promise.all([
       }
       function clear(){ cell.attr("fill","#e0e0e0").attr("fill-opacity",1); tip.style("visibility","hidden"); info.text("hover an occupation"); }
 
-      function setYear(yr){ curYear = yr; d3.select("#tm-btn-1851").classed("active", yr==='1851'); d3.select("#tm-btn-1861").classed("active", yr==='1861'); clear(); }
-      d3.select("#tm-btn-1851").on("click", () => setYear('1851'));
-      d3.select("#tm-btn-1861").on("click", () => setYear('1861'));
-      setYear('1851');
+      const btnSel = d3.select("#tm-buttons").selectAll("button").data(YEARS).join("button")
+        .attr("class","tm-yrbtn").text(y => y).on("click", (e, y) => setYear(y));
+      function setYear(yr){ curYear = yr; btnSel.classed("active", y => y === yr); clear(); }
+      setYear(YEARS[0]);
     });
   });
 })();
