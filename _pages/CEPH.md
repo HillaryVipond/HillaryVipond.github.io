@@ -1280,6 +1280,146 @@ Promise.all([
 })();
 </script>
 
+
+<!-- ================================================================ -->
+<!-- ================================================================ -->
+<!-- 1851->1861 structural transition: movers within fixed Orders      -->
+<!-- ================================================================ -->
+
+<h3>Migration within Orders, 1851 &rarr; 1861</h3>
+
+<p>Zoom in one level. Even <em>within</em> a single Order, the census kept reorganising. Here the 22 Orders stay fixed as the outer bubbles, and inside each one the occupations are grouped by their <em>real census category</em> for the chosen year. Flip between 1851 and 1861 to watch occupations <strong style="color:#E6550D;">split</strong> apart, <strong style="color:#3182BD;">merge</strong> together, or <strong style="color:#756BB1;">reshuffle</strong> within their Order. Unchanged occupations stay grey.</p>
+
+<div style="display:flex;align-items:center;gap:10px;margin:8px 0;flex-wrap:wrap;">
+  <span>Census year:</span>
+  <button id="cc-btn-1851" class="cc-yrbtn">1851</button>
+  <button id="cc-btn-1861" class="cc-yrbtn">1861</button>
+  <span id="cc-count" style="font-size:0.85em;color:#888;margin-left:6px;"></span>
+</div>
+<style>
+  .cc-yrbtn { padding:5px 14px; font-size:14px; cursor:pointer; border:1px solid #bbb; background:#fff; border-radius:4px; }
+  .cc-yrbtn.active { background:#333; color:#fff; border-color:#333; }
+</style>
+
+<div id="cc-legend" style="font-size:0.85em;margin:2px 0 8px;line-height:1.8;">
+  <span style="margin-right:14px;white-space:nowrap;"><span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#E6550D;margin-right:4px;"></span>Split apart</span>
+  <span style="margin-right:14px;white-space:nowrap;"><span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#3182BD;margin-right:4px;"></span>Merged together</span>
+  <span style="margin-right:14px;white-space:nowrap;"><span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#756BB1;margin-right:4px;"></span>Reshuffled</span>
+  <span style="white-space:nowrap;"><span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#dcdcdc;margin-right:4px;"></span>Unchanged</span>
+</div>
+
+<div id="cc-pack" style="max-width:820px;margin:0 auto;"></div>
+
+<script>
+(function(){
+  function ready(fn){ if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, {once:true}); else fn(); }
+  ready(function(){
+    const W = 820, H = 820;
+    d3.json("/assets/data/occ_census_codes.json").then(D => {
+      const nodes = D.nodes;
+      const codeOf = (n, yr) => n.codes[yr] || '(none)';
+
+      // classify each occupation's move 1851 -> 1861 by the change in its category companions
+      function groupsByYear(yr){ const m = new Map(); nodes.forEach(n => { const c = codeOf(n, yr); if (!m.has(c)) m.set(c, []); m.get(c).push(n.occode); }); return m; }
+      const g51 = groupsByYear('1851'), g61 = groupsByYear('1861');
+      const MCOL = { stable:'#dcdcdc', merge:'#3182BD', split:'#E6550D', reshuffle:'#756BB1' };
+      const moveType = {};
+      nodes.forEach(n => {
+        const c51 = new Set(g51.get(codeOf(n,'1851')).filter(o => o !== n.occode));
+        const c61 = new Set(g61.get(codeOf(n,'1861')).filter(o => o !== n.occode));
+        let lost = 0, gained = 0;
+        c51.forEach(o => { if (!c61.has(o)) lost++; });
+        c61.forEach(o => { if (!c51.has(o)) gained++; });
+        moveType[n.occode] = (lost===0 && gained===0) ? 'stable' : (gained>0 && lost===0) ? 'merge' : (lost>0 && gained===0) ? 'split' : 'reshuffle';
+      });
+
+      // fixed Order layout (sized by total 1911 workforce), computed once
+      const orderTotals = d3.rollups(nodes, v => d3.sum(v, d => Math.max(d.size,1)), d => d.order);
+      const orderRoot = d3.hierarchy({ children: orderTotals.map(([o,t]) => ({ order:o, value:t })) }).sum(d => d.value || 0).sort((a,b)=>b.value-a.value);
+      d3.pack().size([W,H]).padding(6)(orderRoot);
+
+      // For a year: occode positions + the census-category bubbles (>=2 members),
+      // each packed INSIDE its fixed Order circle.
+      function layoutFor(yr){
+        const occ = {}, cats = [];
+        orderRoot.children.forEach(oc => {
+          const members = nodes.filter(n => n.order === oc.data.order);
+          const groups = d3.groups(members, n => codeOf(n, yr));
+          const sub = d3.hierarchy({ children: groups.map(([c, ms]) => ({ code:c, children: ms.map(m => ({ leaf:m })) })) })
+            .sum(d => d.leaf ? Math.max(d.leaf.size,1) : 0).sort((a,b)=>b.value-a.value);
+          const R = Math.max(oc.r - 2, 1);
+          d3.pack().size([2*R, 2*R]).padding(1.5)(sub);
+          (sub.children || []).forEach(c => {
+            if ((c.children ? c.children.length : 0) >= 2)
+              cats.push({ key: oc.data.order + '|' + c.data.code, x: oc.x - R + c.x, y: oc.y - R + c.y, r: c.r });
+          });
+          sub.leaves().forEach(lf => { occ[lf.data.leaf.occode] = { x: oc.x - R + lf.x, y: oc.y - R + lf.y, r: lf.r }; });
+        });
+        return { occ, cats };
+      }
+
+      const svg = d3.select("#cc-pack").append("svg")
+        .attr("viewBox", `0 0 ${W} ${H}`).attr("width","100%").style("height","auto")
+        .style("display","block").style("font","10px sans-serif").style("background","#fcfcfc");
+
+      // fixed Order outlines + labels (never move)
+      svg.append("g").selectAll("circle").data(orderRoot.children).join("circle")
+        .attr("cx",d=>d.x).attr("cy",d=>d.y).attr("r",d=>d.r)
+        .attr("fill","none").attr("stroke","#d0d0d0").attr("stroke-width",1.2);
+      svg.append("g").attr("text-anchor","middle").style("pointer-events","none").style("fill","#999")
+        .selectAll("text").data(orderRoot.children).join("text")
+        .attr("x",d=>d.x).attr("y",d=>d.y-d.r+12).style("font-size","11px").style("font-weight","600").text(d=>d.data.order);
+
+      const tip = d3.select("body").append("div")
+        .style("position","absolute").style("pointer-events","none").style("visibility","hidden")
+        .style("background","#fff").style("border","1px solid #ccc").style("padding","6px 10px")
+        .style("border-radius","5px").style("font-size","13px").style("max-width","280px")
+        .style("box-shadow","0 2px 6px rgba(0,0,0,.2)");
+
+      const catG  = svg.append("g");
+      const leafG = svg.append("g");
+      const layoutByYear = { '1851': layoutFor('1851'), '1861': layoutFor('1861') };
+
+      const sel = leafG.selectAll("circle").data(nodes, d => d.occode)
+        .join("circle")
+          .attr("cx", d => layoutByYear['1851'].occ[d.occode].x)
+          .attr("cy", d => layoutByYear['1851'].occ[d.occode].y)
+          .attr("r",  d => layoutByYear['1851'].occ[d.occode].r)
+          .attr("fill", d => MCOL[moveType[d.occode]])
+          .attr("fill-opacity", d => moveType[d.occode]==='stable' ? 0.5 : 0.9)
+          .attr("stroke","#fff").attr("stroke-width",0.4)
+          .on("mouseover", function(e,d){
+            tip.style("visibility","visible").html(`<strong>${d.name}</strong><br>${d.order}<br><span style="color:#888">1851 code ${codeOf(d,'1851')} &rarr; 1861 code ${codeOf(d,'1861')}</span><br><em>${moveType[d.occode]}</em>`);
+            d3.select(this).attr("stroke","#222").attr("stroke-width",1.2);
+          })
+          .on("mousemove", e => tip.style("left",(e.pageX+12)+"px").style("top",(e.pageY-10)+"px"))
+          .on("mouseout", function(){ tip.style("visibility","hidden"); d3.select(this).attr("stroke","#fff").attr("stroke-width",0.4); });
+
+      function show(yr){
+        const L = layoutByYear[yr];
+        // census-category bubbles (the lumps) grow / shrink / move so splits & merges are visible
+        const cs = catG.selectAll("circle").data(L.cats, d => d.key);
+        cs.exit().transition().duration(2000).ease(d3.easeCubicInOut).attr("r",0).style("opacity",0).remove();
+        cs.enter().append("circle")
+            .attr("fill","#000").attr("fill-opacity",0.045).attr("stroke","#aaa").attr("stroke-width",0.8)
+            .attr("cx",d=>d.x).attr("cy",d=>d.y).attr("r",0).style("opacity",0)
+          .merge(cs).transition().duration(2000).ease(d3.easeCubicInOut)
+            .attr("cx",d=>d.x).attr("cy",d=>d.y).attr("r",d=>d.r).style("opacity",1);
+        // occupations glide into their new groups
+        sel.transition().duration(2000).ease(d3.easeCubicInOut)
+          .attr("cx", d => L.occ[d.occode].x).attr("cy", d => L.occ[d.occode].y).attr("r", d => L.occ[d.occode].r);
+        d3.select("#cc-btn-1851").classed("active", yr==='1851');
+        d3.select("#cc-btn-1861").classed("active", yr==='1861');
+        d3.select("#cc-count").text(`${(yr==='1851'?g51:g61).size} census categories in ${yr}`);
+      }
+      d3.select("#cc-btn-1851").on("click", () => show('1851'));
+      d3.select("#cc-btn-1861").on("click", () => show('1861'));
+      show('1851');
+    });
+  });
+})();
+</script>
+
 <h3 style="margin-top:2em;">Occupational Skills Inheritance</h3>
 
 <style>
