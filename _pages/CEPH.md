@@ -1280,6 +1280,8 @@ Promise.all([
 })();
 </script>
 
+<h3 style="margin-top:2em;">Occupational Skills Inheritance</h3>
+
 <style>
   .table-wrap { overflow-x:auto; margin: 0 0 12px; }
   .nice-table { border-collapse: collapse; width: 100%; font-size: 14px; }
