@@ -654,24 +654,25 @@ nav_exclude: false
   <!-- RIGHT: biggest new jobs table -->
   <div style="flex:1 1 300px;min-width:280px;">
     <h4 style="margin:0 0 4px;">The biggest new jobs of the 19th century</h4>
-    <p style="font-size:0.82em;color:#888;margin:0 0 12px;">Ranked by growth in the workforce, 1851–1911.</p>
+    <p style="font-size:0.82em;color:#888;margin:0 0 12px;">Ranked by number of workers, 1911.</p>
     <table style="border-collapse:collapse;width:100%;font-size:0.9em;">
       <thead>
         <tr style="text-align:left;border-bottom:2px solid #238B45;">
           <th style="padding:7px 8px;font-weight:600;">Occupation</th>
           <th style="padding:7px 8px;font-weight:600;text-align:right;">Workers, 1911</th>
-          <th style="padding:7px 8px;font-weight:600;text-align:right;">Growth</th>
         </tr>
       </thead>
       <tbody>
-        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Electricians</td><td style="padding:7px 8px;text-align:right;">19,774</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">1,648×</td></tr>
-        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Motor car drivers</td><td style="padding:7px 8px;text-align:right;">18,904</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">1,260×</td></tr>
-        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Tramway conductors</td><td style="padding:7px 8px;text-align:right;">12,452</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">402×</td></tr>
-        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Bicycle makers &amp; repairers</td><td style="padding:7px 8px;text-align:right;">18,953</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">256×</td></tr>
-        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Photographers</td><td style="padding:7px 8px;text-align:right;">14,611</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">192×</td></tr>
-        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Electrical cable makers</td><td style="padding:7px 8px;text-align:right;">17,975</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">175×</td></tr>
-        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Telegraph &amp; telephone operators</td><td style="padding:7px 8px;text-align:right;">21,993</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">151×</td></tr>
-        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Electrical lamp makers</td><td style="padding:7px 8px;text-align:right;">5,657</td><td style="padding:7px 8px;text-align:right;font-weight:600;color:#238B45;">129×</td></tr>
+        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Electrician</td><td style="padding:7px 8px;text-align:right;">55,447</td></tr>
+        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Motor driver</td><td style="padding:7px 8px;text-align:right;">44,947</td></tr>
+        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Typist</td><td style="padding:7px 8px;text-align:right;">41,927</td></tr>
+        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Bicycle maker</td><td style="padding:7px 8px;text-align:right;">33,461</td></tr>
+        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Telegraph</td><td style="padding:7px 8px;text-align:right;">31,289</td></tr>
+        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Telephonist</td><td style="padding:7px 8px;text-align:right;">19,230</td></tr>
+        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Photographer</td><td style="padding:7px 8px;text-align:right;">17,134</td></tr>
+        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Asphalter</td><td style="padding:7px 8px;text-align:right;">1,612</td></tr>
+        <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Anaesthetist</td><td style="padding:7px 8px;text-align:right;">353</td></tr>
+        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">X-ray operator</td><td style="padding:7px 8px;text-align:right;">77</td></tr>
       </tbody>
     </table>
   </div>
