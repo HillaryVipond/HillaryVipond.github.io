@@ -1177,6 +1177,112 @@ Promise.all([
 })();
 </script>
 
+<!-- ================================================================ -->
+<!-- Census-structure circle pack: occupations regrouped by real code -->
+<!-- ================================================================ -->
+
+<h3>The structure underneath: how each census re-drew the boundaries</h3>
+
+<p>The packing above rests on a single, time-invariant set of occupations — a useful fiction. Underneath it, the census re-classified the workforce at <em>every</em> count: lumping trades together, splitting them apart, shuffling them between Orders. Below, each circle is one occupation (sized by its 1911 workforce, coloured by its modern Order); the bubbles are the <strong>actual census categories of the chosen year</strong>, labelled by their real code. Slide through the censuses and watch occupations the early census crammed into one box fan out into categories of their own.</p>
+
+<div style="display:flex;align-items:center;gap:16px;margin:6px 0 4px;flex-wrap:wrap;">
+  <label>Census year: <strong style="font-size:1.1em;"><span id="cc-year-label">1851</span></strong></label>
+  <input type="range" id="cc-year" min="0" max="5" step="1" value="0" style="width:340px;vertical-align:middle;">
+  <span id="cc-count" style="font-size:0.85em;color:#888;"></span>
+</div>
+
+<div id="cc-legend" style="font-size:0.78em;color:#444;margin:4px 0 8px;line-height:1.9;"></div>
+<div id="cc-pack" style="max-width:820px;margin:0 auto;"></div>
+
+<script>
+(function(){
+  function ready(fn){ if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, {once:true}); else fn(); }
+  ready(function(){
+    const W = 820, H = 820;
+    d3.json("/assets/data/occ_census_codes.json").then(D => {
+      const YEARS  = D.years;
+      const nodes  = D.nodes;
+      const orders = Array.from(new Set(nodes.map(n => n.order))).sort();
+      const color  = d3.scaleOrdinal(orders, d3.quantize(t => d3.interpolateRainbow(t * 0.92 + 0.02), orders.length));
+      const fmt    = d3.format(",");
+      let curYear  = YEARS[0];
+
+      const svg = d3.select("#cc-pack").append("svg")
+        .attr("viewBox", `0 0 ${W} ${H}`).attr("width", "100%").style("height", "auto")
+        .style("display", "block").style("font", "10px sans-serif").style("background", "#fcfcfc");
+      const catG  = svg.append("g");
+      const leafG = svg.append("g");
+      const labG  = svg.append("g").attr("text-anchor", "middle").style("pointer-events", "none");
+
+      const tip = d3.select("body").append("div")
+        .style("position","absolute").style("pointer-events","none").style("visibility","hidden")
+        .style("background","#fff").style("border","1px solid #ccc").style("padding","6px 10px")
+        .style("border-radius","5px").style("font-size","13px").style("max-width","280px")
+        .style("box-shadow","0 2px 6px rgba(0,0,0,.2)");
+
+      d3.select("#cc-legend").html(orders.map(o =>
+        `<span style="white-space:nowrap;margin-right:12px;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color(o)};margin-right:3px;"></span>${o}</span>`).join(""));
+
+      const slider     = d3.select("#cc-year");
+      const yearLabel  = d3.select("#cc-year-label");
+      const countLabel = d3.select("#cc-count");
+
+      function layout(year){
+        const groups = d3.groups(nodes, n => n.codes[String(year)] || "(none)");
+        const root = { children: groups.map(([code, members]) => ({ code, children: members.map(m => ({ leaf: m })) })) };
+        const h = d3.hierarchy(root, d => d.children).sum(d => d.leaf ? Math.max(d.leaf.size, 1) : 0).sort((a, b) => b.value - a.value);
+        d3.pack().size([W, H]).padding(2.5)(h);
+        return h;
+      }
+
+      function render(year, dur){
+        curYear = year;
+        const h = layout(year);
+        const leaves = h.leaves();
+        const cats = h.children || [];
+        yearLabel.text(year);
+        countLabel.text(`${cats.length} census categories · ${leaves.length} occupations`);
+
+        const cs = catG.selectAll("circle").data(cats, d => d.data.code);
+        cs.exit().transition().duration(dur).attr("r", 0).style("opacity", 0).remove();
+        cs.enter().append("circle")
+            .attr("fill", "none").attr("stroke", "#c8c8c8").attr("stroke-width", 1)
+            .attr("cx", d => d.x).attr("cy", d => d.y).attr("r", 0)
+          .merge(cs).transition().duration(dur)
+            .attr("cx", d => d.x).attr("cy", d => d.y).attr("r", d => d.r).style("opacity", 1);
+
+        const ls = leafG.selectAll("circle").data(leaves, d => d.data.leaf.occode);
+        ls.exit().remove();
+        ls.enter().append("circle")
+            .attr("cx", d => d.x).attr("cy", d => d.y).attr("r", 0)
+            .attr("fill", d => color(d.data.leaf.order)).attr("fill-opacity", 0.85)
+            .attr("stroke", "#fff").attr("stroke-width", 0.4)
+            .on("mouseover", function(e, d){ const n = d.data.leaf;
+              tip.style("visibility","visible").html(`<strong>${n.name}</strong><br>${n.order} · ${fmt(n.size)} workers (1911)<br><span style="color:#888">${curYear} census code: ${n.codes[String(curYear)] || '—'}</span>`);
+              d3.select(this).attr("stroke", "#222").attr("stroke-width", 1.2); })
+            .on("mousemove", e => tip.style("left", (e.pageX + 12) + "px").style("top", (e.pageY - 10) + "px"))
+            .on("mouseout", function(){ tip.style("visibility","hidden"); d3.select(this).attr("stroke", "#fff").attr("stroke-width", 0.4); })
+          .merge(ls).transition().duration(dur)
+            .attr("cx", d => d.x).attr("cy", d => d.y).attr("r", d => d.r)
+            .attr("fill", d => color(d.data.leaf.order));
+
+        const big = cats.filter(d => d.r > 22);
+        const tx = labG.selectAll("text").data(big, d => d.data.code);
+        tx.exit().remove();
+        tx.enter().append("text").attr("dy", "0.3em").style("fill", "#555")
+          .merge(tx).transition().duration(dur)
+            .attr("x", d => d.x).attr("y", d => d.y - d.r + 9)
+            .style("font-size", d => Math.min(13, Math.max(8, d.r / 3)) + "px")
+            .text(d => d.data.code);
+      }
+
+      render(YEARS[0], 0);
+      slider.on("input", function(){ render(YEARS[+this.value], 850); });
+    });
+  });
+})();
+</script>
+
 <style>
   .table-wrap { overflow-x:auto; margin: 0 0 12px; }
   .nice-table { border-collapse: collapse; width: 100%; font-size: 14px; }
