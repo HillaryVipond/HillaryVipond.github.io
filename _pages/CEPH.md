@@ -1208,7 +1208,7 @@ Promise.all([
     ]).then(([hier, census]) => {
       const byOcc = new Map(census.nodes.map(n => [n.occode, n]));
       function gby(yr){ const m = new Map(); census.nodes.forEach(n => { const c = n.codes[yr] || '(none)'; if (!m.has(c)) m.set(c, []); m.get(c).push(n.occode); }); return m; }
-      const YEARS = census.years.map(String);
+      const YEARS = census.years.map(String).filter(y => y !== '1911');
       const groups = {}; YEARS.forEach(y => groups[y] = gby(y));
       let curYear = YEARS[0];
 
@@ -1236,23 +1236,40 @@ Promise.all([
       const info = d3.select("#tm-info");
 
       // occupation cells (leaves) — the grey holding space
+      let pinned = null;
       const cell = svg.append("g").selectAll("rect").data(root.leaves()).join("rect")
         .attr("x",d=>d.x0).attr("y",d=>d.y0).attr("width",d=>Math.max(0,d.x1-d.x0)).attr("height",d=>Math.max(0,d.y1-d.y0))
         .attr("fill","#e0e0e0").attr("stroke","#fff").attr("stroke-width",0.5)
-        .on("mouseover", function(e,d){ hi(d); })
+        .on("mouseover", function(e,d){ if (pinned === null) paintCategory(d, false); showTip(d); })
         .on("mousemove", e => tip.style("left",(e.pageX+12)+"px").style("top",(e.pageY-10)+"px"))
-        .on("mouseout", clear);
+        .on("mouseout", function(){ tip.style("visibility","hidden"); if (pinned === null) { resetCells(); resetInfo(); } })
+        .on("click", function(e,d){
+          e.stopPropagation();
+          if (pinned === d.data.occode) { clear(); }
+          else { pinned = d.data.occode; paintCategory(d, true); }
+        });
 
-      function hi(d){
-        const oc = d.data.occode, n = byOcc.get(oc);
-        const code = n ? n.codes[curYear] : null;
-        const members = new Set(code ? (groups[curYear].get(code) || [oc]) : [oc]);
-        cell.attr("fill", c => members.has(c.data.occode) ? HI : "#e8e8e8")
-            .attr("fill-opacity", c => members.has(c.data.occode) ? 0.95 : 0.5);
-        tip.style("visibility","visible").html(`<strong>${d.data.name}</strong>` + (n ? `<br>${n.order}<br><span style="color:#888">${curYear} census code ${code}</span>` : ''));
-        info.html(`<strong style="color:${HI}">${members.size}</strong> occupations shared this census category in ${curYear}`);
+      function membersOf(d){
+        const n = byOcc.get(d.data.occode), code = n ? n.codes[curYear] : null;
+        return new Set(code ? (groups[curYear].get(code) || [d.data.occode]) : [d.data.occode]);
       }
-      function clear(){ cell.attr("fill","#e0e0e0").attr("fill-opacity",1); tip.style("visibility","hidden"); info.text("hover an occupation"); }
+      function paintCategory(d, isPin){
+        const set = membersOf(d);
+        cell.attr("fill", c => set.has(c.data.occode) ? HI : "#e8e8e8")
+            .attr("fill-opacity", c => set.has(c.data.occode) ? 0.95 : 0.45)
+            .attr("stroke", c => c.data.occode === d.data.occode ? "#000" : "#fff")
+            .attr("stroke-width", c => c.data.occode === d.data.occode ? 1.6 : 0.5);
+        info.html(`<strong style="color:${HI}">${set.size}</strong> shared this census category in ${curYear}` + (isPin ? ` &nbsp;·&nbsp; <em>pinned — hover the others to read them; click it again to release</em>` : ``));
+      }
+      function showTip(d){
+        const n = byOcc.get(d.data.occode), code = n ? n.codes[curYear] : null;
+        tip.style("visibility","visible").html(`<strong>${d.data.name}</strong>` + (n ? `<br>${n.order}<br><span style="color:#888">${curYear} census code ${code}</span>` : ''));
+      }
+      function resetInfo(){ info.html("hover an occupation · click to pin it"); }
+      function resetCells(){ cell.attr("fill","#e0e0e0").attr("fill-opacity",1).attr("stroke","#fff").attr("stroke-width",0.5); }
+      function clear(){ pinned = null; resetCells(); tip.style("visibility","hidden"); resetInfo(); }
+
+      svg.on("click", () => { if (pinned !== null) clear(); });
 
       const btnSel = d3.select("#tm-buttons").selectAll("button").data(YEARS).join("button")
         .attr("class","tm-yrbtn").text(y => y).on("click", (e, y) => setYear(y));
