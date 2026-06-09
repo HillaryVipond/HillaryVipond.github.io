@@ -1077,6 +1077,106 @@ Promise.all([
 
 <h2>5. Discussion</h2>
 
+<!-- ================================================ -->
+<!-- Circle packing: Order -> sub-Order -> occupation -->
+<!-- ================================================ -->
+
+<h3>The shape of the workforce: Orders, sub-Orders, and occupations</h3>
+
+<p>Every occupation nests inside a sub-Order, and every sub-Order inside one of the 22 Orders. The circles below pack that whole structure, with each circle's area proportional to its 1911 workforce. Click any bubble to zoom in; click the background to zoom back out.</p>
+
+<div id="circlepack" style="max-width:760px;margin:8px auto 0;"></div>
+<p style="font-size:0.85em;color:#888;text-align:center;margin-top:4px;">Circle area ∝ workers in 1911 · click to zoom in · click outside to zoom out · hover for counts</p>
+
+<script>
+(function(){
+  function ready(fn){ if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, {once:true}); else fn(); }
+  ready(function(){
+    const W = 760, H = 760;
+    d3.json("/assets/data/occ_hierarchy.json").then(data => {
+      const root = d3.pack().size([W, H]).padding(3)(
+        d3.hierarchy(data).sum(d => d.value).sort((a, b) => b.value - a.value)
+      );
+
+      const orders  = root.children.map(d => d.data.name);
+      const color   = d3.scaleOrdinal(orders, d3.quantize(t => d3.interpolateRainbow(t * 0.92 + 0.02), orders.length));
+      const orderOf = d => { let n = d; while (n.depth > 1) n = n.parent; return n.data.name; };
+      const fmt = d3.format(",");
+
+      const svg = d3.select("#circlepack").append("svg")
+        .attr("viewBox", `-${W/2} -${H/2} ${W} ${H}`)
+        .attr("width", "100%").style("height", "auto").style("display", "block")
+        .style("cursor", "pointer").style("font", "11px sans-serif").style("background", "#fff");
+
+      const tip = d3.select("body").append("div")
+        .style("position","absolute").style("pointer-events","none").style("visibility","hidden")
+        .style("background","#fff").style("border","1px solid #ccc").style("padding","6px 10px")
+        .style("border-radius","5px").style("font-size","13px").style("max-width","260px")
+        .style("box-shadow","0 2px 6px rgba(0,0,0,.2)");
+
+      let focus = root, view;
+
+      const node = svg.append("g").selectAll("circle")
+        .data(root.descendants().slice(1))
+        .join("circle")
+          .attr("fill", d => color(orderOf(d)))
+          .attr("fill-opacity", d => d.children ? 0.3 : 0.85)
+          .attr("stroke", d => d.children ? "#fff" : "none")
+          .attr("stroke-width", d => d.children ? 1 : 0)
+          .attr("pointer-events", "all")
+          .on("mouseover", function(event, d){
+            tip.style("visibility","visible").html(
+              d.children
+                ? `<strong>${d.data.name}</strong><br>${fmt(d.value)} workers`
+                : `<strong>${d.data.name}</strong><br>${fmt(d.value)} workers<br><span style="color:#888">${orderOf(d)}</span>`
+            );
+            d3.select(this).attr("stroke","#333").attr("stroke-width",1.5);
+          })
+          .on("mousemove", e => tip.style("left",(e.pageX+12)+"px").style("top",(e.pageY-10)+"px"))
+          .on("mouseout", function(event, d){
+            tip.style("visibility","hidden");
+            d3.select(this).attr("stroke", d.children ? "#fff" : "none").attr("stroke-width", d.children ? 1 : 0);
+          })
+          .on("click", (event, d) => { if (focus !== d) { zoom(event, d); event.stopPropagation(); } });
+
+      const label = svg.append("g")
+          .style("pointer-events","none").attr("text-anchor","middle")
+        .selectAll("text")
+        .data(root.descendants())
+        .join("text")
+          .style("fill-opacity", d => d.parent === root ? 1 : 0)
+          .style("display", d => d.parent === root ? "inline" : "none")
+          .style("font-weight", d => d.depth === 1 ? "600" : "400")
+          .text(d => d.data.name);
+
+      svg.on("click", (event) => zoom(event, root));
+      zoomTo([root.x, root.y, root.r * 2]);
+
+      function zoomTo(v){
+        const k = W / v[2]; view = v;
+        label.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
+        node.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
+        node.attr("r", d => d.r * k);
+      }
+
+      function zoom(event, d){
+        focus = d;
+        const transition = svg.transition().duration(700)
+          .tween("zoom", () => {
+            const i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2]);
+            return t => zoomTo(i(t));
+          });
+        label.filter(function(d){ return d.parent === focus || this.style.display === "inline"; })
+          .transition(transition)
+            .style("fill-opacity", d => d.parent === focus ? 1 : 0)
+            .on("start", function(d){ if (d.parent === focus) this.style.display = "inline"; })
+            .on("end", function(d){ if (d.parent !== focus) this.style.display = "none"; });
+      }
+    });
+  });
+})();
+</script>
+
 <style>
   .table-wrap { overflow-x:auto; margin: 0 0 12px; }
   .nice-table { border-collapse: collapse; width: 100%; font-size: 14px; }
