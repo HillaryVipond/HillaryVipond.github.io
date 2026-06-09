@@ -1276,6 +1276,26 @@ Promise.all([
       const leafG = svg.append("g");
       const layoutByYear = { '1851': layoutFor('1851'), '1861': layoutFor('1861') };
 
+      // overlay: hovering a dot links every member of its census category (current year),
+      // wherever they sit across the Order bubbles — revealing cross-Order categories.
+      const linkG = svg.insert("g", () => leafG.node()).style("pointer-events","none");
+      let curYear = '1851';
+      function showLinks(d){
+        const members = (curYear==='1851'?g51:g61).get(codeOf(d,curYear)) || [];
+        if (members.length < 2) return;
+        const ms = new Set(members);
+        sel.attr("fill-opacity", o => ms.has(o.occode) ? 0.95 : 0.1);
+        const occ = layoutByYear[curYear].occ, src = occ[d.occode];
+        linkG.selectAll("line").data(members.filter(o => o !== d.occode)).join("line")
+          .attr("x1", src.x).attr("y1", src.y)
+          .attr("x2", o => occ[o].x).attr("y2", o => occ[o].y)
+          .attr("stroke", "#222").attr("stroke-width", 0.7).attr("stroke-opacity", 0.45);
+      }
+      function clearLinks(){
+        linkG.selectAll("line").remove();
+        sel.attr("fill-opacity", o => moveType[o.occode]==='stable' ? 0.5 : 0.9);
+      }
+
       const sel = leafG.selectAll("circle").data(nodes, d => d.occode)
         .join("circle")
           .attr("cx", d => layoutByYear['1851'].occ[d.occode].x)
@@ -1286,12 +1306,15 @@ Promise.all([
           .attr("stroke","#fff").attr("stroke-width",0.4)
           .on("mouseover", function(e,d){
             tip.style("visibility","visible").html(`<strong>${d.name}</strong><br>${d.order}<br><span style="color:#888">1851 code ${codeOf(d,'1851')} &rarr; 1861 code ${codeOf(d,'1861')}</span><br><em>${moveType[d.occode]}</em>`);
-            d3.select(this).attr("stroke","#222").attr("stroke-width",1.2);
+            d3.select(this).attr("stroke","#222").attr("stroke-width",1.2).raise();
+            showLinks(d);
           })
           .on("mousemove", e => tip.style("left",(e.pageX+12)+"px").style("top",(e.pageY-10)+"px"))
-          .on("mouseout", function(){ tip.style("visibility","hidden"); d3.select(this).attr("stroke","#fff").attr("stroke-width",0.4); });
+          .on("mouseout", function(){ tip.style("visibility","hidden"); d3.select(this).attr("stroke","#fff").attr("stroke-width",0.4); clearLinks(); });
 
       function show(yr){
+        curYear = yr;
+        linkG.selectAll("line").remove();
         const L = layoutByYear[yr];
         // census-category bubbles (the lumps) grow / shrink / move so splits & merges are visible
         const cs = catG.selectAll("circle").data(L.cats, d => d.key);
@@ -1303,7 +1326,8 @@ Promise.all([
             .attr("cx",d=>d.x).attr("cy",d=>d.y).attr("r",d=>d.r).style("opacity",1);
         // occupations glide into their new groups
         sel.transition().duration(2000).ease(d3.easeCubicInOut)
-          .attr("cx", d => L.occ[d.occode].x).attr("cy", d => L.occ[d.occode].y).attr("r", d => L.occ[d.occode].r);
+          .attr("cx", d => L.occ[d.occode].x).attr("cy", d => L.occ[d.occode].y).attr("r", d => L.occ[d.occode].r)
+          .attr("fill-opacity", d => moveType[d.occode]==='stable' ? 0.5 : 0.9);
         d3.select("#cc-btn-1851").classed("active", yr==='1851');
         d3.select("#cc-btn-1861").classed("active", yr==='1861');
         d3.select("#cc-count").text(`${(yr==='1851'?g51:g61).size} census categories in ${yr}`);
