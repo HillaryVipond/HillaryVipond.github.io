@@ -59,6 +59,12 @@ nav_exclude: false
     .style("font-family", "sans-serif")
     .style("font-size", "14px");
 
+  const fmt = d3.format(",");
+  const tip = d3.select("body").append("div")
+    .style("position","absolute").style("pointer-events","none").style("visibility","hidden")
+    .style("background","#fff").style("border","1px solid #ccc").style("padding","6px 10px")
+    .style("border-radius","5px").style("font-size","13px").style("box-shadow","0 2px 6px rgba(0,0,0,.2)");
+
   // Load a year's JSON and render the treemap
   window.loadYear = function(year) {
     d3.json(`/assets/data/orders_${year}.json`).then(data => {
@@ -78,12 +84,20 @@ nav_exclude: false
       nodes.append("rect")
         .attr("width",  d => d.x1 - d.x0)
         .attr("height", d => d.y1 - d.y0)
-        .attr("fill", d => color(d.data.name));
+        .attr("fill", d => color(d.data.name))
+        .on("mouseover", function(event, d){ tip.style("visibility","visible").html(`<strong>${d.data.name}</strong><br>${fmt(d.value)} workers`); })
+        .on("mousemove", event => tip.style("left",(event.pageX+12)+"px").style("top",(event.pageY-10)+"px"))
+        .on("mouseout", () => tip.style("visibility","hidden"));
 
+      // label only where it fits; otherwise it's available on hover
       nodes.append("text")
         .attr("x", 5).attr("y", 18)
         .text(d => d.data.name)
-        .attr("fill", "#333").style("font-weight", "600");
+        .attr("fill", "#333").style("font-weight", "600").style("pointer-events", "none")
+        .each(function(d){
+          const pad = 6;
+          if ((d.y1 - d.y0) < 18 || this.getComputedTextLength() > (d.x1 - d.x0) - pad) d3.select(this).remove();
+        });
 
     }).catch(err => console.error("Error loading JSON:", err));
   };
