@@ -43,9 +43,15 @@ nav_exclude: false
   const width = 960;
   const height = 600;
 
-  // Same rainbow palette as the circle packs (consistent Order colours across the page)
+  // Calm, professional palette: an even hue spread (so Orders stay distinguishable),
+  // but desaturated and lightened to a soft pastel — and dark labels rather than white.
   const ORDERS = ["Agriculture","Brick","Building","Chemicals","Commerce","Conveyancing","Defence","Domestic","Dress","Fishing","Food","Gas and Electric","General","Government","Leather","Machines","Mining","Paper","Precious Metals","Professions","Textiles","Wood"];
-  const color = d3.scaleOrdinal(ORDERS, d3.quantize(t => d3.interpolateRainbow(t * 0.92 + 0.02), ORDERS.length));
+  const color = d3.scaleOrdinal(ORDERS, ORDERS.map((_, i) => {
+    const c = d3.hsl(d3.interpolateRainbow((i / ORDERS.length) * 0.92 + 0.02));
+    c.s *= 0.42;   // mute saturation
+    c.l = 0.74;    // soft, pastel lightness
+    return c.formatHex();
+  }));
 
   const svg = d3.select("#treemap-time")
     .append("svg")
@@ -75,9 +81,9 @@ nav_exclude: false
         .attr("fill", d => color(d.data.name));
 
       nodes.append("text")
-        .attr("x", 4).attr("y", 18)
+        .attr("x", 5).attr("y", 18)
         .text(d => d.data.name)
-        .attr("fill", "white");
+        .attr("fill", "#333").style("font-weight", "600");
 
     }).catch(err => console.error("Error loading JSON:", err));
   };
