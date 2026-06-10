@@ -419,7 +419,7 @@ nav_exclude: false
         const n = 28, w = 240, h = 12; let bars = "";
         for (let i = 0; i < n; i++) bars += `<rect x="${(i*w/n).toFixed(1)}" y="0" width="${(w/n+0.6).toFixed(1)}" height="${h}" fill="${mechColor(i/(n-1)*mechMax)}"/>`;
         el.style.display = "block";
-        el.innerHTML = `<span style="font-size:12px;color:#444;margin-right:8px;">Share of workers doing machine work</span><svg width="${w}" height="${h}" style="vertical-align:middle;border:1px solid #ddd;">${bars}</svg> <span style="font-size:11px;color:#666;margin-left:6px;">0% &ndash; ${Math.round(mechMax*100)}%</span>`;
+        el.innerHTML = `<span style="font-size:12px;color:#444;margin-right:8px;">Share of workers doing machine work in 1911</span><svg width="${w}" height="${h}" style="vertical-align:middle;border:1px solid #ddd;">${bars}</svg> <span style="font-size:11px;color:#666;margin-left:6px;">0% &ndash; ${Math.round(mechMax*100)}%</span>`;
       }
 
       backBtn.onclick = drawOrders;
