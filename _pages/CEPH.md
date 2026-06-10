@@ -353,6 +353,8 @@ nav_exclude: false
 <p style="font-size:0.9em;color:#666;margin-top:-0.4em;">Click the <strong>Dress</strong> order to open it up, then click a highlighted occupation to see how its tasks changed over time. Click the background to step back out.</p>
 
 <button id="treemap-back" style="display:none;margin:0 0 10px;padding:5px 12px;font-size:13px;cursor:pointer;">← Back to all orders</button>
+<button id="treemap-mech" style="display:none;margin:0 0 10px 6px;padding:5px 12px;font-size:13px;cursor:pointer;">Shade by mechanization</button>
+<div id="mech-legend" style="display:none;margin:0 0 8px;"></div>
 
 <div id="treemap"></div>
 
@@ -395,7 +397,7 @@ nav_exclude: false
       .style("max-width","340px").style("line-height","1.35")
       .style("visibility","hidden").style("box-shadow","0 2px 6px rgba(0,0,0,0.2)");
 
-    d3.json("/assets/data/dress_micro.json").then(rootData => {
+    d3.json("/assets/data/dress_micro.json?v=2").then(rootData => {
       // View A: all orders (Dress highlighted, sized by 1911)
       const ordersRoot = d3.hierarchy(rootData).sum(d => d.size || 0).sort((a,b)=>b.value-a.value);
       d3.treemap().size([W,H]).paddingInner(2)(ordersRoot);
@@ -404,6 +406,21 @@ nav_exclude: false
       const dressData = rootData.children.find(c => c.name === "Dress");
       const dressRoot = d3.hierarchy(dressData).sum(d => d.size || 0).sort((a,b)=>b.value-a.value);
       d3.treemap().size([W,H]).paddingInner(2)(dressRoot);
+
+      // --- mechanization shading (toggle, only in the Dress view) ---
+      const mechBtn = document.getElementById("treemap-mech");
+      const mechMax = d3.max(dressRoot.children, d => d.data.mech || 0) || 1;
+      const mechColor = d3.scaleSequential(d3.interpolateOranges).domain([0, mechMax]);
+      let mechMode = false;
+      mechBtn.onclick = () => { mechMode = !mechMode; drawDress(); };
+      function drawMechLegend(){
+        const el = document.getElementById("mech-legend");
+        if (!mechMode){ el.style.display = "none"; el.innerHTML = ""; return; }
+        const n = 28, w = 240, h = 12; let bars = "";
+        for (let i = 0; i < n; i++) bars += `<rect x="${(i*w/n).toFixed(1)}" y="0" width="${(w/n+0.6).toFixed(1)}" height="${h}" fill="${mechColor(i/(n-1)*mechMax)}"/>`;
+        el.style.display = "block";
+        el.innerHTML = `<span style="font-size:12px;color:#444;margin-right:8px;">Share of workers doing machine work</span><svg width="${w}" height="${h}" style="vertical-align:middle;border:1px solid #ddd;">${bars}</svg> <span style="font-size:11px;color:#666;margin-left:6px;">0% &ndash; ${Math.round(mechMax*100)}%</span>`;
+      }
 
       backBtn.onclick = drawOrders;
       drawOrders();
@@ -452,14 +469,15 @@ nav_exclude: false
       // Larger hover tooltip — only for boxes that aren't already showing their full name.
       function addTip(node, getText){
         node
-          .on("mouseover", function(e,d){ if (d._full) return; tooltip.style("visibility","visible").text(getText(d)); d3.select(this).select("rect").attr("stroke","#333"); })
-          .on("mousemove", function(e,d){ if (d._full) return; tooltip.style("left",(e.pageX+12)+"px").style("top",(e.pageY-10)+"px"); })
+          .on("mouseover", function(e,d){ if (d._full && !mechMode) return; tooltip.style("visibility","visible").text(getText(d)); d3.select(this).select("rect").attr("stroke","#333"); })
+          .on("mousemove", function(e,d){ if (d._full && !mechMode) return; tooltip.style("left",(e.pageX+12)+"px").style("top",(e.pageY-10)+"px"); })
           .on("mouseout", function(){ tooltip.style("visibility","hidden"); d3.select(this).select("rect").attr("stroke","#fff"); });
       }
 
       // --- View A: all orders ---
       function drawOrders(){
         clearImage(); backBtn.style.display="none"; svg.on("click", null);
+        mechMode = false; mechBtn.style.display="none"; drawMechLegend();
         g.selectAll("*").remove();
         const node = g.selectAll("g").data(ordersRoot.children).join("g")
           .attr("transform", d => `translate(${d.x0},${d.y0})`)
@@ -489,6 +507,9 @@ nav_exclude: false
       // --- View B: Dress occupations (charted ones highlighted) ---
       function drawDress(){
         clearImage(); backBtn.style.display="inline-block";
+        mechBtn.style.display="inline-block";
+        mechBtn.textContent = mechMode ? "Back to normal view" : "Shade by mechanization";
+        drawMechLegend();
         g.selectAll("*").remove();
         const node = g.selectAll("g").data(dressRoot.children).join("g")
           .attr("transform", d => `translate(${d.x0},${d.y0})`)
@@ -496,12 +517,12 @@ nav_exclude: false
           .on("click", (e,d) => { e.stopPropagation(); if (d.data.chart) showChart(d); });
         node.append("rect")
           .attr("width", d=>d.x1-d.x0).attr("height", d=>d.y1-d.y0)
-          .attr("fill", d => d.data.chart ? HILITE : GREY).attr("stroke","#fff")
+          .attr("fill", d => mechMode ? mechColor(d.data.mech || 0) : (d.data.chart ? HILITE : GREY)).attr("stroke","#fff")
           .style("opacity",0).transition().duration(450).style("opacity",1);
         node.append("text").style("pointer-events","none")
-          .attr("fill", d => d.data.chart ? "#fff" : "#6f6f6f")
+          .attr("fill", d => mechMode ? ((d.data.mech || 0) > mechMax*0.5 ? "#fff" : "#333") : (d.data.chart ? "#fff" : "#6f6f6f"))
           .call(s => drawLabel(s, d => d.data.occode + ": " + d.data.name, d => String(d.data.occode)));
-        addTip(node, d => d.data.name);
+        addTip(node, d => d.data.name + (mechMode ? " — " + Math.round((d.data.mech||0)*100) + "% machine work" : ""));
         svg.on("click", () => drawOrders());   // background click → back to orders
       }
 
