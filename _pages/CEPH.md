@@ -855,6 +855,8 @@ nav_exclude: false
   An initial mapping of the emergence of new technologies in the UK, by county.
 </h4>
 
+<p>Unlike the apprenticeship system, mechanization rises on <em>both</em> measures &mdash; in share <em>and</em> in absolute numbers: by 1911 there are at least about 1.5 million more people working with machines.</p>
+
 <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
   <label for="tech-year-slider">Select year: <span id="tech-year-label">1851</span></label>
   <input type="range" id="tech-year-slider" min="0" max="5" step="1" value="0" style="width:300px;">
