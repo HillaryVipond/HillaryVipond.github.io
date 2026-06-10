@@ -964,6 +964,8 @@ nav_exclude: false
 
 <p>The apprenticeship system declines everywhere between 1851–1911. The decline is more rapid after 1881. Less urban areas seem to retain more of the system than elsewhere.</p>
 
+<p>But this is a decline in <em>share</em>, not in absolute numbers. Summed across the three roles, the system actually grows slightly — from about 252,000 in 1851 to about 261,000 in 1911, a net rise of roughly 9,000. Apprentices themselves increase substantially, by almost 90,000; the real decline is among journeymen (down about 65,000) and masters.</p>
+
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px;">
 
   <!-- LEFT: Total participation -->
@@ -1592,7 +1594,7 @@ Promise.all([
   <li>From roughly 800 industries to about 10,000 micro-occupations.</li>
   <li>Micro-occupations are necessary to track the emergence of new work and the decline of older jobs.</li>
   <li>Rise of management jobs and factory work.</li>
-  <li>Decline of the apprenticeship system.</li>
+  <li>Decline of the apprenticeship system, in terms of shares. In absolute numbers, it increases by about 9,000.</li>
   <li><strong>Implications:</strong> how society absorbs technological shocks; who gets the new jobs.</li>
   <li><strong>Next steps:</strong> finalise boundaries and definitions of new jobs.</li>
 </ul>
