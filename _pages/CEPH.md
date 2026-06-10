@@ -908,7 +908,7 @@ nav_exclude: false
     if (svg.empty()) return;
 
     const GEO_URL  = '/assets/maps/Counties1851.geojson';
-    const DATA_URL = '/assets/maps/share_machine_by_county3.json';
+    const DATA_URL = '/assets/maps/share_machine_men_by_county.json';
 
     let geoData;
     try { geoData = await d3.json(GEO_URL); } catch { return; }
@@ -927,7 +927,7 @@ nav_exclude: false
     let yearData = null;
     try { yearData = await d3.json(DATA_URL); } catch {}
 
-    const thresholds = [2, 4, 6, 8];
+    const thresholds = [4, 8, 12, 16];
     const color = d3.scaleThreshold().domain(thresholds).range(d3.schemeGreens[5]);
     const countyKey = f => f.properties?.R_CTY;
     const fmt = v => (v == null || isNaN(v)) ? 'N/A' : d3.format('.2f')(v) + '%';
@@ -963,7 +963,7 @@ nav_exclude: false
       const colors = d3.schemeGreens[5];
       const binWidth = 480 / colors.length;
       legendSvg.selectAll('*').remove();
-      const labels = ['0–2%', '2–4%', '4–6%', '6–8%', '8%+'];
+      const labels = ['0–4%', '4–8%', '8–12%', '12–16%', '16%+'];
       colors.forEach((c, i) => {
         legendSvg.append('rect').attr('x', i * binWidth).attr('y', 10)
           .attr('width', binWidth).attr('height', 10).attr('fill', c);
