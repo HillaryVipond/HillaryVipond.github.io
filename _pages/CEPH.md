@@ -1590,6 +1590,7 @@ Promise.all([
 
 <ul style="max-width:820px;line-height:1.8;padding-left:1.2em;">
   <li>From roughly 800 industries to about 10,000 micro-occupations.</li>
+  <li>Micro-occupations are necessary to track the emergence of new work and the decline of older jobs.</li>
   <li>Rise of management jobs and factory work.</li>
   <li>Decline of the apprenticeship system.</li>
   <li><strong>Implications:</strong> how society absorbs technological shocks; who gets the new jobs.</li>
