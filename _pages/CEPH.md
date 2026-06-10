@@ -532,7 +532,7 @@ nav_exclude: false
 
 <p>
   Where did specific new occupations emerge across the country? Choose a trade and a census
-  year to see the share of the male workforce it accounted for in each county.
+  year to see the share of the workforce it accounted for in each county.
 </p>
 
 <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
@@ -604,13 +604,13 @@ nav_exclude: false
   // One consistent colour ramp; thresholds are auto-computed per job from its own data.
   const RAMP = d3.schemeGreens[5];
   const JOBS = {
-    electrician:   { dataUrl: '/assets/maps/share_electrician_by_county.json',   caption: 'Share of male workforce: electricians' },
-    motor_driver:  { dataUrl: '/assets/maps/share_motor_driver_by_county.json',  caption: 'Share of male workforce: motor drivers' },
-    typist:        { dataUrl: '/assets/maps/share_typist_by_county.json',        caption: 'Share of male workforce: typists' },
-    bicycle_maker: { dataUrl: '/assets/maps/share_bicycle_maker_by_county.json', caption: 'Share of male workforce: bicycle makers' },
-    telegraph:     { dataUrl: '/assets/maps/share_telegraph_by_county.json',     caption: 'Share of male workforce: telegraph workers' },
-    telephonist:   { dataUrl: '/assets/maps/share_telephonist_by_county.json',   caption: 'Share of male workforce: telephonists' },
-    photographer:  { dataUrl: '/assets/maps/share_photographer_by_county.json',  caption: 'Share of male workforce: photographers' }
+    electrician:   { dataUrl: '/assets/maps/share_electrician_by_county.json',   caption: 'Share of workforce: electricians' },
+    motor_driver:  { dataUrl: '/assets/maps/share_motor_driver_by_county.json',  caption: 'Share of workforce: motor drivers' },
+    typist:        { dataUrl: '/assets/maps/share_typist_by_county.json',        caption: 'Share of workforce: typists' },
+    bicycle_maker: { dataUrl: '/assets/maps/share_bicycle_maker_by_county.json', caption: 'Share of workforce: bicycle makers' },
+    telegraph:     { dataUrl: '/assets/maps/share_telegraph_by_county.json',     caption: 'Share of workforce: telegraph workers' },
+    telephonist:   { dataUrl: '/assets/maps/share_telephonist_by_county.json',   caption: 'Share of workforce: telephonists' },
+    photographer:  { dataUrl: '/assets/maps/share_photographer_by_county.json',  caption: 'Share of workforce: photographers' }
   };
 
   ready(async function(){
@@ -1588,9 +1588,9 @@ Promise.all([
 
 <h2 style="margin-top:2em;">6. Conclusion</h2>
 
-<div style="max-width:820px;">
-  <p style="margin-bottom:14px;"><strong>Task-level analysis is feasible and informative.</strong> Going from roughly 800 industries to just under a thousand tasks lets us look <em>inside</em> occupations &mdash; and it works.</p>
-  <p style="margin-bottom:14px;"><strong>What is emerging.</strong> The early picture is clear: the rise of management jobs and factory and machine work, alongside the decline of the apprenticeship system.</p>
-  <p style="margin-bottom:14px;"><strong>Why it matters.</strong> This speaks to how a society absorbs technological shocks &mdash; and to who gets the new jobs.</p>
-  <p style="margin-bottom:0;"><strong>Next steps.</strong> Finalise the definitions of new jobs, and work out the shifting Order boundaries.</p>
-</div>
+<ul style="max-width:820px;line-height:1.7;padding-left:1.2em;">
+  <li style="margin-bottom:10px;"><strong>Task-level analysis is feasible and informative.</strong> Going from roughly 800 industries to just under a thousand tasks lets us look <em>inside</em> occupations &mdash; and it works.</li>
+  <li style="margin-bottom:10px;"><strong>What is emerging.</strong> The early picture is clear: the rise of management jobs and factory and machine work, alongside the decline of the apprenticeship system.</li>
+  <li style="margin-bottom:10px;"><strong>Why it matters.</strong> This speaks to how a society absorbs technological shocks &mdash; and to who gets the new jobs.</li>
+  <li><strong>Next steps.</strong> Finalise the definitions of new jobs, and work out the shifting Order boundaries.</li>
+</ul>
