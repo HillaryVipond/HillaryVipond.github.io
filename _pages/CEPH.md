@@ -7,7 +7,7 @@ nav_exclude: false
 
 <p style="font-size:1.05em;line-height:1.7;max-width:820px;margin-top:0.5rem;margin-bottom:2.5rem;">
   This project maps the changing occupational structure of Great Britain across the
-  Second Industrial Revolution, tracking both job loss and job creation. We explore this
+  Second Industrial Revolution, tracking both job loss and job creation. I explore this
   transformation at three levels of granularity: changes at the <strong>Order</strong> level,
   at the <strong>Industry</strong> level, and at the <strong>Micro-Occupations</strong> level.
 </p>
@@ -121,7 +121,7 @@ nav_exclude: false
   document.addEventListener("DOMContentLoaded", function() {
     const width  = 800;
     const height = 600;
-    const margin = { top: 20, right: 20, bottom: 30, left: 150 };
+    const margin = { top: 20, right: 20, bottom: 50, left: 150 };
 
     d3.csv("/assets/data/Orders.csv", d3.autoType).then(data => {
       const allOrders = data.sort((a, b) =>
@@ -146,8 +146,13 @@ nav_exclude: false
         .selectAll("text").style("font-size", "13px");
 
       svg.append("g").attr("transform", `translate(0,${innerH})`)
-        .call(d3.axisBottom(x).ticks(4))
+        .call(d3.axisBottom(x).tickValues([2, 4, 6, 8, 10]))
         .selectAll("text").style("font-size", "12px");
+
+      svg.append("text")
+        .attr("x", innerW / 2).attr("y", innerH + 40)
+        .attr("text-anchor", "middle").style("font-size", "12px").style("fill", "#333")
+        .text("Fold growth");
 
       // Blue = above population growth threshold (2×), orange = below
       const colorFn = d => d.fold_growth_1851_1911 >= 2 ? "#6BAED6" : "#FD8D3C";
@@ -519,126 +524,11 @@ nav_exclude: false
 
 <h3 style="margin-top:1.4em;font-size:1.25em;color:#238B45;border-bottom:3px solid #238B45;padding-bottom:6px;letter-spacing:0.02em;">Growth</h3>
 
-<!-- ===================== -->
-<!-- Section 1: Technology -->
-<!-- ===================== -->
-
-<h3>4.1 Map of mechanization</h3>
-
-<h4 style="margin-top: 1em;">
-  An initial mapping of the emergence of new technologies in the UK, by county.
-</h4>
-
-<div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
-  <label for="tech-year-slider">Select year: <span id="tech-year-label">1851</span></label>
-  <input type="range" id="tech-year-slider" min="0" max="5" step="1" value="0" style="width:300px;">
-</div>
-
-<div style="display:flex;flex-direction:column;align-items:center;margin-bottom:40px;position:relative;">
-  <svg id="tech-map" width="960" height="600" viewBox="0 0 960 600" style="max-width:100%;height:auto;"></svg>
-  <div style="margin-top:10px;">
-    <svg id="tech-legend" width="480" height="50"></svg>
-    <div style="font-size:12px;text-align:center;">Percentage share of male population</div>
-  </div>
-  <div id="tech-tooltip" style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);pointer-events:none;"></div>
-</div>
-
-<script>
-(function(){
-  function ready(fn){
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, {once:true});
-    else fn();
-  }
-
-  ready(async function initTechMap(){
-    const svg = d3.select('#tech-map');
-    const tooltip = d3.select('#tech-tooltip');
-    const slider = d3.select('#tech-year-slider');
-    const yearLabel = d3.select('#tech-year-label');
-    const YEARS = [1851, 1861, 1881, 1891, 1901, 1911];   // 1871 skipped (no census snapshot)
-    if (svg.empty()) return;
-
-    const GEO_URL  = '/assets/maps/Counties1851.geojson';
-    const DATA_URL = '/assets/maps/share_machine_by_county3.json';
-
-    let geoData;
-    try { geoData = await d3.json(GEO_URL); } catch { return; }
-
-    const projection = d3.geoMercator().fitSize([960, 600], geoData);
-    const path = d3.geoPath().projection(projection);
-
-    svg.selectAll('path')
-      .data(geoData.features)
-      .join('path')
-      .attr('d', path)
-      .attr('fill', '#eee')
-      .attr('stroke', '#fff')
-      .attr('stroke-width', 0.5);
-
-    let yearData = null;
-    try { yearData = await d3.json(DATA_URL); } catch {}
-
-    const thresholds = [2, 4, 6, 8];
-    const color = d3.scaleThreshold().domain(thresholds).range(d3.schemeGreens[5]);
-    const countyKey = f => f.properties?.R_CTY;
-    const fmt = v => (v == null || isNaN(v)) ? 'N/A' : d3.format('.2f')(v) + '%';
-    const getYearValues = y => yearData && (yearData[y] ?? yearData[String(y)] ?? yearData[+y] ?? null);
-
-    function paint(year){
-      const values = getYearValues(year);
-      svg.selectAll('path')
-        .attr('fill', d => {
-          if (!values) return '#eee';
-          const v = values[countyKey(d)];
-          return v != null ? color(v) : '#ccc';
-        })
-        .on('mouseover', function(event, d){
-          const name = countyKey(d) ?? 'Unknown';
-          const v = getYearValues(year)?.[name];
-          tooltip.style('visibility','visible').text(`${name}: ${fmt(v)}`);
-          d3.select(this).attr('stroke-width', 2);
-        })
-        .on('mousemove', function(event){
-          const bbox = this.ownerSVGElement.getBoundingClientRect();
-          tooltip.style('top', (event.clientY - bbox.top + 10) + 'px')
-                 .style('left', (event.clientX - bbox.left + 10) + 'px');
-        })
-        .on('mouseout', function(){
-          tooltip.style('visibility','hidden');
-          d3.select(this).attr('stroke-width', 0.5);
-        });
-    }
-
-    (function legend(){
-      const legendSvg = d3.select('#tech-legend');
-      const colors = d3.schemeGreens[5];
-      const binWidth = 480 / colors.length;
-      legendSvg.selectAll('*').remove();
-      const labels = ['0–2%', '2–4%', '4–6%', '6–8%', '8%+'];
-      colors.forEach((c, i) => {
-        legendSvg.append('rect').attr('x', i * binWidth).attr('y', 10)
-          .attr('width', binWidth).attr('height', 10).attr('fill', c);
-        legendSvg.append('text').attr('x', i * binWidth + binWidth / 2).attr('y', 35)
-          .attr('text-anchor', 'middle').attr('font-size', '10px').text(labels[i]);
-      });
-    })();
-
-    paint(YEARS[0]);
-    if (!slider.empty()) {
-      slider.on('input', function(){
-        const y = YEARS[+this.value];
-        yearLabel.text(y);
-        paint(y);
-      });
-    }
-  });
-})();
-</script>
 <!-- ================================================ -->
 <!-- SECTION: SPECIFIC NEW JOBS (combined map)        -->
 <!-- ================================================ -->
 
-<h3>4.2 Map of specific new jobs</h3>
+<h3>4.1 Map of specific new jobs</h3>
 
 <p>
   Where did specific new occupations emerge across the country? Choose a trade and a census
@@ -831,7 +721,7 @@ nav_exclude: false
 <!-- Section 2: Management -->
 <!-- ===================== -->
 
-<h3>4.3 Mapping of management jobs</h3>
+<h3>4.2 Mapping of management jobs</h3>
 
 <h4 style="margin-top: 1em;">
   An initial mapping of the rise of management jobs in the UK, by county.
@@ -947,6 +837,121 @@ nav_exclude: false
   });
 })();
 </script>
+<!-- ===================== -->
+<!-- Section 1: Technology -->
+<!-- ===================== -->
+
+<h3>4.3 Map of mechanization</h3>
+
+<h4 style="margin-top: 1em;">
+  An initial mapping of the emergence of new technologies in the UK, by county.
+</h4>
+
+<div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
+  <label for="tech-year-slider">Select year: <span id="tech-year-label">1851</span></label>
+  <input type="range" id="tech-year-slider" min="0" max="5" step="1" value="0" style="width:300px;">
+</div>
+
+<div style="display:flex;flex-direction:column;align-items:center;margin-bottom:40px;position:relative;">
+  <svg id="tech-map" width="960" height="600" viewBox="0 0 960 600" style="max-width:100%;height:auto;"></svg>
+  <div style="margin-top:10px;">
+    <svg id="tech-legend" width="480" height="50"></svg>
+    <div style="font-size:12px;text-align:center;">Percentage share of male population</div>
+  </div>
+  <div id="tech-tooltip" style="position:absolute;background:#fff;border:1px solid #aaa;padding:5px;visibility:hidden;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.1);pointer-events:none;"></div>
+</div>
+
+<script>
+(function(){
+  function ready(fn){
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn, {once:true});
+    else fn();
+  }
+
+  ready(async function initTechMap(){
+    const svg = d3.select('#tech-map');
+    const tooltip = d3.select('#tech-tooltip');
+    const slider = d3.select('#tech-year-slider');
+    const yearLabel = d3.select('#tech-year-label');
+    const YEARS = [1851, 1861, 1881, 1891, 1901, 1911];   // 1871 skipped (no census snapshot)
+    if (svg.empty()) return;
+
+    const GEO_URL  = '/assets/maps/Counties1851.geojson';
+    const DATA_URL = '/assets/maps/share_machine_by_county3.json';
+
+    let geoData;
+    try { geoData = await d3.json(GEO_URL); } catch { return; }
+
+    const projection = d3.geoMercator().fitSize([960, 600], geoData);
+    const path = d3.geoPath().projection(projection);
+
+    svg.selectAll('path')
+      .data(geoData.features)
+      .join('path')
+      .attr('d', path)
+      .attr('fill', '#eee')
+      .attr('stroke', '#fff')
+      .attr('stroke-width', 0.5);
+
+    let yearData = null;
+    try { yearData = await d3.json(DATA_URL); } catch {}
+
+    const thresholds = [2, 4, 6, 8];
+    const color = d3.scaleThreshold().domain(thresholds).range(d3.schemeGreens[5]);
+    const countyKey = f => f.properties?.R_CTY;
+    const fmt = v => (v == null || isNaN(v)) ? 'N/A' : d3.format('.2f')(v) + '%';
+    const getYearValues = y => yearData && (yearData[y] ?? yearData[String(y)] ?? yearData[+y] ?? null);
+
+    function paint(year){
+      const values = getYearValues(year);
+      svg.selectAll('path')
+        .attr('fill', d => {
+          if (!values) return '#eee';
+          const v = values[countyKey(d)];
+          return v != null ? color(v) : '#ccc';
+        })
+        .on('mouseover', function(event, d){
+          const name = countyKey(d) ?? 'Unknown';
+          const v = getYearValues(year)?.[name];
+          tooltip.style('visibility','visible').text(`${name}: ${fmt(v)}`);
+          d3.select(this).attr('stroke-width', 2);
+        })
+        .on('mousemove', function(event){
+          const bbox = this.ownerSVGElement.getBoundingClientRect();
+          tooltip.style('top', (event.clientY - bbox.top + 10) + 'px')
+                 .style('left', (event.clientX - bbox.left + 10) + 'px');
+        })
+        .on('mouseout', function(){
+          tooltip.style('visibility','hidden');
+          d3.select(this).attr('stroke-width', 0.5);
+        });
+    }
+
+    (function legend(){
+      const legendSvg = d3.select('#tech-legend');
+      const colors = d3.schemeGreens[5];
+      const binWidth = 480 / colors.length;
+      legendSvg.selectAll('*').remove();
+      const labels = ['0–2%', '2–4%', '4–6%', '6–8%', '8%+'];
+      colors.forEach((c, i) => {
+        legendSvg.append('rect').attr('x', i * binWidth).attr('y', 10)
+          .attr('width', binWidth).attr('height', 10).attr('fill', c);
+        legendSvg.append('text').attr('x', i * binWidth + binWidth / 2).attr('y', 35)
+          .attr('text-anchor', 'middle').attr('font-size', '10px').text(labels[i]);
+      });
+    })();
+
+    paint(YEARS[0]);
+    if (!slider.empty()) {
+      slider.on('input', function(){
+        const y = YEARS[+this.value];
+        yearLabel.text(y);
+        paint(y);
+      });
+    }
+  });
+})();
+</script>
 
 
 <h3 style="margin-top:1.6em;font-size:1.25em;color:#D94801;border-bottom:3px solid #D94801;padding-bottom:6px;letter-spacing:0.02em;">Decline</h3>
@@ -957,7 +962,7 @@ nav_exclude: false
 
 <h3>4.4 Mapping of the apprenticeship system</h3>
 
-<p>The apprenticeship system declines everywhere between 1851–1911. The decline is more rapid after 1881. Less urban areas seem to retain more of the system than elsewhere. What is somewhat surprising is how different the decline is by level of skill — apprenticeships decline only slightly over the period; it is Masters and Journeymen who disappear.</p>
+<p>The apprenticeship system declines everywhere between 1851–1911. The decline is more rapid after 1881. Less urban areas seem to retain more of the system than elsewhere.</p>
 
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:40px;">
 
@@ -1576,3 +1581,16 @@ Promise.all([
 </script>
 
 
+
+<!-- ================================================ -->
+<!-- SECTION 6: Conclusion                            -->
+<!-- ================================================ -->
+
+<h2 style="margin-top:2em;">6. Conclusion</h2>
+
+<div style="max-width:820px;">
+  <p style="margin-bottom:14px;"><strong>Task-level analysis is feasible and informative.</strong> Going from roughly 800 industries to just under a thousand tasks lets us look <em>inside</em> occupations &mdash; and it works.</p>
+  <p style="margin-bottom:14px;"><strong>What is emerging.</strong> The early picture is clear: the rise of management jobs and factory and machine work, alongside the decline of the apprenticeship system.</p>
+  <p style="margin-bottom:14px;"><strong>Why it matters.</strong> This speaks to how a society absorbs technological shocks &mdash; and to who gets the new jobs.</p>
+  <p style="margin-bottom:0;"><strong>Next steps.</strong> Finalise the definitions of new jobs, and work out the shifting Order boundaries.</p>
+</div>
