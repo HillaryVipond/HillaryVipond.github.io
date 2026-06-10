@@ -568,7 +568,7 @@ nav_exclude: false
 
   <!-- RIGHT: biggest new jobs table -->
   <div style="flex:1 1 300px;min-width:280px;">
-    <h4 style="margin:0 0 4px;">The biggest new jobs of the 19th century</h4>
+    <h4 style="margin:0 0 4px;">New jobs of the 19th century</h4>
     <p style="font-size:0.82em;color:#888;margin:0 0 12px;">Ranked by number of workers, 1911.</p>
     <table style="border-collapse:collapse;width:100%;font-size:0.9em;">
       <thead>
@@ -1588,9 +1588,10 @@ Promise.all([
 
 <h2 style="margin-top:2em;">6. Conclusion</h2>
 
-<ul style="max-width:820px;line-height:1.7;padding-left:1.2em;">
-  <li style="margin-bottom:10px;"><strong>Task-level analysis is feasible and informative.</strong> Going from roughly 800 industries to just under a thousand tasks lets us look <em>inside</em> occupations &mdash; and it works.</li>
-  <li style="margin-bottom:10px;"><strong>What is emerging.</strong> The early picture is clear: the rise of management jobs and factory and machine work, alongside the decline of the apprenticeship system.</li>
-  <li style="margin-bottom:10px;"><strong>Why it matters.</strong> This speaks to how a society absorbs technological shocks &mdash; and to who gets the new jobs.</li>
-  <li><strong>Next steps.</strong> Finalise the definitions of new jobs, and work out the shifting Order boundaries.</li>
+<ul style="max-width:820px;line-height:1.8;padding-left:1.2em;">
+  <li>From roughly 800 industries to about 10,000 micro-occupations.</li>
+  <li>Rise of management jobs and factory work.</li>
+  <li>Decline of the apprenticeship system.</li>
+  <li><strong>Implications:</strong> how society absorbs technological shocks; who gets the new jobs.</li>
+  <li><strong>Next steps:</strong> finalise boundaries and definitions of new jobs.</li>
 </ul>
