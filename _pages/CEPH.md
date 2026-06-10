@@ -1016,7 +1016,7 @@ const tooltip_total = d3.select("#tooltip");
 
 Promise.all([
   d3.json("/assets/maps/Counties1851.geojson"),
-  d3.json("/assets/maps/share_total_by_county.json")
+  d3.json("/assets/maps/share_total_by_county.json?v=2")
 ]).then(([geoData, yearData]) => {
   const projection = d3.geoMercator().fitSize([480, 300], geoData);
   const path = d3.geoPath().projection(projection);
@@ -1070,7 +1070,7 @@ const roleColor = d3.scaleThreshold().domain(roleThresholds).range(roleColors);
 
 Promise.all([
   d3.json("/assets/maps/Counties1851.geojson"),
-  d3.json("/assets/maps/share_granrole_by_county.json")
+  d3.json("/assets/maps/share_granrole_by_county.json?v=2")
 ]).then(([geoData, roleData]) => {
   const projection = d3.geoMercator().fitSize([480, 300], geoData);
   const path = d3.geoPath().projection(projection);
