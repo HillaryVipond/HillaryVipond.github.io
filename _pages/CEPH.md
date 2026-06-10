@@ -569,6 +569,14 @@ nav_exclude: false
   <!-- RIGHT: biggest new jobs table -->
   <div style="flex:1 1 300px;min-width:280px;">
     <h4 style="margin:0 0 4px;">New jobs of the 19th century</h4>
+    <style>
+      .xray-cell { position:relative; cursor:help; border-bottom:1px dotted #999; }
+      .xray-pop { position:absolute; bottom:135%; left:0; z-index:60; display:none; width:230px;
+        background:#fff; border:1px solid #ccc; border-radius:6px; padding:8px 10px; font-size:0.8rem;
+        font-weight:400; color:#333; line-height:1.5; text-align:left; white-space:normal;
+        box-shadow:0 3px 12px rgba(0,0,0,.18); }
+      .xray-cell:hover .xray-pop { display:block; }
+    </style>
     <p style="font-size:0.82em;color:#888;margin:0 0 12px;">Ranked by number of workers, 1911.</p>
     <table style="border-collapse:collapse;width:100%;font-size:0.9em;">
       <thead>
@@ -587,7 +595,7 @@ nav_exclude: false
         <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Photographer</td><td style="padding:7px 8px;text-align:right;">17,134</td></tr>
         <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">Asphalter</td><td style="padding:7px 8px;text-align:right;">1,612</td></tr>
         <tr style="border-bottom:1px solid #eee;"><td style="padding:7px 8px;">Anaesthetist</td><td style="padding:7px 8px;text-align:right;">353</td></tr>
-        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;">X-ray operator</td><td style="padding:7px 8px;text-align:right;">77</td></tr>
+        <tr style="border-bottom:1px solid #eee;background:#fafefb;"><td style="padding:7px 8px;"><span class="xray-cell">X-ray operator<span class="xray-pop"><strong>Also known as&hellip;</strong><br>radiographer &middot; skiagraphist &middot; roentgenologist &middot; x-rayist &middot; x-ray man (even <em>railway xrayman</em>) &middot; x-ray attendant &middot; x-ray photographer</span></span></td><td style="padding:7px 8px;text-align:right;">77</td></tr>
       </tbody>
     </table>
   </div>
