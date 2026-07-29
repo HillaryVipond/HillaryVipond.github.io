@@ -1,4 +1,3 @@
-
 ---
 layout: single
 title: "Mapping the Second Industrial Revolution"
