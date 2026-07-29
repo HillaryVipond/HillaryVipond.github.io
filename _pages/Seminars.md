@@ -6,10 +6,19 @@ permalink: /Seminars/
 header: false
 ---
 
+### 2026
+- NBER Summer Institute (Labor), Boston
+- Geoinno, Budapest
+- CEPH Economic History Conference, Dublin
+- SOCFACE Workshop, Paris
+- Seminar, NYU
+- Seminar, Berlin
+- Seminar, Inequalities Institute LSE
+- Inequalities Theory and Measurement Winter School, Canazei
   
 ### 2025
 - Economic History Association Conference
-- NBER Summer Institute (*presented by co-author, Yannis Kastis)
+- NBER Summer Institute (DAE, *presented by co-author, Yannis Kastis)
 - World Economic History Congress, Lund
 - University of Southern Denmark Economics Seminar
 - Vienna University of Economics and Business, Political Economy of Public Policy Seminar
