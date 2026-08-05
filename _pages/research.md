@@ -6,17 +6,15 @@ permalink: /research/
 header: false  # 👈 This disables the large title
 ---
 
+
 ## Technological Change & Labour Markets  
 <!-- Research Entry 1 -->
 <div class="research-entry">
-
   <div class="research-image">
     <img src="/assets/images/AreaGraph.jpg" alt="Bootmaking Mechanization Impact">
   </div>
-
   <div class="research-text">
-    <h4><a href="https://github.com/HillaryVipond/JMP"><strong>Technological Unemployment in Victorian Britain: Young Workers and the Collapse of Entry</strong></a> </h4>
-
+    <h4><strong>Technological Unemployment in Victorian Britain: Young Workers and the Collapse of Entry</strong></h4>
 
     <p>Hillary Vipond (JMP)</p>
 
