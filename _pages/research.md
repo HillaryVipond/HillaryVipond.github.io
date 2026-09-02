@@ -14,7 +14,7 @@ header: false  # 👈 This disables the large title
     <img src="/assets/images/AreaGraph.jpg" alt="Bootmaking Mechanization Impact">
   </div>
   <div class="research-text">
-    <h4><strong>Technological Unemployment in Victorian Britain: Young Workers and the Collapse of Entry</strong></h4>
+   <h4><a href="https://github.com/HillaryVipond/JMP/blob/main/Technological_Unemployment_in_Victorian_Britain_VipondH.pdf"><strong>Technological Unemployment in Victorian Britain: Young Workers and the Collapse of Entry</strong></a></h4>
 
     <p>Hillary Vipond (JMP)</p>
 
