@@ -1,0 +1,1514 @@
+[
+  {
+    "county": "BEDFORDSHIRE",
+    "year": 1851,
+    "old": 1415,
+    "new": 24
+  },
+  {
+    "county": "BERKSHIRE",
+    "year": 1851,
+    "old": 2240,
+    "new": 32
+  },
+  {
+    "county": "BUCKINGHAMSHIRE",
+    "year": 1851,
+    "old": 1842,
+    "new": 14
+  },
+  {
+    "county": "CAMBRIDGESHIRE",
+    "year": 1851,
+    "old": 1981,
+    "new": 18
+  },
+  {
+    "county": "CHESHIRE",
+    "year": 1851,
+    "old": 6177,
+    "new": 107
+  },
+  {
+    "county": "CORNWALL",
+    "year": 1851,
+    "old": 3752,
+    "new": 19
+  },
+  {
+    "county": "CUMBERLAND",
+    "year": 1851,
+    "old": 2215,
+    "new": 13
+  },
+  {
+    "county": "DERBYSHIRE",
+    "year": 1851,
+    "old": 3132,
+    "new": 37
+  },
+  {
+    "county": "DEVON",
+    "year": 1851,
+    "old": 7995,
+    "new": 55
+  },
+  {
+    "county": "DORSET",
+    "year": 1851,
+    "old": 2038,
+    "new": 16
+  },
+  {
+    "county": "DURHAM",
+    "year": 1851,
+    "old": 3897,
+    "new": 35
+  },
+  {
+    "county": "ESSEX",
+    "year": 1851,
+    "old": 3222,
+    "new": 34
+  },
+  {
+    "county": "GLOUCESTERSHIRE",
+    "year": 1851,
+    "old": 5819,
+    "new": 70
+  },
+  {
+    "county": "HAMPSHIRE",
+    "year": 1851,
+    "old": 4434,
+    "new": 50
+  },
+  {
+    "county": "HEREFORDSHIRE",
+    "year": 1851,
+    "old": 1199,
+    "new": 4
+  },
+  {
+    "county": "HERTFORDSHIRE",
+    "year": 1851,
+    "old": 1456,
+    "new": 16
+  },
+  {
+    "county": "HUNTINGDONSHIRE",
+    "year": 1851,
+    "old": 575,
+    "new": 4
+  },
+  {
+    "county": "KENT",
+    "year": 1851,
+    "old": 4911,
+    "new": 55
+  },
+  {
+    "county": "LANCASHIRE",
+    "year": 1851,
+    "old": 19024,
+    "new": 352
+  },
+  {
+    "county": "LEICESTERSHIRE",
+    "year": 1851,
+    "old": 3216,
+    "new": 49
+  },
+  {
+    "county": "LINCOLNSHIRE",
+    "year": 1851,
+    "old": 4227,
+    "new": 35
+  },
+  {
+    "county": "LONDON",
+    "year": 1851,
+    "old": 37175,
+    "new": 1139
+  },
+  {
+    "county": "MIDDLESEX",
+    "year": 1851,
+    "old": 1292,
+    "new": 22
+  },
+  {
+    "county": "NORFOLK",
+    "year": 1851,
+    "old": 8303,
+    "new": 97
+  },
+  {
+    "county": "NORTHAMPTONSHIRE",
+    "year": 1851,
+    "old": 12834,
+    "new": 608
+  },
+  {
+    "county": "NORTHUMBERLAND",
+    "year": 1851,
+    "old": 3467,
+    "new": 31
+  },
+  {
+    "county": "NOTTINGHAMSHIRE",
+    "year": 1851,
+    "old": 3732,
+    "new": 53
+  },
+  {
+    "county": "OXFORDSHIRE",
+    "year": 1851,
+    "old": 1832,
+    "new": 25
+  },
+  {
+    "county": "RUTLAND",
+    "year": 1851,
+    "old": 236,
+    "new": 2
+  },
+  {
+    "county": "SHROPSHIRE",
+    "year": 1851,
+    "old": 3226,
+    "new": 36
+  },
+  {
+    "county": "SOMERSET",
+    "year": 1851,
+    "old": 5987,
+    "new": 70
+  },
+  {
+    "county": "STAFFORDSHIRE",
+    "year": 1851,
+    "old": 10011,
+    "new": 260
+  },
+  {
+    "county": "SUFFOLK",
+    "year": 1851,
+    "old": 4340,
+    "new": 36
+  },
+  {
+    "county": "SURREY",
+    "year": 1851,
+    "old": 1635,
+    "new": 22
+  },
+  {
+    "county": "SUSSEX",
+    "year": 1851,
+    "old": 3621,
+    "new": 37
+  },
+  {
+    "county": "WARWICKSHIRE",
+    "year": 1851,
+    "old": 6055,
+    "new": 114
+  },
+  {
+    "county": "WESTMORLAND",
+    "year": 1851,
+    "old": 642,
+    "new": 6
+  },
+  {
+    "county": "WILTSHIRE",
+    "year": 1851,
+    "old": 2527,
+    "new": 21
+  },
+  {
+    "county": "WORCESTERSHIRE",
+    "year": 1851,
+    "old": 3147,
+    "new": 52
+  },
+  {
+    "county": "YORKSHIRE, EAST RIDING",
+    "year": 1851,
+    "old": 3577,
+    "new": 43
+  },
+  {
+    "county": "YORKSHIRE, NORTH RIDING",
+    "year": 1851,
+    "old": 2753,
+    "new": 14
+  },
+  {
+    "county": "YORKSHIRE, WEST RIDING",
+    "year": 1851,
+    "old": 15155,
+    "new": 204
+  },
+  {
+    "county": "BEDFORDSHIRE",
+    "year": 1861,
+    "old": 1728,
+    "new": 28
+  },
+  {
+    "county": "BERKSHIRE",
+    "year": 1861,
+    "old": 2091,
+    "new": 42
+  },
+  {
+    "county": "BUCKINGHAMSHIRE",
+    "year": 1861,
+    "old": 2288,
+    "new": 37
+  },
+  {
+    "county": "CAMBRIDGESHIRE",
+    "year": 1861,
+    "old": 1653,
+    "new": 25
+  },
+  {
+    "county": "CHESHIRE",
+    "year": 1861,
+    "old": 6212,
+    "new": 187
+  },
+  {
+    "county": "CORNWALL",
+    "year": 1861,
+    "old": 3582,
+    "new": 36
+  },
+  {
+    "county": "CUMBERLAND",
+    "year": 1861,
+    "old": 1864,
+    "new": 21
+  },
+  {
+    "county": "DERBYSHIRE",
+    "year": 1861,
+    "old": 2956,
+    "new": 56
+  },
+  {
+    "county": "DEVON",
+    "year": 1861,
+    "old": 8027,
+    "new": 83
+  },
+  {
+    "county": "DORSET",
+    "year": 1861,
+    "old": 2147,
+    "new": 19
+  },
+  {
+    "county": "DURHAM",
+    "year": 1861,
+    "old": 4155,
+    "new": 90
+  },
+  {
+    "county": "ESSEX",
+    "year": 1861,
+    "old": 3182,
+    "new": 47
+  },
+  {
+    "county": "GLOUCESTERSHIRE",
+    "year": 1861,
+    "old": 6426,
+    "new": 157
+  },
+  {
+    "county": "HAMPSHIRE",
+    "year": 1861,
+    "old": 4483,
+    "new": 50
+  },
+  {
+    "county": "HEREFORDSHIRE",
+    "year": 1861,
+    "old": 1166,
+    "new": 7
+  },
+  {
+    "county": "HERTFORDSHIRE",
+    "year": 1861,
+    "old": 1536,
+    "new": 35
+  },
+  {
+    "county": "HUNTINGDONSHIRE",
+    "year": 1861,
+    "old": 659,
+    "new": 7
+  },
+  {
+    "county": "KENT",
+    "year": 1861,
+    "old": 4719,
+    "new": 84
+  },
+  {
+    "county": "LANCASHIRE",
+    "year": 1861,
+    "old": 20579,
+    "new": 640
+  },
+  {
+    "county": "LEICESTERSHIRE",
+    "year": 1861,
+    "old": 4334,
+    "new": 333
+  },
+  {
+    "county": "LINCOLNSHIRE",
+    "year": 1861,
+    "old": 3916,
+    "new": 46
+  },
+  {
+    "county": "LONDON",
+    "year": 1861,
+    "old": 34010,
+    "new": 1824
+  },
+  {
+    "county": "MIDDLESEX",
+    "year": 1861,
+    "old": 1467,
+    "new": 39
+  },
+  {
+    "county": "NORFOLK",
+    "year": 1861,
+    "old": 8886,
+    "new": 244
+  },
+  {
+    "county": "NORTHAMPTONSHIRE",
+    "year": 1861,
+    "old": 15788,
+    "new": 1077
+  },
+  {
+    "county": "NORTHUMBERLAND",
+    "year": 1861,
+    "old": 3462,
+    "new": 65
+  },
+  {
+    "county": "NOTTINGHAMSHIRE",
+    "year": 1861,
+    "old": 3920,
+    "new": 76
+  },
+  {
+    "county": "OXFORDSHIRE",
+    "year": 1861,
+    "old": 1755,
+    "new": 29
+  },
+  {
+    "county": "RUTLAND",
+    "year": 1861,
+    "old": 229,
+    "new": 1
+  },
+  {
+    "county": "SHROPSHIRE",
+    "year": 1861,
+    "old": 3099,
+    "new": 46
+  },
+  {
+    "county": "SOMERSET",
+    "year": 1861,
+    "old": 6096,
+    "new": 118
+  },
+  {
+    "county": "STAFFORDSHIRE",
+    "year": 1861,
+    "old": 9925,
+    "new": 420
+  },
+  {
+    "county": "SUFFOLK",
+    "year": 1861,
+    "old": 4377,
+    "new": 84
+  },
+  {
+    "county": "SURREY",
+    "year": 1861,
+    "old": 1943,
+    "new": 42
+  },
+  {
+    "county": "SUSSEX",
+    "year": 1861,
+    "old": 3635,
+    "new": 73
+  },
+  {
+    "county": "WARWICKSHIRE",
+    "year": 1861,
+    "old": 6739,
+    "new": 221
+  },
+  {
+    "county": "WESTMORLAND",
+    "year": 1861,
+    "old": 670,
+    "new": 45
+  },
+  {
+    "county": "WILTSHIRE",
+    "year": 1861,
+    "old": 2341,
+    "new": 20
+  },
+  {
+    "county": "WORCESTERSHIRE",
+    "year": 1861,
+    "old": 3199,
+    "new": 77
+  },
+  {
+    "county": "YORKSHIRE, EAST RIDING",
+    "year": 1861,
+    "old": 3226,
+    "new": 43
+  },
+  {
+    "county": "YORKSHIRE, NORTH RIDING",
+    "year": 1861,
+    "old": 2615,
+    "new": 23
+  },
+  {
+    "county": "YORKSHIRE, WEST RIDING",
+    "year": 1861,
+    "old": 14708,
+    "new": 396
+  },
+  {
+    "county": "BEDFORDSHIRE",
+    "year": 1881,
+    "old": 933,
+    "new": 141
+  },
+  {
+    "county": "BERKSHIRE",
+    "year": 1881,
+    "old": 1274,
+    "new": 110
+  },
+  {
+    "county": "BUCKINGHAMSHIRE",
+    "year": 1881,
+    "old": 1379,
+    "new": 435
+  },
+  {
+    "county": "CAMBRIDGESHIRE",
+    "year": 1881,
+    "old": 1102,
+    "new": 54
+  },
+  {
+    "county": "CHESHIRE",
+    "year": 1881,
+    "old": 3484,
+    "new": 1000
+  },
+  {
+    "county": "CORNWALL",
+    "year": 1881,
+    "old": 2045,
+    "new": 211
+  },
+  {
+    "county": "CUMBERLAND",
+    "year": 1881,
+    "old": 1469,
+    "new": 65
+  },
+  {
+    "county": "DERBYSHIRE",
+    "year": 1881,
+    "old": 1716,
+    "new": 601
+  },
+  {
+    "county": "DEVON",
+    "year": 1881,
+    "old": 4513,
+    "new": 434
+  },
+  {
+    "county": "DORSET",
+    "year": 1881,
+    "old": 1139,
+    "new": 76
+  },
+  {
+    "county": "DURHAM",
+    "year": 1881,
+    "old": 2664,
+    "new": 384
+  },
+  {
+    "county": "ESSEX",
+    "year": 1881,
+    "old": 2499,
+    "new": 413
+  },
+  {
+    "county": "GLOUCESTERSHIRE",
+    "year": 1881,
+    "old": 4736,
+    "new": 2658
+  },
+  {
+    "county": "HAMPSHIRE",
+    "year": 1881,
+    "old": 2763,
+    "new": 298
+  },
+  {
+    "county": "HEREFORDSHIRE",
+    "year": 1881,
+    "old": 743,
+    "new": 53
+  },
+  {
+    "county": "HERTFORDSHIRE",
+    "year": 1881,
+    "old": 1091,
+    "new": 180
+  },
+  {
+    "county": "HUNTINGDONSHIRE",
+    "year": 1881,
+    "old": 340,
+    "new": 23
+  },
+  {
+    "county": "KENT",
+    "year": 1881,
+    "old": 2909,
+    "new": 204
+  },
+  {
+    "county": "LANCASHIRE",
+    "year": 1881,
+    "old": 15362,
+    "new": 1996
+  },
+  {
+    "county": "LEICESTERSHIRE",
+    "year": 1881,
+    "old": 3148,
+    "new": 12482
+  },
+  {
+    "county": "LINCOLNSHIRE",
+    "year": 1881,
+    "old": 2449,
+    "new": 200
+  },
+  {
+    "county": "LONDON",
+    "year": 1881,
+    "old": 23956,
+    "new": 11557
+  },
+  {
+    "county": "MIDDLESEX",
+    "year": 1881,
+    "old": 1450,
+    "new": 157
+  },
+  {
+    "county": "NORFOLK",
+    "year": 1881,
+    "old": 4735,
+    "new": 2638
+  },
+  {
+    "county": "NORTHAMPTONSHIRE",
+    "year": 1881,
+    "old": 7653,
+    "new": 15877
+  },
+  {
+    "county": "NORTHUMBERLAND",
+    "year": 1881,
+    "old": 1982,
+    "new": 512
+  },
+  {
+    "county": "NOTTINGHAMSHIRE",
+    "year": 1881,
+    "old": 2289,
+    "new": 624
+  },
+  {
+    "county": "OXFORDSHIRE",
+    "year": 1881,
+    "old": 1076,
+    "new": 78
+  },
+  {
+    "county": "RUTLAND",
+    "year": 1881,
+    "old": 140,
+    "new": 18
+  },
+  {
+    "county": "SHROPSHIRE",
+    "year": 1881,
+    "old": 1699,
+    "new": 97
+  },
+  {
+    "county": "SOMERSET",
+    "year": 1881,
+    "old": 4289,
+    "new": 1071
+  },
+  {
+    "county": "STAFFORDSHIRE",
+    "year": 1881,
+    "old": 5355,
+    "new": 3422
+  },
+  {
+    "county": "SUFFOLK",
+    "year": 1881,
+    "old": 2643,
+    "new": 507
+  },
+  {
+    "county": "SURREY",
+    "year": 1881,
+    "old": 1979,
+    "new": 263
+  },
+  {
+    "county": "SUSSEX",
+    "year": 1881,
+    "old": 2102,
+    "new": 181
+  },
+  {
+    "county": "WARWICKSHIRE",
+    "year": 1881,
+    "old": 3992,
+    "new": 1453
+  },
+  {
+    "county": "WESTMORLAND",
+    "year": 1881,
+    "old": 401,
+    "new": 162
+  },
+  {
+    "county": "WILTSHIRE",
+    "year": 1881,
+    "old": 1308,
+    "new": 116
+  },
+  {
+    "county": "WORCESTERSHIRE",
+    "year": 1881,
+    "old": 1902,
+    "new": 590
+  },
+  {
+    "county": "YORKSHIRE, EAST RIDING",
+    "year": 1881,
+    "old": 1955,
+    "new": 203
+  },
+  {
+    "county": "YORKSHIRE, NORTH RIDING",
+    "year": 1881,
+    "old": 1965,
+    "new": 125
+  },
+  {
+    "county": "YORKSHIRE, WEST RIDING",
+    "year": 1881,
+    "old": 10531,
+    "new": 4872
+  },
+  {
+    "county": "BEDFORDSHIRE",
+    "year": 1891,
+    "old": 792,
+    "new": 173
+  },
+  {
+    "county": "BERKSHIRE",
+    "year": 1891,
+    "old": 944,
+    "new": 156
+  },
+  {
+    "county": "BUCKINGHAMSHIRE",
+    "year": 1891,
+    "old": 1307,
+    "new": 948
+  },
+  {
+    "county": "CAMBRIDGESHIRE",
+    "year": 1891,
+    "old": 824,
+    "new": 101
+  },
+  {
+    "county": "CHESHIRE",
+    "year": 1891,
+    "old": 2860,
+    "new": 675
+  },
+  {
+    "county": "CORNWALL",
+    "year": 1891,
+    "old": 1595,
+    "new": 262
+  },
+  {
+    "county": "CUMBERLAND",
+    "year": 1891,
+    "old": 1209,
+    "new": 101
+  },
+  {
+    "county": "DERBYSHIRE",
+    "year": 1891,
+    "old": 1537,
+    "new": 981
+  },
+  {
+    "county": "DEVON",
+    "year": 1891,
+    "old": 3578,
+    "new": 738
+  },
+  {
+    "county": "DORSET",
+    "year": 1891,
+    "old": 822,
+    "new": 81
+  },
+  {
+    "county": "DURHAM",
+    "year": 1891,
+    "old": 2199,
+    "new": 675
+  },
+  {
+    "county": "ESSEX",
+    "year": 1891,
+    "old": 2678,
+    "new": 1117
+  },
+  {
+    "county": "GLOUCESTERSHIRE",
+    "year": 1891,
+    "old": 4997,
+    "new": 3736
+  },
+  {
+    "county": "HAMPSHIRE",
+    "year": 1891,
+    "old": 2235,
+    "new": 438
+  },
+  {
+    "county": "HEREFORDSHIRE",
+    "year": 1891,
+    "old": 531,
+    "new": 79
+  },
+  {
+    "county": "HERTFORDSHIRE",
+    "year": 1891,
+    "old": 887,
+    "new": 231
+  },
+  {
+    "county": "HUNTINGDONSHIRE",
+    "year": 1891,
+    "old": 256,
+    "new": 32
+  },
+  {
+    "county": "KENT",
+    "year": 1891,
+    "old": 2496,
+    "new": 393
+  },
+  {
+    "county": "LANCASHIRE",
+    "year": 1891,
+    "old": 14023,
+    "new": 3880
+  },
+  {
+    "county": "LEICESTERSHIRE",
+    "year": 1891,
+    "old": 5278,
+    "new": 22112
+  },
+  {
+    "county": "LINCOLNSHIRE",
+    "year": 1891,
+    "old": 1772,
+    "new": 248
+  },
+  {
+    "county": "LONDON",
+    "year": 1891,
+    "old": 20457,
+    "new": 16303
+  },
+  {
+    "county": "MIDDLESEX",
+    "year": 1891,
+    "old": 1718,
+    "new": 395
+  },
+  {
+    "county": "NORFOLK",
+    "year": 1891,
+    "old": 4200,
+    "new": 3739
+  },
+  {
+    "county": "NORTHAMPTONSHIRE",
+    "year": 1891,
+    "old": 9087,
+    "new": 24019
+  },
+  {
+    "county": "NORTHUMBERLAND",
+    "year": 1891,
+    "old": 1584,
+    "new": 646
+  },
+  {
+    "county": "NOTTINGHAMSHIRE",
+    "year": 1891,
+    "old": 1904,
+    "new": 820
+  },
+  {
+    "county": "OXFORDSHIRE",
+    "year": 1891,
+    "old": 783,
+    "new": 102
+  },
+  {
+    "county": "RUTLAND",
+    "year": 1891,
+    "old": 113,
+    "new": 112
+  },
+  {
+    "county": "SHROPSHIRE",
+    "year": 1891,
+    "old": 1281,
+    "new": 149
+  },
+  {
+    "county": "SOMERSET",
+    "year": 1891,
+    "old": 5375,
+    "new": 1876
+  },
+  {
+    "county": "STAFFORDSHIRE",
+    "year": 1891,
+    "old": 4770,
+    "new": 3390
+  },
+  {
+    "county": "SUFFOLK",
+    "year": 1891,
+    "old": 2061,
+    "new": 593
+  },
+  {
+    "county": "SURREY",
+    "year": 1891,
+    "old": 1885,
+    "new": 445
+  },
+  {
+    "county": "SUSSEX",
+    "year": 1891,
+    "old": 1850,
+    "new": 330
+  },
+  {
+    "county": "WARWICKSHIRE",
+    "year": 1891,
+    "old": 2991,
+    "new": 1548
+  },
+  {
+    "county": "WESTMORLAND",
+    "year": 1891,
+    "old": 397,
+    "new": 332
+  },
+  {
+    "county": "WILTSHIRE",
+    "year": 1891,
+    "old": 962,
+    "new": 244
+  },
+  {
+    "county": "WORCESTERSHIRE",
+    "year": 1891,
+    "old": 1588,
+    "new": 647
+  },
+  {
+    "county": "YORKSHIRE, EAST RIDING",
+    "year": 1891,
+    "old": 1469,
+    "new": 307
+  },
+  {
+    "county": "YORKSHIRE, NORTH RIDING",
+    "year": 1891,
+    "old": 1512,
+    "new": 221
+  },
+  {
+    "county": "YORKSHIRE, WEST RIDING",
+    "year": 1891,
+    "old": 9523,
+    "new": 7026
+  },
+  {
+    "county": "BEDFORDSHIRE",
+    "year": 1901,
+    "old": 518,
+    "new": 265
+  },
+  {
+    "county": "BERKSHIRE",
+    "year": 1901,
+    "old": 722,
+    "new": 226
+  },
+  {
+    "county": "BUCKINGHAMSHIRE",
+    "year": 1901,
+    "old": 1033,
+    "new": 1220
+  },
+  {
+    "county": "CAMBRIDGESHIRE",
+    "year": 1901,
+    "old": 660,
+    "new": 151
+  },
+  {
+    "county": "CHESHIRE",
+    "year": 1901,
+    "old": 2403,
+    "new": 1023
+  },
+  {
+    "county": "CORNWALL",
+    "year": 1901,
+    "old": 1117,
+    "new": 383
+  },
+  {
+    "county": "CUMBERLAND",
+    "year": 1901,
+    "old": 1018,
+    "new": 181
+  },
+  {
+    "county": "DERBYSHIRE",
+    "year": 1901,
+    "old": 1204,
+    "new": 1641
+  },
+  {
+    "county": "DEVON",
+    "year": 1901,
+    "old": 2258,
+    "new": 799
+  },
+  {
+    "county": "DORSET",
+    "year": 1901,
+    "old": 613,
+    "new": 152
+  },
+  {
+    "county": "DURHAM",
+    "year": 1901,
+    "old": 1882,
+    "new": 1079
+  },
+  {
+    "county": "ESSEX",
+    "year": 1901,
+    "old": 2521,
+    "new": 2048
+  },
+  {
+    "county": "GLOUCESTERSHIRE",
+    "year": 1901,
+    "old": 3875,
+    "new": 3805
+  },
+  {
+    "county": "HAMPSHIRE",
+    "year": 1901,
+    "old": 1873,
+    "new": 732
+  },
+  {
+    "county": "HEREFORDSHIRE",
+    "year": 1901,
+    "old": 367,
+    "new": 109
+  },
+  {
+    "county": "HERTFORDSHIRE",
+    "year": 1901,
+    "old": 741,
+    "new": 418
+  },
+  {
+    "county": "HUNTINGDONSHIRE",
+    "year": 1901,
+    "old": 188,
+    "new": 41
+  },
+  {
+    "county": "KENT",
+    "year": 1901,
+    "old": 2145,
+    "new": 729
+  },
+  {
+    "county": "LANCASHIRE",
+    "year": 1901,
+    "old": 12663,
+    "new": 7436
+  },
+  {
+    "county": "LEICESTERSHIRE",
+    "year": 1901,
+    "old": 2732,
+    "new": 30814
+  },
+  {
+    "county": "LINCOLNSHIRE",
+    "year": 1901,
+    "old": 1331,
+    "new": 445
+  },
+  {
+    "county": "LONDON",
+    "year": 1901,
+    "old": 15988,
+    "new": 17803
+  },
+  {
+    "county": "MIDDLESEX",
+    "year": 1901,
+    "old": 1719,
+    "new": 980
+  },
+  {
+    "county": "NORFOLK",
+    "year": 1901,
+    "old": 3462,
+    "new": 5838
+  },
+  {
+    "county": "NORTHAMPTONSHIRE",
+    "year": 1901,
+    "old": 8330,
+    "new": 32344
+  },
+  {
+    "county": "NORTHUMBERLAND",
+    "year": 1901,
+    "old": 1303,
+    "new": 776
+  },
+  {
+    "county": "NOTTINGHAMSHIRE",
+    "year": 1901,
+    "old": 1514,
+    "new": 1207
+  },
+  {
+    "county": "OXFORDSHIRE",
+    "year": 1901,
+    "old": 599,
+    "new": 175
+  },
+  {
+    "county": "RUTLAND",
+    "year": 1901,
+    "old": 85,
+    "new": 119
+  },
+  {
+    "county": "SHROPSHIRE",
+    "year": 1901,
+    "old": 889,
+    "new": 244
+  },
+  {
+    "county": "SOMERSET",
+    "year": 1901,
+    "old": 3808,
+    "new": 2975
+  },
+  {
+    "county": "STAFFORDSHIRE",
+    "year": 1901,
+    "old": 3877,
+    "new": 5010
+  },
+  {
+    "county": "SUFFOLK",
+    "year": 1901,
+    "old": 1525,
+    "new": 713
+  },
+  {
+    "county": "SURREY",
+    "year": 1901,
+    "old": 1840,
+    "new": 647
+  },
+  {
+    "county": "SUSSEX",
+    "year": 1901,
+    "old": 1559,
+    "new": 540
+  },
+  {
+    "county": "WARWICKSHIRE",
+    "year": 1901,
+    "old": 2269,
+    "new": 1676
+  },
+  {
+    "county": "WESTMORLAND",
+    "year": 1901,
+    "old": 325,
+    "new": 523
+  },
+  {
+    "county": "WILTSHIRE",
+    "year": 1901,
+    "old": 679,
+    "new": 312
+  },
+  {
+    "county": "WORCESTERSHIRE",
+    "year": 1901,
+    "old": 1307,
+    "new": 1123
+  },
+  {
+    "county": "YORKSHIRE, EAST RIDING",
+    "year": 1901,
+    "old": 1234,
+    "new": 469
+  },
+  {
+    "county": "YORKSHIRE, NORTH RIDING",
+    "year": 1901,
+    "old": 1180,
+    "new": 363
+  },
+  {
+    "county": "YORKSHIRE, WEST RIDING",
+    "year": 1901,
+    "old": 7807,
+    "new": 9306
+  },
+  {
+    "county": "BEDFORDSHIRE",
+    "year": 1911,
+    "old": 374,
+    "new": 414
+  },
+  {
+    "county": "BERKSHIRE",
+    "year": 1911,
+    "old": 365,
+    "new": 533
+  },
+  {
+    "county": "BUCKINGHAMSHIRE",
+    "year": 1911,
+    "old": 588,
+    "new": 1314
+  },
+  {
+    "county": "CAMBRIDGESHIRE",
+    "year": 1911,
+    "old": 392,
+    "new": 313
+  },
+  {
+    "county": "CHESHIRE",
+    "year": 1911,
+    "old": 1449,
+    "new": 1766
+  },
+  {
+    "county": "CORNWALL",
+    "year": 1911,
+    "old": 684,
+    "new": 564
+  },
+  {
+    "county": "CUMBERLAND",
+    "year": 1911,
+    "old": 673,
+    "new": 378
+  },
+  {
+    "county": "DERBYSHIRE",
+    "year": 1911,
+    "old": 562,
+    "new": 1818
+  },
+  {
+    "county": "DEVON",
+    "year": 1911,
+    "old": 1411,
+    "new": 1281
+  },
+  {
+    "county": "DORSET",
+    "year": 1911,
+    "old": 310,
+    "new": 369
+  },
+  {
+    "county": "DURHAM",
+    "year": 1911,
+    "old": 1006,
+    "new": 1776
+  },
+  {
+    "county": "ESSEX",
+    "year": 1911,
+    "old": 1674,
+    "new": 3110
+  },
+  {
+    "county": "GLOUCESTERSHIRE",
+    "year": 1911,
+    "old": 1990,
+    "new": 3595
+  },
+  {
+    "county": "HAMPSHIRE",
+    "year": 1911,
+    "old": 1113,
+    "new": 1526
+  },
+  {
+    "county": "HEREFORDSHIRE",
+    "year": 1911,
+    "old": 179,
+    "new": 199
+  },
+  {
+    "county": "HERTFORDSHIRE",
+    "year": 1911,
+    "old": 443,
+    "new": 723
+  },
+  {
+    "county": "HUNTINGDONSHIRE",
+    "year": 1911,
+    "old": 90,
+    "new": 68
+  },
+  {
+    "county": "KENT",
+    "year": 1911,
+    "old": 1283,
+    "new": 1616
+  },
+  {
+    "county": "LANCASHIRE",
+    "year": 1911,
+    "old": 7883,
+    "new": 11405
+  },
+  {
+    "county": "LEICESTERSHIRE",
+    "year": 1911,
+    "old": 2868,
+    "new": 26453
+  },
+  {
+    "county": "LINCOLNSHIRE",
+    "year": 1911,
+    "old": 746,
+    "new": 912
+  },
+  {
+    "county": "LONDON",
+    "year": 1911,
+    "old": 8394,
+    "new": 15556
+  },
+  {
+    "county": "MIDDLESEX",
+    "year": 1911,
+    "old": 1290,
+    "new": 2735
+  },
+  {
+    "county": "NORFOLK",
+    "year": 1911,
+    "old": 2473,
+    "new": 5996
+  },
+  {
+    "county": "NORTHAMPTONSHIRE",
+    "year": 1911,
+    "old": 6692,
+    "new": 28141
+  },
+  {
+    "county": "NORTHUMBERLAND",
+    "year": 1911,
+    "old": 694,
+    "new": 1159
+  },
+  {
+    "county": "NOTTINGHAMSHIRE",
+    "year": 1911,
+    "old": 694,
+    "new": 1644
+  },
+  {
+    "county": "OXFORDSHIRE",
+    "year": 1911,
+    "old": 340,
+    "new": 323
+  },
+  {
+    "county": "RUTLAND",
+    "year": 1911,
+    "old": 55,
+    "new": 114
+  },
+  {
+    "county": "SHROPSHIRE",
+    "year": 1911,
+    "old": 405,
+    "new": 499
+  },
+  {
+    "county": "SOMERSET",
+    "year": 1911,
+    "old": 2907,
+    "new": 3498
+  },
+  {
+    "county": "STAFFORDSHIRE",
+    "year": 1911,
+    "old": 2085,
+    "new": 5145
+  },
+  {
+    "county": "SUFFOLK",
+    "year": 1911,
+    "old": 879,
+    "new": 781
+  },
+  {
+    "county": "SURREY",
+    "year": 1911,
+    "old": 1370,
+    "new": 1628
+  },
+  {
+    "county": "SUSSEX",
+    "year": 1911,
+    "old": 852,
+    "new": 1323
+  },
+  {
+    "county": "WARWICKSHIRE",
+    "year": 1911,
+    "old": 1167,
+    "new": 2122
+  },
+  {
+    "county": "WESTMORLAND",
+    "year": 1911,
+    "old": 190,
+    "new": 520
+  },
+  {
+    "county": "WILTSHIRE",
+    "year": 1911,
+    "old": 367,
+    "new": 453
+  },
+  {
+    "county": "WORCESTERSHIRE",
+    "year": 1911,
+    "old": 710,
+    "new": 1431
+  },
+  {
+    "county": "YORKSHIRE, EAST RIDING",
+    "year": 1911,
+    "old": 764,
+    "new": 855
+  },
+  {
+    "county": "YORKSHIRE, NORTH RIDING",
+    "year": 1911,
+    "old": 706,
+    "new": 718
+  },
+  {
+    "county": "YORKSHIRE, WEST RIDING",
+    "year": 1911,
+    "old": 3844,
+    "new": 9503
+  }
+]
