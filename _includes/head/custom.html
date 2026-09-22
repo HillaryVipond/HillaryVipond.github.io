@@ -1,0 +1,8 @@
+{%- comment -%}
+  Per-page opt-out of search-engine indexing.
+  Set `noindex: true` in a page's front matter to keep it out of Google
+  while still leaving it reachable by anyone with the URL.
+{%- endcomment -%}
+{%- if page.noindex -%}
+<meta name="robots" content="noindex, nofollow">
+{%- endif -%}
