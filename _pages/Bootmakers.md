@@ -75,23 +75,6 @@ noindex: true
   suggest little impact.
 </p>
 
-<p style="line-height:1.7;max-width:820px;">
-  However, the new &ldquo;tasks&rdquo; level of analysis makes it possible to pry open this
-  black box. I define the &ldquo;old&rdquo; tasks as those which, together, were responsible
-  for the employment of 97% of all English bootmakers prior to mechanization (in 1851 and
-  1861). These were the &ldquo;Shoemakers&rdquo;, &ldquo;Cordwainers&rdquo;,
-  &ldquo;Cloggers&rdquo;, &ldquo;Binders&rdquo;, and &ldquo;Closers&rdquo;. As mechanization
-  set in, the old jobs monotonically declined. In total, 153,000 artisanal bootmaking jobs
-  disappeared over the period.
-</p>
-
-<p style="line-height:1.7;max-width:820px;">
-  Simultaneously, a set of new, more specialized jobs emerged. In total, 140,000 new jobs
-  emerged over the period, in work including but not limited to: sewing machinists, riveters,
-  operators, and the foremen and managers in the factories. A more modern production process
-  was displacing the older, artisanal one.
-</p>
-
 <div id="fig1" style="max-width:980px;margin-top:1.6em;">
 
   <div id="fig1-stats" style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;"></div>
@@ -504,6 +487,23 @@ noindex: true
 </script>
 
 <p style="line-height:1.7;max-width:820px;margin-top:2em;">
+  However, the new &ldquo;tasks&rdquo; level of analysis makes it possible to pry open this
+  black box. I define the &ldquo;old&rdquo; tasks as those which, together, were responsible
+  for the employment of 97% of all English bootmakers prior to mechanization (in 1851 and
+  1861). These were the &ldquo;Shoemakers&rdquo;, &ldquo;Cordwainers&rdquo;,
+  &ldquo;Cloggers&rdquo;, &ldquo;Binders&rdquo;, and &ldquo;Closers&rdquo;. As mechanization
+  set in, the old jobs monotonically declined. In total, 153,000 artisanal bootmaking jobs
+  disappeared over the period.
+</p>
+
+<p style="line-height:1.7;max-width:820px;">
+  Simultaneously, a set of new, more specialized jobs emerged. In total, 140,000 new jobs
+  emerged over the period, in work including but not limited to: sewing machinists, riveters,
+  operators, and the foremen and managers in the factories. A more modern production process
+  was displacing the older, artisanal one.
+</p>
+
+<p style="line-height:1.7;max-width:820px;">
   At the national level, the countervailing forces of job creation and job loss as the
   English bootmaking industry mechanized very nearly balanced out. Given the large increase
   in productivity associated with mechanization, far fewer workers would have been required
@@ -524,7 +524,204 @@ noindex: true
 <p style="line-height:1.7;max-width:820px;">
   My second finding is that the industry relocated spatially. The new task level of analysis
   shows that artisanal jobs disappeared in every county in England, while the new jobs
-  emerged primarily in only a few counties.
+  emerged primarily in only a few counties. The figure below illustrates the total change in
+  the number of bootmakers employed in &ldquo;new&rdquo; and &ldquo;old&rdquo; tasks, by
+  county, between 1851 and 1911.
+</p>
+
+<div id="fig2a" style="max-width:960px;margin-top:1.6em;">
+  <div id="fig2a-chart"></div>
+  <p style="font-size:0.85em;color:#777;line-height:1.6;margin-top:14px;max-width:900px;">
+    <em>Notes:</em> This figure reports county-level changes in the number of bootmakers
+    employed, by task category, between 1851 and 1911. Panel A shows the change in the number
+    of workers employed in traditional artisanal bootmaking tasks. Panel B shows the
+    corresponding change in employment in newly emerging, more specialized bootmaking tasks.
+    Counties are ordered by the size of their artisanal loss. Hover a county to read both
+    figures and the net change.
+    <em>Source:</em> data derived by the author from ICeM full-count census microdata.
+  </p>
+</div>
+
+<script>
+(function(){
+  document.addEventListener("DOMContentLoaded", function(){
+
+  // paper palette
+  var OLD_BLUE  = "#4F81BD";
+  var NEW_GREEN = "#2E9B33";
+
+  var W = 900, ROW = 13;
+  var M = { top: 54, right: 14, bottom: 52, left: 8 };
+  var LAB = 152, GAP = 26;
+  var PW  = (W - M.left - M.right - LAB - GAP) / 2;
+
+  var fmt  = d3.format(",");
+  var fmtS = d3.format("+,");
+
+  function pretty(c){
+    return String(c).replace(/,/g, "").toLowerCase()
+      .replace(/\b[a-z]/g, function(m){ return m.toUpperCase(); });
+  }
+
+  d3.json("/assets/maps/bootmaker_counts_by_county.json?v=1").then(function(rows){
+    if (!rows) return;
+
+    var at = {};
+    rows.forEach(function(r){
+      var c = String(r.county).toUpperCase().trim();
+      (at[c] || (at[c] = {}))[r.year] = { old: +r.old, new: +r.new };
+    });
+
+    var data = Object.keys(at).map(function(c){
+      var a = at[c][1851] || { old: 0, new: 0 };
+      var b = at[c][1911] || { old: 0, new: 0 };
+      return { county: c, name: pretty(c), dOld: b.old - a.old, dNew: b.new - a.new };
+    }).sort(function(p, q){ return d3.ascending(p.dOld, q.dOld); });
+
+    var H = M.top + data.length * ROW + M.bottom;
+
+    var svg = d3.select("#fig2a-chart").append("svg")
+      .attr("viewBox", [0, 0, W, H])
+      .attr("width", "100%")
+      .style("font-family", "sans-serif")
+      .style("overflow", "visible");
+
+    var xA = d3.scaleLinear()
+      .domain([Math.min(0, d3.min(data, function(d){ return d.dOld; })), 0]).nice()
+      .range([0, PW]);
+    var xB = d3.scaleLinear()
+      .domain([0, d3.max(data, function(d){ return d.dNew; })]).nice()
+      .range([0, PW]);
+
+    var AX = M.left + LAB;          // left edge of panel A
+    var BX = AX + PW + GAP;         // left edge of panel B
+    var y  = function(i){ return M.top + i * ROW; };
+
+    // panel titles
+    svg.append("text").attr("x", AX).attr("y", 20)
+      .attr("fill", "#333").style("font-size", "13.5px").style("font-weight", "700")
+      .text("A: Change in Number of 'Old' Tasks");
+    svg.append("text").attr("x", BX).attr("y", 20)
+      .attr("fill", "#333").style("font-size", "13.5px").style("font-weight", "700")
+      .text("B: Change in Number of 'New' Tasks");
+
+    // plot backgrounds
+    [[AX, "a"], [BX, "b"]].forEach(function(p){
+      svg.append("rect").attr("x", p[0]).attr("y", M.top - 6)
+        .attr("width", PW).attr("height", data.length * ROW + 10)
+        .attr("fill", "#f6f6f6");
+    });
+
+    // gridlines
+    xA.ticks(6).forEach(function(t){
+      svg.append("line").attr("x1", AX + xA(t)).attr("x2", AX + xA(t))
+        .attr("y1", M.top - 6).attr("y2", M.top + data.length * ROW + 4)
+        .attr("stroke", t === 0 ? "#bbb" : "#fff").attr("stroke-width", t === 0 ? 1 : 1);
+    });
+    xB.ticks(6).forEach(function(t){
+      svg.append("line").attr("x1", BX + xB(t)).attr("x2", BX + xB(t))
+        .attr("y1", M.top - 6).attr("y2", M.top + data.length * ROW + 4)
+        .attr("stroke", t === 0 ? "#bbb" : "#fff").attr("stroke-width", 1);
+    });
+
+    // hover bands (full width, behind bars)
+    var bands = svg.append("g").selectAll("rect").data(data).join("rect")
+      .attr("x", M.left).attr("y", function(d, i){ return y(i); })
+      .attr("width", W - M.left - M.right).attr("height", ROW)
+      .attr("fill", "transparent").style("cursor", "crosshair");
+
+    // county labels
+    svg.append("g").selectAll("text").data(data).join("text")
+      .attr("x", AX - 8).attr("y", function(d, i){ return y(i) + ROW - 3.5; })
+      .attr("text-anchor", "end").attr("fill", "#444")
+      .style("font-size", "10.5px").style("pointer-events", "none")
+      .text(function(d){ return d.name; });
+
+    // bars
+    var barsA = svg.append("g").selectAll("rect").data(data).join("rect")
+      .attr("x", function(d){ return AX + xA(Math.min(0, d.dOld)); })
+      .attr("y", function(d, i){ return y(i) + 2; })
+      .attr("width", function(d){ return Math.abs(xA(d.dOld) - xA(0)); })
+      .attr("height", ROW - 4)
+      .attr("fill", OLD_BLUE).style("pointer-events", "none");
+
+    var barsB = svg.append("g").selectAll("rect").data(data).join("rect")
+      .attr("x", BX + xB(0))
+      .attr("y", function(d, i){ return y(i) + 2; })
+      .attr("width", function(d){ return Math.max(0, xB(d.dNew) - xB(0)); })
+      .attr("height", ROW - 4)
+      .attr("fill", NEW_GREEN).style("pointer-events", "none");
+
+    // axes
+    var ay = M.top + data.length * ROW + 6;
+    svg.append("g").attr("transform", "translate(" + AX + "," + ay + ")")
+      .call(d3.axisBottom(xA).ticks(6).tickFormat(d3.format(",")).tickSizeOuter(0))
+      .call(function(s){ s.select(".domain").attr("stroke", "#bbb"); s.selectAll("line").attr("stroke", "#bbb"); })
+      .selectAll("text").attr("fill", "#666").style("font-size", "10px");
+    svg.append("g").attr("transform", "translate(" + BX + "," + ay + ")")
+      .call(d3.axisBottom(xB).ticks(6).tickFormat(d3.format(",")).tickSizeOuter(0))
+      .call(function(s){ s.select(".domain").attr("stroke", "#bbb"); s.selectAll("line").attr("stroke", "#bbb"); })
+      .selectAll("text").attr("fill", "#666").style("font-size", "10px");
+
+    [[AX, "Change in Number, 1851–1911"], [BX, "Change in Number, 1851–1911"]].forEach(function(p){
+      svg.append("text").attr("x", p[0] + PW / 2).attr("y", ay + 38)
+        .attr("text-anchor", "middle").attr("fill", "#666").style("font-size", "11px")
+        .text(p[1]);
+    });
+
+    // interaction
+    var tip = d3.select("body").append("div")
+      .style("position", "absolute").style("pointer-events", "none").style("visibility", "hidden")
+      .style("background", "#fff").style("border", "1px solid #ccc").style("padding", "8px 11px")
+      .style("border-radius", "5px").style("font-size", "13px").style("line-height", "1.5")
+      .style("box-shadow", "0 2px 8px rgba(0,0,0,.18)").style("z-index", 9999);
+
+    bands
+      .on("mouseover", function(event, d){
+        d3.select(this).attr("fill", "rgba(0,0,0,0.055)");
+        tip.style("visibility", "visible");
+      })
+      .on("mousemove", function(event, d){
+        var net = d.dOld + d.dNew;
+        tip.html('<strong>' + d.name + '</strong><br>' +
+                 '<span style="color:' + OLD_BLUE + ';">&#9632;</span> Old tasks: ' + fmtS(d.dOld) + '<br>' +
+                 '<span style="color:' + NEW_GREEN + ';">&#9632;</span> New tasks: ' + fmtS(d.dNew) + '<br>' +
+                 '<span style="color:#666;">Net: ' + fmtS(net) + '</span>')
+           .style("left", (event.pageX + 14) + "px")
+           .style("top", (event.pageY - 12) + "px");
+      })
+      .on("mouseout", function(){
+        d3.select(this).attr("fill", "transparent");
+        tip.style("visibility", "hidden");
+      });
+  });
+
+  });
+})();
+</script>
+
+<p style="line-height:1.7;max-width:820px;margin-top:2em;">
+  The overall picture is one in which the older and more general types of work declined in
+  every county in England, while employment in the new and more specialized tasks emerged in
+  only a select few. The result is that the balancing of countervailing forces which we saw at
+  the national level did not take place at the more local level. In most counties the
+  bootmaking industry as a whole went into decline. In two counties &mdash; Northamptonshire
+  and Leicestershire &mdash; the loss of employment in the older tasks was more than
+  compensated by the surge in new opportunities, and the bootmaking industry flourished.
+</p>
+
+<p style="line-height:1.7;max-width:820px;">
+  Interpreted geographically, the net result was a tectonic shift in the location of the
+  industry. Nearly half of the new jobs were generated in Northamptonshire and Leicestershire
+  alone, and those two counties became the enclaves of English bootmaking.
+</p>
+
+<h4 style="margin-top:2.2em;font-size:1.05em;color:#444;">The same shift, census by census</h4>
+
+<p style="line-height:1.7;max-width:820px;">
+  The figure above collapses six decades into a single number per county. The maps below
+  unfold it again: drag the year slider, or press play, to watch the artisanal trade drain out
+  of the country while the new work pools into Northamptonshire and Leicestershire.
 </p>
 
 <div id="fig2" style="max-width:1000px;margin-top:1.6em;">
@@ -563,22 +760,6 @@ noindex: true
     <em>Source:</em> data derived by the author from ICeM full-count census microdata.
   </p>
 </div>
-
-<p style="line-height:1.7;max-width:820px;margin-top:2em;">
-  The overall picture is one in which the older and more general types of work declined in
-  every county in England, while employment in the new and more specialized tasks emerged in
-  only a select few. The result is that the balancing of countervailing forces which we saw at
-  the national level did not take place at the more local level. In most counties the
-  bootmaking industry as a whole went into decline. In two counties &mdash; Northamptonshire
-  and Leicestershire &mdash; the loss of employment in the older tasks was more than
-  compensated by the surge in new opportunities, and the bootmaking industry flourished.
-</p>
-
-<p style="line-height:1.7;max-width:820px;">
-  Interpreted geographically, the net result was a tectonic shift in the location of the
-  industry. Nearly half of the new jobs were generated in Northamptonshire and Leicestershire
-  alone, and those two counties became the enclaves of English bootmaking.
-</p>
 
 <script>
 (function(){
