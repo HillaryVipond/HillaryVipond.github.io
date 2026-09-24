@@ -743,14 +743,6 @@ permalink: /bootmakers/
     <em>Notes:</em> This figure reports county-level numbers of bootmakers employed, by task
     category. Panel A shows the number of workers employed in traditional artisanal bootmaking
     tasks. Panel B shows employment in newly emerging, more specialized bootmaking tasks.
-    <br><br>
-    <em>On this version:</em> where the paper's Figure 2 reports the total change between 1851
-    and 1911, these maps report the level in each census year, so that the change can be
-    played through. Each map keeps a <strong>single colour scale fixed across all six
-    years</strong>, so a county fading between years is a real fall in employment rather than
-    an artefact of rescaling. Bands are anchored to the maximum observed in that measure over
-    the whole period. Wales is outside the sample and is shown in grey. There is no 1871
-    census in the ICeM data. Hover any county to read its numbers across all three panels.
     <em>Source:</em> data derived by the author from ICeM full-count census microdata.
   </p>
 </div>
