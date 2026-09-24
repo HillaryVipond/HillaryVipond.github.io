@@ -2,7 +2,6 @@
 layout: single
 title: "Technological Unemployment in Victorian Britain"
 permalink: /bootmakers/
-noindex: true
 ---
 
 <p style="font-size:1.15em;color:#555;margin-top:-0.6em;margin-bottom:0.2em;font-style:italic;">
@@ -12,7 +11,8 @@ noindex: true
 
 <p style="font-size:1.05em;line-height:1.7;max-width:820px;">
   This page is a visual summary of my paper on the mechanization of the English
-  bootmaking industry. It rebuilds the paper's figures as interactive graphics.
+  bootmaking industry. The full paper is available
+  <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7404339">here</a>.
 </p>
 
 <!-- ================================================ -->
@@ -27,7 +27,7 @@ noindex: true
     reallocated. Using 170 million full-count British census observations
     (1851&ndash;1911), I construct new task-level data on occupation and investigate
     English bootmaking as it mechanized. 153,000 artisanal jobs disappeared as skills
-    became obsolete; 140,000 specialized jobs emerged. Incumbent artisans did not take
+    became obsolete. 140,000 specialized jobs emerged. Incumbent artisans did not take
     the new jobs, nor were they displaced. Instead, entry collapsed &mdash; young men
     stopped entering the old trade. New jobs went primarily to young workers, though not
     in the same locations. Young cohorts absorbed the adjustment.
@@ -96,10 +96,10 @@ noindex: true
     production.
     <br><br>
     <em>On this version:</em> counts are person-level observations in the expanded cleaned
-    English bootmaker sample; unclassified occupation strings are excluded. The vertical
+    English bootmaker sample. Unclassified occupation strings are excluded. The vertical
     marker is 1857, the year the first bootmaking sewing machines were imported into England
     and set to work. There is no 1871 census in the ICeM data. Hover a band for its count and
-    share; click a task in the legend to isolate it. <em>Source:</em> data derived by the
+    share. Click a task in the legend to isolate it. <em>Source:</em> data derived by the
     author from ICeM full-count census microdata.
   </p>
 </div>
@@ -182,9 +182,9 @@ noindex: true
   // Headline stat tiles
   // ---------------------------------------------------------------
   var stats = [
-    { label: "Industry total",      sub: "all bootmakers",        a: totalAt(0),        b: totalAt(5),        col: "#4c5f9e" },
     { label: "Old artisanal tasks", sub: "makers, cordwainers…", a: totalAt(0, OLD), b: totalAt(5, OLD), col: "#08519c" },
-    { label: "New machine-era tasks", sub: "machinists, riveters…", a: totalAt(0, NEW), b: totalAt(5, NEW), col: "#238B45" }
+    { label: "New machine-era tasks", sub: "machinists, riveters…", a: totalAt(0, NEW), b: totalAt(5, NEW), col: "#238B45" },
+    { label: "Industry total",      sub: "all bootmakers",        a: totalAt(0),        b: totalAt(5),        col: "#4c5f9e" }
   ];
   d3.select("#fig1-stats").selectAll("div").data(stats).join("div")
     .attr("style", function(d){
@@ -718,12 +718,6 @@ noindex: true
 
 <h4 style="margin-top:2.2em;font-size:1.05em;color:#444;">The same shift, census by census</h4>
 
-<p style="line-height:1.7;max-width:820px;">
-  The figure above collapses six decades into a single number per county. The maps below
-  unfold it again: drag the year slider, or press play, to watch the artisanal trade drain out
-  of the country while the new work pools into Northamptonshire and Leicestershire.
-</p>
-
 <div id="fig2" style="max-width:1000px;margin-top:1.6em;">
 
   <div id="fig2-status"></div>
@@ -754,7 +748,7 @@ noindex: true
     and 1911, these maps report the level in each census year, so that the change can be
     played through. Each map keeps a <strong>single colour scale fixed across all six
     years</strong>, so a county fading between years is a real fall in employment rather than
-    an artefact of rescaling; bands are anchored to the maximum observed in that measure over
+    an artefact of rescaling. Bands are anchored to the maximum observed in that measure over
     the whole period. Wales is outside the sample and is shown in grey. There is no 1871
     census in the ICeM data. Hover any county to read its numbers across all three panels.
     <em>Source:</em> data derived by the author from ICeM full-count census microdata.
@@ -971,7 +965,30 @@ noindex: true
               "<code>bootmaker_counts_by_county.json</code> loads.");
     }
 
-    var projection = d3.geoMercator().fitSize([MW, MH - 12], geo);
+    // The geojson holds one polygon per land parcel (245 of them for 55
+    // counties: Essex alone is 28 estuary pieces). Dissolve them into a single
+    // MultiPolygon per county so each county is one shape and one hover target.
+    var byCty = new Map();
+    geo.features.forEach(function(f){
+      var c = f.properties && f.properties.R_CTY;
+      if (!c || !f.geometry) return;
+      if (!byCty.has(c)) {
+        byCty.set(c, {
+          type: "Feature",
+          properties: { R_CTY: c, R_CTRY: f.properties.R_CTRY },
+          geometry: { type: "MultiPolygon", coordinates: [] }
+        });
+      }
+      var g = f.geometry;
+      if (g.type === "Polygon") byCty.get(c).geometry.coordinates.push(g.coordinates);
+      else if (g.type === "MultiPolygon") {
+        g.coordinates.forEach(function(poly){ byCty.get(c).geometry.coordinates.push(poly); });
+      }
+    });
+    var COUNTIES = Array.from(byCty.values());
+
+    var projection = d3.geoMercator()
+      .fitSize([MW, MH - 12], { type: "FeatureCollection", features: COUNTIES });
     var path = d3.geoPath().projection(projection);
     var key = function(f){ return f.properties && f.properties.R_CTY; };
 
@@ -1037,7 +1054,7 @@ noindex: true
         .style("display", "block")
         .style("margin-top", "4px");
 
-      p.paths = svg.selectAll("path").data(geo.features).join("path")
+      p.paths = svg.append("g").selectAll("path").data(COUNTIES).join("path")
         .attr("d", path)
         .attr("stroke", "#fff")
         .attr("stroke-width", 0.4)
@@ -1063,6 +1080,15 @@ noindex: true
           highlight(null);
         });
 
+      // Highlight is drawn on its own layer above the map, so the base layer's
+      // DOM order is never disturbed and hit-testing stays stable.
+      p.hl = svg.append("path")
+        .attr("fill", "none")
+        .attr("stroke", "#222")
+        .attr("stroke-width", 1.6)
+        .attr("stroke-linejoin", "round")
+        .style("pointer-events", "none");
+
       // legend
       var lw = MW, lh = 40;
       var lsvg = host.append("svg").attr("viewBox", [0, 0, lw, lh]).attr("width", "100%");
@@ -1087,11 +1113,10 @@ noindex: true
     d3.select("#fig2-ticks").selectAll("span").data(YEARS).join("span").text(String);
 
     function highlight(county){
+      var f = county ? byCty.get(county) : null;
+      var d = f ? path(f) : null;
       PANELS.forEach(function(p){
-        p.paths
-          .attr("stroke", function(d){ return key(d) === county ? "#222" : "#fff"; })
-          .attr("stroke-width", function(d){ return key(d) === county ? 1.6 : 0.4; })
-          .filter(function(d){ return key(d) === county; }).raise();
+        if (p.hl) p.hl.attr("d", d);
       });
       readout(county);
     }
