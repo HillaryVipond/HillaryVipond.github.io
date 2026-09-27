@@ -96,10 +96,262 @@ body.present .page__content { padding-top: 0 !important; }
 
 <section class="frame frame--title">
   <div class="rule"></div>
-  <h1>Mapping the Second Industrial Revolution</h1>
-  <div class="sub">Occupational change in Britain, 1851&ndash;1911</div>
-  <div class="who">Hillary Vipond<br><span style="color:#777;">Paris School of Economics</span></div>
+  <h1>Mapping the 2nd Industrial Revolution</h1>
+  <div class="sub">The Emergence of New Jobs in 19th-Century Britain</div>
+  <div class="who">H.&thinsp;G. Vipond<br><span style="color:#777;">Complexity Science Hub</span></div>
 </section>
+
+<section class="frame">
+  <div class="in-kicker">Introduction</div>
+  <h3>Introduction</h3>
+  <div class="frame__body">
+    <div class="in-split">
+      <ul class="in-list">
+        <li>19th Century: rapid technological change</li>
+        <li>Creative destruction: destroyed jobs, created new jobs
+            <span class="in-cite">(Acemoglu &amp; Restrepo 2019)</span></li>
+        <li>New Jobs: have been vital
+            <span class="in-cite">(Autor et al, 2025; Kalyani et al 2025)</span></li>
+        <li>60% of the jobs that employ Americans today did not exist in the 1950s.</li>
+      </ul>
+      <figure class="in-fig">
+        <img src="/assets/images/Tesla.jpg" alt="Tesla's magnifying transmitter generating millions of volts">
+        <figcaption>Tesla and his &ldquo;magnifying transmitter&rdquo;, generating millions of volts.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="frame">
+  <div class="in-kicker">Introduction</div>
+  <h3>This Paper: Map Emergence of New Jobs in 2nd IR</h3>
+  <div class="frame__body">
+    <ol class="in-num">
+      <li><strong>Aim:</strong> Understand how and where job creation mapped on to job loss</li>
+      <li><strong>Problem:</strong> No systematic quantitative record of job creation and loss in
+          Victorian Britain</li>
+      <li><strong>Solution:</strong> Generate &ldquo;micro-occupation&rdquo; data.
+          800 industries &rarr; 10,000 micro-occupations.</li>
+      <li><strong>Quantify:</strong> new and declining occupations in Britain 1851&ndash;1921</li>
+    </ol>
+  </div>
+</section>
+
+<section class="frame">
+  <div class="in-kicker">History</div>
+  <h3>History: 2nd Industrial Revolution</h3>
+  <div class="frame__body">
+    <div class="in-split">
+      <ul class="in-list">
+        <li><strong>1851:</strong> Crystal Palace &mdash; Workshop of the World</li>
+        <li><strong>1870s:</strong> Britain &mdash; shift to a new phase of industrialization.</li>
+        <li>Traditional crafts sectors start declining</li>
+        <li>Vast numbers of new jobs emerging: electricians, engineers, railway workers</li>
+      </ul>
+      <figure class="in-fig">
+        <img src="/assets/images/CrystalPalace.jpg" alt="The Great Exhibition at the Crystal Palace, 1851">
+        <figcaption>The Crystal Palace, 1851.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="frame">
+  <div class="in-kicker">History</div>
+  <h3>History: British Census</h3>
+  <div class="frame__body">
+    <div class="in-split">
+      <ul class="in-list">
+        <li><strong>1753 Thomas Potter:</strong> bill introduced to Parliament. Army, emigration to
+            the colonies, burden of the poor law. Population growth.</li>
+        <li><strong>1801&ndash;1831:</strong> Parish (township) register aggregates</li>
+        <li><strong>1841&ndash;1921:</strong> Individual Level</li>
+      </ul>
+      <figure class="in-fig in-fig--narrow">
+        <img src="/assets/images/Census1851.jpg" alt="Title page of the Census of Great Britain, 1851">
+        <figcaption>Census of Great Britain, 1851.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="frame">
+  <div class="in-kicker">History</div>
+  <h3>History: British Census Classification Schema</h3>
+  <div class="frame__body">
+    <div class="in-split">
+      <ul class="in-list">
+        <li><strong>1841:</strong> First individual level census</li>
+        <li><strong>1851:</strong> 18 orders, 90 sub-orders</li>
+        <li><strong>1861:</strong> &ldquo;The classification of 1851 has been entirely revised&rdquo;.
+            Dress goes from Services to Textiles. Animal/Vegetable matter go.</li>
+        <li><strong>By 1901:</strong> 23 Orders, substantial changes in sub-orders</li>
+      </ul>
+      <figure class="in-fig">
+        <img src="/assets/images/CensusClassification.jpg" alt="Census table showing the occupancy of classes of persons">
+        <figcaption>Contemporary tabulation of the classification.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="frame">
+  <div class="in-kicker">Data</div>
+  <h3>Data: The Integrated Census Microdata Project (ICeM)</h3>
+  <div class="frame__body">
+    <ul class="in-list in-list--wide">
+      <li>Decennial English census data from 1851 to 1921 (excluding 1871)</li>
+      <li>220 million individual level census records, digitized</li>
+      <li>Occupation: at industry level</li>
+    </ul>
+    <figure class="in-fig in-fig--full">
+      <img src="/assets/images/Census.jpg" alt="A page from a census enumerator's book">
+      <figcaption>A page of the census enumerators' books.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="frame">
+  <div class="in-kicker">Data &middot; Task Data</div>
+  <h3>Data Construction 1: &ldquo;Task&rdquo; Occupation</h3>
+  <div class="frame__body">
+    <table class="in-table">
+      <thead>
+        <tr>
+          <th>Industry Code</th>
+          <th>Occupation &mdash; Original Strings</th>
+          <th>New Variable: &ldquo;Task&rdquo;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>663 (Bootmaker)</td><td>CORDWAINER</td><td>Cordwainer</td></tr>
+        <tr><td>663 (Bootmaker)</td><td>BOOT &amp; SHOE MAKER</td><td>Maker</td></tr>
+        <tr><td>663 (Bootmaker)</td><td>BOOT AND SHOE BINDER</td><td>Binder</td></tr>
+        <tr><td>663 (Bootmaker)</td><td>BOOT &amp; SHOE RIVETTER</td><td>Rivetter</td></tr>
+        <tr><td>663 (Bootmaker)</td><td>SEWING MACHINIST</td><td>Sewing Machinist</td></tr>
+      </tbody>
+    </table>
+    <p class="in-note">
+      The table shows examples of original occupation strings from Census records and their
+      corresponding new variable &ldquo;Task&rdquo;. I assign 97% of them to &ldquo;Task&rdquo;.
+    </p>
+  </div>
+</section>
+
+<section class="frame">
+  <div class="in-kicker">Data &middot; Task Data</div>
+  <h3>Data Construction 1: &ldquo;Task&rdquo; Occupation</h3>
+  <div class="frame__body">
+    <p class="in-lead">Every spelling of <strong>tailor</strong> found in the census strings:</p>
+    <div class="in-strings">
+      &hellip;tailor', 'failor', 'tailar', 'tailaress', 'tailer', 'taileres', 'taileress',
+      'tailering', 'tailers', 'taillor', 'tailloress', 'tailor', "tailor's", 'tailor(journeyman',
+      'tailor(master', 'tailor,', 'tailor-', 'tailor-maker', 'tailor&hellip;', 'tailor:', 'tailore',
+      "tailore's", "tailore'ss", 'tailorees', 'tailorefs', 'tailorer', 'tailorers', 'tailorerss',
+      'tailores', "tailores's", 'tailoress', "tailoress's", 'tailoress-', 'tailoress&hellip;',
+      'tailoresse', 'tailoresses', 'tailoresss', 'tailorest', 'tailories', 'tailoriess',
+      'tailoring', 'tailorings', 'tailoris', 'tailoriss', 'tailorist', 'tailorists', 'tailormaker',
+      'tailorman', 'tailorness', 'tailorous', 'tailorress', 'tailors', 'tailors&hellip;', 'tailorss',
+      'tailory', 'tailorys', 'tailoting', 'tailour', 'tailouress', 'tailours', 'tailress',
+      'tailroess', 'taioleress', 'tairloress', 'taitor', 'taitoress', 'talior', 'talioress',
+      'tallor', 'talloress', 'talloring', 'talor', 'talores', 'taloress', 'taloring', 'tayler',
+      'tayleress', 'taylor', "taylor's", 'taylores', 'tayloress', 'taylorest', 'tayloring',
+      'tayloris', 'tayloriss', 'taylorist', 'taylors', 'tialor', 'tialoress', 'tilloter', 'tailess'
+    </div>
+  </div>
+</section>
+
+<section class="frame">
+  <div class="in-kicker">Data &middot; Task Data</div>
+  <h3>Data Construction 2: Census Linking</h3>
+  <div class="frame__body">
+    <ul class="in-list in-list--wide">
+      <li><strong>Context:</strong> Census linking is indispensable</li>
+      <li><strong>Concern:</strong> False positives pose threat to inference:
+        <ol class="in-sub">
+          <li>Migration: O'Grada et al. (2025), 68&ndash;77% vs 14%</li>
+          <li>Occupation: Helgertz et al. (2023)</li>
+        </ol>
+      </li>
+      <li><strong>Problem:</strong> Without ground truth, how to check?</li>
+      <li><strong>Solution:</strong> Leverage statistical regularities of false matches:
+          <em>litmus test</em></li>
+    </ul>
+  </div>
+</section>
+
+<section class="frame frame--section">
+  <div class="kicker">Preliminary Findings</div>
+  <h2>Preliminary Findings</h2>
+  <p style="margin-top:18px;color:#777;font-size:1.05rem;">
+    Everything that follows is live on the site.
+  </p>
+</section>
+
+<style>
+  /* intro frames, ported from the Beamer deck */
+  .in-kicker {
+    font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+    color:#9a9a9a; font-weight:700; margin-bottom:6px;
+  }
+  .in-split { display:flex; gap:44px; align-items:center; flex-wrap:wrap; }
+  .in-split > .in-list { flex:1 1 400px; min-width:300px; }
+  .in-split > .in-fig  { flex:0 1 620px; min-width:260px; }
+  .in-fig { margin:0; }
+  /* as large as the space allows, but capped against the viewport so a frame
+     can never grow past one screen */
+  .in-fig img {
+    max-width:100%; max-height:62vh; width:auto; height:auto;
+    display:block; margin:0 auto; border-radius:2px;
+  }
+  /* the 1851 title page is only 180px wide in the source deck, so it cannot
+     take much enlargement before it softens */
+  .in-fig--narrow { flex:0 1 330px !important; }
+  .in-fig--narrow img { max-height:54vh; }
+  .in-fig--full { margin:20px 0 0; max-width:100%; }
+  .in-fig--full img { max-height:54vh; }
+  .in-fig figcaption { font-size:.78rem; color:#999; margin-top:8px; line-height:1.45; text-align:center; }
+
+  .in-list, .in-num { margin:0; padding-left:0; list-style:none; }
+  .in-list li, .in-num li {
+    position:relative; padding-left:26px; margin-bottom:16px;
+    font-size:1.12rem; line-height:1.55; color:#2b2b2b;
+  }
+  .in-list--wide li { font-size:1.18rem; }
+  .in-list > li::before {
+    content:"\25B8"; position:absolute; left:2px; top:0; color:#238B45; font-size:1rem;
+  }
+  .in-num { counter-reset:inum; }
+  .in-num > li { counter-increment:inum; padding-left:34px; }
+  .in-num > li::before {
+    content:counter(inum) "."; position:absolute; left:0; top:0;
+    color:#238B45; font-weight:700;
+  }
+  .in-sub { margin:10px 0 0 0; padding-left:20px; }
+  .in-sub li { font-size:1rem; margin-bottom:6px; color:#444; padding-left:4px; }
+  .in-sub li::before { content:none; }
+  .in-cite { color:#888; font-size:.92em; }
+
+  .in-table { border-collapse:collapse; font-size:1rem; max-width:1000px; }
+  .in-table th {
+    text-align:left; font-weight:700; color:#222; padding:9px 26px 9px 0;
+    border-bottom:2px solid #238B45;
+  }
+  .in-table td { padding:9px 26px 9px 0; border-bottom:1px solid #eee; color:#333; }
+  .in-table td:nth-child(2) { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.92em; }
+  .in-note { font-size:.85rem; color:#888; margin-top:16px; max-width:900px; line-height:1.6; }
+  .in-lead { font-size:1.05rem; color:#444; margin:0 0 14px; }
+  .in-strings {
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:.86rem; line-height:1.85; color:#444; background:#fafafa;
+    border-left:3px solid #e0e0e0; padding:18px 22px; max-width:1050px;
+    word-spacing:.05em;
+  }
+  @media (max-width:760px){
+    .in-split { gap:22px; }
+    .in-list li, .in-num li { font-size:1rem; }
+  }
+</style>
 
 
 <section class="frame frame--section">
