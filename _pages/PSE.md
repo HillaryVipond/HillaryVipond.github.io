@@ -18,6 +18,7 @@ noindex: true
 :root { --accent: #238B45; --ink: #1c1c1c; --muted: #8a8a8a; }
 
 .deck { width: 100vw; margin-left: calc(50% - 50vw); padding: 0; }
+.page__title { display: none; }   /* duplicates the title frame */
 .page__content .deck h2,
 .page__content .deck h3,
 .page__content .deck h4 { border: 0; }
@@ -71,9 +72,11 @@ noindex: true
   background: rgba(255,255,255,.94); border: 1px solid #e0e0e0;
   border-radius: 22px; padding: 5px 8px; box-shadow: 0 2px 10px rgba(0,0,0,.08); font-size: 13px;
 }
-#deck-bar button { border: 0; background: none; cursor: pointer; font-size: 15px; color: #444; padding: 2px 9px; border-radius: 14px; line-height: 1.4; }
+#deck-bar button { border: 0; background: none; cursor: pointer; font-size: 19px; color: #444; padding: 2px 14px; border-radius: 14px; line-height: 1.4; }
+#deck-next { padding: 2px 34px; }
+#deck-prev { padding: 2px 20px; }
 #deck-bar button:hover { background: #f0f0f0; }
-#deck-count { color: var(--muted); font-variant-numeric: tabular-nums; padding: 0 4px; }
+#deck-count { color: #555; font-variant-numeric: tabular-nums; padding: 0 10px; font-size: 16px; font-weight: 600; }
 
 body.present .masthead,
 body.present .page__footer,
@@ -89,7 +92,6 @@ body.present .page__content { padding-top: 0 !important; }
   <button id="deck-prev" title="Previous frame (left arrow)">&lsaquo;</button>
   <span id="deck-count">1 / 1</span>
   <button id="deck-next" title="Next frame (right arrow or space)">&rsaquo;</button>
-  <button id="deck-present" title="Presentation mode (f)" style="font-size:12px;">present</button>
 </div>
 
 <div class="deck">
@@ -280,14 +282,6 @@ body.present .page__content { padding-top: 0 !important; }
   </div>
 </section>
 
-<section class="frame frame--section">
-  <div class="kicker">Preliminary Findings</div>
-  <h2>Preliminary Findings</h2>
-  <p style="margin-top:18px;color:#777;font-size:1.05rem;">
-    Everything that follows is live on the site.
-  </p>
-</section>
-
 <style>
   /* intro frames, ported from the Beamer deck */
   .in-kicker {
@@ -304,10 +298,10 @@ body.present .page__content { padding-top: 0 !important; }
     max-width:100%; max-height:62vh; width:auto; height:auto;
     display:block; margin:0 auto; border-radius:2px;
   }
-  /* the 1851 title page is only 180px wide in the source deck, so it cannot
-     take much enlargement before it softens */
-  .in-fig--narrow { flex:0 1 330px !important; }
-  .in-fig--narrow img { max-height:54vh; }
+  /* the 1851 title page is only 180px wide in the source deck, so this is a
+     deliberate upscale and it will look soft -- a better scan would fix it */
+  .in-fig--narrow { flex:0 1 520px !important; }
+  .in-fig--narrow img { max-height:66vh; }
   .in-fig--full { margin:20px 0 0; max-width:100%; }
   .in-fig--full img { max-height:54vh; }
   .in-fig figcaption { font-size:.78rem; color:#999; margin-top:8px; line-height:1.45; text-align:center; }
@@ -2704,7 +2698,6 @@ Promise.all([
 
     document.getElementById("deck-prev").onclick = function(){ go(current() - 1); };
     document.getElementById("deck-next").onclick = function(){ go(current() + 1); };
-    document.getElementById("deck-present").onclick = function(){ document.body.classList.toggle("present"); };
 
     document.addEventListener("keydown", function(e){
       var t = e.target.tagName;
