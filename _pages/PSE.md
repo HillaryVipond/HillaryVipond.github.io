@@ -191,7 +191,6 @@ body.present .page__content { padding-top: 0 !important; }
       </ul>
       <figure class="in-fig">
         <img src="/assets/images/CensusClassification.jpg" alt="Census table showing the occupancy of classes of persons">
-        <figcaption>Contemporary tabulation of the classification.</figcaption>
       </figure>
     </div>
   </div>
@@ -208,7 +207,6 @@ body.present .page__content { padding-top: 0 !important; }
     </ul>
     <figure class="in-fig in-fig--full">
       <img src="/assets/images/Census.jpg" alt="A page from a census enumerator's book">
-      <figcaption>A page of the census enumerators' books.</figcaption>
     </figure>
   </div>
 </section>
@@ -290,20 +288,19 @@ body.present .page__content { padding-top: 0 !important; }
   }
   .in-split { display:flex; gap:44px; align-items:center; flex-wrap:wrap; }
   .in-split > .in-list { flex:1 1 400px; min-width:300px; }
-  .in-split > .in-fig  { flex:0 1 620px; min-width:260px; }
+  .in-split > .in-fig  { flex:0 1 480px; min-width:260px; }
   .in-fig { margin:0 auto; width:fit-content; max-width:100%; }
   /* as large as the space allows, but capped against the viewport so a frame
      can never grow past one screen */
   .in-fig img {
-    max-width:100%; max-height:62vh; width:auto; height:auto;
-    display:block; margin:0 auto; border-radius:2px;
+    width:100%; height:auto; display:block; border-radius:2px;
   }
   /* the 1851 title page is only 180px wide in the source deck, so this is a
      deliberate upscale and it will look soft -- a better scan would fix it */
-  .in-fig--narrow { flex:0 1 620px !important; }
-  .in-fig--narrow img { max-height:78vh; }
+  .in-fig--narrow { flex:0 1 430px !important; }
+
   .in-fig--full { margin:20px 0 0; max-width:100%; }
-  .in-fig--full img { max-height:54vh; }
+  .in-fig--full { max-width:1000px; }
   .in-fig figcaption { font-size:.78rem; color:#999; margin-top:8px; line-height:1.45; text-align:center; }
 
   .in-list, .in-num { margin:0; padding-left:0; list-style:none; }
@@ -1616,7 +1613,6 @@ Promise.all([
 <p>Every occupation nests inside a sub-Order, and every sub-Order inside one of the 22 Orders. The circles below pack that whole structure, with each circle's area proportional to its 1911 workforce. Click any bubble to zoom in; click the background to zoom back out.</p>
 
 <div id="circlepack" style="max-width:760px;margin:8px auto 0;"></div>
-<p style="font-size:0.85em;color:#888;text-align:center;margin-top:4px;">Circle area ∝ workers in 1911 · click to zoom in · click outside to zoom out · hover for counts</p>
 
 <script>
 (function(){
@@ -2364,7 +2360,7 @@ Promise.all([
   function colOf(t){ var c = CATS.filter(function(c){return c.key===t;})[0]; return c ? c.col : "#888"; }
 
   function makeChart(opts){
-    var W = 700, H = 500, M = { top:18, right:26, bottom:54, left:66 };
+    var W = 700, H = 460, M = { top:18, right:26, bottom:54, left:66 };
     var iW = W-M.left-M.right, iH = H-M.top-M.bottom;
     var svg = d3.select(opts.svg).attr("viewBox",[0,0,W,H]);
     var sc-tip = d3.select(opts.tip);
@@ -2421,7 +2417,7 @@ Promise.all([
             opts.tipExtra(d));
         })
         .on("mousemove",function(event){
-          var r = this.closest(".panel").getBoundingClientRect();
+          var r = this.closest(".sc-panel").getBoundingClientRect();
           tip.style("left", Math.min(r.width-300, event.clientX-r.left+14)+"px")
              .style("top",  Math.max(4, event.clientY-r.top-10)+"px");
         })
@@ -2514,7 +2510,7 @@ Promise.all([
     });
 
     function renderJoint(){
-      var W = 700, H = 560, M = { top:18, right:26, bottom:56, left:70 };
+      var W = 700, H = 520, M = { top:18, right:26, bottom:56, left:70 };
       var iW = W-M.left-M.right, iH = H-M.top-M.bottom;
       var svg = d3.select("#sc-svg-joint").attr("viewBox",[0,0,W,H]);
       var sc-tip = d3.select("#sc-tip-joint");
@@ -2596,7 +2592,7 @@ Promise.all([
               d3.format(",")(d.ent1)+" → "+d3.format(",")(d.ent2)+"</div>");
         })
         .on("mousemove",function(event){
-          var r2 = this.closest(".panel").getBoundingClientRect();
+          var r2 = this.closest(".sc-panel").getBoundingClientRect();
           tip.style("left", Math.min(r2.width-300, event.clientX-r2.left+14)+"px")
              .style("top",  Math.max(4, event.clientY-r2.top-10)+"px");
         })
@@ -2730,6 +2726,37 @@ Promise.all([
     }, { passive: true });
 
     count.textContent = "1 / " + frames.length;
+
+    // Several charts ported from the website are drawn at a fixed pixel size
+    // with no viewBox, so they cannot scale and end up squeezed or overflowing.
+    // Give them a viewBox derived from their own attributes, then let them fill
+    // the frame width and cap their height against the viewport. Small SVGs
+    // (legends and colour ramps) are left alone.
+    function fitSvgs(){
+      document.querySelectorAll(".frame svg").forEach(function(svg){
+        if (svg.dataset.fitted) return;
+        var wA = parseFloat(svg.getAttribute("width"));
+        var hA = parseFloat(svg.getAttribute("height"));
+        var vb = svg.getAttribute("viewBox");
+        if (!vb) {
+          if (!(wA >= 600 && hA > 0)) return;      // leave legends as they are
+          svg.setAttribute("viewBox", "0 0 " + wA + " " + hA);
+        } else {
+          var parts = vb.split(/[ ,]+/);
+          if (!(parseFloat(parts[2]) >= 600)) return;
+        }
+        svg.removeAttribute("width");
+        svg.removeAttribute("height");
+        svg.style.width = "100%";
+        svg.style.height = "auto";
+        svg.style.maxHeight = "68vh";
+        svg.dataset.fitted = "1";
+      });
+    }
+    fitSvgs();
+    new MutationObserver(fitSvgs).observe(document.body, { childList: true, subtree: true });
+    [400, 1200, 3000].forEach(function(t){ setTimeout(fitSvgs, t); });
+
   });
 })();
 </script>
