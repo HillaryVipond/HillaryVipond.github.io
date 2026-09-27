@@ -66,6 +66,11 @@ noindex: true
 
 /* a frame that needs more than one screen: roughly two slides tall */
 .frame--tall { min-height: 195vh; }
+/* the ported figures cap their container at the width of the original
+   article column (760px, 920px...), which no frame height can undo.
+   On a tall frame let the chart have the whole width. */
+.frame--tall .frame__body > div { max-width: none !important; }
+.frame--tall .frame__body > p   { max-width: 1100px; }
 /* free-flowing: no fixed height, no divider, so a run of these reads as
    one continuous page rather than a sequence of slides */
 .frame--free { min-height: auto; padding-top: 3vh; padding-bottom: 5vh;
