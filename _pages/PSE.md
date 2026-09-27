@@ -355,6 +355,7 @@ body.present .page__content { padding-top: 0 !important; }
 
 
 <section class="frame">
+<div class="frame__body">
 <h2>1. Occupational Orders over Time</h2>
 <p>Click a year to view the treemap of the different sectors of the British economy by census year.</p>
 
@@ -437,10 +438,12 @@ body.present .page__content { padding-top: 0 !important; }
   document.addEventListener("DOMContentLoaded", () => loadYear(1851), { once: true });
 })();
 </script>
+</div>
 </section>
 
 
 <section class="frame">
+<div class="frame__body">
 <h3>Orders ranked by growth, 1851–1911</h3>
 <p>Showing the growth in different sectors of the economy over the period. Sectors shown in blue are growing more rapidly than average population growth.</p>
 
@@ -517,10 +520,12 @@ body.present .page__content { padding-top: 0 !important; }
   }, { once: true });
 })();
 </script>
+</div>
 </section>
 
 
 <section class="frame">
+<div class="frame__body">
 <h2>2. Occupational Industries: Growth and Decline</h2>
 <p>Showing growth by industry over the period. Note that the extreme outliers are primarily in industries which were very small or non-existent in 1851.</p>
 
@@ -670,10 +675,12 @@ body.present .page__content { padding-top: 0 !important; }
   }, { once: true });
 })();
 </script>
+</div>
 </section>
 
 
 <section class="frame">
+<div class="frame__body">
 <h2>3. Micro-Occupations: Growth and Decline</h2>
 
 <p>Each industry is itself made up of many different jobs: micro-occupations. In moving one level deeper, we can see the distinct occupations within each industry. This makes it possible to track how they grew and declined over the 2nd Industrial Revolution.</p>
@@ -865,6 +872,7 @@ body.present .page__content { padding-top: 0 !important; }
   }, { once: true });
 })();
 </script>
+</div>
 </section>
 
 
@@ -875,6 +883,7 @@ body.present .page__content { padding-top: 0 !important; }
 
 
 <section class="frame">
+<div class="frame__body">
 <h3>4.1 Map of specific new jobs</h3>
 
 <p>
@@ -1069,10 +1078,12 @@ body.present .page__content { padding-top: 0 !important; }
   });
 })();
 </script>
+</div>
 </section>
 
 
 <section class="frame">
+<div class="frame__body">
 <h3>4.2 Mapping of management jobs</h3>
 
 <h4 style="margin-top: 1em;">
@@ -1189,10 +1200,12 @@ body.present .page__content { padding-top: 0 !important; }
   });
 })();
 </script>
+</div>
 </section>
 
 
 <section class="frame">
+<div class="frame__body">
 <h3>4.3 Map of mechanization</h3>
 
 <h4 style="margin-top: 1em;">
@@ -1306,10 +1319,12 @@ body.present .page__content { padding-top: 0 !important; }
   });
 })();
 </script>
+</div>
 </section>
 
 
 <section class="frame">
+<div class="frame__body">
 <h3>4.4 Mapping of the apprenticeship system</h3>
 
 <p>The apprenticeship system declines everywhere between 1851–1911. The decline is more rapid after 1881. Less urban areas seem to retain more of the system than elsewhere.</p>
@@ -1462,6 +1477,7 @@ Promise.all([
   });
 }
 </script>
+</div>
 </section>
 
 
@@ -1472,6 +1488,7 @@ Promise.all([
 
 
 <section class="frame">
+<div class="frame__body">
 <h3>5.1 Occupational Skills Inheritance</h3>
 
 <style>
@@ -1588,10 +1605,12 @@ Promise.all([
     });
   })();
 </script>
+</div>
 </section>
 
 
 <section class="frame">
+<div class="frame__body">
 <h3>5.2 The shape of the workforce: Orders, sub-Orders, and occupations</h3>
 
 <p>Every occupation nests inside a sub-Order, and every sub-Order inside one of the 22 Orders. The circles below pack that whole structure, with each circle's area proportional to its 1911 workforce. Click any bubble to zoom in; click the background to zoom back out.</p>
@@ -1687,10 +1706,12 @@ Promise.all([
   });
 })();
 </script>
+</div>
 </section>
 
 
 <section class="frame">
+<div class="frame__body">
 <h3>Changing Taxonomies: Census Waves 1851–1911</h3>
 
 <p>The grey treemap is the <strong>1911 classification</strong> — Orders, their sub-Orders, and the occupations within them: the structure everything eventually settled into. Pick an earlier census and <strong>hover any occupation</strong> to light up the others it was lumped with <em>that</em> year — wherever they ended up on the 1911 map. The more scattered the highlight, the more that early census cut across the modern Orders.</p>
@@ -1789,10 +1810,12 @@ Promise.all([
   });
 })();
 </script>
+</div>
 </section>
 
 
 <section class="frame">
+<div class="frame__body">
 <h3>Migration within Orders, 1851 &rarr; 1861</h3>
 
 <p>Zoom in one level. Even <em>within</em> a single Order, the census kept reorganising. Here the 22 Orders stay fixed as the outer bubbles, and inside each one the occupations are grouped by their <em>real census category</em> for the chosen year. Flip between 1851 and 1861 to watch occupations <strong style="color:#E6550D;">split</strong> apart, <strong style="color:#3182BD;">merge</strong> together, or <strong style="color:#756BB1;">reshuffle</strong> within their Order. Unchanged occupations stay grey.</p>
@@ -1926,6 +1949,7 @@ Promise.all([
   });
 })();
 </script>
+</div>
 </section>
 
 
@@ -2636,6 +2660,7 @@ Promise.all([
 
 
 <section class="frame">
+<div class="frame__body">
 <h2 style="margin-top:2em;">6. Conclusion</h2>
 
 <ul style="max-width:820px;line-height:1.8;padding-left:1.2em;">
@@ -2647,6 +2672,7 @@ Promise.all([
   <li><strong>Next steps:</strong> finalise boundaries and definitions of new jobs.</li>
 </ul>
 
+</div>
 </section>
 
 </div>
