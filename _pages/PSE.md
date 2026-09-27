@@ -49,6 +49,7 @@ noindex: true
 .frame > h4 { font-size: 1rem; font-weight: 600; color: #444; margin: 2px 0 10px; }
 
 .frame__body { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; }
+.frame__body > p { font-size: 0.95rem; line-height: 1.55; max-width: 1000px; }
 
 .frame__num  { position: absolute; right: 5vw; bottom: 2.4vh; font-size: 12px; color: var(--muted); letter-spacing: .04em; }
 .frame__foot { position: absolute; left: 5vw;  bottom: 2.4vh; font-size: 12px; color: var(--muted); letter-spacing: .04em; }
@@ -76,7 +77,7 @@ noindex: true
 #deck-next { padding: 2px 34px; }
 #deck-prev { padding: 2px 20px; }
 #deck-bar button:hover { background: #f0f0f0; }
-#deck-count { color: #555; font-variant-numeric: tabular-nums; padding: 0 10px; font-size: 16px; font-weight: 600; }
+#deck-count { color: #555; font-variant-numeric: tabular-nums; padding: 0 10px; font-size: 19px; font-weight: 700; }
 
 body.present .masthead,
 body.present .page__footer,
@@ -171,7 +172,6 @@ body.present .page__content { padding-top: 0 !important; }
       </ul>
       <figure class="in-fig in-fig--narrow">
         <img src="/assets/images/Census1851.jpg" alt="Title page of the Census of Great Britain, 1851">
-        <figcaption>Census of Great Britain, 1851.</figcaption>
       </figure>
     </div>
   </div>
@@ -291,7 +291,7 @@ body.present .page__content { padding-top: 0 !important; }
   .in-split { display:flex; gap:44px; align-items:center; flex-wrap:wrap; }
   .in-split > .in-list { flex:1 1 400px; min-width:300px; }
   .in-split > .in-fig  { flex:0 1 620px; min-width:260px; }
-  .in-fig { margin:0; }
+  .in-fig { margin:0 auto; width:fit-content; max-width:100%; }
   /* as large as the space allows, but capped against the viewport so a frame
      can never grow past one screen */
   .in-fig img {
@@ -300,8 +300,8 @@ body.present .page__content { padding-top: 0 !important; }
   }
   /* the 1851 title page is only 180px wide in the source deck, so this is a
      deliberate upscale and it will look soft -- a better scan would fix it */
-  .in-fig--narrow { flex:0 1 520px !important; }
-  .in-fig--narrow img { max-height:66vh; }
+  .in-fig--narrow { flex:0 1 620px !important; }
+  .in-fig--narrow img { max-height:78vh; }
   .in-fig--full { margin:20px 0 0; max-width:100%; }
   .in-fig--full img { max-height:54vh; }
   .in-fig figcaption { font-size:.78rem; color:#999; margin-top:8px; line-height:1.45; text-align:center; }
@@ -349,8 +349,8 @@ body.present .page__content { padding-top: 0 !important; }
 
 
 <section class="frame frame--section">
-  <div class="kicker">Part I</div>
-  <h2>1. Occupational Orders over Time</h2>
+  <div class="kicker">Part 1</div>
+  <h2>Descriptive Evidence</h2>
 </section>
 
 
@@ -520,12 +520,6 @@ body.present .page__content { padding-top: 0 !important; }
 </section>
 
 
-<section class="frame frame--section">
-  <div class="kicker">Part II</div>
-  <h2>2. Occupational Industries</h2>
-</section>
-
-
 <section class="frame">
 <h2>2. Occupational Industries: Growth and Decline</h2>
 <p>Showing growth by industry over the period. Note that the extreme outliers are primarily in industries which were very small or non-existent in 1851.</p>
@@ -676,12 +670,6 @@ body.present .page__content { padding-top: 0 !important; }
   }, { once: true });
 })();
 </script>
-</section>
-
-
-<section class="frame frame--section">
-  <div class="kicker">Part III</div>
-  <h2>3. Micro-Occupations</h2>
 </section>
 
 
@@ -881,8 +869,8 @@ body.present .page__content { padding-top: 0 !important; }
 
 
 <section class="frame frame--section">
-  <div class="kicker">Part IV</div>
-  <h2>4. Results</h2>
+  <div class="kicker">Part 2</div>
+  <h2>New Evidence</h2>
 </section>
 
 
@@ -1478,8 +1466,8 @@ Promise.all([
 
 
 <section class="frame frame--section">
-  <div class="kicker">Part V</div>
-  <h2>5. Discussion</h2>
+  <div class="kicker">Part 3</div>
+  <h2>Discussion</h2>
 </section>
 
 
@@ -1941,23 +1929,8 @@ Promise.all([
 </section>
 
 
-<section class="frame">
-<h2 style="margin-top:2em;">6. Conclusion</h2>
-
-<ul style="max-width:820px;line-height:1.8;padding-left:1.2em;">
-  <li>From roughly 800 industries to about 10,000 micro-occupations.</li>
-  <li>Micro-occupations are necessary to track the emergence of new work and the decline of older jobs.</li>
-  <li>Rise of management jobs and factory work.</li>
-  <li>Decline of the apprenticeship system, in terms of shares. In absolute numbers, it increases by about 9,000.</li>
-  <li><strong>Implications:</strong> how society absorbs technological shocks; who gets the new jobs.</li>
-  <li><strong>Next steps:</strong> finalise boundaries and definitions of new jobs.</li>
-</ul>
-
-</section>
-
-
 <section class="frame frame--section">
-  <div class="kicker">Part VII</div>
+  <div class="kicker">Part 4</div>
   <h2>Results</h2>
 </section>
 
@@ -2660,6 +2633,21 @@ Promise.all([
   });
 })();
 </script>
+
+
+<section class="frame">
+<h2 style="margin-top:2em;">6. Conclusion</h2>
+
+<ul style="max-width:820px;line-height:1.8;padding-left:1.2em;">
+  <li>From roughly 800 industries to about 10,000 micro-occupations.</li>
+  <li>Micro-occupations are necessary to track the emergence of new work and the decline of older jobs.</li>
+  <li>Rise of management jobs and factory work.</li>
+  <li>Decline of the apprenticeship system, in terms of shares. In absolute numbers, it increases by about 9,000.</li>
+  <li><strong>Implications:</strong> how society absorbs technological shocks; who gets the new jobs.</li>
+  <li><strong>Next steps:</strong> finalise boundaries and definitions of new jobs.</li>
+</ul>
+
+</section>
 
 </div>
 
