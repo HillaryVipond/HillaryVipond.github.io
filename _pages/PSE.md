@@ -64,6 +64,14 @@ noindex: true
 .frame--section h2 { font-size: 2.3rem; margin: 0; border: 0; padding: 0; }
 .frame--section h2::after { display: none; }
 
+/* a frame that needs more than one screen: roughly two slides tall */
+.frame--tall { min-height: 195vh; }
+/* free-flowing: no fixed height, no divider, so a run of these reads as
+   one continuous page rather than a sequence of slides */
+.frame--free { min-height: auto; padding-top: 3vh; padding-bottom: 5vh;
+               border-bottom: 0; scroll-snap-align: none; }
+.frame--free .frame__num, .frame--free .frame__foot { display: none; }
+
 .frame--todo { background: #fffdf5; }
 .frame--todo .box { border: 1px dashed #d8c48a; background: #fffbe9; color: #7a5c00; padding: 22px 26px; border-radius: 4px; max-width: 760px; line-height: 1.6; }
 
@@ -1606,7 +1614,7 @@ Promise.all([
 </section>
 
 
-<section class="frame">
+<section class="frame frame--tall">
 <div class="frame__body">
 <h3>5.2 The shape of the workforce: Orders, sub-Orders, and occupations</h3>
 
@@ -1706,7 +1714,7 @@ Promise.all([
 </section>
 
 
-<section class="frame">
+<section class="frame frame--tall">
 <div class="frame__body">
 <h3>Changing Taxonomies: Census Waves 1851–1911</h3>
 
@@ -2363,11 +2371,11 @@ Promise.all([
     var W = 700, H = 460, M = { top:18, right:26, bottom:54, left:66 };
     var iW = W-M.left-M.right, iH = H-M.top-M.bottom;
     var svg = d3.select(opts.svg).attr("viewBox",[0,0,W,H]);
-    var sc-tip = d3.select(opts.tip);
+    var tip = d3.select(opts.tip);
     var g   = svg.append("g").attr("transform","translate("+M.left+","+M.top+")");
 
     var gridY = g.append("g").attr("class","sc-grid"), gridX = g.append("g").attr("class","sc-grid");
-    var sc-zero  = g.append("line").attr("class","sc-zero");
+    var zero = g.append("line").attr("class","sc-zero");
     var zlab  = g.append("text").attr("class","sc-zerolab");
     var axX   = g.append("g").attr("class","sc-axis").attr("transform","translate(0,"+iH+")");
     var axY   = g.append("g").attr("class","sc-axis");
@@ -2384,7 +2392,7 @@ Promise.all([
 
       x.domain(d3.extent(data,function(d){return d.x;})).nice();
       x.domain([x.domain()[0]-3, Math.min(2, x.domain()[1]+3)]);
-      // Always keep sc-zero in view: "every occupation sits below the line" is only
+      // Always keep zero in view: "every occupation sits below the line" is only
       // visible if the line is on the chart. opts.yMax forces headroom above it,
       // so the empty space itself carries the point.
       var ye = d3.extent(vals.concat([0])), pad = (ye[1]-ye[0])*0.08 || 1;
@@ -2513,7 +2521,7 @@ Promise.all([
       var W = 700, H = 520, M = { top:18, right:26, bottom:56, left:70 };
       var iW = W-M.left-M.right, iH = H-M.top-M.bottom;
       var svg = d3.select("#sc-svg-joint").attr("viewBox",[0,0,W,H]);
-      var sc-tip = d3.select("#sc-tip-joint");
+      var tip = d3.select("#sc-tip-joint");
       svg.selectAll("*").remove();
       var g = svg.append("g").attr("transform","translate("+M.left+","+M.top+")");
 
@@ -2749,7 +2757,7 @@ Promise.all([
         svg.removeAttribute("height");
         svg.style.width = "100%";
         svg.style.height = "auto";
-        svg.style.maxHeight = "68vh";
+        svg.style.maxHeight = svg.closest(".frame--tall") ? "150vh" : "68vh";
         svg.dataset.fitted = "1";
       });
     }
