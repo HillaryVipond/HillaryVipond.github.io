@@ -1975,6 +1975,446 @@ Promise.all([
 })();
 </script>
 
+
+<section class="frame">
+  <h3>Did contraction push workers out, or stop new ones coming in?</h3>
+  <div class="frame__body">
+
+  <p class="sc-sub">
+    Each dot is a male occupation whose employment contracted between 1851 and 1881, and both
+    panels share the same horizontal axis: how far the occupation shrank. On the left, whether
+    workers already in the trade left it. On the right, whether young workers stopped entering it.
+    <span style="color:#999;">
+      <strong id="sc-nkept">&mdash;</strong> occupations shown, of 33 that contracted;
+      <strong id="sc-ndropped">&mdash;</strong> excluded for having fewer than 250 entrants in
+      either window.
+    </span>
+  </p>
+
+  <div id="sc-legend-a" class="sc-legend"></div>
+  <div class="sc-hint">Click a category to remove it.</div>
+
+  <div class="sc-row">
+    <div class="sc-panel">
+      <div class="sc-ptitle">Change in exit</div>
+      <div class="sc-pnote">Difference-in-differences coefficient, percentage points</div>
+      <svg id="sc-svg-exit"></svg>
+      <div class="sc-tip" id="sc-tip-exit"></div>
+    </div>
+    <div class="sc-panel">
+      <div class="sc-ptitle">Change in entry</div>
+      <div class="sc-pnote" id="sc-entry-note">Change in entry relative to the occupation's own 1851&ndash;61 rate</div>
+      <svg id="sc-svg-entry"></svg>
+      <div class="sc-tip" id="sc-tip-entry"></div>
+    </div>
+  </div>
+
+  </div>
+</section>
+
+<section class="frame">
+  <h3>Do the two margins move together?</h3>
+  <div class="frame__body">
+
+  <div id="sc-legend-b" class="sc-legend"></div>
+  <div class="sc-hint">Click a category to remove it.</div>
+
+  <div class="sc-row">
+    <div class="sc-panel" style="flex:0 1 700px;">
+      <div class="sc-ptitle">Change in exit against change in entry</div>
+      <div class="sc-pnote">One dot per occupation. The dashed line is a least-squares fit.</div>
+      <svg id="sc-svg-joint"></svg>
+      <div class="sc-tip" id="sc-tip-joint"></div>
+    </div>
+    <div style="flex:1 1 300px;min-width:280px;font-size:.92rem;color:#555;line-height:1.7;padding-top:40px;">
+      <p style="margin:0 0 14px;">
+        Bottom-right: exit rose <em>and</em> entry collapsed. Top-left: neither moved much.
+      </p>
+      <p style="margin:0 0 14px;">
+        A loose tendency rather than a law &mdash; <strong>r = &minus;0.46</strong>, so change in
+        exit accounts for about a fifth of the variation in change in entry, and on 18 points that
+        falls just short of conventional significance. It is not driven by any one occupation:
+        dropping each in turn leaves r between &minus;0.37 and &minus;0.55.
+      </p>
+      <p style="margin:0;">
+        The occupations off the line are the interesting ones. <strong>Other miners</strong> shows
+        essentially no unusual exit yet lost 82% of its entrants; <strong>sawyers</strong> are the
+        mirror image.
+      </p>
+    </div>
+  </div>
+
+  </div>
+</section>
+
+<style>
+  .sc-sub { font-size:.95rem; color:#555; line-height:1.6; max-width:1000px; margin:10px 0 16px; }
+
+  #sc-legend-a { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:4px; }
+  #sc-legend-a button {
+    font:inherit; font-size:13px; display:inline-flex; align-items:center; gap:7px;
+    padding:5px 13px 5px 10px; border:1px solid #ddd; border-radius:16px; background:#fff;
+    color:#444; cursor:pointer;
+  }
+  #sc-legend-a button .sw { width:11px; height:11px; border-radius:50%; display:inline-block; }
+  #sc-legend-a button .n { color:#999; font-variant-numeric:tabular-nums; }
+  #sc-legend-a button.off { opacity:.4; background:#fafafa; text-decoration:line-through; }
+  .sc-hint { font-size:.82rem; color:#999; margin:2px 0 14px; }
+
+  .sc-row { display:flex; gap:26px; flex-wrap:wrap; align-items:flex-start; }
+  .sc-panel { flex:1 1 520px; min-width:430px; position:relative; }
+  .sc-ptitle { font-size:1.02rem; font-weight:700; color:#222; margin:0 0 2px; }
+  .sc-pnote { font-size:.84rem; color:#888; margin:0 0 6px; min-height:1.2em; }
+
+  svg { display:block; width:100%; height:auto; overflow:visible; }
+  .sc-grid line { stroke:#f1f1f1; }
+  .sc-axis text { fill:#666; font-size:11.5px; }
+  .sc-axis path, .sc-axis line { stroke:#ccc; }
+  .sc-axis-title { fill:#666; font-size:11.5px; }
+  .sc-zero { stroke:#999; stroke-width:1; stroke-dasharray:5 4; }
+  .sc-zerolab { fill:#aaa; font-size:10.5px; }
+  .sc-dot { stroke:#fff; stroke-width:1.4; cursor:pointer; }
+  .sc-lab { font-size:10px; fill:#666; pointer-events:none; }
+  .sc-tip { position:absolute; pointer-events:none; visibility:hidden; background:#fff;
+         border:1px solid #ccc; border-radius:6px; padding:8px 11px; font-size:13px;
+         line-height:1.45; box-shadow:0 4px 14px rgba(0,0,0,.14); z-index:5; max-width:290px; }
+  .sc-tip strong { display:block; margin-bottom:3px; }
+
+  /* scatter frames */
+  .sc-sub { font-size:.95rem; color:#555; line-height:1.6; max-width:1040px; margin:6px 0 14px; }
+  .sc-legend { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:4px; }
+  .sc-legend button {
+    font:inherit; font-size:13px; display:inline-flex; align-items:center; gap:7px;
+    padding:5px 13px 5px 10px; border:1px solid #ddd; border-radius:16px; background:#fff;
+    color:#444; cursor:pointer;
+  }
+  .sc-legend button .sw { width:11px; height:11px; border-radius:50%; display:inline-block; }
+  .sc-legend button .n { color:#999; font-variant-numeric:tabular-nums; }
+  .sc-legend button.off { opacity:.4; background:#fafafa; text-decoration:line-through; }
+</style>
+
+<script>
+(function(){
+  var SHORT = {
+    "37":"Church officers", "84":"Domestic servants", "91":"Prison officers",
+    "175":"Farmers' sons",  "181":"Ag. labourers",    "208":"Copper miners",
+    "210":"Lead miners",    "211":"Other miners",     "257":"Patternmakers",
+    "305":"Nail makers",    "339":"Other metal",      "406":"Thatchers",
+    "453":"Sawyers",        "486":"Tallow chandlers", "558":"Wool carding",
+    "561":"Wool weaving",   "566":"Wool, other",      "574":"Silk spinners",
+    "576":"Silk weaving",   "577":"Ribbon",           "580":"Flax & linen",
+    "584":"Rope & twine",   "592":"Hosiery",          "606":"Weavers",
+    "607":"Sundry fabrics", "608":"Factory hands",    "627":"Textile finishers",
+    "653":"Tailors",        "660":"Button makers",    "661":"Gloves",
+    "750":"Sundry trades",  "768":"Artisans",         "770":"Factory labourers"
+  };
+  var CATS = [
+    { key:"Adjustment",       label:"Adjustment",       col:"#238B45" },
+    { key:"Rubbish category", label:"Rubbish category", col:"#D99A2B" },
+    { key:"Category error",   label:"Category error",   col:"#7E57C2" }
+  ];
+  var hidden = {};
+
+  var fmt1 = d3.format(".1f"), fmt2 = d3.format(".2f"), fmt3 = d3.format(".3f");
+  function clean(s){ return String(s).replace(/�|â€“|Â€“/g,"–").replace(/\s+/g," ").trim(); }
+  function title(s){ return clean(s).toLowerCase().replace(/\b[a-z]/g,function(m){return m.toUpperCase();}); }
+  function colOf(t){ var c = CATS.filter(function(c){return c.key===t;})[0]; return c ? c.col : "#888"; }
+
+  function makeChart(opts){
+    var W = 700, H = 500, M = { top:18, right:26, bottom:54, left:66 };
+    var iW = W-M.left-M.right, iH = H-M.top-M.bottom;
+    var svg = d3.select(opts.svg).attr("viewBox",[0,0,W,H]);
+    var sc-tip = d3.select(opts.tip);
+    var g   = svg.append("g").attr("transform","translate("+M.left+","+M.top+")");
+
+    var gridY = g.append("g").attr("class","sc-grid"), gridX = g.append("g").attr("class","sc-grid");
+    var sc-zero  = g.append("line").attr("class","sc-zero");
+    var zlab  = g.append("text").attr("class","sc-zerolab");
+    var axX   = g.append("g").attr("class","sc-axis").attr("transform","translate(0,"+iH+")");
+    var axY   = g.append("g").attr("class","sc-axis");
+    g.append("text").attr("class","sc-axis-title").attr("x",iW/2).attr("y",iH+42)
+      .attr("text-anchor","middle").text("Change in employment, 1851–1881");
+    var yTitle = g.append("text").attr("class","sc-axis-title").attr("transform","rotate(-90)")
+      .attr("x",-(iH/2)).attr("y",-48).attr("text-anchor","middle");
+    var labLayer = g.append("g"), dotLayer = g.append("g");
+    var x = d3.scaleLinear().range([0,iW]), y = d3.scaleLinear().range([iH,0]);
+
+    function render(data, accessor, yLabel){
+      var live = data.filter(function(d){ return !hidden[d.type]; });
+      var vals = data.map(accessor).filter(isFinite);
+
+      x.domain(d3.extent(data,function(d){return d.x;})).nice();
+      x.domain([x.domain()[0]-3, Math.min(2, x.domain()[1]+3)]);
+      // Always keep sc-zero in view: "every occupation sits below the line" is only
+      // visible if the line is on the chart. opts.yMax forces headroom above it,
+      // so the empty space itself carries the point.
+      var ye = d3.extent(vals.concat([0])), pad = (ye[1]-ye[0])*0.08 || 1;
+      y.domain([ye[0]-pad, opts.yMax != null ? opts.yMax : ye[1]+pad]);
+      yTitle.text(yLabel);
+
+      gridY.selectAll("line").data(y.ticks(7)).join("line")
+        .attr("x1",0).attr("x2",iW).attr("y1",y).attr("y2",y);
+      gridX.selectAll("line").data(x.ticks(7)).join("line")
+        .attr("y1",0).attr("y2",iH).attr("x1",x).attr("x2",x);
+
+      zero.attr("x1",0).attr("x2",iW).attr("y1",y(0)).attr("y2",y(0));
+      zlab.attr("x",4).attr("y",y(0)-6).text(opts.zeroLabel);
+
+      axX.call(d3.axisBottom(x).ticks(7).tickFormat(function(v){return v+"%";}).tickSizeOuter(0));
+      axY.call(d3.axisLeft(y).ticks(7).tickSizeOuter(0));
+
+      dotLayer.selectAll("circle").data(data, function(d){return d.code;}).join("circle")
+        .attr("class","sc-dot").attr("r",6)
+        .attr("cx",function(d){return x(d.x);})
+        .attr("cy",function(d){return y(accessor(d));})
+        .attr("fill",function(d){return colOf(d.type);})
+        .attr("display",function(d){return hidden[d.type] ? "none" : null;})
+        .on("mouseover",function(event,d){
+          d3.select(this).attr("r",9);
+          tip.style("visibility","visible").html(
+            "<strong>"+d.name+"</strong>"+
+            "<div style='color:#777'>code "+d.code+" · "+d.type+"</div>"+
+            "<div>Employment 1851–1881: "+fmt1(d.x)+"%</div>"+
+            opts.tipExtra(d));
+        })
+        .on("mousemove",function(event){
+          var r = this.closest(".panel").getBoundingClientRect();
+          tip.style("left", Math.min(r.width-300, event.clientX-r.left+14)+"px")
+             .style("top",  Math.max(4, event.clientY-r.top-10)+"px");
+        })
+        .on("mouseout",function(){ d3.select(this).attr("r",6); tip.style("visibility","hidden"); });
+
+      // greedy label placement; anything that would collide is dropped
+      var placed = [], out = [];
+      function fits(b){
+        if (b.x < -60 || b.x+b.w > iW+22 || b.y < -4 || b.y+b.h > iH+4) return false;
+        return !placed.some(function(p){
+          return !(b.x+b.w<p.x || p.x+p.w<b.x || b.y+b.h<p.y || p.y+p.h<b.y);
+        });
+      }
+      live.slice().sort(function(a,b){ return Math.abs(accessor(b))-Math.abs(accessor(a)); })
+        .forEach(function(d){
+          var cx=x(d.x), cy=y(accessor(d)), w=d.short.length*5.3+4, h=11;
+          var tries=[
+            {x:cx+9,   y:cy-5.5, a:"start"},
+            {x:cx-9-w, y:cy-5.5, a:"end"},
+            {x:cx-w/2, y:cy-17,  a:"middle"},
+            {x:cx-w/2, y:cy+7,   a:"middle"}
+          ];
+          for (var i=0;i<tries.length;i++){
+            var b={x:tries[i].x,y:tries[i].y,w:w,h:h};
+            if (fits(b)){
+              placed.push(b);
+              out.push({ d:d, tx: tries[i].a==="end"?cx-9:(tries[i].a==="middle"?cx:cx+9),
+                         ty: b.y+8.5, a:tries[i].a });
+              return;
+            }
+          }
+        });
+      labLayer.selectAll("text").data(out,function(o){return o.d.code;}).join("text")
+        .attr("class","sc-lab")
+        .attr("x",function(o){return o.tx;}).attr("y",function(o){return o.ty;})
+        .attr("text-anchor",function(o){return o.a;})
+        .text(function(o){return o.d.short;});
+    }
+    return render;
+  }
+
+  Promise.all([
+    d3.csv("/assets/Results/scatter_M_negative_classified.csv"),
+    d3.csv("/assets/Results/scatter_M_negative_classified_Entry.csv")
+  ]).then(function(res){
+    var exitRows = res[0], entryRows = res[1];
+    var entryBy = {};
+    entryRows.forEach(function(r){ entryBy[r.occode] = r; });
+
+    var data = exitRows.map(function(r){
+      var e = entryBy[r.occode] || {};
+      return {
+        code: r.occode,
+        name: title(r.level3),
+        short: SHORT[r.occode] || title(r.level3).split(/[ ,;(]/)[0],
+        x: +r.employment_pct_change_1851_1881,
+        exit: +r.DiD_beta_pp,
+        pct: +r.DiD_percentile,
+        entry_pp: +e.entry_change_pp,
+        entry_pct: +e.entry_change_pct,
+        rate1: +e.Rate_P1, rate2: +e.Rate_P2,
+        ent1: +e.Entrants_P1, ent2: +e.Entrants_P2,
+        type: r.occupation_type
+      };
+    }).filter(function(d){ return isFinite(d.x); });
+
+    // Sample restriction: an occupation must have at least 250 entrants in BOTH
+    // panels. Entrants are a small fraction of the linked sample, so without this
+    // the entry sc-panel rests on a few dozen people for some occupations.
+    var MIN_ENTRANTS = 250;
+    var dropped = data.filter(function(d){ return !(d.ent1 >= MIN_ENTRANTS && d.ent2 >= MIN_ENTRANTS); });
+    data = data.filter(function(d){ return d.ent1 >= MIN_ENTRANTS && d.ent2 >= MIN_ENTRANTS; });
+    d3.select("#sc-nkept").text(data.length);
+    d3.select("#sc-ndropped").text(dropped.length);
+
+    var renderExit = makeChart({
+      svg:"#sc-svg-exit", tip:"#sc-tip-exit", zeroLabel:"no change in exit",
+      tipExtra: function(d){
+        return "<div>Change in exit: "+fmt2(d.exit)+" pp</div>"+
+               "<div style='color:#777'>"+fmt1(d.pct)+"th percentile</div>";
+      }
+    });
+    var renderEntry = makeChart({
+      svg:"#sc-svg-entry", tip:"#sc-tip-entry", zeroLabel:"no change in entry", yMax:40,
+      tipExtra: function(d){
+        return "<div>Change in entry: "+fmt1(d.entry_pct)+"% ("+fmt3(d.entry_pp)+" pp)</div>"+
+               "<div style='color:#777'>entry rate "+fmt3(d.rate1)+"% → "+fmt3(d.rate2)+"%</div>"+
+               "<div style='color:#777'>entrants "+d3.format(",")(d.ent1)+" → "+d3.format(",")(d.ent2)+"</div>";
+      }
+    });
+
+    function renderJoint(){
+      var W = 700, H = 560, M = { top:18, right:26, bottom:56, left:70 };
+      var iW = W-M.left-M.right, iH = H-M.top-M.bottom;
+      var svg = d3.select("#sc-svg-joint").attr("viewBox",[0,0,W,H]);
+      var sc-tip = d3.select("#sc-tip-joint");
+      svg.selectAll("*").remove();
+      var g = svg.append("g").attr("transform","translate("+M.left+","+M.top+")");
+
+      var xe = d3.extent(data.concat(), function(d){ return d.exit; });
+      var ye = d3.extent(data.concat(), function(d){ return d.entry_pct; });
+      var xp = (xe[1]-xe[0])*0.10, yp = (ye[1]-ye[0])*0.10;
+      var x = d3.scaleLinear().domain([xe[0]-xp, xe[1]+xp]).nice().range([0,iW]);
+      var y = d3.scaleLinear().domain([ye[0]-yp, Math.max(10, ye[1]+yp)]).nice().range([iH,0]);
+
+      g.append("g").attr("class","sc-grid").selectAll("line").data(y.ticks(7)).join("line")
+        .attr("x1",0).attr("x2",iW).attr("y1",y).attr("y2",y);
+      g.append("g").attr("class","sc-grid").selectAll("line").data(x.ticks(7)).join("line")
+        .attr("y1",0).attr("y2",iH).attr("x1",x).attr("x2",x);
+
+      // both zeros matter here: no change in exit, no change in entry
+      g.append("line").attr("class","sc-zero")
+        .attr("x1",0).attr("x2",iW).attr("y1",y(0)).attr("y2",y(0));
+      g.append("text").attr("class","sc-zerolab").attr("x",4).attr("y",y(0)-6)
+        .text("no change in entry");
+      g.append("line").attr("class","sc-zero")
+        .attr("x1",x(0)).attr("x2",x(0)).attr("y1",0).attr("y2",iH);
+      g.append("text").attr("class","sc-zerolab")
+        .attr("transform","translate("+(x(0)-6)+","+(iH-4)+") rotate(-90)")
+        .text("no change in exit");
+
+      // least-squares fit across everything currently shown, drawn faintly:
+      // r is about -0.46 on 18 points, which is suggestive and not much more
+      var live = data.filter(function(d){ return !hidden[d.type]; });
+      if (live.length > 2) {
+        var n = live.length;
+        var mx = d3.mean(live, function(d){return d.exit;});
+        var my = d3.mean(live, function(d){return d.entry_pct;});
+        var sxx = d3.sum(live, function(d){return (d.exit-mx)*(d.exit-mx);});
+        var syy = d3.sum(live, function(d){return (d.entry_pct-my)*(d.entry_pct-my);});
+        var sxy = d3.sum(live, function(d){return (d.exit-mx)*(d.entry_pct-my);});
+        if (sxx > 0 && syy > 0) {
+          var slope = sxy/sxx, inter = my - slope*mx;
+          var r = sxy/Math.sqrt(sxx*syy);
+          var x0 = x.domain()[0], x1 = x.domain()[1];
+          g.append("line")
+            .attr("x1",x(x0)).attr("y1",y(inter+slope*x0))
+            .attr("x2",x(x1)).attr("y2",y(inter+slope*x1))
+            .attr("stroke","#bbb").attr("stroke-width",1.5).attr("stroke-dasharray","6 5");
+          g.append("text").attr("class","sc-zerolab").attr("fill","#999")
+            .attr("x",iW-2).attr("y",14).attr("text-anchor","end")
+            .text("r = " + d3.format("+.2f")(r) + " (n = " + n + ") — suggestive only");
+        }
+      }
+
+      g.append("g").attr("class","sc-axis").attr("transform","translate(0,"+iH+")")
+        .call(d3.axisBottom(x).ticks(7).tickSizeOuter(0));
+      g.append("g").attr("class","sc-axis")
+        .call(d3.axisLeft(y).ticks(7).tickFormat(function(v){return v+"%";}).tickSizeOuter(0));
+      g.append("text").attr("class","sc-axis-title").attr("x",iW/2).attr("y",iH+42)
+        .attr("text-anchor","middle").text("Change in exit, DiD coefficient (pp)");
+      g.append("text").attr("class","sc-axis-title").attr("transform","rotate(-90)")
+        .attr("x",-(iH/2)).attr("y",-52).attr("text-anchor","middle")
+        .text("Change in entry (% of its own 1851–61 rate)");
+
+      var labLayer = g.append("g"), dotLayer = g.append("g");
+
+      dotLayer.selectAll("circle").data(data, function(d){return d.code;}).join("circle")
+        .attr("class","sc-dot").attr("r",6)
+        .attr("cx",function(d){return x(d.exit);})
+        .attr("cy",function(d){return y(d.entry_pct);})
+        .attr("fill",function(d){return colOf(d.type);})
+        .attr("display",function(d){return hidden[d.type] ? "none" : null;})
+        .on("mouseover",function(event,d){
+          d3.select(this).attr("r",9);
+          tip.style("visibility","visible").html(
+            "<strong>"+d.name+"</strong>"+
+            "<div style='color:#777'>code "+d.code+" · "+d.type+"</div>"+
+            "<div>Change in exit: "+fmt2(d.exit)+" pp</div>"+
+            "<div>Change in entry: "+fmt1(d.entry_pct)+"%</div>"+
+            "<div style='color:#777'>employment "+fmt1(d.x)+"% · entrants "+
+              d3.format(",")(d.ent1)+" → "+d3.format(",")(d.ent2)+"</div>");
+        })
+        .on("mousemove",function(event){
+          var r2 = this.closest(".panel").getBoundingClientRect();
+          tip.style("left", Math.min(r2.width-300, event.clientX-r2.left+14)+"px")
+             .style("top",  Math.max(4, event.clientY-r2.top-10)+"px");
+        })
+        .on("mouseout",function(){ d3.select(this).attr("r",6); tip.style("visibility","hidden"); });
+
+      var placed = [], out = [];
+      function fits(b){
+        if (b.x < -60 || b.x+b.w > iW+22 || b.y < -4 || b.y+b.h > iH+4) return false;
+        return !placed.some(function(p){
+          return !(b.x+b.w<p.x || p.x+p.w<b.x || b.y+b.h<p.y || p.y+p.h<b.y);
+        });
+      }
+      live.forEach(function(d){
+        var cx=x(d.exit), cy=y(d.entry_pct), w=d.short.length*5.3+4, h=11;
+        var tries=[{x:cx+9,y:cy-5.5,a:"start"},{x:cx-9-w,y:cy-5.5,a:"end"},
+                   {x:cx-w/2,y:cy-17,a:"middle"},{x:cx-w/2,y:cy+7,a:"middle"}];
+        for (var i2=0;i2<tries.length;i2++){
+          var b={x:tries[i2].x,y:tries[i2].y,w:w,h:h};
+          if (fits(b)){
+            placed.push(b);
+            out.push({d:d, tx: tries[i2].a==="end"?cx-9:(tries[i2].a==="middle"?cx:cx+9),
+                      ty:b.y+8.5, a:tries[i2].a});
+            return;
+          }
+        }
+      });
+      labLayer.selectAll("text").data(out,function(o){return o.d.code;}).join("text")
+        .attr("class","sc-lab")
+        .attr("x",function(o){return o.tx;}).attr("y",function(o){return o.ty;})
+        .attr("text-anchor",function(o){return o.a;})
+        .text(function(o){return o.d.short;});
+    }
+
+    function drawAll(){
+      renderExit(data, function(d){return d.exit;}, "Change in exit, DiD coefficient (pp)");
+      // Relative, not percentage points: entry rates differ by an order of magnitude
+      // across these occupations, so pp changes are not comparable between them.
+      renderEntry(data, function(d){return d.entry_pct;},
+                  "Change in entry (% of its own 1851–61 rate)");
+      renderJoint();
+    }
+
+    var counts = {};
+    data.forEach(function(d){ counts[d.type] = (counts[d.type]||0)+1; });
+    d3.selectAll("#sc-legend-a, #sc-legend-b").selectAll("button").data(CATS).join("button")
+      .html(function(c){
+        return '<span class="sw" style="background:'+c.col+'"></span>'+c.label+
+               ' <span class="n">'+(counts[c.key]||0)+'</span>';
+      })
+      .on("click", function(event,c){
+        hidden[c.key] = !hidden[c.key];
+        d3.selectAll("#sc-legend-a button, #sc-legend-b button")
+          .classed("off", function(cc){ return !!hidden[cc.key]; });
+        drawAll();
+      });
+
+    drawAll();
+  });
+})();
+</script>
+
 </div>
 
 
