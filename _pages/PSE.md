@@ -2925,7 +2925,8 @@ Promise.all([
 
 <script>
 (function(){
-  var TOP_N = 6;   // largest origins taken from each window; their union is named
+  // The branches to show, chosen by hand. Everything else falls into the tail.
+  var KEEP = ["787", "181", "551", "119", "697", "765", "173"];
 
   var FILES = [1851, 1861, 1881, 1891, 1901].map(function(y){
     return d3.csv("/assets/Results/Foreman_origins_" + y + ".csv?v=1");
@@ -2935,11 +2936,12 @@ Promise.all([
   var FO_W = 320, FO_H = 620;
   var TOP_Y = 30, TOP_H = 26;
   var NODE_H = 26, BOT_PAD = 26;
-  var SIDE = 10, GAP_B = 5.5, GAP_T = 3, NECK = 0.82;
+  var SIDE = 10, GAP_B = 5, GAP_T = 2.5, NECK = 0.84;
+  var REST_FRAC = 0.085;          // the tail's fixed slice of the panel
 
   var NONE_COL = "#B9BFC6", REST_COL = "#E4E4E4";
-  var PALETTE = ["#3C7DB1", "#6B9E78", "#C08A2E", "#9C6FA8", "#5FA8A0",
-                 "#E0B66A", "#7FA9CB", "#B07C5A", "#8FA65A", "#6A5ACD"];
+  var PALETTE = ["#3C7DB1", "#6B9E78", "#C08A2E", "#9C6FA8",
+                 "#5FA8A0", "#E0B66A", "#B07C5A"];
 
   function clean(s){
     return String(s || "").replace(/�|â€“/g, "–").replace(/\s+/g, " ").trim();
@@ -2953,50 +2955,29 @@ Promise.all([
     var names = {};
     res.pop().forEach(function(r){ names[r.occode] = title(r.occ_name); });
 
-    // one entry per transition window, in census order
     var wins = res.map(function(rows){
-      var lab = rows[0].first_year + " → " + rows[0].second_year;
       var tot = d3.sum(rows, function(r){ return +r.foreman_n; });
       var by = {};
       rows.forEach(function(r){ by[r.occode_first_year] = +r.foreman_n; });
-      var ranked = rows.slice().sort(function(a, b){ return b.foreman_n - a.foreman_n; })
-        .map(function(r){ return r.occode_first_year; });
-      return { lab: lab, total: tot, by: by, ranked: ranked, nOrigins: rows.length };
+      return { lab: rows[0].first_year + " → " + rows[0].second_year,
+               total: tot, by: by, nOrigins: rows.length };
     });
 
-    // the named set: the union of each window's largest few. Everything else is
-    // bundled, and that bundle growing is the point -- recruitment spreads out.
-    var named = [];
-    wins.forEach(function(w){
-      w.ranked.slice(0, TOP_N).forEach(function(c){
-        if (named.indexOf(c) < 0) named.push(c);
-      });
+    // biggest first, measured over all five windows together
+    var occ = KEEP.slice().sort(function(a, b){
+      return d3.sum(wins, function(w){ return w.by[b] || 0; }) -
+             d3.sum(wins, function(w){ return w.by[a] || 0; });
     });
-
-    var appears = {}, weight = {};
-    named.forEach(function(c){
-      appears[c] = wins.filter(function(w){ return w.ranked.slice(0, TOP_N).indexOf(c) >= 0; }).length;
-      weight[c] = d3.sum(wins, function(w){ return w.by[c] || 0; });
-    });
-
-    // ordinary occupations first, by how many windows they lead in and then by
-    // size; the two catch-alls are pinned to the end
-    var occ = named.filter(function(c){ return c !== "NA"; })
-      .sort(function(a, b){ return (appears[b] - appears[a]) || (weight[b] - weight[a]); });
-
-    var colour = {};
-    occ.forEach(function(c, i){ colour[c] = PALETTE[i % PALETTE.length]; });
-    colour["NA"] = NONE_COL;
-    colour["__REST__"] = REST_COL;
-
-    var label = {};
-    occ.forEach(function(c){ label[c] = names[c] || ("Occode " + c); });
-    label["NA"] = "No occupation recorded";
-    label["__REST__"] = "All other occupations";
-
     var order = occ.concat(["NA", "__REST__"]);
 
-    // every window's share of every node, including the bundled remainder
+    var colour = {}, label = {};
+    occ.forEach(function(c, i){
+      colour[c] = PALETTE[i % PALETTE.length];
+      label[c] = names[c] || ("Occode " + c);
+    });
+    colour["NA"] = NONE_COL;   label["NA"] = "No occupation recorded";
+    colour["__REST__"] = REST_COL; label["__REST__"] = "All other occupations";
+
     var share = {};
     wins.forEach(function(w){
       var acc = 0;
@@ -3007,25 +2988,13 @@ Promise.all([
         acc += v;
       });
       share["__REST__|" + w.lab] = 100 - acc;
+      w.named = acc;
       w.nRest = w.nOrigins - order.filter(function(c){
         return c !== "__REST__" && (w.by[c] || 0) > 0; }).length;
     });
 
-    // The bundled tail is 59-75% of every window, which left the named
-    // branches as slivers. Draw it at a fixed narrow width instead, and give
-    // the named branches one pixels-per-point scale shared by all five panels
-    // -- so a branch can still be compared across windows by eye, and a panel
-    // whose named set is smaller simply ends sooner.
     var INNER = FO_W - SIDE * 2;
-    var REST_W = INNER * 0.11;
-    var namedOf = function(w){
-      return d3.sum(order, function(c){
-        return c === "__REST__" ? 0 : (share[c + "|" + w.lab] || 0); });
-    };
-    var liveOf = function(w){
-      return order.filter(function(c){ return share[c + "|" + w.lab] > 0; }).length;
-    };
-    var K = (INNER - REST_W - d3.max(wins, liveOf) * GAP_B) / d3.max(wins, namedOf);
+    var REST_W = INNER * REST_FRAC;
 
     var grid = d3.select("#fo-grid"), readout = d3.select("#fo-readout");
 
@@ -3034,42 +3003,46 @@ Promise.all([
       "of it; the blocks below are what they were doing in the census before. Between " +
       fmtN(d3.min(wins, function(w){ return w.nOrigins; })) + " and " +
       fmtN(d3.max(wins, function(w){ return w.nOrigins; })) +
-      " distinct occupations feed in each time, so only the largest are named and the rest are " +
-      "bundled into the dashed block at the end. That tail runs from 59% of the intake to 75%, " +
-      "so it is drawn at a fixed narrow width rather than to scale, to leave the named " +
-      "branches room. The named branches do share one scale across all five panels, so their " +
-      "widths are comparable window to window; hover gives the true percentages.");
+      " distinct occupations feed in each window, so seven are named and the rest go into the " +
+      "dashed block on the right, which is held at a fixed narrow width rather than drawn to " +
+      "scale. The named branches are then stretched to fill the panel, so within a panel their " +
+      "widths are in true proportion to one another, but a branch is not comparable across " +
+      "panels by width — hover it and read the percentages instead.");
 
     wins.forEach(function(w){
       var cell = grid.append("div").attr("class", "fo-cell");
       var svg = cell.append("svg").attr("class", "fo-svg").attr("viewBox", [0, 0, FO_W, FO_H]);
       cell.append("div").attr("class", "fo-wlab").text(w.lab);
 
-      var inner = INNER;
       var live = order.filter(function(c){ return share[c + "|" + w.lab] > 0; });
       var yTopBot = TOP_Y + TOP_H, yNodeTop = FO_H - BOT_PAD - NODE_H;
       var mid = (yTopBot + yNodeTop) / 2;
 
-      // widths at the base: named branches to the shared scale, the tail fixed
+      // The named branches share out everything the tail and the gaps leave,
+      // so every panel spans the full width and the flows are as wide as the
+      // space allows. Proportions within a panel stay true.
+      var avail = INNER - REST_W - (live.length - 1) * GAP_B;
+      var namedSum = d3.sum(live, function(c){
+        return c === "__REST__" ? 0 : share[c + "|" + w.lab]; });
+
       var wid = live.map(function(c){
-        return c === "__REST__" ? REST_W : share[c + "|" + w.lab] * K;
+        return c === "__REST__" ? REST_W : avail * share[c + "|" + w.lab] / namedSum;
       });
-      var span = d3.sum(wid) + (live.length - 1) * GAP_B;
-      var neckSpan = d3.sum(wid) * NECK + (live.length - 1) * GAP_T;
-      var xb = SIDE, xt = SIDE + span / 2 - neckSpan / 2;
+      var neckSum = d3.sum(wid) * NECK + (live.length - 1) * GAP_T;
+      var xb = SIDE, xt = SIDE + (INNER - neckSum) / 2;
 
       var bands = live.map(function(c, i){
-        var b = { id: c, win: w.lab, share: share[c + "|" + w.lab],
-                  xt: xt, wt: wid[i] * NECK, xb: xb, wb: wid[i] };
-        xt += b.wt + GAP_T;
+        var b = { id: c, share: share[c + "|" + w.lab],
+                  xb: xb, wb: wid[i], xt: xt, wt: wid[i] * NECK };
         xb += b.wb + GAP_B;
+        xt += b.wt + GAP_T;
         return b;
       });
 
       svg.append("rect").attr("class", "fo-bar").attr("x", SIDE).attr("y", TOP_Y)
-        .attr("width", inner).attr("height", TOP_H).attr("rx", 2);
+        .attr("width", INNER).attr("height", TOP_H).attr("rx", 2);
       svg.append("text").attr("class", "fo-cap")
-        .attr("x", SIDE + inner / 2).attr("y", TOP_Y - 10)
+        .attr("x", SIDE + INNER / 2).attr("y", TOP_Y - 10)
         .attr("text-anchor", "middle").text("all managers");
 
       svg.append("g").selectAll("path").data(bands).join("path")
@@ -3105,7 +3078,7 @@ Promise.all([
                fmt1(share[d.id + "|" + w.lab] || 0) + '%</span></span>';
       }).join("");
       var sub = d.id === "__REST__"
-        ? '<span class="fo-step__w">the unnamed tail</span>'
+        ? '<span class="fo-step__w">not to scale</span>'
         : (d.id === "NA" ? '' : '<span class="fo-step__w">occode ' + d.id + '</span>');
       readout.html('<span class="fo-readout__sw" style="background:' + colour[d.id] + '"></span>' +
                    '<span class="fo-readout__name">' + label[d.id] + '</span>' + sub + trail);
@@ -3119,18 +3092,22 @@ Promise.all([
 </script>
 
 <style>
+  /* Fixed height and no wrapping: a long occupation name used to wrap onto a
+     second line, which changed the height of this strip and shunted the whole
+     grid down as the pointer moved. */
   .fo-readout {
-    min-height: 34px; display: flex; align-items: center; flex-wrap: wrap; gap: 0 18px;
-    margin: 2px 0 14px; font-size: .92rem; color: #333;
+    height: 30px; display: flex; align-items: center; flex-wrap: nowrap;
+    overflow: hidden; gap: 0 16px; margin: 2px 0 14px;
+    font-size: .92rem; color: #333; white-space: nowrap;
   }
   .fo-readout__hint { color: #9a9a9a; font-size: .86rem; }
-  .fo-readout__sw { width: 12px; height: 12px; border-radius: 2px; display: inline-block; margin-right: 9px; }
-  .fo-readout__name { font-weight: 600; margin-right: 10px; }
-  .fo-step { color: #666; font-size: .86rem; white-space: nowrap; }
+  .fo-readout__sw { width: 12px; height: 12px; border-radius: 2px; display: inline-block; margin-right: 9px; flex: none; }
+  .fo-readout__name { font-weight: 600; margin-right: 10px; flex: none; }
+  .fo-step { color: #666; font-size: .86rem; white-space: nowrap; flex: none; }
   .fo-step__w { color: #a0a0a0; margin-right: 6px; }
   .fo-step__v { font-variant-numeric: tabular-nums; color: #222; }
 
-  .fo-grid { display: flex; gap: 20px; align-items: flex-start; }
+  .fo-grid { display: flex; gap: 18px; align-items: flex-start; }
   .fo-cell { flex: 1 1 0; min-width: 0; }
   .fo-svg { width: 100%; height: auto; display: block; }
   .fo-wlab {
