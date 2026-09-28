@@ -1894,6 +1894,12 @@ Promise.all([
 <h3>1.1. Measuring displacement</h3>
   <div class="frame__body">
 
+    <p class="eq-lead">
+      For each occupation I estimate how much its exit rate changed between two windows &mdash;
+      <strong>1851&ndash;1861</strong> and <strong>1861&ndash;1881</strong> &mdash; and then put
+      that change in context.
+    </p>
+
     <div class="eq-box"><div id="eq-did"></div></div>
     <div class="eq-gloss">
       <span class="eq-sym-i" data-tex="Exit_{ic\tau}"></span> exit rate, occupation <em>i</em>,
@@ -1905,22 +1911,12 @@ Promise.all([
       <span class="eq-sym-i" data-tex="Post_\tau"></span> so controls may trend differently
     </div>
 
+    <p class="eq-head">This picks out an outlier</p>
     <ul class="in-list eq-points">
-      <li><strong><span class="eq-sym-i" data-tex="\beta"></span> is the whole estimate.</strong>
-          How much an occupation&rsquo;s exit rate moved once mechanization arrived &mdash; net of
-          its own level before, and net of its county.</li>
-
-      <li><strong>One occupation at a time.</strong> I run this same regression
-          <strong>231 times</strong>, each time putting a different large male occupation into
-          the treated position.</li>
-
-      <li><strong>Every other run is a placebo.</strong> An occupation that was not mechanized
-          this way has no reason to break at that moment, so those 231 estimates trace out what
-          an ordinary occupation looked like in the same decades.</li>
-
-      <li><strong>That turns one number into a position.</strong> Rather than asking whether
-          <span class="eq-sym-i" data-tex="\beta"></span> is large &mdash; large compared to what?
-          &mdash; I ask where it falls in the distribution of everything else.</li>
+      <li>A single <span class="eq-sym-i" data-tex="\beta"></span> is hard to read. Large or small
+          compared to what?</li>
+      <li>Re-estimate the same equation <strong>231 times</strong>.</li>
+      <li>That gives a whole distribution of <span class="eq-sym-i" data-tex="\beta"></span>&rsquo;s.</li>
     </ul>
 
   </div>
@@ -1952,23 +1948,25 @@ Promise.all([
 
 <style>
   /* the DiD equation slide */
+  .eq-lead { font-size: 1.05rem; color: #444; line-height: 1.6; max-width: 1080px; margin: 4px 0 18px; }
+
   .eq-box {
     border-left: 3px solid #238B45; background: #fafafa;
-    padding: 26px 34px; margin: 6px 0 14px; max-width: 1080px; overflow-x: auto;
+    padding: 26px 34px; margin: 0 0 14px; max-width: 1080px; overflow-x: auto;
   }
   .eq-box .katex-display { margin: 0; }
   .eq-box .katex { font-size: 1.34em; }
 
   .eq-gloss {
     font-size: .84rem; color: #8a8a8a; line-height: 2.1;
-    max-width: 1080px; margin: 0 0 26px; padding-left: 3px;
+    max-width: 1080px; margin: 0 0 30px; padding-left: 3px;
   }
   .eq-gloss em { color: #666; }
   .eq-sym-i { white-space: nowrap; color: #555; }
 
+  .eq-head { font-size: 1.12rem; font-weight: 700; color: #1c1c1c; margin: 0 0 14px; }
   .eq-points { max-width: 1080px; }
-  .eq-points li { font-size: 1.05rem; margin-bottom: 14px; color: #333; }
-  .eq-points strong { color: #1c1c1c; }
+  .eq-points li { font-size: 1.08rem; margin-bottom: 13px; color: #333; }
   .eq-points .eq-sym-i { color: #238B45; }
 
   @media (max-width: 860px) {
@@ -2209,31 +2207,34 @@ Promise.all([
 
 <section class="frame">
   <div class="in-kicker">Results · A: Workforce in Transition</div>
-<h3>1.3. Did contraction push workers out, or stop new ones coming in?</h3>
+<h3>1.3. Did contraction push workers out?</h3>
   <div class="frame__body">
-
-  <p class="sc-sub">
-    Each dot is a male occupation whose employment contracted between 1851 and 1881, and both
-    panels share the same horizontal axis: how far the occupation shrank. On the left, whether
-    workers already in the trade left it. On the right, whether young workers stopped entering it.
-    <span style="color:#999;">
-      <strong id="sc-nkept">&mdash;</strong> occupations shown, of 33 that contracted;
-      <strong id="sc-ndropped">&mdash;</strong> excluded for having fewer than 250 entrants in
-      either window.
-    </span>
-  </p>
 
   <div id="sc-legend-a" class="sc-legend"></div>
   <div class="sc-hint">Click a category to remove it.</div>
 
   <div class="sc-row">
-    <div class="sc-panel">
+    <div class="sc-panel" style="flex:0 1 880px;">
       <div class="sc-ptitle">Change in exit</div>
       <div class="sc-pnote">Difference-in-differences coefficient, percentage points</div>
       <svg id="sc-svg-exit"></svg>
       <div class="sc-tip" id="sc-tip-exit"></div>
     </div>
-    <div class="sc-panel">
+  </div>
+
+  </div>
+</section>
+
+<section class="frame">
+  <div class="in-kicker">Results · A: Workforce in Transition</div>
+<h3>1.4. Or did it stop new ones coming in?</h3>
+  <div class="frame__body">
+
+  <div id="sc-legend-c" class="sc-legend"></div>
+  <div class="sc-hint">Click a category to remove it.</div>
+
+  <div class="sc-row">
+    <div class="sc-panel" style="flex:0 1 880px;">
       <div class="sc-ptitle">Change in entry</div>
       <div class="sc-pnote" id="sc-entry-note">Change in entry relative to the occupation's own 1851&ndash;61 rate</div>
       <svg id="sc-svg-entry"></svg>
@@ -2246,7 +2247,7 @@ Promise.all([
 
 <section class="frame">
   <div class="in-kicker">Results · A: Workforce in Transition</div>
-<h3>1.4. More unusual on exit, or on entry?</h3>
+<h3>1.5. More unusual on exit, or on entry?</h3>
   <div class="frame__body">
 
   <p class="sc-sub">
@@ -2292,15 +2293,15 @@ Promise.all([
 <style>
   .sc-sub { font-size:.95rem; color:#555; line-height:1.6; max-width:1000px; margin:10px 0 16px; }
 
-  #sc-legend-a { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:4px; }
-  #sc-legend-a button {
+  #sc-legend-a, #sc-legend-c { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:4px; }
+  #sc-legend-a button, #sc-legend-c button {
     font:inherit; font-size:13px; display:inline-flex; align-items:center; gap:7px;
     padding:5px 13px 5px 10px; border:1px solid #ddd; border-radius:16px; background:#fff;
     color:#444; cursor:pointer;
   }
-  #sc-legend-a button .sw { width:11px; height:11px; border-radius:50%; display:inline-block; }
-  #sc-legend-a button .n { color:#999; font-variant-numeric:tabular-nums; }
-  #sc-legend-a button.off { opacity:.4; background:#fafafa; text-decoration:line-through; }
+  #sc-legend-a button .sw, #sc-legend-c button .sw { width:11px; height:11px; border-radius:50%; display:inline-block; }
+  #sc-legend-a button .n, #sc-legend-c button .n { color:#999; font-variant-numeric:tabular-nums; }
+  #sc-legend-a button.off, #sc-legend-c button.off { opacity:.4; background:#fafafa; text-decoration:line-through; }
   .sc-hint { font-size:.82rem; color:#999; margin:2px 0 14px; }
 
   .sc-row { display:flex; gap:26px; flex-wrap:wrap; align-items:flex-start; }
@@ -2499,10 +2500,7 @@ Promise.all([
     // panels. Entrants are a small fraction of the linked sample, so without this
     // the entry sc-panel rests on a few dozen people for some occupations.
     var MIN_ENTRANTS = 250;
-    var dropped = data.filter(function(d){ return !(d.ent1 >= MIN_ENTRANTS && d.ent2 >= MIN_ENTRANTS); });
     data = data.filter(function(d){ return d.ent1 >= MIN_ENTRANTS && d.ent2 >= MIN_ENTRANTS; });
-    d3.select("#sc-nkept").text(data.length);
-    d3.select("#sc-ndropped").text(dropped.length);
 
     var renderExit = makeChart({
       svg:"#sc-svg-exit", tip:"#sc-tip-exit", zeroLabel:"no change in exit",
@@ -2628,14 +2626,14 @@ Promise.all([
 
     var counts = {};
     data.forEach(function(d){ counts[d.type] = (counts[d.type]||0)+1; });
-    d3.selectAll("#sc-legend-a, #sc-legend-b").selectAll("button").data(CATS).join("button")
+    d3.selectAll("#sc-legend-a, #sc-legend-b, #sc-legend-c").selectAll("button").data(CATS).join("button")
       .html(function(c){
         return '<span class="sw" style="background:'+c.col+'"></span>'+c.label+
                ' <span class="n">'+(counts[c.key]||0)+'</span>';
       })
       .on("click", function(event,c){
         hidden[c.key] = !hidden[c.key];
-        d3.selectAll("#sc-legend-a button, #sc-legend-b button")
+        d3.selectAll("#sc-legend-a button, #sc-legend-b button, #sc-legend-c button")
           .classed("off", function(cc){ return !!hidden[cc.key]; });
         drawAll();
       });
