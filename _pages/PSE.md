@@ -36,12 +36,16 @@ noindex: true
 
 .frame > h2:first-of-type,
 .frame > h3:first-of-type,
+.fig-flow > h2:first-of-type,
+.fig-flow > h3:first-of-type,
 .frame__title {
   font-size: 1.62rem; font-weight: 700; color: var(--ink);
   letter-spacing: -0.01em; margin: 0 0 4px 0; padding: 0 0 10px 0; line-height: 1.25;
 }
 .frame > h2:first-of-type::after,
 .frame > h3:first-of-type::after,
+.fig-flow > h2:first-of-type::after,
+.fig-flow > h3:first-of-type::after,
 .frame__title::after {
   content: ""; display: block; width: 100%; height: 2px;
   background: var(--accent); margin-top: 10px;
@@ -369,7 +373,6 @@ body.present .page__content { padding-top: 0 !important; }
 
 
 <section class="frame frame--section">
-  <div class="kicker">Part 1</div>
   <h2>Descriptive Evidence</h2>
 </section>
 
@@ -377,6 +380,7 @@ body.present .page__content { padding-top: 0 !important; }
 <section class="frame">
 <div class="frame__body">
 <div class="fig-flow">
+<div class="in-kicker">Descriptive Evidence</div>
 <h2>1. Occupational Orders over Time</h2>
 <p>Click a year to view the treemap of the different sectors of the British economy by census year.</p>
 
@@ -467,7 +471,8 @@ body.present .page__content { padding-top: 0 !important; }
 <section class="frame">
 <div class="frame__body">
 <div class="fig-flow">
-<h3>Orders ranked by growth, 1851–1911</h3>
+<div class="in-kicker">Descriptive Evidence</div>
+<h3>2. Orders ranked by growth, 1851–1911</h3>
 <p>Showing the growth in different sectors of the economy over the period. Sectors shown in blue are growing more rapidly than average population growth.</p>
 
 <div id="growth-chart" style="margin-top: 2em;"></div>
@@ -551,7 +556,8 @@ body.present .page__content { padding-top: 0 !important; }
 <section class="frame">
 <div class="frame__body">
 <div class="fig-flow">
-<h2>2. Occupational Industries: Growth and Decline</h2>
+<div class="in-kicker">Descriptive Evidence</div>
+<h2>3. Occupational Industries: Growth and Decline</h2>
 <p>Showing growth by industry over the period. Note that the extreme outliers are primarily in industries which were very small or non-existent in 1851.</p>
 
 <div id="scatterplot"></div>
@@ -708,7 +714,8 @@ body.present .page__content { padding-top: 0 !important; }
 <section class="frame frame--tall">
 <div class="frame__body">
 <div class="fig-flow">
-<h2>3. Micro-Occupations: Growth and Decline</h2>
+<div class="in-kicker">Descriptive Evidence</div>
+<h2>4. Micro-Occupations: Growth and Decline</h2>
 
 <p>Each industry is itself made up of many different jobs: micro-occupations. In moving one level deeper, we can see the distinct occupations within each industry. This makes it possible to track how they grew and declined over the 2nd Industrial Revolution.</p>
 
@@ -905,7 +912,6 @@ body.present .page__content { padding-top: 0 !important; }
 
 
 <section class="frame frame--section">
-  <div class="kicker">Part 2</div>
   <h2>New Evidence</h2>
 </section>
 
@@ -913,7 +919,8 @@ body.present .page__content { padding-top: 0 !important; }
 <section class="frame">
 <div class="frame__body">
 <div class="fig-flow">
-<h3>4.1 Map of specific new jobs</h3>
+<div class="in-kicker">New Evidence</div>
+<h3>1. Map of specific new jobs</h3>
 
 <p>
   Where did specific new occupations emerge across the country? Choose a trade and a census
@@ -1115,7 +1122,8 @@ body.present .page__content { padding-top: 0 !important; }
 <section class="frame">
 <div class="frame__body">
 <div class="fig-flow">
-<h3>4.2 Mapping of management jobs</h3>
+<div class="in-kicker">New Evidence</div>
+<h3>2. Mapping of management jobs</h3>
 
 <h4 style="margin-top: 1em;">
   An initial mapping of the rise of management jobs in the UK, by county.
@@ -1239,7 +1247,8 @@ body.present .page__content { padding-top: 0 !important; }
 <section class="frame">
 <div class="frame__body">
 <div class="fig-flow">
-<h3>4.3 Map of mechanization</h3>
+<div class="in-kicker">New Evidence</div>
+<h3>3. Map of mechanization</h3>
 
 <h4 style="margin-top: 1em;">
   An initial mapping of the emergence of new technologies in the UK, by county.
@@ -1360,7 +1369,8 @@ body.present .page__content { padding-top: 0 !important; }
 <section class="frame">
 <div class="frame__body">
 <div class="fig-flow">
-<h3>4.4 Mapping of the apprenticeship system</h3>
+<div class="in-kicker">New Evidence</div>
+<h3>4. Mapping of the apprenticeship system</h3>
 
 <p>The apprenticeship system declines everywhere between 1851–1911. The decline is more rapid after 1881. Less urban areas seem to retain more of the system than elsewhere.</p>
 
@@ -1518,7 +1528,6 @@ Promise.all([
 
 
 <section class="frame frame--section">
-  <div class="kicker">Part 3</div>
   <h2>Methods</h2>
 </section>
 
@@ -1526,7 +1535,8 @@ Promise.all([
 <section class="frame frame--tall">
 <div class="frame__body">
 <div class="fig-flow">
-<h3>5.2 The shape of the workforce: Orders, sub-Orders, and occupations</h3>
+<div class="in-kicker">Methods</div>
+<h3>1. The shape of the workforce: Orders, sub-Orders, and occupations</h3>
 
 <p>Every occupation nests inside a sub-Order, and every sub-Order inside one of the 22 Orders. The circles below pack that whole structure, with each circle's area proportional to its 1911 workforce. Click any bubble to zoom in; click the background to zoom back out.</p>
 
@@ -1628,7 +1638,8 @@ Promise.all([
 <section class="frame frame--tall">
 <div class="frame__body">
 <div class="fig-flow">
-<h3>Changing Taxonomies: Census Waves 1851–1911</h3>
+<div class="in-kicker">Methods</div>
+<h3>2. Changing Taxonomies: Census Waves 1851–1911</h3>
 
 <p>The grey treemap is the <strong>1911 classification</strong> — Orders, their sub-Orders, and the occupations within them: the structure everything eventually settled into. Pick an earlier census and <strong>hover any occupation</strong> to light up the others it was lumped with <em>that</em> year — wherever they ended up on the 1911 map. The more scattered the highlight, the more that early census cut across the modern Orders.</p>
 
@@ -1734,7 +1745,8 @@ Promise.all([
 <section class="frame">
 <div class="frame__body">
 <div class="fig-flow">
-<h3>Migration within Orders, 1851 &rarr; 1861</h3>
+<div class="in-kicker">Methods</div>
+<h3>3. Migration within Orders, 1851 &rarr; 1861</h3>
 
 <p>Zoom in one level. Even <em>within</em> a single Order, the census kept reorganising. Here the 22 Orders stay fixed as the outer bubbles, and inside each one the occupations are grouped by their <em>real census category</em> for the chosen year. Flip between 1851 and 1861 to watch occupations <strong style="color:#E6550D;">split</strong> apart, <strong style="color:#3182BD;">merge</strong> together, or <strong style="color:#756BB1;">reshuffle</strong> within their Order. Unchanged occupations stay grey.</p>
 
@@ -1873,7 +1885,6 @@ Promise.all([
 
 
 <section class="frame frame--section">
-  <div class="kicker">Part 4</div>
   <h2>Results</h2>
 </section>
 
@@ -1881,7 +1892,8 @@ Promise.all([
 <section class="frame">
 <div class="frame__body">
 <div class="fig-flow">
-<h3>5.1 Occupational Skills Inheritance</h3>
+<div class="in-kicker">Results</div>
+<h3>1. Occupational Skills Inheritance</h3>
 
 <style>
   .table-wrap { overflow-x:auto; margin: 0 0 12px; }
@@ -2003,7 +2015,8 @@ Promise.all([
 
 
 <section class="frame">
-  <h3>Were incumbent bootmakers displaced?</h3>
+  <div class="in-kicker">Results</div>
+<h3>2. Were incumbent bootmakers displaced?</h3>
   <div class="frame__body">
 
   <div id="placebo-men">
@@ -2263,7 +2276,8 @@ Promise.all([
 
 
 <section class="frame">
-  <h3>Did contraction push workers out, or stop new ones coming in?</h3>
+  <div class="in-kicker">Results</div>
+<h3>3. Did contraction push workers out, or stop new ones coming in?</h3>
   <div class="frame__body">
 
   <p class="sc-sub">
@@ -2299,7 +2313,8 @@ Promise.all([
 </section>
 
 <section class="frame">
-  <h3>Do the two margins move together?</h3>
+  <div class="in-kicker">Results</div>
+<h3>4. Do the two margins move together?</h3>
   <div class="frame__body">
 
   <div id="sc-legend-b" class="sc-legend"></div>
@@ -2702,10 +2717,10 @@ Promise.all([
 </script>
 
 
-<section class="frame">
+<section class="frame frame--plain">
 <div class="frame__body">
 <div class="fig-flow">
-<h2 style="margin-top:2em;">6. Conclusion</h2>
+<h2 style="margin-top:2em;">Conclusion</h2>
 
 <ul style="max-width:820px;line-height:1.8;padding-left:1.2em;">
   <li>From roughly 800 industries to about 10,000 micro-occupations.</li>
