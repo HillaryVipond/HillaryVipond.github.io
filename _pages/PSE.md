@@ -1891,24 +1891,10 @@ Promise.all([
 
 <section class="frame">
   <div class="in-kicker">Results · Workforce in Transition</div>
-<h3>Were incumbent bootmakers displaced?</h3>
+<h3>1. Who was displaced</h3>
   <div class="frame__body">
 
   <div id="placebo-men">
-    <p class="ph-sub">
-      Occupational structures were shifting across the whole economy in this period, so the
-      bootmaker difference-in-differences coefficient is only interpretable against the range
-      of changes occurring elsewhere. Each comparison occupation is treated in turn as though
-      it had been affected by mechanization.
-    </p>
-
-    <div class="ph-legend" aria-label="Legend">
-      <span><i class="ph-dot ph-dot--control" aria-hidden="true"></i>Control occupations</span>
-      <span><i class="ph-dot ph-dot--boot" aria-hidden="true"></i>Bootmakers</span>
-      <span><i class="ph-line" aria-hidden="true"></i>Distribution percentiles</span>
-      <span class="ph-note">Large occupations &mdash; at least 500 observations in both panels &middot; 231 controls</span>
-    </div>
-
     <div class="ph-readout" aria-live="polite"></div>
 
     <div class="ph-wrap">
@@ -1921,11 +1907,6 @@ Promise.all([
       <div class="ph-tip" role="tooltip" hidden></div>
     </div>
 
-    <p class="ph-take">
-      The male estimate sits <strong>inside the bulk of the distribution</strong>, at around the
-      78th percentile: 51 of 231 comparison occupations show a larger increase in exit over the
-      same period. Mechanization produced no unusual displacement of incumbent men.
-    </p>
   </div>
 
   </div>
@@ -2152,7 +2133,7 @@ Promise.all([
 
 <section class="frame">
   <div class="in-kicker">Results · Workforce in Transition</div>
-<h3>Did contraction push workers out, or stop new ones coming in?</h3>
+<h3>2. Did contraction push workers out, or stop new ones coming in?</h3>
   <div class="frame__body">
 
   <p class="sc-sub">
@@ -2189,7 +2170,7 @@ Promise.all([
 
 <section class="frame">
   <div class="in-kicker">Results · Workforce in Transition</div>
-<h3>Do the two margins move together?</h3>
+<h3>3. Do the two margins move together?</h3>
   <div class="frame__body">
 
   <div id="sc-legend-b" class="sc-legend"></div>
@@ -2594,7 +2575,7 @@ Promise.all([
 
 <section class="frame frame--todo">
   <div class="in-kicker">Results · Fertility</div>
-<h3>Fertility</h3>
+<h3>1. Fertility</h3>
   <div class="frame__body">
     <div class="box">
       <strong>Placeholder.</strong> Send the data and a sketch of what this should show,
@@ -2608,7 +2589,7 @@ Promise.all([
 <div class="frame__body">
 <div class="fig-flow">
 <div class="in-kicker">Results · Social Mobility</div>
-<h3>Occupational Skills Inheritance</h3>
+<h3>1. Occupational Skills Inheritance</h3>
 
 <style>
   .table-wrap { overflow-x:auto; margin: 0 0 12px; }
@@ -2731,7 +2712,7 @@ Promise.all([
 
 <section class="frame frame--todo">
   <div class="in-kicker">Results · Social Mobility</div>
-<h3>Social Mobility</h3>
+<h3>2. Social Mobility</h3>
   <div class="frame__body">
     <div class="box">
       <strong>Placeholder.</strong> Send the data and a sketch of what this should show,
