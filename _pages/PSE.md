@@ -2648,7 +2648,7 @@ Promise.all([
 
 <section class="frame">
   <div class="in-kicker">Results · B: Social Mobility</div>
-<h3>Who were the foremen?</h3>
+<h3>2.1. Who were the foremen?</h3>
   <div class="frame__body">
 
   <div class="fm-row">
@@ -2674,9 +2674,37 @@ Promise.all([
   </div>
 </section>
 
+<section class="frame">
+  <div class="in-kicker">Results · B: Social Mobility</div>
+<h3>2.2. How many foremen?</h3>
+  <div class="frame__body">
+
+  <div class="fm-row">
+    <div class="fm-panel">
+      <div class="fm-ptitle">The same occupations, counted rather than shared out</div>
+      <svg id="fm-svg-abs"></svg>
+      <div class="fm-note">
+        The same selection, the same order and the same colours, now on a count axis. Each bar is
+        still half coloured &mdash; the shares have not changed &mdash; but the quantity behind
+        them has.
+      </div>
+      <div class="fm-tip" id="fm-tip-abs"></div>
+    </div>
+    <div class="fm-aside">
+      <ul class="in-list fm-points">
+        <li>27,000 foremen in 1851.</li>
+        <li>289,000 by 1911, a tenfold rise.</li>
+        <li>More supervisors, spread over more trades.</li>
+      </ul>
+    </div>
+  </div>
+
+  </div>
+</section>
+
 <script>
 (function(){
-  var FM_W = 980, FM_H = 560, FM_M = { top: 26, right: 20, bottom: 46, left: 58 };
+  var FM_W = 980, FM_H = 560, FM_M = { top: 26, right: 20, bottom: 46, left: 74 };
 
   function fmClean(s){
     return String(s || "").replace(/�|â€“|Â€“/g, "–").replace(/\s+/g, " ").trim();
@@ -2684,6 +2712,7 @@ Promise.all([
   function fmTitle(s){
     return fmClean(s).toLowerCase().replace(/\b[a-z]/g, function(m){ return m.toUpperCase(); });
   }
+  var fmN = d3.format(","), fmP = d3.format(".1f");
 
   Promise.all([
     d3.csv("/assets/Foreman_by_occode_year.csv?v=1"),
@@ -2695,7 +2724,7 @@ Promise.all([
 
     // Per year: rank the occupations and take them until they cover half the
     // foremen. That cut-off is the point -- it needs 8 occupations in 1851 and
-    // 31 by 1901.
+    // 31 by 1901. Both charts use this same selection.
     var byYear = d3.group(rows, function(r){ return +r.census_year; });
     var years = Array.from(byYear.keys()).sort(d3.ascending);
     var union = [], series = [];
@@ -2733,91 +2762,104 @@ Promise.all([
     var pos = {};
     order.forEach(function(c, i){ pos[c] = i; });
 
-    // one stable colour per occupation across every bar, so the eye can follow it
+    // one stable colour per occupation across every bar and both charts
     var palette = d3.schemeTableau10
       .concat(d3.schemeSet2 || [])
       .concat(d3.schemeSet3 || [])
       .concat(d3.schemePaired || []);
     var colour = d3.scaleOrdinal().domain(order).range(palette);
 
-    var svg = d3.select("#fm-svg").attr("viewBox", [0, 0, FM_W, FM_H]);
-    var tip = d3.select("#fm-tip");
-    var iW = FM_W - FM_M.left - FM_M.right, iH = FM_H - FM_M.top - FM_M.bottom;
-    var g = svg.append("g").attr("transform", "translate(" + FM_M.left + "," + FM_M.top + ")");
+    var maxTotal = d3.max(series, function(s){ return s.total; });
 
-    var x = d3.scaleBand().domain(years).range([0, iW]).padding(0.34);
-    var y = d3.scaleLinear().domain([0, 100]).range([iH, 0]);
+    // mode "share": every bar is 100% tall, so composition is comparable.
+    // mode "count": bars are the actual number of foremen, so the growth from
+    // 27k to 289k is what you see instead.
+    function draw(svgSel, tipSel, mode){
+      var share = mode === "share";
+      var svg = d3.select(svgSel).attr("viewBox", [0, 0, FM_W, FM_H]);
+      var tip = d3.select(tipSel);
+      var iW = FM_W - FM_M.left - FM_M.right, iH = FM_H - FM_M.top - FM_M.bottom;
+      var g = svg.append("g").attr("transform", "translate(" + FM_M.left + "," + FM_M.top + ")");
 
-    g.append("g").attr("class", "fm-grid").selectAll("line").data(y.ticks(5)).join("line")
-      .attr("x1", 0).attr("x2", iW).attr("y1", y).attr("y2", y);
+      var x = d3.scaleBand().domain(years).range([0, iW]).padding(0.34);
+      var y = d3.scaleLinear().domain([0, share ? 100 : maxTotal]).range([iH, 0]);
+      function val(n, s){ return share ? 100 * n / s.total : n; }
 
-    // the grey remainder: every other occupation in that census
-    g.selectAll("rect.fm-rest").data(series).join("rect").attr("class", "fm-rest")
-      .attr("x", function(d){ return x(d.year); })
-      .attr("width", x.bandwidth())
-      .attr("y", y(100))
-      .attr("height", function(d){ return y(100 * d.topSum / d.total) - y(100); })
-      .on("mouseover", function(event, d){
-        tip.style("visibility", "visible").html(
-          "<strong>All other occupations</strong>" +
-          "<div style='color:#777'>" + d3.format(",")(d.nOther) + " occupations</div>" +
-          "<div>" + d3.format(".1f")(100 - 100 * d.topSum / d.total) + "% of " + d.year + " foremen</div>");
-      })
-      .on("mousemove", fmMove)
-      .on("mouseout", fmOut);
+      g.append("g").attr("class", "fm-grid").selectAll("line").data(y.ticks(5)).join("line")
+        .attr("x1", 0).attr("x2", iW).attr("y1", y).attr("y2", y);
 
-    var flat = [];
-    series.forEach(function(s){
-      var acc = 0;
-      s.top.slice()
-        .sort(function(a, b){ return pos[a.code] - pos[b.code]; })
-        .forEach(function(d){
-          var share = 100 * d.n / s.total;
-          flat.push({ year: s.year, code: d.code, n: d.n, share: share,
-                      y0: acc, rank: d.rank, appears: appears[d.code], total: s.total });
-          acc += share;
-        });
-    });
+      // the grey remainder: every other occupation in that census
+      g.selectAll("rect.fm-rest").data(series).join("rect").attr("class", "fm-rest")
+        .attr("x", function(d){ return x(d.year); })
+        .attr("width", x.bandwidth())
+        .attr("y", function(d){ return y(val(d.total, d)); })
+        .attr("height", function(d){ return y(val(d.topSum, d)) - y(val(d.total, d)); })
+        .on("mouseover", function(event, d){
+          tip.style("visibility", "visible").html(
+            "<strong>All other occupations</strong>" +
+            "<div style='color:#777'>" + fmN(d.nOther) + " occupations</div>" +
+            "<div>" + fmN(d.total - d.topSum) + " foremen &middot; " +
+              fmP(100 - 100 * d.topSum / d.total) + "% of " + d.year + "</div>");
+        })
+        .on("mousemove", move).on("mouseout", out);
 
-    g.selectAll("rect.fm-seg").data(flat).join("rect").attr("class", "fm-seg")
-      .attr("x", function(d){ return x(d.year); })
-      .attr("width", x.bandwidth())
-      .attr("y", function(d){ return y(d.y0 + d.share); })
-      .attr("height", function(d){ return Math.max(0.6, y(d.y0) - y(d.y0 + d.share)); })
-      .attr("fill", function(d){ return colour(d.code); })
-      .on("mouseover", function(event, d){
-        // light this occupation up in every year it appears
-        g.selectAll("rect.fm-seg").classed("fm-dim", function(o){ return o.code !== d.code; });
-        tip.style("visibility", "visible").html(
-          "<strong>" + (names[d.code] || ("Occode " + d.code)) + "</strong>" +
-          "<div style='color:#777'>occode " + d.code + " · rank " + d.rank + " in " + d.year +
-            " · in the top half of " + d.appears + " of 6 censuses</div>" +
-          "<div>" + d3.format(",")(d.n) + " foremen · " + d3.format(".1f")(d.share) + "% of " + d.year + "</div>");
-      })
-      .on("mousemove", fmMove)
-      .on("mouseout", fmOut);
+      var flat = [];
+      series.forEach(function(s){
+        var acc = 0;
+        s.top.slice()
+          .sort(function(a, b){ return pos[a.code] - pos[b.code]; })
+          .forEach(function(d){
+            var h = val(d.n, s);
+            flat.push({ year: s.year, code: d.code, n: d.n, y0: acc, h: h,
+                        pct: 100 * d.n / s.total, rank: d.rank,
+                        appears: appears[d.code] });
+            acc += h;
+          });
+      });
 
-    // how many occupations it took, written over each bar
-    g.selectAll("text.fm-count").data(series).join("text").attr("class", "fm-count")
-      .attr("x", function(d){ return x(d.year) + x.bandwidth() / 2; })
-      .attr("y", function(d){ return y(100 * d.topSum / d.total) - 8; })
-      .attr("text-anchor", "middle")
-      .text(function(d){ return d.top.length; });
+      g.selectAll("rect.fm-seg").data(flat).join("rect").attr("class", "fm-seg")
+        .attr("x", function(d){ return x(d.year); })
+        .attr("width", x.bandwidth())
+        .attr("y", function(d){ return y(d.y0 + d.h); })
+        .attr("height", function(d){ return Math.max(0.6, y(d.y0) - y(d.y0 + d.h)); })
+        .attr("fill", function(d){ return colour(d.code); })
+        .on("mouseover", function(event, d){
+          // light this occupation up in every year it appears
+          g.selectAll("rect.fm-seg").classed("fm-dim", function(o){ return o.code !== d.code; });
+          tip.style("visibility", "visible").html(
+            "<strong>" + (names[d.code] || ("Occode " + d.code)) + "</strong>" +
+            "<div style='color:#777'>occode " + d.code + " &middot; rank " + d.rank + " in " + d.year +
+              " &middot; in the top half of " + d.appears + " of 6 censuses</div>" +
+            "<div>" + fmN(d.n) + " foremen &middot; " + fmP(d.pct) + "% of " + d.year + "</div>");
+        })
+        .on("mousemove", move).on("mouseout", out);
 
-    g.append("g").attr("class", "fm-axis").attr("transform", "translate(0," + iH + ")")
-      .call(d3.axisBottom(x).tickSizeOuter(0));
-    g.append("g").attr("class", "fm-axis")
-      .call(d3.axisLeft(y).ticks(5).tickFormat(function(v){ return v + "%"; }).tickSizeOuter(0));
+      // over each bar: how many occupations it took, or the headcount itself
+      g.selectAll("text.fm-count").data(series).join("text").attr("class", "fm-count")
+        .attr("x", function(d){ return x(d.year) + x.bandwidth() / 2; })
+        .attr("y", function(d){ return y(val(d.total, d)) - 8; })
+        .attr("text-anchor", "middle")
+        .text(function(d){ return share ? d.top.length : fmN(d.total); });
 
-    function fmMove(event){
-      var r = this.closest(".fm-panel").getBoundingClientRect();
-      tip.style("left", Math.min(r.width - 290, event.clientX - r.left + 14) + "px")
-         .style("top", Math.max(4, event.clientY - r.top - 10) + "px");
+      g.append("g").attr("class", "fm-axis").attr("transform", "translate(0," + iH + ")")
+        .call(d3.axisBottom(x).tickSizeOuter(0));
+      g.append("g").attr("class", "fm-axis")
+        .call(d3.axisLeft(y).ticks(5).tickSizeOuter(0)
+          .tickFormat(share ? function(v){ return v + "%"; } : fmN));
+
+      function move(event){
+        var r = this.closest(".fm-panel").getBoundingClientRect();
+        tip.style("left", Math.min(r.width - 290, event.clientX - r.left + 14) + "px")
+           .style("top", Math.max(4, event.clientY - r.top - 10) + "px");
+      }
+      function out(){
+        g.selectAll("rect.fm-seg").classed("fm-dim", false);
+        tip.style("visibility", "hidden");
+      }
     }
-    function fmOut(){
-      g.selectAll("rect.fm-seg").classed("fm-dim", false);
-      tip.style("visibility", "hidden");
-    }
+
+    draw("#fm-svg", "#fm-tip", "share");
+    draw("#fm-svg-abs", "#fm-tip-abs", "count");
   });
 })();
 </script>
