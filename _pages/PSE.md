@@ -76,6 +76,7 @@ noindex: true
 
 .frame--section .kicker { font-size: .78rem; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 12px; }
 .frame--section h2 { font-size: 2.3rem; margin: 0; border: 0; padding: 0; }
+.frame--section .blocklab { font-size: 1.32rem; color: #9a9a9a; margin-top: 14px; letter-spacing: .01em; }
 .frame--section h2::after { display: none; }
 
 /* a frame that needs more than one screen: roughly two slides tall */
@@ -1885,6 +1886,7 @@ Promise.all([
 
 <section class="frame frame--section">
   <h2>Results</h2>
+  <div class="blocklab">A: Workforce in Transition</div>
 </section>
 
 
@@ -2646,6 +2648,12 @@ Promise.all([
 </script>
 
 
+<section class="frame frame--section frame--block">
+  <h2>Results</h2>
+  <div class="blocklab">B: Social Mobility</div>
+</section>
+
+
 <section class="frame">
   <div class="in-kicker">Results · B: Social Mobility</div>
 <h3>2.1. Who were the foremen?</h3>
@@ -3360,6 +3368,12 @@ Promise.all([
   .fo-axis2 path, .fo-axis2 line { stroke: #ccc; }
   .fo-axt { fill: #666; font-size: 12px; }
 </style>
+
+
+<section class="frame frame--section frame--block">
+  <h2>Results</h2>
+  <div class="blocklab">C: Fertility</div>
+</section>
 
 
 <section class="frame">
