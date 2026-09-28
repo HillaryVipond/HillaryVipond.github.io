@@ -3366,6 +3366,13 @@ Promise.all([
 </script>
 
 <style>
+  /* the placeholder banner; its rule used to live in the origins frame,
+     which now runs on real data and no longer carries one */
+  .fo-mock {
+    border-left: 3px solid #d8a93a; background: #fffbe9; color: #7a5c00;
+    padding: 12px 18px; margin: 2px 0 18px; max-width: 1100px;
+    font-size: .88rem; line-height: 1.55; border-radius: 3px;
+  }
   .fo-aside2 { flex: 0 1 300px; min-width: 230px; padding-top: 40px; }
   .fo-row { display: flex; gap: 30px; align-items: flex-start; flex-wrap: wrap; }
   .hc-panel { flex: 0 1 900px; min-width: 420px; }
