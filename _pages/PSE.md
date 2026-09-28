@@ -3011,6 +3011,22 @@ Promise.all([
         return c !== "__REST__" && (w.by[c] || 0) > 0; }).length;
     });
 
+    // The bundled tail is 59-75% of every window, which left the named
+    // branches as slivers. Draw it at a fixed narrow width instead, and give
+    // the named branches one pixels-per-point scale shared by all five panels
+    // -- so a branch can still be compared across windows by eye, and a panel
+    // whose named set is smaller simply ends sooner.
+    var INNER = FO_W - SIDE * 2;
+    var REST_W = INNER * 0.11;
+    var namedOf = function(w){
+      return d3.sum(order, function(c){
+        return c === "__REST__" ? 0 : (share[c + "|" + w.lab] || 0); });
+    };
+    var liveOf = function(w){
+      return order.filter(function(c){ return share[c + "|" + w.lab] > 0; }).length;
+    };
+    var K = (INNER - REST_W - d3.max(wins, liveOf) * GAP_B) / d3.max(wins, namedOf);
+
     var grid = d3.select("#fo-grid"), readout = d3.select("#fo-readout");
 
     d3.select("#fo-note").html(
@@ -3019,26 +3035,32 @@ Promise.all([
       fmtN(d3.min(wins, function(w){ return w.nOrigins; })) + " and " +
       fmtN(d3.max(wins, function(w){ return w.nOrigins; })) +
       " distinct occupations feed in each time, so only the largest are named and the rest are " +
-      "bundled into the pale block at the end — which grows from about half the intake to " +
-      "three quarters of it. Panels are normalised, so they compare composition rather than size.");
+      "bundled into the dashed block at the end. That tail runs from 59% of the intake to 75%, " +
+      "so it is drawn at a fixed narrow width rather than to scale, to leave the named " +
+      "branches room. The named branches do share one scale across all five panels, so their " +
+      "widths are comparable window to window; hover gives the true percentages.");
 
     wins.forEach(function(w){
       var cell = grid.append("div").attr("class", "fo-cell");
       var svg = cell.append("svg").attr("class", "fo-svg").attr("viewBox", [0, 0, FO_W, FO_H]);
       cell.append("div").attr("class", "fo-wlab").text(w.lab);
 
-      var inner = FO_W - SIDE * 2;
+      var inner = INNER;
       var live = order.filter(function(c){ return share[c + "|" + w.lab] > 0; });
       var yTopBot = TOP_Y + TOP_H, yNodeTop = FO_H - BOT_PAD - NODE_H;
       var mid = (yTopBot + yNodeTop) / 2;
-      var totB = inner - (live.length - 1) * GAP_B;
-      var neckW = inner * NECK, totT = neckW - (live.length - 1) * GAP_T;
 
-      var xt = SIDE + (inner - neckW) / 2, xb = SIDE;
-      var bands = live.map(function(c){
-        var sh = share[c + "|" + w.lab];
-        var b = { id: c, win: w.lab, share: sh,
-                  xt: xt, wt: totT * sh / 100, xb: xb, wb: totB * sh / 100 };
+      // widths at the base: named branches to the shared scale, the tail fixed
+      var wid = live.map(function(c){
+        return c === "__REST__" ? REST_W : share[c + "|" + w.lab] * K;
+      });
+      var span = d3.sum(wid) + (live.length - 1) * GAP_B;
+      var neckSpan = d3.sum(wid) * NECK + (live.length - 1) * GAP_T;
+      var xb = SIDE, xt = SIDE + span / 2 - neckSpan / 2;
+
+      var bands = live.map(function(c, i){
+        var b = { id: c, win: w.lab, share: share[c + "|" + w.lab],
+                  xt: xt, wt: wid[i] * NECK, xb: xb, wb: wid[i] };
         xt += b.wt + GAP_T;
         xb += b.wb + GAP_B;
         return b;
@@ -3051,7 +3073,9 @@ Promise.all([
         .attr("text-anchor", "middle").text("all managers");
 
       svg.append("g").selectAll("path").data(bands).join("path")
-        .attr("class", "fo-ribbon").attr("data-src", function(d){ return d.id; })
+        .attr("class", function(d){
+          return "fo-ribbon" + (d.id === "__REST__" ? " fo-trunc" : ""); })
+        .attr("data-src", function(d){ return d.id; })
         .attr("fill", function(d){ return colour[d.id]; })
         .attr("d", function(d){
           var l0 = d.xb, l1 = d.xt, r0 = d.xb + d.wb, r1 = d.xt + d.wt;
@@ -3063,7 +3087,9 @@ Promise.all([
         .on("mouseover", over).on("mouseout", out);
 
       svg.append("g").selectAll("rect.fo-node").data(bands).join("rect")
-        .attr("class", "fo-node").attr("data-src", function(d){ return d.id; })
+        .attr("class", function(d){
+          return "fo-node" + (d.id === "__REST__" ? " fo-trunc" : ""); })
+        .attr("data-src", function(d){ return d.id; })
         .attr("x", function(d){ return d.xb; }).attr("y", yNodeTop)
         .attr("width", function(d){ return d.wb; }).attr("height", NODE_H).attr("rx", 1.5)
         .attr("fill", function(d){ return colour[d.id]; })
@@ -3115,6 +3141,8 @@ Promise.all([
   .fo-bar { fill: #c9ccd1; }
   .fo-ribbon { opacity: .62; stroke: #fff; stroke-width: .5; transition: opacity .12s; cursor: pointer; }
   .fo-node { cursor: pointer; transition: opacity .12s; }
+  /* the bundled tail is drawn at a fixed width, not to scale */
+  .fo-trunc { stroke: #a8adb4; stroke-width: .8; stroke-dasharray: 3 2.5; }
   .fo-dim { opacity: .07 !important; }
   .fo-cap { fill: #9a9a9a; font-size: 11px; }
 
