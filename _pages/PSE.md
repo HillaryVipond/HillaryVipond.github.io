@@ -50,6 +50,13 @@ noindex: true
 
 .frame__body { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; }
 .frame__body > p { font-size: 0.95rem; line-height: 1.55; max-width: 1000px; }
+/* .frame__body is a flex column, so its direct children stretch to the full
+   frame width. That turned the ported control buttons into full-width bars.
+   Keep interactive controls at their natural size, as on the website. */
+.frame__body > button,
+.frame__body > select,
+.frame__body > label,
+.frame__body > span   { align-self: flex-start; }
 
 .frame__num  { position: absolute; right: 5vw; bottom: 2.4vh; font-size: 12px; color: var(--muted); letter-spacing: .04em; }
 .frame__foot { position: absolute; left: 5vw;  bottom: 2.4vh; font-size: 12px; color: var(--muted); letter-spacing: .04em; }
@@ -689,7 +696,7 @@ body.present .page__content { padding-top: 0 !important; }
 </section>
 
 
-<section class="frame">
+<section class="frame frame--tall">
 <div class="frame__body">
 <h2>3. Micro-Occupations: Growth and Decline</h2>
 
