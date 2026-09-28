@@ -2657,7 +2657,8 @@ Promise.all([
       <svg id="fm-svg"></svg>
       <div class="fm-note">
         Each bar is every foreman recorded that year. The coloured blocks are the occupations that,
-        taken together, account for the first 50%. Hover one to follow it across the censuses.
+        taken together, account for the first 50%, stacked in the same order every year so a trade
+        keeps its place. Hover one to follow it across the censuses.
       </div>
       <div class="fm-tip" id="fm-tip"></div>
     </div>
@@ -2707,19 +2708,37 @@ Promise.all([
       var cum = 0, top = [];
       for (var i = 0; i < v.length; i++){
         cum += v[i].n;
-        top.push(v[i]);
+        top.push({ code: v[i].code, n: v[i].n, rank: i + 1 });
         if (cum / total >= 0.5) break;
       }
       top.forEach(function(d){ if (union.indexOf(d.code) < 0) union.push(d.code); });
       series.push({ year: y, total: total, top: top, topSum: cum, nOther: v.length - top.length });
     });
 
+    // One global bottom-to-top order for every bar, so an occupation keeps its
+    // place from census to census. Sort by how many years it appears in at all,
+    // then by size: the three that show up in all six censuses -- farm bailiffs,
+    // the unspecified managers, cotton -- therefore sit at the bottom each time,
+    // and the occupations that come and go float above them.
+    var appears = {}, weight = {};
+    series.forEach(function(s){
+      s.top.forEach(function(d){
+        appears[d.code] = (appears[d.code] || 0) + 1;
+        weight[d.code] = (weight[d.code] || 0) + d.n;
+      });
+    });
+    var order = union.slice().sort(function(a, b){
+      return (appears[b] - appears[a]) || (weight[b] - weight[a]);
+    });
+    var pos = {};
+    order.forEach(function(c, i){ pos[c] = i; });
+
     // one stable colour per occupation across every bar, so the eye can follow it
     var palette = d3.schemeTableau10
       .concat(d3.schemeSet2 || [])
       .concat(d3.schemeSet3 || [])
       .concat(d3.schemePaired || []);
-    var colour = d3.scaleOrdinal().domain(union).range(palette);
+    var colour = d3.scaleOrdinal().domain(order).range(palette);
 
     var svg = d3.select("#fm-svg").attr("viewBox", [0, 0, FM_W, FM_H]);
     var tip = d3.select("#fm-tip");
@@ -2750,12 +2769,14 @@ Promise.all([
     var flat = [];
     series.forEach(function(s){
       var acc = 0;
-      s.top.forEach(function(d, i){
-        var share = 100 * d.n / s.total;
-        flat.push({ year: s.year, code: d.code, n: d.n, share: share,
-                    y0: acc, rank: i + 1, total: s.total });
-        acc += share;
-      });
+      s.top.slice()
+        .sort(function(a, b){ return pos[a.code] - pos[b.code]; })
+        .forEach(function(d){
+          var share = 100 * d.n / s.total;
+          flat.push({ year: s.year, code: d.code, n: d.n, share: share,
+                      y0: acc, rank: d.rank, appears: appears[d.code], total: s.total });
+          acc += share;
+        });
     });
 
     g.selectAll("rect.fm-seg").data(flat).join("rect").attr("class", "fm-seg")
@@ -2769,7 +2790,8 @@ Promise.all([
         g.selectAll("rect.fm-seg").classed("fm-dim", function(o){ return o.code !== d.code; });
         tip.style("visibility", "visible").html(
           "<strong>" + (names[d.code] || ("Occode " + d.code)) + "</strong>" +
-          "<div style='color:#777'>occode " + d.code + " · rank " + d.rank + " in " + d.year + "</div>" +
+          "<div style='color:#777'>occode " + d.code + " · rank " + d.rank + " in " + d.year +
+            " · in the top half of " + d.appears + " of 6 censuses</div>" +
           "<div>" + d3.format(",")(d.n) + " foremen · " + d3.format(".1f")(d.share) + "% of " + d.year + "</div>");
       })
       .on("mousemove", fmMove)
