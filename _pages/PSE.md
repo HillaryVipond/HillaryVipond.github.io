@@ -3189,8 +3189,8 @@ Promise.all([
     var maxShare = d3.max(nodes, function(d){
       return d3.max(COH, function(y){ return 100 * (d.n[y] || 0) / totals[y]; });
     });
-    var rad = d3.scaleSqrt().domain([0, maxShare]).range([0, 11]);
-    var SUPP_R = 0.9;   // a cell too thin to publish still gets a dot
+    var rad = d3.scalePow().exponent(0.4).domain([0, maxShare]).range([1.5, 14]);
+    var SUPP_R = 1.5;   // a cell too thin to publish still gets a dot
 
     var iW = SP_W - SP_M.left - SP_M.right, iH = SP_H - SP_M.top - SP_M.bottom;
     var gx = d3.scaleBand().domain(GROUPS.map(function(d){ return d.g; }))
@@ -3226,7 +3226,7 @@ Promise.all([
         .attr("r", function(d){
           return d.n[yr] === null ? SUPP_R : rad(100 * d.n[yr] / totals[yr]); })
         .attr("fill", function(d){ return GCOL[d.g]; })
-        .attr("opacity", function(d){ return d.n[yr] === null ? .3 : .72; })
+        .attr("opacity", function(d){ return d.n[yr] === null ? .28 : .66; })
         .on("mouseover", function(event, d){ over(d); })
         .on("mouseout", out);
     });
@@ -3239,10 +3239,14 @@ Promise.all([
         return '<span class="sp-step"><span class="sp-step__w">' + yr + "–" + ENDS[yr] +
                '</span><span class="sp-step__v">' + v + '</span></span>';
       }).join("");
-      readout.html('<span class="sp-sw" style="background:' + GCOL[d.g] + '"></span>' +
-                   '<span class="sp-name">' + d.name + '</span>' +
-                   '<span class="sp-step__w">' + GNAME[d.g] + ' &middot; HISCAM ' +
-                   f1(d.hiscam) + '</span>' + trail);
+      readout.html(
+        '<div class="sp-l1">' +
+          '<span class="sp-sw" style="background:' + GCOL[d.g] + '"></span>' +
+          '<span class="sp-name">' + d.name + '</span>' +
+          '<span class="sp-step__w">' + GNAME[d.g] + ' &middot; HISCAM ' +
+          f1(d.hiscam) + '</span>' +
+        '</div>' +
+        '<div class="sp-l2">' + trail + '</div>');
     }
     function out(){
       d3.selectAll(".sp-node").classed("sp-dim", false);
@@ -3257,10 +3261,14 @@ Promise.all([
 </script>
 
 <style>
+  /* two fixed lines, so a hover can never change the height and shunt the
+     panels down the page */
   .sp-readout {
-    height: 30px; display: flex; align-items: center; flex-wrap: nowrap; overflow: hidden;
-    gap: 0 16px; margin: 0 0 4px; font-size: .92rem; color: #333; white-space: nowrap;
+    height: 48px; overflow: hidden; margin: 0 0 4px;
+    font-size: .92rem; color: #333; white-space: nowrap;
   }
+  .sp-l1 { display: flex; align-items: center; height: 24px; }
+  .sp-l2 { display: flex; align-items: center; height: 24px; gap: 0 18px; padding-left: 21px; }
   .sp-sw { width: 12px; height: 12px; border-radius: 2px; display: inline-block; margin-right: 9px; flex: none; }
   .sp-name { font-weight: 600; margin-right: 10px; flex: none; }
   .sp-step { color: #666; font-size: .86rem; white-space: nowrap; flex: none; }
@@ -3284,7 +3292,7 @@ Promise.all([
   .sp-dim { opacity: .06 !important; }
 
   .sp-note {
-    font-size: .84rem; color: #8a8a8a; line-height: 1.65; margin: 14px 0 0; max-width: 1150px;
+    font-size: .84rem; color: #8a8a8a; line-height: 1.65; margin: 34px 0 0; max-width: 1150px;
   }
   .sp-note em { color: #9a8a5a; font-style: italic; }
 </style>
