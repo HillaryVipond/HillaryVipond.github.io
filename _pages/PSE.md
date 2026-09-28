@@ -3127,7 +3127,7 @@ Promise.all([
   <div class="frame__body">
 
   <div class="fo-mock">
-    Candidate slide. <strong>The nodes, the clusters and the edges are all invented</strong> —
+    Still a mock-up. <strong>The nodes, the clusters and the edges are all invented</strong> —
     but there are 797 of them, the real number of occodes, split across the nine HISCO major
     groups in their real proportions, so this is an honest preview of how busy the real thing
     would look. Positions come from a placeholder layout, not a real proximity matrix: the real
@@ -3144,33 +3144,6 @@ Promise.all([
     that occupation for that cohort, so the cloud shifts across the space as the composition
     changes. The layout is computed once and frozen &mdash; it must be identical in all three
     panels or they cannot be compared.
-  </div>
-
-  </div>
-</section>
-
-<section class="frame">
-  <div class="in-kicker">Results · B: Social Mobility</div>
-<h3>2.5. Fathers&rsquo; occupational status</h3>
-  <div class="frame__body">
-
-  <div class="fo-mock">
-    Candidate slide. <strong>Invented distributions</strong> on a real HISCAM scale &mdash;
-    the real version is a histogram of fathers&rsquo; occodes weighted against
-    <code>census_taxonomy.csv</code>, which already covers 783 of the 797 occodes.
-  </div>
-
-  <div class="fo-row">
-    <div class="hc-panel">
-      <svg id="hc-svg"></svg>
-    </div>
-    <div class="fo-aside2">
-      <ul class="in-list fo-points">
-        <li>One curve per cohort, on the HISCAM status scale.</li>
-        <li>Answers whether fathers got higher status, not which trades they were in.</li>
-        <li>Needs only the cohort counts; the status join happens here.</li>
-      </ul>
-    </div>
   </div>
 
   </div>
@@ -3297,62 +3270,6 @@ Promise.all([
     }
   })();
 
-  // ================================================== option C: HISCAM status
-  (function(){
-    var W = 900, H = 420, M = { top:20, right:24, bottom:52, left:56 };
-    var iW = W-M.left-M.right, iH = H-M.top-M.bottom;
-    var svg = d3.select("#hc-svg").attr("viewBox", [0, 0, W, H]);
-    var g = svg.append("g").attr("transform","translate("+M.left+","+M.top+")");
-
-    // placeholder distributions on the real HISCAM range; the real data is a
-    // weighted histogram of fathers' occodes against census_taxonomy.csv
-    var CURVES = [
-      { c: COHORTS[0], mu: 46, sd: 7.5,  col: "#6B9E78" },
-      { c: COHORTS[1], mu: 48, sd: 8.5,  col: "#C08A2E" },
-      { c: COHORTS[2], mu: 51, sd: 10.0, col: "#3C7DB1" }
-    ];
-    var xs = d3.range(25, 80.5, 0.5);
-    var series = CURVES.map(function(k){
-      return { k:k, pts: xs.map(function(v){
-        var z = (v - k.mu) / k.sd;
-        return { x:v, y: Math.exp(-0.5*z*z) / (k.sd * Math.sqrt(2*Math.PI)) };
-      })};
-    });
-
-    var x = d3.scaleLinear().domain([25, 80]).range([0, iW]);
-    var y = d3.scaleLinear().domain([0, d3.max(series, function(s){
-      return d3.max(s.pts, function(p){ return p.y; }); }) * 1.12]).range([iH, 0]);
-
-    g.append("g").attr("class","fo-grid2").selectAll("line").data(y.ticks(5)).join("line")
-      .attr("x1",0).attr("x2",iW).attr("y1",y).attr("y2",y);
-
-    var area = d3.area().x(function(p){return x(p.x);}).y0(iH).y1(function(p){return y(p.y);})
-      .curve(d3.curveBasis);
-    var line = d3.line().x(function(p){return x(p.x);}).y(function(p){return y(p.y);})
-      .curve(d3.curveBasis);
-
-    series.forEach(function(s){
-      g.append("path").datum(s.pts).attr("d", area).attr("fill", s.k.col).attr("opacity", .16);
-      g.append("path").datum(s.pts).attr("d", line).attr("fill","none")
-        .attr("stroke", s.k.col).attr("stroke-width", 2);
-      g.append("line").attr("x1",x(s.k.mu)).attr("x2",x(s.k.mu))
-        .attr("y1",iH).attr("y2",y(d3.max(s.pts,function(p){return p.y;})))
-        .attr("stroke",s.k.col).attr("stroke-dasharray","4 4").attr("opacity",.55);
-    });
-
-    g.append("g").attr("class","fo-axis2").attr("transform","translate(0,"+iH+")")
-      .call(d3.axisBottom(x).ticks(8).tickSizeOuter(0));
-    g.append("text").attr("class","fo-axt").attr("x",iW/2).attr("y",iH+40)
-      .attr("text-anchor","middle").text("Father's HISCAM occupational status");
-
-    var lg = g.append("g").attr("transform","translate("+(iW-200)+",6)");
-    series.forEach(function(s, i){
-      lg.append("rect").attr("x",0).attr("y",i*20).attr("width",11).attr("height",11)
-        .attr("fill",s.k.col).attr("rx",2);
-      lg.append("text").attr("class","fo-axt").attr("x",18).attr("y",i*20+10)
-        .text(s.k.c.replace("→","–"));
-    });
-  })();
 })();
 </script>
 
@@ -3364,9 +3281,6 @@ Promise.all([
     padding: 12px 18px; margin: 2px 0 18px; max-width: 1100px;
     font-size: .88rem; line-height: 1.55; border-radius: 3px;
   }
-  .fo-aside2 { flex: 0 1 300px; min-width: 230px; padding-top: 40px; }
-  .fo-row { display: flex; gap: 30px; align-items: flex-start; flex-wrap: wrap; }
-  .hc-panel { flex: 0 1 900px; min-width: 420px; }
   .fo-points li { font-size: .96rem; line-height: 1.55; color: #444; margin-bottom: 18px; }
 
   .sp-readout {
@@ -3381,10 +3295,151 @@ Promise.all([
   .sp-edges { fill: none; stroke: #e3e3e3; stroke-width: .5; }
   .sp-node { cursor: pointer; transition: opacity .12s; stroke: #fff; stroke-width: .4; }
 
-  .fo-grid2 line { stroke: #f1f1f1; }
-  .fo-axis2 text { fill: #666; font-size: 12px; }
-  .fo-axis2 path, .fo-axis2 line { stroke: #ccc; }
-  .fo-axt { fill: #666; font-size: 12px; }
+</style>
+
+
+<section class="frame">
+  <div class="in-kicker">Results · B: Social Mobility</div>
+<h3>2.5. Fathers&rsquo; occupational status</h3>
+  <div class="frame__body">
+
+  <div class="hc-row">
+    <div class="hc-panel">
+      <svg id="hc-svg"></svg>
+    </div>
+    <div class="hc-aside">
+      <ul class="in-list hc-points" id="hc-points"></ul>
+    </div>
+  </div>
+
+  <div class="hc-note" id="hc-note"></div>
+
+  </div>
+</section>
+
+<script>
+(function(){
+  var W = 940, H = 470, M = { top: 18, right: 26, bottom: 54, left: 58 };
+  var LO = 25, HI = 78, BW = 2.4;          // HISCAM window and kernel bandwidth
+  var COLS = ["#6B9E78", "#C08A2E", "#3C7DB1"];
+  var f1 = d3.format(".1f"), fN = d3.format(",");
+
+  d3.csv("/assets/Results/father_hiscam_by_cohort.csv?v=1").then(function(rows){
+    var g0 = d3.group(rows, function(r){ return r.baseline_year; });
+    var cohorts = Array.from(g0.keys()).sort(d3.ascending).map(function(y, i){
+      var rs = g0.get(y);
+      var pts = rs.map(function(r){ return { x: +r.hiscam, n: +r.sons_n }; })
+                  .sort(function(a, b){ return a.x - b.x; });
+      return { y: y, lab: y + " → " + rs[0].endpoint_year, pts: pts,
+               col: COLS[i % COLS.length],
+               kept: d3.sum(pts, function(p){ return p.n; }),
+               unscaled: +rs[0].unscaled_n, total: +rs[0].total_n };
+    });
+
+    // weighted quantiles straight off the counts, no resampling
+    function quant(pts, p){
+      var tot = d3.sum(pts, function(d){ return d.n; }), c = 0;
+      for (var i = 0; i < pts.length; i++){
+        c += pts[i].n;
+        if (c >= tot * p) return pts[i].x;
+      }
+      return pts[pts.length - 1].x;
+    }
+    cohorts.forEach(function(c){
+      c.mean = d3.sum(c.pts, function(d){ return d.x * d.n; }) / c.kept;
+      c.p25 = quant(c.pts, 0.25);
+      c.med = quant(c.pts, 0.50);
+      c.p75 = quant(c.pts, 0.75);
+      c.iqr = c.p75 - c.p25;
+    });
+
+    // Gaussian kernel density, weighted by the number of sons at each value
+    var grid = d3.range(LO, HI + 0.25, 0.25);
+    cohorts.forEach(function(c){
+      c.curve = grid.map(function(x){
+        var s = 0;
+        c.pts.forEach(function(p){
+          var z = (x - p.x) / BW;
+          s += p.n * Math.exp(-0.5 * z * z);
+        });
+        return { x: x, y: s / (c.kept * BW * Math.sqrt(2 * Math.PI)) };
+      });
+    });
+
+    var svg = d3.select("#hc-svg").attr("viewBox", [0, 0, W, H]);
+    var iW = W - M.left - M.right, iH = H - M.top - M.bottom;
+    var g = svg.append("g").attr("transform", "translate(" + M.left + "," + M.top + ")");
+
+    var x = d3.scaleLinear().domain([LO, HI]).range([0, iW]);
+    var y = d3.scaleLinear().range([iH, 0]).domain([0, d3.max(cohorts, function(c){
+      return d3.max(c.curve, function(p){ return p.y; }); }) * 1.14]);
+
+    g.append("g").attr("class", "hc-grid").selectAll("line").data(y.ticks(5)).join("line")
+      .attr("x1", 0).attr("x2", iW).attr("y1", y).attr("y2", y);
+
+    var area = d3.area().x(function(p){ return x(p.x); }).y0(iH)
+      .y1(function(p){ return y(p.y); }).curve(d3.curveBasis);
+    var line = d3.line().x(function(p){ return x(p.x); })
+      .y(function(p){ return y(p.y); }).curve(d3.curveBasis);
+
+    cohorts.forEach(function(c){
+      g.append("path").datum(c.curve).attr("d", area).attr("fill", c.col).attr("opacity", .13);
+      g.append("path").datum(c.curve).attr("d", line).attr("fill", "none")
+        .attr("stroke", c.col).attr("stroke-width", 2);
+      g.append("line").attr("class", "hc-med")
+        .attr("x1", x(c.med)).attr("x2", x(c.med)).attr("y1", iH).attr("y2", y(0) - iH * 0.86)
+        .attr("stroke", c.col);
+    });
+
+    g.append("g").attr("class", "hc-axis").attr("transform", "translate(0," + iH + ")")
+      .call(d3.axisBottom(x).ticks(9).tickSizeOuter(0));
+    g.append("text").attr("class", "hc-axt").attr("x", iW / 2).attr("y", iH + 42)
+      .attr("text-anchor", "middle").text("Father's HISCAM occupational status");
+
+    var lg = g.append("g").attr("transform", "translate(" + (iW - 250) + ",4)");
+    cohorts.forEach(function(c, i){
+      lg.append("rect").attr("x", 0).attr("y", i * 21).attr("width", 11).attr("height", 11)
+        .attr("fill", c.col).attr("rx", 2);
+      lg.append("text").attr("class", "hc-axt").attr("x", 18).attr("y", i * 21 + 10)
+        .text(c.lab.replace("→", "–") + "   median " + f1(c.med) +
+              "   IQR " + f1(c.iqr));
+    });
+
+    var a = cohorts[0], z = cohorts[cohorts.length - 1];
+    d3.select("#hc-points").selectAll("li").data([
+      "The middle barely moves: median " + f1(a.med) + " to " + f1(z.med) + ".",
+      "The spread widens: interquartile range " + f1(a.iqr) + " to " + f1(z.iqr) + ".",
+      "Managers were drawn from a broader range of homes, not a higher one."
+    ]).join("li").text(function(d){ return d; });
+
+    d3.select("#hc-note").text(
+      "Each curve is the distribution of father's HISCAM status among men observed as managers " +
+      "at the end of the window, weighted by the number of sons. " +
+      fN(a.total) + ", " + fN(cohorts[1].total) + " and " + fN(z.total) +
+      " sons respectively. Occupations HISCAM does not scale — private means, no specified " +
+      "occupation, and the wives categories — are left out rather than counted as status " +
+      "zero, which is " + f1(100 * a.unscaled / a.total) + "% to " +
+      f1(100 * cohorts[1].unscaled / cohorts[1].total) + "% of sons.");
+  });
+})();
+</script>
+
+<style>
+  .hc-row { display: flex; gap: 34px; align-items: flex-start; flex-wrap: wrap; }
+  .hc-panel { flex: 0 1 940px; min-width: 420px; }
+  .hc-aside { flex: 0 1 300px; min-width: 230px; padding-top: 46px; }
+  .hc-points li { font-size: .98rem; line-height: 1.55; color: #444; margin-bottom: 18px; }
+
+  .hc-grid line { stroke: #f1f1f1; }
+  .hc-axis text { fill: #666; font-size: 12px; }
+  .hc-axis path, .hc-axis line { stroke: #ccc; }
+  .hc-axt { fill: #666; font-size: 12px; }
+  .hc-med { stroke-dasharray: 4 4; opacity: .6; }
+
+  .hc-note {
+    font-size: .84rem; color: #8a8a8a; line-height: 1.65;
+    margin: 18px 0 0; max-width: 1150px;
+  }
 </style>
 
 
