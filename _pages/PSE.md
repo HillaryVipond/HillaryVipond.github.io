@@ -1960,9 +1960,9 @@ Promise.all([
   .eq-box .katex-display { margin: 0; }
   .eq-box .katex { font-size: 1.72em; }
 
-  .eq-split { display: flex; gap: 70px; align-items: flex-start; flex-wrap: wrap; max-width: 1480px; }
+  .eq-split { display: flex; gap: 96px; align-items: flex-start; flex-wrap: wrap; }
   .eq-terms { flex: 0 1 660px; min-width: 340px; }
-  .eq-logic { flex: 0 1 400px; min-width: 290px; margin-left: auto; padding-top: 4px; }
+  .eq-logic { flex: 0 1 400px; min-width: 290px; padding-top: 4px; }
 
   .eq-term {
     display: flex; gap: 20px; align-items: baseline;
@@ -1984,7 +1984,6 @@ Promise.all([
     .eq-box { padding: 20px 22px; }
     .eq-box .katex { font-size: 1.1em; }
     .eq-split { gap: 28px; }
-    .eq-logic { margin-left: 0; }
     .eq-term .eq-sym { flex-basis: 76px; }
     .eq-points li { font-size: 1rem; }
   }
@@ -2229,7 +2228,6 @@ Promise.all([
   <div class="sc-row">
     <div class="sc-panel" style="flex:0 1 880px;">
       <div class="sc-ptitle">Change in exit</div>
-      <div class="sc-pnote">Difference-in-differences coefficient, percentage points</div>
       <svg id="sc-svg-exit"></svg>
       <div class="sc-tip" id="sc-tip-exit"></div>
     </div>
@@ -2246,10 +2244,10 @@ Promise.all([
   <div id="sc-legend-c" class="sc-legend"></div>
 
   <div class="sc-row">
-    <div class="sc-panel" style="flex:0 1 880px;">
+    <div class="sc-panel" style="flex:0 1 1060px;">
       <div class="sc-ptitle">Change in entry</div>
-      <div class="sc-pnote" id="sc-entry-note">Change in entry relative to the occupation's own 1851&ndash;61 rate</div>
       <svg id="sc-svg-entry"></svg>
+      <div class="sc-pnote sc-pnote--below" id="sc-entry-note">Change in entry relative to the occupation's own 1851&ndash;61 rate</div>
       <div class="sc-tip" id="sc-tip-entry"></div>
     </div>
   </div>
@@ -2272,9 +2270,8 @@ Promise.all([
   <div id="sc-legend-b" class="sc-legend"></div>
 
   <div class="sc-row">
-    <div class="sc-panel" style="flex:1 1 840px;">
+    <div class="sc-panel sc-panel--joint" style="flex:0 1 820px;">
       <div class="sc-ptitle">Exit percentile against entry percentile</div>
-      <div class="sc-pnote">One dot per occupation. On the diagonal, both margins are equally unusual.</div>
       <svg id="sc-svg-joint"></svg>
       <div class="sc-tip" id="sc-tip-joint"></div>
     </div>
@@ -2303,7 +2300,9 @@ Promise.all([
   #sc-legend-a button .n, #sc-legend-c button .n { color:#999; font-variant-numeric:tabular-nums; }
   #sc-legend-a button.off, #sc-legend-c button.off { opacity:.4; background:#fafafa; text-decoration:line-through; }
   .sc-sub--wide { max-width: none; }
-  .sc-aside { flex: 0 1 260px; min-width: 210px; padding-top: 34px; }
+  .sc-aside { flex: 0 1 280px; min-width: 210px; padding-top: 74px; }
+  .sc-panel--joint { margin-top: 30px; }
+  .sc-pnote--below { margin: 10px 0 0; min-height: 0; }
   .sc-points li { font-size: .98rem; line-height: 1.55; color: #444; margin-bottom: 18px; }
   .sc-hint { font-size:.82rem; color:#999; margin:2px 0 14px; }
 
@@ -2877,7 +2876,8 @@ Promise.all([
         svg.style.width = "100%";
         svg.style.height = "auto";
         var host = svg.parentElement ? svg.parentElement.id : "";
-        if (host === "treemap-time" || host === "growth-chart") {
+        if (host === "treemap-time" || host === "growth-chart"
+            || svg.id === "sc-svg-joint") {
           svg.setAttribute("preserveAspectRatio", "xMinYMid meet");
         }
         svg.style.maxHeight = svg.closest(".frame--tall") ? "150vh"
