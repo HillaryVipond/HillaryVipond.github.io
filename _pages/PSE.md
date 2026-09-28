@@ -2672,7 +2672,7 @@ Promise.all([
     </div>
     <div class="fm-aside">
       <ul class="in-list fm-points">
-        <li>In 1851, eight occupations held half the foremen.</li>
+        <li>In 1851, seven occupations held half the foremen.</li>
         <li>By 1901 it took thirty-one.</li>
         <li>Supervision spread out across the economy.</li>
       </ul>
@@ -2700,8 +2700,8 @@ Promise.all([
     </div>
     <div class="fm-aside">
       <ul class="in-list fm-points">
-        <li>27,000 foremen in 1851.</li>
-        <li>289,000 by 1911, a tenfold rise.</li>
+        <li>25,000 foremen in 1851.</li>
+        <li>282,000 by 1911, an elevenfold rise.</li>
         <li>More supervisors, spread over more trades.</li>
       </ul>
     </div>
@@ -2723,7 +2723,7 @@ Promise.all([
   var fmN = d3.format(","), fmP = d3.format(".1f");
 
   Promise.all([
-    d3.csv("/assets/Foreman_by_occode_year.csv?v=1"),
+    d3.csv("/assets/Foreman_by_occode_year2.csv?v=1"),
     d3.csv("/assets/data/occode_names.csv")
   ]).then(function(res){
     var rows = res[0].filter(function(r){ return r.occode && r.occode !== "NA"; });
@@ -2731,7 +2731,7 @@ Promise.all([
     res[1].forEach(function(r){ names[r.occode] = fmTitle(r.occ_name); });
 
     // Per year: rank the occupations and take them until they cover half the
-    // foremen. That cut-off is the point -- it needs 8 occupations in 1851 and
+    // foremen. That cut-off is the point -- it needs 7 occupations in 1851 and
     // 31 by 1901. Both charts use this same selection.
     var byYear = d3.group(rows, function(r){ return +r.census_year; });
     var years = Array.from(byYear.keys()).sort(d3.ascending);
@@ -2781,7 +2781,7 @@ Promise.all([
 
     // mode "share": every bar is 100% tall, so composition is comparable.
     // mode "count": bars are the actual number of foremen, so the growth from
-    // 27k to 289k is what you see instead.
+    // 25k to 282k is what you see instead.
     function draw(svgSel, tipSel, mode){
       var share = mode === "share";
       var svg = d3.select(svgSel).attr("viewBox", [0, 0, FM_W, FM_H]);
