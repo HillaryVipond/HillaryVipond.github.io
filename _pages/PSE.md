@@ -3121,7 +3121,7 @@ Promise.all([
 </style>
 
 
-<section class="frame frame--tall">
+<section class="frame">
   <div class="in-kicker">Results · B: Social Mobility</div>
 <h3>2.4. Fathers&rsquo; occupations in occupation space</h3>
   <div class="frame__body">
@@ -3135,7 +3135,7 @@ Promise.all([
 
 <script>
 (function(){
-  var SP_W = 380, SP_H = 620, SP_M = { top: 14, right: 12, bottom: 30, left: 40 };
+  var SP_W = 380, SP_H = 410, SP_M = { top: 12, right: 12, bottom: 14, left: 40 };
 
   var GROUPS = [
     { g: "1", name: "Professional & technical", col: "#9C6FA8" },
