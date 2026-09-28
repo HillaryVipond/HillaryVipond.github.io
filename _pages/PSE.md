@@ -3450,10 +3450,156 @@ Promise.all([
 
 
 <section class="frame">
+  <div class="in-kicker">Results · C: Fertility</div>
+<h3>3.1. Fertility</h3>
+  <div class="frame__body">
+
+  <div class="fe-mock">
+    Layout mock-up. The numbers below are <strong>invented placeholders</strong>, and I have
+    guessed at the shape of the figure &mdash; mean children by census year, one line per group.
+    Send the data and tell me what it really plots.
+  </div>
+
+  <div class="fe-readout" id="fe-readout"></div>
+
+  <div class="fe-row">
+    <div class="fe-panel">
+      <svg id="fe-svg"></svg>
+    </div>
+    <div class="fe-aside">
+      <ul class="in-list fe-points" id="fe-points"></ul>
+    </div>
+  </div>
+
+  <div class="fe-note" id="fe-note"></div>
+
+  </div>
+</section>
+
+<script>
+(function(){
+  // ------------------------------------------------------------- mock data
+  // Replace with a d3.csv load of year,group,value and nothing below changes.
+  var YEARS = [1851, 1861, 1881, 1891, 1901, 1911];
+  var SERIES = [
+    { key: "Managers",              col: "#3C7DB1", v: [4.9, 4.9, 4.7, 4.3, 3.7, 3.1] },
+    { key: "All other workers",     col: "#C08A2E", v: [5.4, 5.5, 5.3, 4.9, 4.3, 3.6] },
+    { key: "Agricultural labourers", col: "#6B9E78", v: [5.7, 5.8, 5.7, 5.3, 4.7, 4.0] }
+  ];
+
+  var W = 940, H = 470, M = { top: 18, right: 150, bottom: 48, left: 58 };
+  var f1 = d3.format(".1f"), fD = d3.format("+.2f");
+
+  var svg = d3.select("#fe-svg").attr("viewBox", [0, 0, W, H]);
+  var iW = W - M.left - M.right, iH = H - M.top - M.bottom;
+  var g = svg.append("g").attr("transform", "translate(" + M.left + "," + M.top + ")");
+  var readout = d3.select("#fe-readout");
+
+  var x = d3.scalePoint().domain(YEARS).range([0, iW]).padding(0.06);
+  var lo = d3.min(SERIES, function(s){ return d3.min(s.v); });
+  var hi = d3.max(SERIES, function(s){ return d3.max(s.v); });
+  var y = d3.scaleLinear().domain([Math.floor(lo - 0.6), Math.ceil(hi + 0.3)]).range([iH, 0]);
+
+  g.append("g").attr("class", "fe-grid").selectAll("line").data(y.ticks(6)).join("line")
+    .attr("x1", 0).attr("x2", iW).attr("y1", y).attr("y2", y);
+
+  var line = d3.line().x(function(d, i){ return x(YEARS[i]); }).y(y).curve(d3.curveMonotoneX);
+
+  SERIES.forEach(function(s){
+    g.append("path").datum(s.v).attr("class", "fe-line").attr("data-fe", s.key)
+      .attr("d", line).attr("stroke", s.col);
+    g.selectAll(null).data(s.v).join("circle")
+      .attr("class", "fe-dot").attr("data-fe", s.key)
+      .attr("cx", function(d, i){ return x(YEARS[i]); }).attr("cy", y)
+      .attr("r", 4.5).attr("fill", s.col)
+      .on("mouseover", function(){ over(s); }).on("mouseout", out);
+    g.append("text").attr("class", "fe-lab").attr("data-fe", s.key)
+      .attr("x", iW + 10).attr("y", y(s.v[s.v.length - 1]) + 4)
+      .attr("fill", s.col).text(s.key)
+      .on("mouseover", function(){ over(s); }).on("mouseout", out);
+  });
+
+  g.append("g").attr("class", "fe-axis").attr("transform", "translate(0," + iH + ")")
+    .call(d3.axisBottom(x).tickFormat(d3.format("d")).tickSizeOuter(0));
+  g.append("g").attr("class", "fe-axis").call(d3.axisLeft(y).ticks(6).tickSizeOuter(0));
+  g.append("text").attr("class", "fe-axt").attr("transform", "rotate(-90)")
+    .attr("x", -(iH / 2)).attr("y", -40).attr("text-anchor", "middle")
+    .text("Mean children");
+
+  function over(s){
+    d3.selectAll("[data-fe]").classed("fe-dim", function(){
+      return this.getAttribute("data-fe") !== s.key; });
+    var trail = YEARS.map(function(yr, i){
+      return '<span class="fe-step"><span class="fe-step__w">' + yr +
+             '</span><span class="fe-step__v">' + f1(s.v[i]) + '</span></span>';
+    }).join("");
+    readout.html('<div class="fe-l1">' +
+                   '<span class="fe-sw" style="background:' + s.col + '"></span>' +
+                   '<span class="fe-name">' + s.key + '</span>' +
+                   '<span class="fe-step__w">' + fD(s.v[s.v.length - 1] - s.v[0]) +
+                   ' children, 1851 to 1911</span></div>' +
+                 '<div class="fe-l2">' + trail + '</div>');
+  }
+  function out(){
+    d3.selectAll("[data-fe]").classed("fe-dim", false);
+    readout.html("");
+  }
+
+  d3.select("#fe-points").selectAll("li").data([
+    "Fertility falls across every group after 1881.",
+    "Managers start lower and stay lower.",
+    "The gap between groups narrows as the decline sets in."
+  ]).join("li").text(function(d){ return d; });
+
+  d3.select("#fe-note").text(
+    "Hover a line to read it year by year. Mean children per man observed in that census.");
+})();
+</script>
+
+<style>
+  .fe-mock {
+    border-left: 3px solid #d8a93a; background: #fffbe9; color: #7a5c00;
+    padding: 12px 18px; margin: 2px 0 16px; max-width: 1100px;
+    font-size: .88rem; line-height: 1.55; border-radius: 3px;
+  }
+
+  .fe-readout {
+    height: 48px; overflow: hidden; margin: 0 0 6px;
+    font-size: .92rem; color: #333; white-space: nowrap;
+  }
+  .fe-l1 { display: flex; align-items: center; height: 24px; }
+  .fe-l2 { display: flex; align-items: center; height: 24px; gap: 0 20px; padding-left: 21px; }
+  .fe-sw { width: 12px; height: 12px; border-radius: 2px; display: inline-block; margin-right: 9px; flex: none; }
+  .fe-name { font-weight: 600; margin-right: 10px; flex: none; }
+  .fe-step { color: #666; font-size: .86rem; white-space: nowrap; flex: none; }
+  .fe-step__w { color: #a0a0a0; margin-right: 6px; }
+  .fe-step__v { font-variant-numeric: tabular-nums; color: #222; }
+
+  .fe-row { display: flex; gap: 34px; align-items: flex-start; flex-wrap: wrap; }
+  .fe-panel { flex: 0 1 940px; min-width: 420px; }
+  .fe-aside { flex: 0 1 290px; min-width: 230px; padding-top: 40px; }
+  .fe-points li { font-size: .98rem; line-height: 1.55; color: #444; margin-bottom: 18px; }
+
+  .fe-grid line { stroke: #f1f1f1; }
+  .fe-axis text { fill: #666; font-size: 12px; }
+  .fe-axis path, .fe-axis line { stroke: #ccc; }
+  .fe-axt { fill: #666; font-size: 12px; }
+  .fe-line { fill: none; stroke-width: 2.2; transition: opacity .12s; }
+  .fe-dot { stroke: #fff; stroke-width: 1.4; cursor: pointer; transition: opacity .12s; }
+  .fe-lab { font-size: 12.5px; cursor: pointer; transition: opacity .12s; }
+  .fe-dim { opacity: .13 !important; }
+
+  .fe-note {
+    font-size: .84rem; color: #8a8a8a; line-height: 1.65; margin: 26px 0 0; max-width: 1150px;
+  }
+</style>
+
+
+<section class="frame">
 <div class="frame__body">
 <div class="fig-flow">
 <div class="in-kicker">Results · C: Fertility</div>
-<h3>3.1. Occupational Skills Inheritance</h3>
+<h3>3.2. Occupational Skills Inheritance</h3>
 
 <style>
   .table-wrap { overflow-x:auto; margin: 0 0 12px; }
@@ -3571,18 +3717,6 @@ Promise.all([
 </script>
 </div>
 </div>
-</section>
-
-
-<section class="frame frame--todo">
-  <div class="in-kicker">Results · C: Fertility</div>
-<h3>3.2. Fertility</h3>
-  <div class="frame__body">
-    <div class="box">
-      <strong>Placeholder.</strong> Send the data and a sketch of what this should show,
-      and I will build it here.
-    </div>
-  </div>
 </section>
 
 
