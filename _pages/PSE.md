@@ -3104,37 +3104,15 @@ Promise.all([
 
 <section class="frame frame--tall">
   <div class="in-kicker">Results · B: Social Mobility</div>
-<h3>2.4. Fathers&rsquo; occupations &mdash; option A: the flow</h3>
+<h3>2.4. Fathers&rsquo; occupations in occupation space</h3>
   <div class="frame__body">
 
   <div class="fo-mock">
-    Option A of three. Layout mock-up &mdash; <strong>invented placeholder shares</strong>, not
-    results. This is slide 2.3&rsquo;s chart pointed at fathers instead of previous jobs.
-  </div>
-
-  <div class="fo-readout" id="fa-readout">
-    <span class="fo-readout__hint">Hover a source to name it and trace it across the cohorts.</span>
-  </div>
-  <div class="fo-grid" id="fa-grid"></div>
-  <div class="fo-note">
-    Each panel is one linked cohort: boys observed in the first census, their occupation as adults
-    in the second. The grey bar is all the sons; the blocks below are what their fathers did.
-    Normalised, so the panels compare composition.
-  </div>
-
-  </div>
-</section>
-
-<section class="frame frame--tall">
-  <div class="in-kicker">Results · B: Social Mobility</div>
-<h3>2.5. Fathers&rsquo; occupations &mdash; option B: the occupation space</h3>
-  <div class="frame__body">
-
-  <div class="fo-mock">
-    Option B of three. <strong>The nodes, the clusters and the edges are all invented</strong> —
+    Candidate slide. <strong>The nodes, the clusters and the edges are all invented</strong> —
     but there are 797 of them, the real number of occodes, split across the nine HISCO major
     groups in their real proportions, so this is an honest preview of how busy the real thing
-    would look. Positions come from a placeholder layout, not a real proximity matrix.
+    would look. Positions come from a placeholder layout, not a real proximity matrix: the real
+    one needs a proximity built from something other than mobility, or the clusters are circular.
   </div>
 
   <div class="sp-readout" id="sp-readout">
@@ -3154,11 +3132,13 @@ Promise.all([
 
 <section class="frame">
   <div class="in-kicker">Results · B: Social Mobility</div>
-<h3>2.6. Fathers&rsquo; occupations &mdash; option C: status</h3>
+<h3>2.5. Fathers&rsquo; occupational status</h3>
   <div class="frame__body">
 
   <div class="fo-mock">
-    Option C of three. <strong>Invented distributions</strong> on a real HISCAM scale.
+    Candidate slide. <strong>Invented distributions</strong> on a real HISCAM scale &mdash;
+    the real version is a histogram of fathers&rsquo; occodes weighted against
+    <code>census_taxonomy.csv</code>, which already covers 783 of the 797 occodes.
   </div>
 
   <div class="fo-row">
@@ -3169,7 +3149,7 @@ Promise.all([
       <ul class="in-list fo-points">
         <li>One curve per cohort, on the HISCAM status scale.</li>
         <li>Answers whether fathers got higher status, not which trades they were in.</li>
-        <li>You already hold HISCAM for 783 of the 797 occodes.</li>
+        <li>Needs only the cohort counts; the status join happens here.</li>
       </ul>
     </div>
   </div>
@@ -3190,7 +3170,7 @@ Promise.all([
     };
   }
   function gauss(r){ return (r() + r() + r() + r() - 2) * 0.9; }
-  var fmt0 = d3.format(".0f"), fmt1 = d3.format(".1f");
+  var fmt1 = d3.format(".1f");
 
   var COHORTS = ["1851 → 1881", "1861 → 1891", "1881 → 1911"];
 
@@ -3206,91 +3186,6 @@ Promise.all([
     { g:"8", name:"Production — metal, wood", n:153, col:"#E0B66A" },
     { g:"9", name:"Transport & labourers",       n:134, col:"#B07C5A" }
   ];
-
-  // ============================================ option A: the three-panel flow
-  (function(){
-    var SOURCES = [
-      { id:"6",     name:"Agriculture & fishing",        col:"#6B9E78" },
-      { id:"7",     name:"Production — materials",  col:"#C08A2E" },
-      { id:"8",     name:"Production — metal, wood",col:"#E0B66A" },
-      { id:"9",     name:"Transport & labourers",        col:"#B07C5A" },
-      { id:"4",     name:"Sales",                        col:"#7FA9CB" },
-      { id:"5",     name:"Service",                      col:"#5FA8A0" },
-      { id:"3",     name:"Clerical",                     col:"#3C7DB1" },
-      { id:"1",     name:"Professional & technical",     col:"#9C6FA8" },
-      { id:"NONE",  name:"No father recorded",           col:"#B9BFC6" }
-    ];
-    var SHARES = {
-      "1851 → 1881": { "6":27, "7":18, "8":16, "9":12, "4":9,  "5":6,  "3":3, "1":3, NONE:6 },
-      "1861 → 1891": { "6":22, "7":18, "8":16, "9":13, "4":11, "5":7,  "3":5, "1":3, NONE:5 },
-      "1881 → 1911": { "6":15, "7":16, "8":15, "9":14, "4":14, "5":9,  "3":9, "1":4, NONE:4 }
-    };
-    var colour = {};
-    SOURCES.forEach(function(s){ colour[s.id] = s.col; });
-
-    var W = 320, H = 620, TOP_Y = 30, TOP_H = 26, NODE_H = 26, BOT_PAD = 26;
-    var SIDE = 10, GAP_B = 5.5, GAP_T = 3, NECK = 0.82;
-    var grid = d3.select("#fa-grid"), readout = d3.select("#fa-readout");
-
-    COHORTS.forEach(function(win){
-      var cell = grid.append("div").attr("class", "fo-cell");
-      var svg = cell.append("svg").attr("class", "fo-svg").attr("viewBox", [0, 0, W, H]);
-      cell.append("div").attr("class", "fo-wlab").text(win);
-
-      var inner = W - SIDE * 2;
-      var live = SOURCES.filter(function(s){ return (SHARES[win][s.id] || 0) > 0; });
-      var yTopBot = TOP_Y + TOP_H, yNodeTop = H - BOT_PAD - NODE_H;
-      var mid = (yTopBot + yNodeTop) / 2;
-      var totB = inner - (live.length - 1) * GAP_B;
-      var neckW = inner * NECK, totT = neckW - (live.length - 1) * GAP_T;
-
-      var xt = SIDE + (inner - neckW) / 2, xb = SIDE;
-      var bands = live.map(function(s){
-        var sh = SHARES[win][s.id];
-        var b = { id:s.id, name:s.name, share:sh, xt:xt, wt:totT*sh/100, xb:xb, wb:totB*sh/100 };
-        xt += b.wt + GAP_T; xb += b.wb + GAP_B;
-        return b;
-      });
-
-      svg.append("rect").attr("class","fo-bar").attr("x",SIDE).attr("y",TOP_Y)
-        .attr("width",inner).attr("height",TOP_H).attr("rx",2);
-      svg.append("text").attr("class","fo-cap").attr("x",SIDE+inner/2).attr("y",TOP_Y-10)
-        .attr("text-anchor","middle").text("all sons");
-
-      svg.append("g").selectAll("path").data(bands).join("path")
-        .attr("class","fo-ribbon").attr("data-fa",function(d){return d.id;})
-        .attr("fill",function(d){return colour[d.id];})
-        .attr("d",function(d){
-          var l0=d.xb, l1=d.xt, r0=d.xb+d.wb, r1=d.xt+d.wt;
-          return "M"+l0+","+yNodeTop+"C"+l0+","+mid+" "+l1+","+mid+" "+l1+","+yTopBot+
-                 "L"+r1+","+yTopBot+"C"+r1+","+mid+" "+r0+","+mid+" "+r0+","+yNodeTop+"Z";
-        })
-        .on("mouseover", over).on("mouseout", out);
-
-      svg.append("g").selectAll("rect.fo-node").data(bands).join("rect")
-        .attr("class","fo-node").attr("data-fa",function(d){return d.id;})
-        .attr("x",function(d){return d.xb;}).attr("y",yNodeTop)
-        .attr("width",function(d){return d.wb;}).attr("height",NODE_H).attr("rx",1.5)
-        .attr("fill",function(d){return colour[d.id];})
-        .on("mouseover", over).on("mouseout", out);
-    });
-
-    function over(event, d){
-      d3.selectAll("[data-fa]").classed("fo-dim", function(){
-        return this.getAttribute("data-fa") !== d.id;
-      });
-      var trail = COHORTS.map(function(c){
-        return '<span class="fo-step"><span class="fo-step__w">' + c.replace("→","–") +
-               '</span><span class="fo-step__v">' + fmt0(SHARES[c][d.id] || 0) + '%</span></span>';
-      }).join("");
-      readout.html('<span class="fo-readout__sw" style="background:'+colour[d.id]+'"></span>' +
-                   '<span class="fo-readout__name">'+d.name+'</span>' + trail);
-    }
-    function out(){
-      d3.selectAll("[data-fa]").classed("fo-dim", false);
-      readout.html('<span class="fo-readout__hint">Hover a source to name it and trace it across the cohorts.</span>');
-    }
-  })();
 
   // ============================================ option B: the occupation space
   (function(){
