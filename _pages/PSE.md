@@ -66,7 +66,6 @@ noindex: true
 .frame__body > span   { align-self: flex-start; }
 
 .frame__num  { position: absolute; right: 5vw; bottom: 2.4vh; font-size: 12px; color: var(--muted); letter-spacing: .04em; }
-.frame__foot { position: absolute; left: 5vw;  bottom: 2.4vh; font-size: 12px; color: var(--muted); letter-spacing: .04em; }
 
 .frame--title, .frame--section { justify-content: center; }
 .frame--title h1 { font-size: 2.9rem; font-weight: 700; line-height: 1.15; margin: 0 0 14px; color: var(--ink); letter-spacing: -0.02em; }
@@ -89,7 +88,7 @@ noindex: true
    one continuous page rather than a sequence of slides */
 .frame--free { min-height: auto; padding-top: 3vh; padding-bottom: 5vh;
                border-bottom: 0; scroll-snap-align: none; }
-.frame--free .frame__num, .frame--free .frame__foot { display: none; }
+.frame--free .frame__num { display: none; }
 
 .frame--todo { background: #fffdf5; }
 .frame--todo .box { border: 1px dashed #d8c48a; background: #fffbe9; color: #7a5c00; padding: 22px 26px; border-radius: 4px; max-width: 760px; line-height: 1.6; }
@@ -1898,6 +1897,11 @@ Promise.all([
 
     <div class="eq-split">
       <div class="eq-terms">
+        <div class="eq-term eq-term--note">
+          <span class="eq-sym">2&nbsp;&times;&nbsp;2</span>
+          <span>difference-in-differences, over two stacked transition windows:
+            1851&ndash;1861 and 1861&ndash;1881</span>
+        </div>
         <div class="eq-term"><span class="eq-sym" data-tex="Exit_{ic\tau}"></span>
           <span>exit rate, occupation <em>i</em>, county <em>c</em>, census <em>&tau;</em></span></div>
         <div class="eq-term"><span class="eq-sym" data-tex="\delta_c"></span>
@@ -1910,11 +1914,6 @@ Promise.all([
           <span>the coefficient of interest</span></div>
         <div class="eq-term"><span class="eq-sym" data-tex="X_{i\tau}"></span>
           <span>covariates, interacted with <span class="eq-sym-i" data-tex="Post_\tau"></span></span></div>
-
-        <div class="eq-note">
-          2&nbsp;&times;&nbsp;2 difference-in-differences, over two stacked transition windows:
-          1851&ndash;1861 and 1861&ndash;1881.
-        </div>
       </div>
 
       <div class="eq-logic">
@@ -1944,7 +1943,7 @@ Promise.all([
     if (!window.katex) return;
     var main = document.getElementById("eq-did");
     if (main) katex.render(DID, main, { displayMode: true, throwOnError: false });
-    document.querySelectorAll(".eq-sym, .eq-sym-i").forEach(function(el){
+    document.querySelectorAll(".eq-sym[data-tex], .eq-sym-i[data-tex]").forEach(function(el){
       katex.render(el.getAttribute("data-tex"), el, { throwOnError: false });
     });
   }
@@ -1958,28 +1957,25 @@ Promise.all([
   /* the DiD equation slide */
   .eq-box {
     border-left: 3px solid #238B45; background: #fafafa;
-    padding: 26px 34px; margin: 6px 0 30px; max-width: 1080px; overflow-x: auto;
+    padding: 36px 44px; margin: 6px 0 34px; max-width: 1200px; overflow-x: auto;
   }
   .eq-box .katex-display { margin: 0; }
-  .eq-box .katex { font-size: 1.34em; }
+  .eq-box .katex { font-size: 1.72em; }
 
-  .eq-split { display: flex; gap: 64px; align-items: flex-start; flex-wrap: wrap; }
-  .eq-terms { flex: 0 1 470px; min-width: 330px; }
-  .eq-logic { flex: 1 1 380px; min-width: 300px; padding-top: 4px; }
+  .eq-split { display: flex; gap: 70px; align-items: flex-start; flex-wrap: wrap; }
+  .eq-terms { flex: 0 1 660px; min-width: 340px; }
+  .eq-logic { flex: 0 1 400px; min-width: 290px; margin-left: auto; padding-top: 4px; }
 
   .eq-term {
-    display: flex; gap: 18px; align-items: baseline;
-    padding: 7px 0; border-bottom: 1px solid #f2f2f2;
-    font-size: .92rem; line-height: 1.5; color: #555;
+    display: flex; gap: 20px; align-items: baseline;
+    padding: 8px 0; border-bottom: 1px solid #f2f2f2;
+    font-size: .94rem; line-height: 1.5; color: #555;
   }
-  .eq-term .eq-sym { flex: 0 0 82px; text-align: right; color: #333; }
+  .eq-term .eq-sym { flex: 0 0 96px; text-align: right; color: #333; }
   .eq-term em { color: #777; }
+  .eq-term--note { color: #8a8a8a; border-bottom: 1px solid #e4e4e4; padding-bottom: 11px; }
+  .eq-term--note .eq-sym { color: #8a8a8a; font-variant-numeric: tabular-nums; }
   .eq-sym-i { white-space: nowrap; color: #555; }
-
-  .eq-note {
-    font-size: .84rem; color: #8a8a8a; line-height: 1.7;
-    margin-top: 16px; padding-left: 3px;
-  }
 
   .eq-label {
     font-size: .78rem; letter-spacing: .14em; text-transform: uppercase;
@@ -1988,11 +1984,12 @@ Promise.all([
   .eq-points li { font-size: 1.1rem; line-height: 1.55; color: #333; margin-bottom: 16px; }
   .eq-points .eq-sym-i { color: #238B45; }
 
-  @media (max-width: 900px) {
-    .eq-box { padding: 18px 20px; }
-    .eq-box .katex { font-size: 1.05em; }
+  @media (max-width: 980px) {
+    .eq-box { padding: 20px 22px; }
+    .eq-box .katex { font-size: 1.1em; }
     .eq-split { gap: 28px; }
-    .eq-term .eq-sym { flex-basis: 70px; }
+    .eq-logic { margin-left: 0; }
+    .eq-term .eq-sym { flex-basis: 76px; }
     .eq-points li { font-size: 1rem; }
   }
 </style>
@@ -2271,40 +2268,29 @@ Promise.all([
 <h3>1.5. More unusual on exit, or on entry?</h3>
   <div class="frame__body">
 
-  <p class="sc-sub">
-    Each occupation is ranked twice against the same universe of
-    <strong>235 large male occupations</strong>: once on how far its exit rate rose, once on how
-    far its entry collapsed. Putting both on a percentile scale makes the two margins comparable,
-    and asks which of them an occupation is really an outlier on.
+  <p class="sc-sub sc-sub--wide">
+    Each occupation is ranked twice against the same universe of 235 large male occupations:
+    once on how far its exit rate rose, once on how far its entry collapsed. Putting both on a
+    percentile scale makes the two margins comparable, and asks which of them an occupation is
+    really an outlier on.
   </p>
 
   <div id="sc-legend-b" class="sc-legend"></div>
   <div class="sc-hint">Click a category to remove it.</div>
 
   <div class="sc-row">
-    <div class="sc-panel" style="flex:0 1 660px;">
+    <div class="sc-panel" style="flex:1 1 840px;">
       <div class="sc-ptitle">Exit percentile against entry percentile</div>
       <div class="sc-pnote">One dot per occupation. On the diagonal, both margins are equally unusual.</div>
       <svg id="sc-svg-joint"></svg>
       <div class="sc-tip" id="sc-tip-joint"></div>
     </div>
-    <div style="flex:1 1 300px;min-width:280px;font-size:.92rem;color:#555;line-height:1.7;padding-top:40px;">
-      <p style="margin:0 0 14px;">
-        <strong>Everything is extreme on entry.</strong> All 18 sit at or above the
-        <strong>71st percentile</strong> of entry collapse, most of them far higher. Contraction
-        shutting off recruitment is not what distinguishes these occupations &mdash; it is what
-        they have in common.
-      </p>
-      <p style="margin:0 0 14px;">
-        <strong>Exit is what separates them.</strong> On the exit margin they run from the
-        <strong>22nd</strong> percentile to the <strong>100th</strong>. Most therefore fall below
-        the diagonal: they stopped taking people in without pushing the incumbents out.
-      </p>
-      <p style="margin:0;">
-        Only <strong>6 of 18</strong> are more unusual on exit than on entry &mdash; and all six
-        are <span style="color:#238B45;font-weight:600;">Adjustment</span> occupations. None of
-        the rubbish categories or category errors clears the diagonal.
-      </p>
+    <div class="sc-aside">
+      <ul class="in-list sc-points">
+        <li>Everything is extreme on entry. All 18 sit above the 71st percentile of entry
+            collapse.</li>
+        <li>Exit is what separates them.</li>
+      </ul>
     </div>
   </div>
 
@@ -2323,6 +2309,9 @@ Promise.all([
   #sc-legend-a button .sw, #sc-legend-c button .sw { width:11px; height:11px; border-radius:50%; display:inline-block; }
   #sc-legend-a button .n, #sc-legend-c button .n { color:#999; font-variant-numeric:tabular-nums; }
   #sc-legend-a button.off, #sc-legend-c button.off { opacity:.4; background:#fafafa; text-decoration:line-through; }
+  .sc-sub--wide { max-width: none; }
+  .sc-aside { flex: 0 1 260px; min-width: 210px; padding-top: 34px; }
+  .sc-points li { font-size: .98rem; line-height: 1.55; color: #444; margin-bottom: 18px; }
   .sc-hint { font-size:.82rem; color:#999; margin:2px 0 14px; }
 
   .sc-row { display:flex; gap:26px; flex-wrap:wrap; align-items:flex-start; }
@@ -2542,7 +2531,7 @@ Promise.all([
     function renderJoint(){
       // A square plot area, so the diagonal really is 45 degrees on screen and
       // "further from the line" means what it looks like it means.
-      var SIDE = 520, M = { top:18, right:26, bottom:56, left:70 };
+      var SIDE = 620, M = { top:18, right:26, bottom:56, left:70 };
       var W = SIDE+M.left+M.right, H = SIDE+M.top+M.bottom, iW = SIDE, iH = SIDE;
       var svg = d3.select("#sc-svg-joint").attr("viewBox",[0,0,W,H]);
       var tip = d3.select("#sc-tip-joint");
@@ -2835,10 +2824,6 @@ Promise.all([
       n.className = "frame__num";
       n.textContent = (i + 1) + " / " + frames.length;
       f.appendChild(n);
-      var ft = document.createElement("div");
-      ft.className = "frame__foot";
-      ft.textContent = "Mapping the Second Industrial Revolution";
-      f.appendChild(ft);
     });
 
     function current(){
