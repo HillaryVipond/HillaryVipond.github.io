@@ -1891,7 +1891,7 @@ Promise.all([
 
 <section class="frame">
   <div class="in-kicker">Results · Workforce in Transition</div>
-<h3>1. Were incumbent bootmakers displaced?</h3>
+<h3>Were incumbent bootmakers displaced?</h3>
   <div class="frame__body">
 
   <div id="placebo-men">
@@ -2152,7 +2152,7 @@ Promise.all([
 
 <section class="frame">
   <div class="in-kicker">Results · Workforce in Transition</div>
-<h3>2. Did contraction push workers out, or stop new ones coming in?</h3>
+<h3>Did contraction push workers out, or stop new ones coming in?</h3>
   <div class="frame__body">
 
   <p class="sc-sub">
@@ -2189,7 +2189,7 @@ Promise.all([
 
 <section class="frame">
   <div class="in-kicker">Results · Workforce in Transition</div>
-<h3>3. Do the two margins move together?</h3>
+<h3>Do the two margins move together?</h3>
   <div class="frame__body">
 
   <div id="sc-legend-b" class="sc-legend"></div>
@@ -2593,8 +2593,8 @@ Promise.all([
 
 
 <section class="frame frame--todo">
-  <div class="in-kicker">Results</div>
-<h3>4. Fertility</h3>
+  <div class="in-kicker">Results · Fertility</div>
+<h3>Fertility</h3>
   <div class="frame__body">
     <div class="box">
       <strong>Placeholder.</strong> Send the data and a sketch of what this should show,
@@ -2607,8 +2607,8 @@ Promise.all([
 <section class="frame">
 <div class="frame__body">
 <div class="fig-flow">
-<div class="in-kicker">Results</div>
-<h3>5. Occupational Skills Inheritance</h3>
+<div class="in-kicker">Results · Social Mobility</div>
+<h3>Occupational Skills Inheritance</h3>
 
 <style>
   .table-wrap { overflow-x:auto; margin: 0 0 12px; }
@@ -2730,8 +2730,8 @@ Promise.all([
 
 
 <section class="frame frame--todo">
-  <div class="in-kicker">Results</div>
-<h3>6. Social Mobility</h3>
+  <div class="in-kicker">Results · Social Mobility</div>
+<h3>Social Mobility</h3>
   <div class="frame__body">
     <div class="box">
       <strong>Placeholder.</strong> Send the data and a sketch of what this should show,
