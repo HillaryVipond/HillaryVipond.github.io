@@ -3127,7 +3127,6 @@ Promise.all([
   <div class="frame__body">
 
   <div class="sp-readout" id="sp-readout"></div>
-  <div class="sp-legend" id="sp-legend"></div>
   <div class="sp-grid" id="sp-grid"></div>
   <div class="sp-note" id="sp-note"></div>
 
@@ -3199,9 +3198,6 @@ Promise.all([
     var yext = d3.extent(nodes, function(d){ return d.hiscam; });
     var y = d3.scaleLinear().domain([yext[0] - 2, yext[1] + 2]).nice().range([iH, 0]);
 
-    d3.select("#sp-legend").selectAll("span").data(GROUPS).join("span")
-      .attr("class", "sp-key")
-      .html(function(d){ return '<i style="background:' + d.col + '"></i>' + d.name; });
 
     var readout = d3.select("#sp-readout");
     var grid = d3.select("#sp-grid");
@@ -3254,14 +3250,8 @@ Promise.all([
     }
 
     d3.select("#sp-note").html(
-      "One dot per father&rsquo;s occupation, " + fN(nodes.length) + " of them, in the same " +
-      "position in all three panels. Across: the nine HISCO occupational families. Up the side: " +
-      "HISCAM occupational status. Dot size is that occupation&rsquo;s share of the manager " +
-      "sons in that cohort, so the mass of the cloud is what moves. Horizontal placement within " +
-      "a family is arbitrary spacing, not a measurement. Cells with fewer than five sons are " +
-      "not published and show as faint dots. " +
-      "<em>A true proximity network &mdash; occupations joined by how alike their tasks are &mdash; " +
-      "still needs the task matrix; this is the honest version until then.</em>");
+      "Y axis: HISCAM occupational status. Dot size is that occupation’s share "
+      + "of the manager sons in that cohort.");
   });
 })();
 </script>
@@ -3269,7 +3259,7 @@ Promise.all([
 <style>
   .sp-readout {
     height: 30px; display: flex; align-items: center; flex-wrap: nowrap; overflow: hidden;
-    gap: 0 16px; margin: 2px 0 10px; font-size: .92rem; color: #333; white-space: nowrap;
+    gap: 0 16px; margin: 0 0 4px; font-size: .92rem; color: #333; white-space: nowrap;
   }
   .sp-sw { width: 12px; height: 12px; border-radius: 2px; display: inline-block; margin-right: 9px; flex: none; }
   .sp-name { font-weight: 600; margin-right: 10px; flex: none; }
@@ -3277,9 +3267,6 @@ Promise.all([
   .sp-step__w { color: #a0a0a0; margin-right: 6px; }
   .sp-step__v { font-variant-numeric: tabular-nums; color: #222; }
 
-  .sp-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 0 0 12px; }
-  .sp-key { font-size: .8rem; color: #666; display: inline-flex; align-items: center; }
-  .sp-key i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 6px; }
 
   .sp-grid { display: flex; gap: 22px; align-items: flex-start; }
   .sp-cell { flex: 1 1 0; min-width: 0; }
@@ -3297,7 +3284,7 @@ Promise.all([
   .sp-dim { opacity: .06 !important; }
 
   .sp-note {
-    font-size: .84rem; color: #8a8a8a; line-height: 1.65; margin: 18px 0 0; max-width: 1150px;
+    font-size: .84rem; color: #8a8a8a; line-height: 1.65; margin: 14px 0 0; max-width: 1150px;
   }
   .sp-note em { color: #9a8a5a; font-style: italic; }
 </style>
