@@ -2647,10 +2647,196 @@ Promise.all([
 
 
 <section class="frame">
+  <div class="in-kicker">Results · B: Social Mobility</div>
+<h3>Who were the foremen?</h3>
+  <div class="frame__body">
+
+  <div class="fm-row">
+    <div class="fm-panel">
+      <div class="fm-ptitle">Occupations holding the first half of all foremen, by census year</div>
+      <svg id="fm-svg"></svg>
+      <div class="fm-note">
+        Each bar is every foreman recorded that year. The coloured blocks are the occupations that,
+        taken together, account for the first 50%. Hover one to follow it across the censuses.
+      </div>
+      <div class="fm-tip" id="fm-tip"></div>
+    </div>
+    <div class="fm-aside">
+      <ul class="in-list fm-points">
+        <li>In 1851, eight occupations held half the foremen.</li>
+        <li>By 1901 it took thirty-one.</li>
+        <li>Supervision spread out across the economy.</li>
+      </ul>
+    </div>
+  </div>
+
+  </div>
+</section>
+
+<script>
+(function(){
+  var FM_W = 980, FM_H = 560, FM_M = { top: 26, right: 20, bottom: 46, left: 58 };
+
+  function fmClean(s){
+    return String(s || "").replace(/�|â€“|Â€“/g, "–").replace(/\s+/g, " ").trim();
+  }
+  function fmTitle(s){
+    return fmClean(s).toLowerCase().replace(/\b[a-z]/g, function(m){ return m.toUpperCase(); });
+  }
+
+  Promise.all([
+    d3.csv("/assets/Foreman_by_occode_year.csv?v=1"),
+    d3.csv("/assets/data/occode_names.csv")
+  ]).then(function(res){
+    var rows = res[0].filter(function(r){ return r.occode && r.occode !== "NA"; });
+    var names = {};
+    res[1].forEach(function(r){ names[r.occode] = fmTitle(r.occ_name); });
+
+    // Per year: rank the occupations and take them until they cover half the
+    // foremen. That cut-off is the point -- it needs 8 occupations in 1851 and
+    // 31 by 1901.
+    var byYear = d3.group(rows, function(r){ return +r.census_year; });
+    var years = Array.from(byYear.keys()).sort(d3.ascending);
+    var union = [], series = [];
+
+    years.forEach(function(y){
+      var v = byYear.get(y)
+        .map(function(r){ return { code: r.occode, n: +r.foreman_n }; })
+        .sort(function(a, b){ return b.n - a.n; });
+      var total = d3.sum(v, function(d){ return d.n; });
+      var cum = 0, top = [];
+      for (var i = 0; i < v.length; i++){
+        cum += v[i].n;
+        top.push(v[i]);
+        if (cum / total >= 0.5) break;
+      }
+      top.forEach(function(d){ if (union.indexOf(d.code) < 0) union.push(d.code); });
+      series.push({ year: y, total: total, top: top, topSum: cum, nOther: v.length - top.length });
+    });
+
+    // one stable colour per occupation across every bar, so the eye can follow it
+    var palette = d3.schemeTableau10
+      .concat(d3.schemeSet2 || [])
+      .concat(d3.schemeSet3 || [])
+      .concat(d3.schemePaired || []);
+    var colour = d3.scaleOrdinal().domain(union).range(palette);
+
+    var svg = d3.select("#fm-svg").attr("viewBox", [0, 0, FM_W, FM_H]);
+    var tip = d3.select("#fm-tip");
+    var iW = FM_W - FM_M.left - FM_M.right, iH = FM_H - FM_M.top - FM_M.bottom;
+    var g = svg.append("g").attr("transform", "translate(" + FM_M.left + "," + FM_M.top + ")");
+
+    var x = d3.scaleBand().domain(years).range([0, iW]).padding(0.34);
+    var y = d3.scaleLinear().domain([0, 100]).range([iH, 0]);
+
+    g.append("g").attr("class", "fm-grid").selectAll("line").data(y.ticks(5)).join("line")
+      .attr("x1", 0).attr("x2", iW).attr("y1", y).attr("y2", y);
+
+    // the grey remainder: every other occupation in that census
+    g.selectAll("rect.fm-rest").data(series).join("rect").attr("class", "fm-rest")
+      .attr("x", function(d){ return x(d.year); })
+      .attr("width", x.bandwidth())
+      .attr("y", y(100))
+      .attr("height", function(d){ return y(100 * d.topSum / d.total) - y(100); })
+      .on("mouseover", function(event, d){
+        tip.style("visibility", "visible").html(
+          "<strong>All other occupations</strong>" +
+          "<div style='color:#777'>" + d3.format(",")(d.nOther) + " occupations</div>" +
+          "<div>" + d3.format(".1f")(100 - 100 * d.topSum / d.total) + "% of " + d.year + " foremen</div>");
+      })
+      .on("mousemove", fmMove)
+      .on("mouseout", fmOut);
+
+    var flat = [];
+    series.forEach(function(s){
+      var acc = 0;
+      s.top.forEach(function(d, i){
+        var share = 100 * d.n / s.total;
+        flat.push({ year: s.year, code: d.code, n: d.n, share: share,
+                    y0: acc, rank: i + 1, total: s.total });
+        acc += share;
+      });
+    });
+
+    g.selectAll("rect.fm-seg").data(flat).join("rect").attr("class", "fm-seg")
+      .attr("x", function(d){ return x(d.year); })
+      .attr("width", x.bandwidth())
+      .attr("y", function(d){ return y(d.y0 + d.share); })
+      .attr("height", function(d){ return Math.max(0.6, y(d.y0) - y(d.y0 + d.share)); })
+      .attr("fill", function(d){ return colour(d.code); })
+      .on("mouseover", function(event, d){
+        // light this occupation up in every year it appears
+        g.selectAll("rect.fm-seg").classed("fm-dim", function(o){ return o.code !== d.code; });
+        tip.style("visibility", "visible").html(
+          "<strong>" + (names[d.code] || ("Occode " + d.code)) + "</strong>" +
+          "<div style='color:#777'>occode " + d.code + " · rank " + d.rank + " in " + d.year + "</div>" +
+          "<div>" + d3.format(",")(d.n) + " foremen · " + d3.format(".1f")(d.share) + "% of " + d.year + "</div>");
+      })
+      .on("mousemove", fmMove)
+      .on("mouseout", fmOut);
+
+    // how many occupations it took, written over each bar
+    g.selectAll("text.fm-count").data(series).join("text").attr("class", "fm-count")
+      .attr("x", function(d){ return x(d.year) + x.bandwidth() / 2; })
+      .attr("y", function(d){ return y(100 * d.topSum / d.total) - 8; })
+      .attr("text-anchor", "middle")
+      .text(function(d){ return d.top.length; });
+
+    g.append("g").attr("class", "fm-axis").attr("transform", "translate(0," + iH + ")")
+      .call(d3.axisBottom(x).tickSizeOuter(0));
+    g.append("g").attr("class", "fm-axis")
+      .call(d3.axisLeft(y).ticks(5).tickFormat(function(v){ return v + "%"; }).tickSizeOuter(0));
+
+    function fmMove(event){
+      var r = this.closest(".fm-panel").getBoundingClientRect();
+      tip.style("left", Math.min(r.width - 290, event.clientX - r.left + 14) + "px")
+         .style("top", Math.max(4, event.clientY - r.top - 10) + "px");
+    }
+    function fmOut(){
+      g.selectAll("rect.fm-seg").classed("fm-dim", false);
+      tip.style("visibility", "hidden");
+    }
+  });
+})();
+</script>
+
+<style>
+  .fm-row { display: flex; gap: 30px; align-items: flex-start; flex-wrap: wrap; }
+  .fm-panel { flex: 0 1 980px; min-width: 420px; position: relative; margin-top: 18px; }
+  .fm-aside { flex: 0 1 280px; min-width: 210px; padding-top: 66px; }
+  .fm-ptitle { font-size: 1.02rem; font-weight: 700; color: #222; margin: 0 0 8px; }
+
+  .fm-grid line { stroke: #f1f1f1; }
+  .fm-axis text { fill: #666; font-size: 12px; }
+  .fm-axis path, .fm-axis line { stroke: #ccc; }
+
+  .fm-seg { stroke: #fff; stroke-width: 1; cursor: pointer; transition: opacity .12s; }
+  .fm-dim { opacity: .18; }
+  .fm-rest { fill: #ededed; stroke: #fff; stroke-width: 1; }
+  .fm-count { fill: #555; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+
+  .fm-note { font-size: .84rem; color: #8a8a8a; line-height: 1.6; margin: 12px 0 0; max-width: 900px; }
+  .fm-points li { font-size: .98rem; line-height: 1.55; color: #444; margin-bottom: 18px; }
+
+  .fm-tip {
+    position: absolute; pointer-events: none; visibility: hidden; background: #fff;
+    border: 1px solid #ddd; border-radius: 4px; padding: 8px 11px; font-size: .84rem;
+    color: #333; box-shadow: 0 2px 8px rgba(0,0,0,.09); max-width: 280px; line-height: 1.45;
+  }
+  .fm-tip strong { display: block; margin-bottom: 3px; }
+
+  @media (max-width: 900px) {
+    .fm-row { gap: 18px; }
+    .fm-aside { padding-top: 0; }
+  }
+</style>
+
+
+<section class="frame">
 <div class="frame__body">
 <div class="fig-flow">
-<div class="in-kicker">Results · B: Social Mobility</div>
-<h3>Occupational Skills Inheritance</h3>
+<div class="in-kicker">Results · C: Fertility</div>
+<h3>3.1. Occupational Skills Inheritance</h3>
 
 <style>
   .table-wrap { overflow-x:auto; margin: 0 0 12px; }
@@ -2773,7 +2959,7 @@ Promise.all([
 
 <section class="frame frame--todo">
   <div class="in-kicker">Results · C: Fertility</div>
-<h3>Fertility</h3>
+<h3>3.2. Fertility</h3>
   <div class="frame__body">
     <div class="box">
       <strong>Placeholder.</strong> Send the data and a sketch of what this should show,
