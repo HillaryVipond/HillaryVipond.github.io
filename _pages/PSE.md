@@ -2904,6 +2904,201 @@ Promise.all([
 </style>
 
 
+<section class="frame frame--tall">
+  <div class="in-kicker">Results · B: Social Mobility</div>
+<h3>2.3. Where did foremen come from?</h3>
+  <div class="frame__body">
+
+  <div class="fo-mock">
+    Layout mock-up. The shares below are <strong>invented placeholder values</strong>, not results
+    &mdash; they are here to show the form. Send the origins file and this fills with real data.
+  </div>
+
+  <div class="fo-readout" id="fo-readout">
+    <span class="fo-readout__hint">Hover a source to name it and trace it across the windows.</span>
+  </div>
+
+  <div class="fo-grid" id="fo-grid"></div>
+
+  <div class="fo-note">
+    Each panel is one transition window. The bar at the top is every foreman at the end of it;
+    the blocks along the bottom are where they were in the census before, sized by share. Every
+    panel is normalised, so the panels compare composition rather than size. Sources keep the same
+    colour and the same left-to-right place in every panel, so nothing crosses.
+  </div>
+
+  </div>
+</section>
+
+<script>
+(function(){
+  // ---------------------------------------------------------------- mock data
+  // Replace this block with a d3.csv load of window,origin_occode,n and the rest
+  // of the file works unchanged -- it only ever reads SOURCES and SHARES.
+  var SOURCES = [
+    { id: "SELF",  name: "Already a foreman",                        kind: "self"  },
+    { id: "177",   name: "Farm – bailiffs, stewards, foremen",  kind: "occ"   },
+    { id: "181",   name: "Agricultural labourers",                   kind: "occ"   },
+    { id: "555",   name: "Cotton & cotton goods manufacture",        kind: "occ"   },
+    { id: "761",   name: "Manufacturers, managers, superintendents", kind: "occ"   },
+    { id: "697",   name: "Grocers, tea dealers",                     kind: "occ"   },
+    { id: "713",   name: "Innkeepers, hotel keepers, publicans",     kind: "occ"   },
+    { id: "OTHER", name: "All other occupations",                    kind: "other" },
+    { id: "NONE",  name: "No previous job",                          kind: "none"  }
+  ];
+  var WINDOWS = ["1851 → 1861", "1861 → 1881", "1881 → 1891",
+                 "1891 → 1901", "1901 → 1911"];
+  var SHARES = {
+    "1851 → 1861": { SELF:12, "177":22, "181":14, "555":11, "761":8,  "697":3, "713":3, OTHER:18, NONE:9 },
+    "1861 → 1881": { SELF:16, "177":19, "181":12, "555":10, "761":9,  "697":4, "713":4, OTHER:18, NONE:8 },
+    "1881 → 1891": { SELF:21, "177":15, "181":9,  "555":9,  "761":10, "697":6, "713":5, OTHER:18, NONE:7 },
+    "1891 → 1901": { SELF:25, "177":12, "181":7,  "555":7,  "761":11, "697":7, "713":6, OTHER:18, NONE:7 },
+    "1901 → 1911": { SELF:29, "177":10, "181":5,  "555":6,  "761":11, "697":8, "713":7, OTHER:18, NONE:6 }
+  };
+
+  // ------------------------------------------------------------------ colours
+  var OCC_COLS = ["#3C7DB1", "#7FA9CB", "#C08A2E", "#E0B66A", "#6B9E78", "#A8C6AF", "#9C6FA8"];
+  var colour = {};
+  var oi = 0;
+  SOURCES.forEach(function(s){
+    if (s.kind === "self")       colour[s.id] = "#1F5C3D";   // stayed put
+    else if (s.kind === "none")  colour[s.id] = "#B9BFC6";   // outside employment
+    else if (s.kind === "other") colour[s.id] = "#E2E2E2";   // the bundled tail
+    else                         colour[s.id] = OCC_COLS[oi++ % OCC_COLS.length];
+  });
+
+  var FO_W = 320, FO_H = 620;
+  var TOP_Y = 26, TOP_H = 30;          // the destination bar
+  var NODE_H = 30, BOT_PAD = 26;       // the source blocks
+  var SIDE = 10, GAP = 2.5;            // panel inset, and the gap between sources
+
+  var grid = d3.select("#fo-grid");
+  var readout = d3.select("#fo-readout");
+  var fmt = d3.format(".0f");
+
+  WINDOWS.forEach(function(win){
+    var cell = grid.append("div").attr("class", "fo-cell");
+    var svg = cell.append("svg").attr("class", "fo-svg").attr("viewBox", [0, 0, FO_W, FO_H]);
+    cell.append("div").attr("class", "fo-wlab").text(win);
+
+    var inner = FO_W - SIDE * 2;
+    var live = SOURCES.filter(function(s){ return (SHARES[win][s.id] || 0) > 0; });
+    var nGap = (live.length - 1) * GAP;
+
+    var yTopBot = TOP_Y + TOP_H;                 // underside of the destination bar
+    var yNodeTop = FO_H - BOT_PAD - NODE_H;      // top of the source blocks
+    var mid = (yTopBot + yNodeTop) / 2;
+
+    // The top bar and the bottom blocks are cut in the same proportions and the
+    // same order, so ribbons only converge to close the gaps -- none can cross.
+    var xt = SIDE, xb = SIDE;
+    var bands = live.map(function(s){
+      var share = SHARES[win][s.id];
+      var wTop = inner * share / 100;
+      var wBot = (inner - nGap) * share / 100;
+      var b = { id: s.id, name: s.name, share: share,
+                xt: xt, wt: wTop, xb: xb, wb: wBot };
+      xt += wTop;
+      xb += wBot + GAP;
+      return b;
+    });
+
+    // ribbons first, so the solid blocks sit over their ends
+    svg.append("g").selectAll("path").data(bands).join("path")
+      .attr("class", "fo-ribbon")
+      .attr("data-src", function(d){ return d.id; })
+      .attr("fill", function(d){ return colour[d.id]; })
+      .attr("d", function(d){
+        var l0 = d.xb, l1 = d.xt, r0 = d.xb + d.wb, r1 = d.xt + d.wt;
+        return "M" + l0 + "," + yNodeTop +
+               "C" + l0 + "," + mid + " " + l1 + "," + mid + " " + l1 + "," + yTopBot +
+               "L" + r1 + "," + yTopBot +
+               "C" + r1 + "," + mid + " " + r0 + "," + mid + " " + r0 + "," + yNodeTop + "Z";
+      })
+      .on("mouseover", over).on("mouseout", out);
+
+    svg.append("g").selectAll("rect.fo-top").data(bands).join("rect")
+      .attr("class", "fo-top")
+      .attr("data-src", function(d){ return d.id; })
+      .attr("x", function(d){ return d.xt; }).attr("y", TOP_Y)
+      .attr("width", function(d){ return d.wt; }).attr("height", TOP_H)
+      .attr("fill", function(d){ return colour[d.id]; })
+      .on("mouseover", over).on("mouseout", out);
+
+    svg.append("g").selectAll("rect.fo-node").data(bands).join("rect")
+      .attr("class", "fo-node")
+      .attr("data-src", function(d){ return d.id; })
+      .attr("x", function(d){ return d.xb; }).attr("y", yNodeTop)
+      .attr("width", function(d){ return d.wb; }).attr("height", NODE_H)
+      .attr("fill", function(d){ return colour[d.id]; })
+      .on("mouseover", over).on("mouseout", out);
+
+    svg.append("text").attr("class", "fo-cap")
+      .attr("x", SIDE).attr("y", TOP_Y - 9)
+      .text("all foremen");
+  });
+
+  function over(event, d){
+    d3.selectAll(".fo-ribbon, .fo-top, .fo-node")
+      .classed("fo-dim", function(){ return this.getAttribute("data-src") !== d.id; });
+    var trail = WINDOWS.map(function(w){
+      var v = SHARES[w][d.id] || 0;
+      return '<span class="fo-step"><span class="fo-step__w">' + w.replace(/→/, "–") +
+             '</span><span class="fo-step__v">' + fmt(v) + '%</span></span>';
+    }).join("");
+    readout.html('<span class="fo-readout__sw" style="background:' + colour[d.id] + '"></span>' +
+                 '<span class="fo-readout__name">' + d.name + '</span>' + trail);
+  }
+  function out(){
+    d3.selectAll(".fo-ribbon, .fo-top, .fo-node").classed("fo-dim", false);
+    readout.html('<span class="fo-readout__hint">Hover a source to name it and trace it across the windows.</span>');
+  }
+})();
+</script>
+
+<style>
+  .fo-mock {
+    border-left: 3px solid #d8a93a; background: #fffbe9; color: #7a5c00;
+    padding: 12px 18px; margin: 2px 0 18px; max-width: 1100px;
+    font-size: .88rem; line-height: 1.55; border-radius: 3px;
+  }
+
+  .fo-readout {
+    min-height: 34px; display: flex; align-items: center; flex-wrap: wrap; gap: 0 18px;
+    margin: 0 0 14px; font-size: .92rem; color: #333;
+  }
+  .fo-readout__hint { color: #9a9a9a; font-size: .86rem; }
+  .fo-readout__sw { width: 12px; height: 12px; border-radius: 2px; display: inline-block; margin-right: 9px; }
+  .fo-readout__name { font-weight: 600; margin-right: 10px; }
+  .fo-step { color: #666; font-size: .86rem; white-space: nowrap; }
+  .fo-step__w { color: #a0a0a0; margin-right: 6px; }
+  .fo-step__v { font-variant-numeric: tabular-nums; color: #222; }
+
+  .fo-grid { display: flex; gap: 20px; align-items: flex-start; }
+  .fo-cell { flex: 1 1 0; min-width: 0; }
+  .fo-svg { width: 100%; height: auto; display: block; }
+  .fo-wlab {
+    text-align: center; font-size: .9rem; color: #444; font-variant-numeric: tabular-nums;
+    margin-top: 4px;
+  }
+
+  .fo-ribbon { opacity: .58; transition: opacity .12s; cursor: pointer; }
+  .fo-top, .fo-node { cursor: pointer; transition: opacity .12s; }
+  .fo-dim { opacity: .08 !important; }
+  .fo-cap { fill: #9a9a9a; font-size: 11px; }
+
+  .fo-note {
+    font-size: .84rem; color: #8a8a8a; line-height: 1.65;
+    margin: 20px 0 0; max-width: 1150px;
+  }
+
+  @media (max-width: 1000px) {
+    .fo-grid { flex-wrap: wrap; }
+    .fo-cell { flex: 1 1 260px; }
+  }
+</style>
+
+
 <section class="frame">
 <div class="frame__body">
 <div class="fig-flow">
