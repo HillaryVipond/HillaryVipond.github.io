@@ -1889,56 +1889,39 @@ Promise.all([
 </section>
 
 
-<section class="frame frame--nonum">
+<section class="frame">
   <div class="in-kicker">Results · A: Workforce in Transition</div>
-<h3>Measuring displacement</h3>
+<h3>1.1. Measuring displacement</h3>
   <div class="frame__body">
 
-    <p class="eq-lead">
-      I estimate, for each occupation, how much its exit rate moved once mechanization
-      arrived &mdash; relative to the same occupation&rsquo;s own county and relative to the
-      period before.
-    </p>
-
     <div class="eq-box"><div id="eq-did"></div></div>
-
-    <div class="eq-split">
-      <div class="eq-terms">
-        <div class="eq-term"><span class="eq-sym" data-tex="Exit_{ic\tau}"></span>
-          <span>rate at which workers leave occupation <em>i</em> in county <em>c</em> at census <em>&tau;</em></span></div>
-        <div class="eq-term"><span class="eq-sym" data-tex="\delta_c"></span>
-          <span>county fixed effects &mdash; local labour markets differ</span></div>
-        <div class="eq-term"><span class="eq-sym" data-tex="Boot_{i\tau}"></span>
-          <span>indicator for the treated occupation</span></div>
-        <div class="eq-term"><span class="eq-sym" data-tex="Post_\tau"></span>
-          <span>censuses after mechanization</span></div>
-        <div class="eq-term eq-term--key"><span class="eq-sym" data-tex="\beta"></span>
-          <span><strong>the coefficient of interest</strong> &mdash; the difference-in-differences</span></div>
-        <div class="eq-term"><span class="eq-sym" data-tex="X_{i\tau}"></span>
-          <span>occupation covariates, interacted with <span class="eq-sym-i" data-tex="Post_\tau"></span>
-            so controls are free to trend differently</span></div>
-      </div>
-
-      <div class="eq-logic">
-        <h4>How this picks out an outlier</h4>
-        <p>
-          A single <span class="eq-sym-i" data-tex="\beta"></span> is hard to read. Large or
-          small compared to what?
-        </p>
-        <p>
-          So I re-estimate the same equation <strong>231 times</strong>, each time putting a
-          different large male occupation in the treated position. Every one of those is a
-          placebo: an occupation that was <em>not</em> mechanized in this way should show no
-          systematic break.
-        </p>
-        <p>
-          That gives a whole distribution of <span class="eq-sym-i" data-tex="\beta"></span>&rsquo;s.
-          Bootmakers can then be read against it &mdash; not as a number on its own, but as a
-          position in the spread of what ordinary occupations were doing at the same time.
-        </p>
-        <p class="eq-next">The next slide is that distribution.</p>
-      </div>
+    <div class="eq-gloss">
+      <span class="eq-sym-i" data-tex="Exit_{ic\tau}"></span> exit rate, occupation <em>i</em>,
+      county <em>c</em>, census <em>&tau;</em> &nbsp;&middot;&nbsp;
+      <span class="eq-sym-i" data-tex="\delta_c"></span> county fixed effects &nbsp;&middot;&nbsp;
+      <span class="eq-sym-i" data-tex="Boot_{i\tau}"></span> treated occupation &nbsp;&middot;&nbsp;
+      <span class="eq-sym-i" data-tex="Post_\tau"></span> after mechanization &nbsp;&middot;&nbsp;
+      <span class="eq-sym-i" data-tex="X_{i\tau}"></span> covariates, interacted with
+      <span class="eq-sym-i" data-tex="Post_\tau"></span> so controls may trend differently
     </div>
+
+    <ul class="in-list eq-points">
+      <li><strong><span class="eq-sym-i" data-tex="\beta"></span> is the whole estimate.</strong>
+          How much an occupation&rsquo;s exit rate moved once mechanization arrived &mdash; net of
+          its own level before, and net of its county.</li>
+
+      <li><strong>One occupation at a time.</strong> I run this same regression
+          <strong>231 times</strong>, each time putting a different large male occupation into
+          the treated position.</li>
+
+      <li><strong>Every other run is a placebo.</strong> An occupation that was not mechanized
+          this way has no reason to break at that moment, so those 231 estimates trace out what
+          an ordinary occupation looked like in the same decades.</li>
+
+      <li><strong>That turns one number into a position.</strong> Rather than asking whether
+          <span class="eq-sym-i" data-tex="\beta"></span> is large &mdash; large compared to what?
+          &mdash; I ask where it falls in the distribution of everything else.</li>
+    </ul>
 
   </div>
 </section>
@@ -1957,7 +1940,7 @@ Promise.all([
     if (!window.katex) return;
     var main = document.getElementById("eq-did");
     if (main) katex.render(DID, main, { displayMode: true, throwOnError: false });
-    document.querySelectorAll(".eq-sym, .eq-sym-i").forEach(function(el){
+    document.querySelectorAll(".eq-sym-i").forEach(function(el){
       katex.render(el.getAttribute("data-tex"), el, { throwOnError: false });
     });
   }
@@ -1969,44 +1952,36 @@ Promise.all([
 
 <style>
   /* the DiD equation slide */
-  .eq-lead { font-size: 1.02rem; color: #444; margin: 0 0 20px; max-width: 1000px; line-height: 1.55; }
-
   .eq-box {
     border-left: 3px solid #238B45; background: #fafafa;
-    padding: 22px 30px; margin: 0 0 30px; max-width: 1050px; overflow-x: auto;
+    padding: 26px 34px; margin: 6px 0 14px; max-width: 1080px; overflow-x: auto;
   }
   .eq-box .katex-display { margin: 0; }
-  .eq-box .katex { font-size: 1.18em; }
+  .eq-box .katex { font-size: 1.34em; }
 
-  .eq-split { display: flex; gap: 56px; align-items: flex-start; flex-wrap: wrap; }
-  .eq-terms { flex: 1 1 440px; min-width: 320px; }
-  .eq-logic { flex: 1 1 420px; min-width: 300px; }
-
-  .eq-term {
-    display: flex; gap: 16px; align-items: baseline;
-    padding: 7px 0; border-bottom: 1px solid #f0f0f0;
-    font-size: .95rem; line-height: 1.5; color: #444;
+  .eq-gloss {
+    font-size: .84rem; color: #8a8a8a; line-height: 2.1;
+    max-width: 1080px; margin: 0 0 26px; padding-left: 3px;
   }
-  .eq-term:last-child { border-bottom: 0; }
-  .eq-term .eq-sym { flex: 0 0 86px; text-align: right; color: #1c1c1c; }
-  .eq-term--key { color: #1c1c1c; }
-  .eq-term--key .eq-sym { color: #238B45; }
-  .eq-sym-i { white-space: nowrap; }
+  .eq-gloss em { color: #666; }
+  .eq-sym-i { white-space: nowrap; color: #555; }
 
-  .eq-logic h4 { font-size: 1rem; font-weight: 700; color: #222; margin: 0 0 12px; }
-  .eq-logic p { font-size: .95rem; line-height: 1.6; color: #444; margin: 0 0 12px; }
-  .eq-next { color: #8a8a8a !important; font-style: italic; }
+  .eq-points { max-width: 1080px; }
+  .eq-points li { font-size: 1.05rem; margin-bottom: 14px; color: #333; }
+  .eq-points strong { color: #1c1c1c; }
+  .eq-points .eq-sym-i { color: #238B45; }
 
   @media (max-width: 860px) {
-    .eq-split { gap: 26px; }
-    .eq-term .eq-sym { flex-basis: 70px; }
+    .eq-box { padding: 18px 20px; }
+    .eq-box .katex { font-size: 1.05em; }
+    .eq-points li { font-size: .98rem; }
   }
 </style>
 
 
 <section class="frame">
   <div class="in-kicker">Results · A: Workforce in Transition</div>
-<h3>1.1. Who was displaced</h3>
+<h3>1.2. Who was displaced</h3>
   <div class="frame__body">
 
   <div id="placebo-men">
@@ -2033,9 +2008,6 @@ Promise.all([
   #placebo-men .ph-legend { display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: center; color: #777; font-size: .85rem; }
   #placebo-men .ph-legend span { display: inline-flex; align-items: center; gap: 7px; }
   #placebo-men .ph-note { color: #999; }
-  #placebo-men .ph-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; box-sizing: border-box; }
-  #placebo-men .ph-dot--control { background: #fff; border: 1.5px solid #9aa0a6; }
-  #placebo-men .ph-dot--boot { background: #d6322e; border: 1.5px solid #d6322e; }
   #placebo-men .ph-line { display: inline-block; width: 18px; border-top: 1px dashed #aaa; }
   #placebo-men .ph-readout { min-height: 22px; margin: 10px 0 2px; font-weight: 600; font-variant-numeric: tabular-nums; color: #222; }
   #placebo-men .ph-wrap { position: relative; width: 100%; }
@@ -2046,10 +2018,8 @@ Promise.all([
   #placebo-men .ph-quant.median { stroke-dasharray: none; opacity: .8; }
   #placebo-men .ph-quant-label { fill: #999; font-size: 12px; }
   #placebo-men .ph-pt { fill: #fff; stroke: #9aa0a6; stroke-width: 1.15; opacity: .62; pointer-events: none; }
-  #placebo-men .ph-boot-guide { stroke: #d6322e; stroke-width: 1.25; opacity: .7; }
-  #placebo-men .ph-boot-pt { fill: #d6322e; stroke: #fff; stroke-width: 1.75; pointer-events: none; }
+  #placebo-men .ph-boot-pt { fill: #fff; stroke: #9aa0a6; stroke-width: 1.15; opacity: .62; pointer-events: none; }
   #placebo-men .ph-hover-pt { fill: #ffe9a8; stroke: #333; stroke-width: 1.5; pointer-events: none; }
-  #placebo-men .ph-boot-label { fill: #222; font-size: 12px; font-weight: 600; }
   #placebo-men .ph-axis text, #placebo-men .ph-axis-title { fill: #555; font-size: 12px; }
   #placebo-men .ph-axis path, #placebo-men .ph-axis line { stroke: #ccc; }
   #placebo-men .ph-hit { fill: transparent; pointer-events: all; }
@@ -2181,12 +2151,8 @@ Promise.all([
         .attr("cy", function(d){ return y(d.density); })
         .attr("r", 2.7);
 
-      g.append("line").attr("class", "ph-boot-guide")
-        .attr("x1", x(boot.beta)).attr("x2", x(boot.beta))
-        .attr("y1", y(boot.density)).attr("y2", M.top + iH);
-
       g.append("circle").attr("class", "ph-boot-pt")
-        .attr("cx", x(boot.beta)).attr("cy", y(boot.density)).attr("r", 5.7);
+        .attr("cx", x(boot.beta)).attr("cy", y(boot.density)).attr("r", 2.7);
 
 
       g.append("g").attr("class", "ph-axis")
@@ -2243,7 +2209,7 @@ Promise.all([
 
 <section class="frame">
   <div class="in-kicker">Results · A: Workforce in Transition</div>
-<h3>1.2. Did contraction push workers out, or stop new ones coming in?</h3>
+<h3>1.3. Did contraction push workers out, or stop new ones coming in?</h3>
   <div class="frame__body">
 
   <p class="sc-sub">
@@ -2280,33 +2246,42 @@ Promise.all([
 
 <section class="frame">
   <div class="in-kicker">Results · A: Workforce in Transition</div>
-<h3>1.3. Do the two margins move together?</h3>
+<h3>1.4. More unusual on exit, or on entry?</h3>
   <div class="frame__body">
+
+  <p class="sc-sub">
+    Each occupation is ranked twice against the same universe of
+    <strong>235 large male occupations</strong>: once on how far its exit rate rose, once on how
+    far its entry collapsed. Putting both on a percentile scale makes the two margins comparable,
+    and asks which of them an occupation is really an outlier on.
+  </p>
 
   <div id="sc-legend-b" class="sc-legend"></div>
   <div class="sc-hint">Click a category to remove it.</div>
 
   <div class="sc-row">
-    <div class="sc-panel" style="flex:0 1 700px;">
-      <div class="sc-ptitle">Change in exit against change in entry</div>
-      <div class="sc-pnote">One dot per occupation. The dashed line is a least-squares fit.</div>
+    <div class="sc-panel" style="flex:0 1 660px;">
+      <div class="sc-ptitle">Exit percentile against entry percentile</div>
+      <div class="sc-pnote">One dot per occupation. On the diagonal, both margins are equally unusual.</div>
       <svg id="sc-svg-joint"></svg>
       <div class="sc-tip" id="sc-tip-joint"></div>
     </div>
     <div style="flex:1 1 300px;min-width:280px;font-size:.92rem;color:#555;line-height:1.7;padding-top:40px;">
       <p style="margin:0 0 14px;">
-        Bottom-right: exit rose <em>and</em> entry collapsed. Top-left: neither moved much.
+        <strong>Everything is extreme on entry.</strong> All 18 sit at or above the
+        <strong>71st percentile</strong> of entry collapse, most of them far higher. Contraction
+        shutting off recruitment is not what distinguishes these occupations &mdash; it is what
+        they have in common.
       </p>
       <p style="margin:0 0 14px;">
-        A loose tendency rather than a law &mdash; <strong>r = &minus;0.46</strong>, so change in
-        exit accounts for about a fifth of the variation in change in entry, and on 18 points that
-        falls just short of conventional significance. It is not driven by any one occupation:
-        dropping each in turn leaves r between &minus;0.37 and &minus;0.55.
+        <strong>Exit is what separates them.</strong> On the exit margin they run from the
+        <strong>22nd</strong> percentile to the <strong>100th</strong>. Most therefore fall below
+        the diagonal: they stopped taking people in without pushing the incumbents out.
       </p>
       <p style="margin:0;">
-        The occupations off the line are the interesting ones. <strong>Other miners</strong> shows
-        essentially no unusual exit yet lost 82% of its entrants; <strong>sawyers</strong> are the
-        mirror image.
+        Only <strong>6 of 18</strong> are more unusual on exit than on entry &mdash; and all six
+        are <span style="color:#238B45;font-weight:600;">Adjustment</span> occupations. None of
+        the rubbish categories or category errors clears the diagonal.
       </p>
     </div>
   </div>
@@ -2489,15 +2464,23 @@ Promise.all([
 
   Promise.all([
     d3.csv("/assets/Results/scatter_M_negative_classified.csv"),
-    d3.csv("/assets/Results/scatter_M_negative_classified_Entry.csv")
+    d3.csv("/assets/Results/scatter_M_negative_classified_Entry.csv"),
+    d3.csv("/assets/Results/entry_exit_percentiles_M_33_contracting.csv?v=1")
   ]).then(function(res){
-    var exitRows = res[0], entryRows = res[1];
-    var entryBy = {};
+    var exitRows = res[0], entryRows = res[1], pctRows = res[2];
+    var entryBy = {}, pctBy = {};
     entryRows.forEach(function(r){ entryBy[r.occode] = r; });
+    // percentiles are against all 235 large male occupations, not within the 33,
+    // so the two margins can be compared without the ranks being zero-sum
+    pctRows.forEach(function(r){ pctBy[r.occode] = r; });
 
     var data = exitRows.map(function(r){
       var e = entryBy[r.occode] || {};
+      var q = pctBy[r.occode] || {};
       return {
+        exit_q:  +q.exit_increase_percentile,
+        entry_q: +q.entry_collapse_percentile,
+        bal:     +q.mechanism_balance_percentile,
         code: r.occode,
         name: title(r.level3),
         short: SHORT[r.occode] || title(r.level3).split(/[ ,;(]/)[0],
@@ -2538,86 +2521,64 @@ Promise.all([
     });
 
     function renderJoint(){
-      var W = 700, H = 520, M = { top:18, right:26, bottom:56, left:70 };
-      var iW = W-M.left-M.right, iH = H-M.top-M.bottom;
+      // A square plot area, so the diagonal really is 45 degrees on screen and
+      // "further from the line" means what it looks like it means.
+      var SIDE = 520, M = { top:18, right:26, bottom:56, left:70 };
+      var W = SIDE+M.left+M.right, H = SIDE+M.top+M.bottom, iW = SIDE, iH = SIDE;
       var svg = d3.select("#sc-svg-joint").attr("viewBox",[0,0,W,H]);
       var tip = d3.select("#sc-tip-joint");
       svg.selectAll("*").remove();
       var g = svg.append("g").attr("transform","translate("+M.left+","+M.top+")");
 
-      var xe = d3.extent(data.concat(), function(d){ return d.exit; });
-      var ye = d3.extent(data.concat(), function(d){ return d.entry_pct; });
-      var xp = (xe[1]-xe[0])*0.10, yp = (ye[1]-ye[0])*0.10;
-      var x = d3.scaleLinear().domain([xe[0]-xp, xe[1]+xp]).nice().range([0,iW]);
-      var y = d3.scaleLinear().domain([ye[0]-yp, Math.max(10, ye[1]+yp)]).nice().range([iH,0]);
+      // fixed 0-100 on both axes: the point is partly that the cloud is jammed
+      // against the right-hand edge, and a fitted domain would hide that
+      var x = d3.scaleLinear().domain([0,100]).range([0,iW]);
+      var y = d3.scaleLinear().domain([0,100]).range([iH,0]);
 
-      g.append("g").attr("class","sc-grid").selectAll("line").data(y.ticks(7)).join("line")
+      g.append("g").attr("class","sc-grid").selectAll("line").data(y.ticks(10)).join("line")
         .attr("x1",0).attr("x2",iW).attr("y1",y).attr("y2",y);
-      g.append("g").attr("class","sc-grid").selectAll("line").data(x.ticks(7)).join("line")
+      g.append("g").attr("class","sc-grid").selectAll("line").data(x.ticks(10)).join("line")
         .attr("y1",0).attr("y2",iH).attr("x1",x).attr("x2",x);
 
-      // both zeros matter here: no change in exit, no change in entry
+      // the 45-degree line: equally unusual on both margins
       g.append("line").attr("class","sc-zero")
-        .attr("x1",0).attr("x2",iW).attr("y1",y(0)).attr("y2",y(0));
-      g.append("text").attr("class","sc-zerolab").attr("x",4).attr("y",y(0)-6)
-        .text("no change in entry");
-      g.append("line").attr("class","sc-zero")
-        .attr("x1",x(0)).attr("x2",x(0)).attr("y1",0).attr("y2",iH);
+        .attr("x1",x(0)).attr("y1",y(0)).attr("x2",x(100)).attr("y2",y(100));
       g.append("text").attr("class","sc-zerolab")
-        .attr("transform","translate("+(x(0)-6)+","+(iH-4)+") rotate(-90)")
-        .text("no change in exit");
-
-      // least-squares fit across everything currently shown, drawn faintly:
-      // r is about -0.46 on 18 points, which is suggestive and not much more
-      var live = data.filter(function(d){ return !hidden[d.type]; });
-      if (live.length > 2) {
-        var n = live.length;
-        var mx = d3.mean(live, function(d){return d.exit;});
-        var my = d3.mean(live, function(d){return d.entry_pct;});
-        var sxx = d3.sum(live, function(d){return (d.exit-mx)*(d.exit-mx);});
-        var syy = d3.sum(live, function(d){return (d.entry_pct-my)*(d.entry_pct-my);});
-        var sxy = d3.sum(live, function(d){return (d.exit-mx)*(d.entry_pct-my);});
-        if (sxx > 0 && syy > 0) {
-          var slope = sxy/sxx, inter = my - slope*mx;
-          var r = sxy/Math.sqrt(sxx*syy);
-          var x0 = x.domain()[0], x1 = x.domain()[1];
-          g.append("line")
-            .attr("x1",x(x0)).attr("y1",y(inter+slope*x0))
-            .attr("x2",x(x1)).attr("y2",y(inter+slope*x1))
-            .attr("stroke","#bbb").attr("stroke-width",1.5).attr("stroke-dasharray","6 5");
-          g.append("text").attr("class","sc-zerolab").attr("fill","#999")
-            .attr("x",iW-2).attr("y",14).attr("text-anchor","end")
-            .text("r = " + d3.format("+.2f")(r) + " (n = " + n + ") — suggestive only");
-        }
-      }
+        .attr("x",10).attr("y",16).attr("fill","#999")
+        .text("above the line: more unusual on EXIT");
+      g.append("text").attr("class","sc-zerolab")
+        .attr("x",iW-6).attr("y",iH-10).attr("text-anchor","end").attr("fill","#999")
+        .text("below the line: more unusual on ENTRY");
 
       g.append("g").attr("class","sc-axis").attr("transform","translate(0,"+iH+")")
-        .call(d3.axisBottom(x).ticks(7).tickSizeOuter(0));
+        .call(d3.axisBottom(x).ticks(10).tickSizeOuter(0));
       g.append("g").attr("class","sc-axis")
-        .call(d3.axisLeft(y).ticks(7).tickFormat(function(v){return v+"%";}).tickSizeOuter(0));
+        .call(d3.axisLeft(y).ticks(10).tickSizeOuter(0));
       g.append("text").attr("class","sc-axis-title").attr("x",iW/2).attr("y",iH+42)
-        .attr("text-anchor","middle").text("Change in exit, DiD coefficient (pp)");
+        .attr("text-anchor","middle").text("Entry collapse — percentile among 235 large occupations");
       g.append("text").attr("class","sc-axis-title").attr("transform","rotate(-90)")
         .attr("x",-(iH/2)).attr("y",-52).attr("text-anchor","middle")
-        .text("Change in entry (% of its own 1851–61 rate)");
+        .text("Exit increase — percentile among 235 large occupations");
 
+      var live = data.filter(function(d){ return !hidden[d.type]; });
       var labLayer = g.append("g"), dotLayer = g.append("g");
 
       dotLayer.selectAll("circle").data(data, function(d){return d.code;}).join("circle")
         .attr("class","sc-dot").attr("r",6)
-        .attr("cx",function(d){return x(d.exit);})
-        .attr("cy",function(d){return y(d.entry_pct);})
+        .attr("cx",function(d){return x(d.entry_q);})
+        .attr("cy",function(d){return y(d.exit_q);})
         .attr("fill",function(d){return colOf(d.type);})
         .attr("display",function(d){return hidden[d.type] ? "none" : null;})
         .on("mouseover",function(event,d){
           d3.select(this).attr("r",9);
+          var side = d.bal >= 0 ? "more unusual on exit" : "more unusual on entry";
           tip.style("visibility","visible").html(
             "<strong>"+d.name+"</strong>"+
             "<div style='color:#777'>code "+d.code+" · "+d.type+"</div>"+
-            "<div>Change in exit: "+fmt2(d.exit)+" pp</div>"+
-            "<div>Change in entry: "+fmt1(d.entry_pct)+"%</div>"+
-            "<div style='color:#777'>employment "+fmt1(d.x)+"% · entrants "+
-              d3.format(",")(d.ent1)+" → "+d3.format(",")(d.ent2)+"</div>");
+            "<div>Exit: "+fmt1(d.exit_q)+"th percentile</div>"+
+            "<div>Entry: "+fmt1(d.entry_q)+"th percentile</div>"+
+            "<div style='color:#777'>"+d3.format("+.1f")(d.bal)+" — "+side+"</div>"+
+            "<div style='color:#777'>employment "+fmt1(d.x)+"%</div>");
         })
         .on("mousemove",function(event){
           var r2 = this.closest(".sc-panel").getBoundingClientRect();
@@ -2633,20 +2594,22 @@ Promise.all([
           return !(b.x+b.w<p.x || p.x+p.w<b.x || b.y+b.h<p.y || p.y+p.h<b.y);
         });
       }
-      live.forEach(function(d){
-        var cx=x(d.exit), cy=y(d.entry_pct), w=d.short.length*5.3+4, h=11;
-        var tries=[{x:cx+9,y:cy-5.5,a:"start"},{x:cx-9-w,y:cy-5.5,a:"end"},
-                   {x:cx-w/2,y:cy-17,a:"middle"},{x:cx-w/2,y:cy+7,a:"middle"}];
-        for (var i2=0;i2<tries.length;i2++){
-          var b={x:tries[i2].x,y:tries[i2].y,w:w,h:h};
-          if (fits(b)){
-            placed.push(b);
-            out.push({d:d, tx: tries[i2].a==="end"?cx-9:(tries[i2].a==="middle"?cx:cx+9),
-                      ty:b.y+8.5, a:tries[i2].a});
-            return;
+      // label the most lopsided first -- those are the ones worth naming
+      live.slice().sort(function(a2,b2){ return Math.abs(b2.bal)-Math.abs(a2.bal); })
+        .forEach(function(d){
+          var cx=x(d.entry_q), cy=y(d.exit_q), w=d.short.length*5.3+4, h=11;
+          var tries=[{x:cx-9-w,y:cy-5.5,a:"end"},{x:cx+9,y:cy-5.5,a:"start"},
+                     {x:cx-w/2,y:cy-17,a:"middle"},{x:cx-w/2,y:cy+7,a:"middle"}];
+          for (var i2=0;i2<tries.length;i2++){
+            var b={x:tries[i2].x,y:tries[i2].y,w:w,h:h};
+            if (fits(b)){
+              placed.push(b);
+              out.push({d:d, tx: tries[i2].a==="end"?cx-9:(tries[i2].a==="middle"?cx:cx+9),
+                        ty:b.y+8.5, a:tries[i2].a});
+              return;
+            }
           }
-        }
-      });
+        });
       labLayer.selectAll("text").data(out,function(o){return o.d.code;}).join("text")
         .attr("class","sc-lab")
         .attr("x",function(o){return o.tx;}).attr("y",function(o){return o.ty;})
