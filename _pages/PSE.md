@@ -2912,165 +2912,190 @@ Promise.all([
 <h3>2.3. Where did managers come from?</h3>
   <div class="frame__body">
 
-  <div class="fo-mock">
-    Layout mock-up. The shares below are <strong>invented placeholder values</strong>, not results
-    &mdash; they are here to show the form. Send the origins file and this fills with real data.
-  </div>
-
   <div class="fo-readout" id="fo-readout">
     <span class="fo-readout__hint">Hover a source to name it and trace it across the windows.</span>
   </div>
 
   <div class="fo-grid" id="fo-grid"></div>
 
-  <div class="fo-note">
-    Each panel is one transition window. The grey bar at the top is every manager at the end of it;
-    the blocks along the bottom are where they were in the census before, sized by share. Every
-    panel is normalised, so the panels compare composition rather than size. Sources keep the same
-    colour and the same left-to-right place in every panel, so no two streams cross.
-  </div>
+  <div class="fo-note" id="fo-note"></div>
 
   </div>
 </section>
 
 <script>
 (function(){
-  // ---------------------------------------------------------------- mock data
-  // Replace this block with a d3.csv load of window,origin_occode,n and the rest
-  // of the file works unchanged -- it only ever reads SOURCES, WINDOWS, SHARES.
-  var SOURCES = [
-    { id: "SELF",  name: "Already a manager",                        kind: "self"  },
-    { id: "177",   name: "Farm – bailiffs, stewards, foremen",  kind: "occ"   },
-    { id: "181",   name: "Agricultural labourers",                   kind: "occ"   },
-    { id: "555",   name: "Cotton & cotton goods manufacture",        kind: "occ"   },
-    { id: "761",   name: "Manufacturers, managers, superintendents", kind: "occ"   },
-    { id: "697",   name: "Grocers, tea dealers",                     kind: "occ"   },
-    { id: "713",   name: "Innkeepers, hotel keepers, publicans",     kind: "occ"   },
-    { id: "OTHER", name: "All other occupations",                    kind: "other" },
-    { id: "NONE",  name: "No previous job",                          kind: "none"  }
-  ];
-  var WINDOWS = ["1851 → 1861", "1861 → 1881", "1881 → 1891",
-                 "1891 → 1901", "1901 → 1911"];
-  var SHARES = {
-    "1851 → 1861": { SELF:12, "177":22, "181":14, "555":11, "761":8,  "697":3, "713":3, OTHER:18, NONE:9 },
-    "1861 → 1881": { SELF:16, "177":19, "181":12, "555":10, "761":9,  "697":4, "713":4, OTHER:18, NONE:8 },
-    "1881 → 1891": { SELF:21, "177":15, "181":9,  "555":9,  "761":10, "697":6, "713":5, OTHER:18, NONE:7 },
-    "1891 → 1901": { SELF:25, "177":12, "181":7,  "555":7,  "761":11, "697":7, "713":6, OTHER:18, NONE:7 },
-    "1901 → 1911": { SELF:29, "177":10, "181":5,  "555":6,  "761":11, "697":8, "713":7, OTHER:18, NONE:6 }
-  };
+  var TOP_N = 6;   // largest origins taken from each window; their union is named
 
-  // ------------------------------------------------------------------ colours
-  var OCC_COLS = ["#3C7DB1", "#7FA9CB", "#C08A2E", "#E0B66A", "#6B9E78", "#A8C6AF", "#9C6FA8"];
-  var colour = {};
-  var oi = 0;
-  SOURCES.forEach(function(s){
-    if (s.kind === "self")       colour[s.id] = "#1F5C3D";   // stayed put
-    else if (s.kind === "none")  colour[s.id] = "#B9BFC6";   // outside employment
-    else if (s.kind === "other") colour[s.id] = "#E2E2E2";   // the bundled tail
-    else                         colour[s.id] = OCC_COLS[oi++ % OCC_COLS.length];
+  var FILES = [1851, 1861, 1881, 1891, 1901].map(function(y){
+    return d3.csv("/assets/Results/Foreman_origins_" + y + ".csv?v=1");
   });
+  FILES.push(d3.csv("/assets/data/occode_names.csv"));
 
   var FO_W = 320, FO_H = 620;
-  var TOP_Y = 30, TOP_H = 26;          // the single grey destination bar
-  var NODE_H = 26, BOT_PAD = 26;       // the source blocks
-  var SIDE = 10;
-  var GAP_B = 5.5;                     // between source blocks, widest apart
-  var GAP_T = 3;                       // between the streams where they arrive
-  var NECK  = 0.82;                    // streams land on this much of the bar
+  var TOP_Y = 30, TOP_H = 26;
+  var NODE_H = 26, BOT_PAD = 26;
+  var SIDE = 10, GAP_B = 5.5, GAP_T = 3, NECK = 0.82;
 
-  var grid = d3.select("#fo-grid");
-  var readout = d3.select("#fo-readout");
-  var fmt = d3.format(".0f");
+  var NONE_COL = "#B9BFC6", REST_COL = "#E4E4E4";
+  var PALETTE = ["#3C7DB1", "#6B9E78", "#C08A2E", "#9C6FA8", "#5FA8A0",
+                 "#E0B66A", "#7FA9CB", "#B07C5A", "#8FA65A", "#6A5ACD"];
 
-  WINDOWS.forEach(function(win){
-    var cell = grid.append("div").attr("class", "fo-cell");
-    var svg = cell.append("svg").attr("class", "fo-svg").attr("viewBox", [0, 0, FO_W, FO_H]);
-    cell.append("div").attr("class", "fo-wlab").text(win);
+  function clean(s){
+    return String(s || "").replace(/�|â€“/g, "–").replace(/\s+/g, " ").trim();
+  }
+  function title(s){
+    return clean(s).toLowerCase().replace(/\b[a-z]/g, function(m){ return m.toUpperCase(); });
+  }
+  var fmt1 = d3.format(".1f"), fmtN = d3.format(",");
 
-    var inner = FO_W - SIDE * 2;
-    var live = SOURCES.filter(function(s){ return (SHARES[win][s.id] || 0) > 0; });
+  Promise.all(FILES).then(function(res){
+    var names = {};
+    res.pop().forEach(function(r){ names[r.occode] = title(r.occ_name); });
 
-    var yTopBot = TOP_Y + TOP_H;                 // underside of the grey bar
-    var yNodeTop = FO_H - BOT_PAD - NODE_H;      // top of the source blocks
-    var mid = (yTopBot + yNodeTop) / 2;
-
-    // Streams are wide and well separated at the bottom and narrow into a neck
-    // under the bar, so each one visibly tapers instead of butting against its
-    // neighbour. Order is identical at both ends, so none of them cross.
-    var totB = inner - (live.length - 1) * GAP_B;
-    var neckW = inner * NECK;
-    var totT = neckW - (live.length - 1) * GAP_T;
-
-    var xt = SIDE + (inner - neckW) / 2, xb = SIDE;
-    var bands = live.map(function(s){
-      var share = SHARES[win][s.id];
-      var b = { id: s.id, name: s.name, share: share,
-                xt: xt, wt: totT * share / 100,
-                xb: xb, wb: totB * share / 100 };
-      xt += b.wt + GAP_T;
-      xb += b.wb + GAP_B;
-      return b;
+    // one entry per transition window, in census order
+    var wins = res.map(function(rows){
+      var lab = rows[0].first_year + " → " + rows[0].second_year;
+      var tot = d3.sum(rows, function(r){ return +r.foreman_n; });
+      var by = {};
+      rows.forEach(function(r){ by[r.occode_first_year] = +r.foreman_n; });
+      var ranked = rows.slice().sort(function(a, b){ return b.foreman_n - a.foreman_n; })
+        .map(function(r){ return r.occode_first_year; });
+      return { lab: lab, total: tot, by: by, ranked: ranked, nOrigins: rows.length };
     });
 
-    // the destination: one solid grey bar, not cut up by source
-    svg.append("rect").attr("class", "fo-bar")
-      .attr("x", SIDE).attr("y", TOP_Y)
-      .attr("width", inner).attr("height", TOP_H).attr("rx", 2);
-    svg.append("text").attr("class", "fo-cap")
-      .attr("x", SIDE + inner / 2).attr("y", TOP_Y - 10)
-      .attr("text-anchor", "middle").text("all managers");
+    // the named set: the union of each window's largest few. Everything else is
+    // bundled, and that bundle growing is the point -- recruitment spreads out.
+    var named = [];
+    wins.forEach(function(w){
+      w.ranked.slice(0, TOP_N).forEach(function(c){
+        if (named.indexOf(c) < 0) named.push(c);
+      });
+    });
 
-    svg.append("g").selectAll("path").data(bands).join("path")
-      .attr("class", "fo-ribbon")
-      .attr("data-src", function(d){ return d.id; })
-      .attr("fill", function(d){ return colour[d.id]; })
-      .attr("d", function(d){
-        var l0 = d.xb, l1 = d.xt, r0 = d.xb + d.wb, r1 = d.xt + d.wt;
-        return "M" + l0 + "," + yNodeTop +
-               "C" + l0 + "," + mid + " " + l1 + "," + mid + " " + l1 + "," + yTopBot +
-               "L" + r1 + "," + yTopBot +
-               "C" + r1 + "," + mid + " " + r0 + "," + mid + " " + r0 + "," + yNodeTop + "Z";
-      })
-      .on("mouseover", over).on("mouseout", out);
+    var appears = {}, weight = {};
+    named.forEach(function(c){
+      appears[c] = wins.filter(function(w){ return w.ranked.slice(0, TOP_N).indexOf(c) >= 0; }).length;
+      weight[c] = d3.sum(wins, function(w){ return w.by[c] || 0; });
+    });
 
-    svg.append("g").selectAll("rect.fo-node").data(bands).join("rect")
-      .attr("class", "fo-node")
-      .attr("data-src", function(d){ return d.id; })
-      .attr("x", function(d){ return d.xb; }).attr("y", yNodeTop)
-      .attr("width", function(d){ return d.wb; }).attr("height", NODE_H)
-      .attr("rx", 1.5)
-      .attr("fill", function(d){ return colour[d.id]; })
-      .on("mouseover", over).on("mouseout", out);
+    // ordinary occupations first, by how many windows they lead in and then by
+    // size; the two catch-alls are pinned to the end
+    var occ = named.filter(function(c){ return c !== "NA"; })
+      .sort(function(a, b){ return (appears[b] - appears[a]) || (weight[b] - weight[a]); });
+
+    var colour = {};
+    occ.forEach(function(c, i){ colour[c] = PALETTE[i % PALETTE.length]; });
+    colour["NA"] = NONE_COL;
+    colour["__REST__"] = REST_COL;
+
+    var label = {};
+    occ.forEach(function(c){ label[c] = names[c] || ("Occode " + c); });
+    label["NA"] = "No occupation recorded";
+    label["__REST__"] = "All other occupations";
+
+    var order = occ.concat(["NA", "__REST__"]);
+
+    // every window's share of every node, including the bundled remainder
+    var share = {};
+    wins.forEach(function(w){
+      var acc = 0;
+      order.forEach(function(c){
+        if (c === "__REST__") return;
+        var v = 100 * (w.by[c] || 0) / w.total;
+        share[c + "|" + w.lab] = v;
+        acc += v;
+      });
+      share["__REST__|" + w.lab] = 100 - acc;
+      w.nRest = w.nOrigins - order.filter(function(c){
+        return c !== "__REST__" && (w.by[c] || 0) > 0; }).length;
+    });
+
+    var grid = d3.select("#fo-grid"), readout = d3.select("#fo-readout");
+
+    d3.select("#fo-note").html(
+      "Each panel is one transition window. The grey bar at the top is every manager at the end " +
+      "of it; the blocks below are what they were doing in the census before. Between " +
+      fmtN(d3.min(wins, function(w){ return w.nOrigins; })) + " and " +
+      fmtN(d3.max(wins, function(w){ return w.nOrigins; })) +
+      " distinct occupations feed in each time, so only the largest are named and the rest are " +
+      "bundled into the pale block at the end — which grows from about half the intake to " +
+      "three quarters of it. Panels are normalised, so they compare composition rather than size.");
+
+    wins.forEach(function(w){
+      var cell = grid.append("div").attr("class", "fo-cell");
+      var svg = cell.append("svg").attr("class", "fo-svg").attr("viewBox", [0, 0, FO_W, FO_H]);
+      cell.append("div").attr("class", "fo-wlab").text(w.lab);
+
+      var inner = FO_W - SIDE * 2;
+      var live = order.filter(function(c){ return share[c + "|" + w.lab] > 0; });
+      var yTopBot = TOP_Y + TOP_H, yNodeTop = FO_H - BOT_PAD - NODE_H;
+      var mid = (yTopBot + yNodeTop) / 2;
+      var totB = inner - (live.length - 1) * GAP_B;
+      var neckW = inner * NECK, totT = neckW - (live.length - 1) * GAP_T;
+
+      var xt = SIDE + (inner - neckW) / 2, xb = SIDE;
+      var bands = live.map(function(c){
+        var sh = share[c + "|" + w.lab];
+        var b = { id: c, win: w.lab, share: sh,
+                  xt: xt, wt: totT * sh / 100, xb: xb, wb: totB * sh / 100 };
+        xt += b.wt + GAP_T;
+        xb += b.wb + GAP_B;
+        return b;
+      });
+
+      svg.append("rect").attr("class", "fo-bar").attr("x", SIDE).attr("y", TOP_Y)
+        .attr("width", inner).attr("height", TOP_H).attr("rx", 2);
+      svg.append("text").attr("class", "fo-cap")
+        .attr("x", SIDE + inner / 2).attr("y", TOP_Y - 10)
+        .attr("text-anchor", "middle").text("all managers");
+
+      svg.append("g").selectAll("path").data(bands).join("path")
+        .attr("class", "fo-ribbon").attr("data-src", function(d){ return d.id; })
+        .attr("fill", function(d){ return colour[d.id]; })
+        .attr("d", function(d){
+          var l0 = d.xb, l1 = d.xt, r0 = d.xb + d.wb, r1 = d.xt + d.wt;
+          return "M" + l0 + "," + yNodeTop +
+                 "C" + l0 + "," + mid + " " + l1 + "," + mid + " " + l1 + "," + yTopBot +
+                 "L" + r1 + "," + yTopBot +
+                 "C" + r1 + "," + mid + " " + r0 + "," + mid + " " + r0 + "," + yNodeTop + "Z";
+        })
+        .on("mouseover", over).on("mouseout", out);
+
+      svg.append("g").selectAll("rect.fo-node").data(bands).join("rect")
+        .attr("class", "fo-node").attr("data-src", function(d){ return d.id; })
+        .attr("x", function(d){ return d.xb; }).attr("y", yNodeTop)
+        .attr("width", function(d){ return d.wb; }).attr("height", NODE_H).attr("rx", 1.5)
+        .attr("fill", function(d){ return colour[d.id]; })
+        .on("mouseover", over).on("mouseout", out);
+    });
+
+    function over(event, d){
+      d3.selectAll(".fo-ribbon, .fo-node")
+        .classed("fo-dim", function(){ return this.getAttribute("data-src") !== d.id; });
+      var trail = wins.map(function(w){
+        return '<span class="fo-step"><span class="fo-step__w">' +
+               w.lab.replace("→", "–") + '</span><span class="fo-step__v">' +
+               fmt1(share[d.id + "|" + w.lab] || 0) + '%</span></span>';
+      }).join("");
+      var sub = d.id === "__REST__"
+        ? '<span class="fo-step__w">the unnamed tail</span>'
+        : (d.id === "NA" ? '' : '<span class="fo-step__w">occode ' + d.id + '</span>');
+      readout.html('<span class="fo-readout__sw" style="background:' + colour[d.id] + '"></span>' +
+                   '<span class="fo-readout__name">' + label[d.id] + '</span>' + sub + trail);
+    }
+    function out(){
+      d3.selectAll(".fo-ribbon, .fo-node").classed("fo-dim", false);
+      readout.html('<span class="fo-readout__hint">Hover a source to name it and trace it across the windows.</span>');
+    }
   });
-
-  function over(event, d){
-    d3.selectAll(".fo-ribbon, .fo-node")
-      .classed("fo-dim", function(){ return this.getAttribute("data-src") !== d.id; });
-    var trail = WINDOWS.map(function(w){
-      var v = SHARES[w][d.id] || 0;
-      return '<span class="fo-step"><span class="fo-step__w">' + w.replace("→", "–") +
-             '</span><span class="fo-step__v">' + fmt(v) + '%</span></span>';
-    }).join("");
-    readout.html('<span class="fo-readout__sw" style="background:' + colour[d.id] + '"></span>' +
-                 '<span class="fo-readout__name">' + d.name + '</span>' + trail);
-  }
-  function out(){
-    d3.selectAll(".fo-ribbon, .fo-node").classed("fo-dim", false);
-    readout.html('<span class="fo-readout__hint">Hover a source to name it and trace it across the windows.</span>');
-  }
 })();
 </script>
 
 <style>
-  .fo-mock {
-    border-left: 3px solid #d8a93a; background: #fffbe9; color: #7a5c00;
-    padding: 12px 18px; margin: 2px 0 18px; max-width: 1100px;
-    font-size: .88rem; line-height: 1.55; border-radius: 3px;
-  }
-
   .fo-readout {
     min-height: 34px; display: flex; align-items: center; flex-wrap: wrap; gap: 0 18px;
-    margin: 0 0 14px; font-size: .92rem; color: #333;
+    margin: 2px 0 14px; font-size: .92rem; color: #333;
   }
   .fo-readout__hint { color: #9a9a9a; font-size: .86rem; }
   .fo-readout__sw { width: 12px; height: 12px; border-radius: 2px; display: inline-block; margin-right: 9px; }
