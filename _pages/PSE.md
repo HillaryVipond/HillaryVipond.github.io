@@ -1894,30 +1894,38 @@ Promise.all([
 <h3>1.1. Measuring displacement</h3>
   <div class="frame__body">
 
-    <p class="eq-lead">
-      For each occupation I estimate how much its exit rate changed between two windows &mdash;
-      <strong>1851&ndash;1861</strong> and <strong>1861&ndash;1881</strong> &mdash; and then put
-      that change in context.
-    </p>
-
     <div class="eq-box"><div id="eq-did"></div></div>
-    <div class="eq-gloss">
-      <span class="eq-sym-i" data-tex="Exit_{ic\tau}"></span> exit rate, occupation <em>i</em>,
-      county <em>c</em>, census <em>&tau;</em> &nbsp;&middot;&nbsp;
-      <span class="eq-sym-i" data-tex="\delta_c"></span> county fixed effects &nbsp;&middot;&nbsp;
-      <span class="eq-sym-i" data-tex="Boot_{i\tau}"></span> treated occupation &nbsp;&middot;&nbsp;
-      <span class="eq-sym-i" data-tex="Post_\tau"></span> after mechanization &nbsp;&middot;&nbsp;
-      <span class="eq-sym-i" data-tex="X_{i\tau}"></span> covariates, interacted with
-      <span class="eq-sym-i" data-tex="Post_\tau"></span> so controls may trend differently
-    </div>
 
-    <p class="eq-head">This picks out an outlier</p>
-    <ul class="in-list eq-points">
-      <li>A single <span class="eq-sym-i" data-tex="\beta"></span> is hard to read. Large or small
-          compared to what?</li>
-      <li>Re-estimate the same equation <strong>231 times</strong>.</li>
-      <li>That gives a whole distribution of <span class="eq-sym-i" data-tex="\beta"></span>&rsquo;s.</li>
-    </ul>
+    <div class="eq-split">
+      <div class="eq-terms">
+        <div class="eq-term"><span class="eq-sym" data-tex="Exit_{ic\tau}"></span>
+          <span>exit rate, occupation <em>i</em>, county <em>c</em>, census <em>&tau;</em></span></div>
+        <div class="eq-term"><span class="eq-sym" data-tex="\delta_c"></span>
+          <span>county fixed effects</span></div>
+        <div class="eq-term"><span class="eq-sym" data-tex="Boot_{i\tau}"></span>
+          <span>treated occupation</span></div>
+        <div class="eq-term"><span class="eq-sym" data-tex="Post_\tau"></span>
+          <span>after mechanization</span></div>
+        <div class="eq-term"><span class="eq-sym" data-tex="\beta"></span>
+          <span>the coefficient of interest</span></div>
+        <div class="eq-term"><span class="eq-sym" data-tex="X_{i\tau}"></span>
+          <span>covariates, interacted with <span class="eq-sym-i" data-tex="Post_\tau"></span></span></div>
+
+        <div class="eq-note">
+          2&nbsp;&times;&nbsp;2 difference-in-differences, over two stacked transition windows:
+          1851&ndash;1861 and 1861&ndash;1881.
+        </div>
+      </div>
+
+      <div class="eq-logic">
+        <p class="eq-label">Picking out an outlier</p>
+        <ul class="in-list eq-points">
+          <li>I run this regression 231 times.</li>
+          <li><span class="eq-sym-i" data-tex="\beta"></span> shows how much an occupation&rsquo;s
+              exit rate moves vis-&agrave;-vis the average.</li>
+        </ul>
+      </div>
+    </div>
 
   </div>
 </section>
@@ -1936,7 +1944,7 @@ Promise.all([
     if (!window.katex) return;
     var main = document.getElementById("eq-did");
     if (main) katex.render(DID, main, { displayMode: true, throwOnError: false });
-    document.querySelectorAll(".eq-sym-i").forEach(function(el){
+    document.querySelectorAll(".eq-sym, .eq-sym-i").forEach(function(el){
       katex.render(el.getAttribute("data-tex"), el, { throwOnError: false });
     });
   }
@@ -1948,31 +1956,44 @@ Promise.all([
 
 <style>
   /* the DiD equation slide */
-  .eq-lead { font-size: 1.05rem; color: #444; line-height: 1.6; max-width: 1080px; margin: 4px 0 18px; }
-
   .eq-box {
     border-left: 3px solid #238B45; background: #fafafa;
-    padding: 26px 34px; margin: 0 0 14px; max-width: 1080px; overflow-x: auto;
+    padding: 26px 34px; margin: 6px 0 30px; max-width: 1080px; overflow-x: auto;
   }
   .eq-box .katex-display { margin: 0; }
   .eq-box .katex { font-size: 1.34em; }
 
-  .eq-gloss {
-    font-size: .84rem; color: #8a8a8a; line-height: 2.1;
-    max-width: 1080px; margin: 0 0 30px; padding-left: 3px;
+  .eq-split { display: flex; gap: 64px; align-items: flex-start; flex-wrap: wrap; }
+  .eq-terms { flex: 0 1 470px; min-width: 330px; }
+  .eq-logic { flex: 1 1 380px; min-width: 300px; padding-top: 4px; }
+
+  .eq-term {
+    display: flex; gap: 18px; align-items: baseline;
+    padding: 7px 0; border-bottom: 1px solid #f2f2f2;
+    font-size: .92rem; line-height: 1.5; color: #555;
   }
-  .eq-gloss em { color: #666; }
+  .eq-term .eq-sym { flex: 0 0 82px; text-align: right; color: #333; }
+  .eq-term em { color: #777; }
   .eq-sym-i { white-space: nowrap; color: #555; }
 
-  .eq-head { font-size: 1.12rem; font-weight: 700; color: #1c1c1c; margin: 0 0 14px; }
-  .eq-points { max-width: 1080px; }
-  .eq-points li { font-size: 1.08rem; margin-bottom: 13px; color: #333; }
+  .eq-note {
+    font-size: .84rem; color: #8a8a8a; line-height: 1.7;
+    margin-top: 16px; padding-left: 3px;
+  }
+
+  .eq-label {
+    font-size: .78rem; letter-spacing: .14em; text-transform: uppercase;
+    color: #9a9a9a; font-weight: 400; margin: 0 0 16px;
+  }
+  .eq-points li { font-size: 1.1rem; line-height: 1.55; color: #333; margin-bottom: 16px; }
   .eq-points .eq-sym-i { color: #238B45; }
 
-  @media (max-width: 860px) {
+  @media (max-width: 900px) {
     .eq-box { padding: 18px 20px; }
     .eq-box .katex { font-size: 1.05em; }
-    .eq-points li { font-size: .98rem; }
+    .eq-split { gap: 28px; }
+    .eq-term .eq-sym { flex-basis: 70px; }
+    .eq-points li { font-size: 1rem; }
   }
 </style>
 
