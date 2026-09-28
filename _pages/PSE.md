@@ -2921,10 +2921,10 @@ Promise.all([
   <div class="fo-grid" id="fo-grid"></div>
 
   <div class="fo-note">
-    Each panel is one transition window. The bar at the top is every foreman at the end of it;
+    Each panel is one transition window. The grey bar at the top is every foreman at the end of it;
     the blocks along the bottom are where they were in the census before, sized by share. Every
     panel is normalised, so the panels compare composition rather than size. Sources keep the same
-    colour and the same left-to-right place in every panel, so nothing crosses.
+    colour and the same left-to-right place in every panel, so no two streams cross.
   </div>
 
   </div>
@@ -2934,7 +2934,7 @@ Promise.all([
 (function(){
   // ---------------------------------------------------------------- mock data
   // Replace this block with a d3.csv load of window,origin_occode,n and the rest
-  // of the file works unchanged -- it only ever reads SOURCES and SHARES.
+  // of the file works unchanged -- it only ever reads SOURCES, WINDOWS, SHARES.
   var SOURCES = [
     { id: "SELF",  name: "Already a foreman",                        kind: "self"  },
     { id: "177",   name: "Farm – bailiffs, stewards, foremen",  kind: "occ"   },
@@ -2968,9 +2968,12 @@ Promise.all([
   });
 
   var FO_W = 320, FO_H = 620;
-  var TOP_Y = 26, TOP_H = 30;          // the destination bar
-  var NODE_H = 30, BOT_PAD = 26;       // the source blocks
-  var SIDE = 10, GAP = 2.5;            // panel inset, and the gap between sources
+  var TOP_Y = 30, TOP_H = 26;          // the single grey destination bar
+  var NODE_H = 26, BOT_PAD = 26;       // the source blocks
+  var SIDE = 10;
+  var GAP_B = 5.5;                     // between source blocks, widest apart
+  var GAP_T = 3;                       // between the streams where they arrive
+  var NECK  = 0.82;                    // streams land on this much of the bar
 
   var grid = d3.select("#fo-grid");
   var readout = d3.select("#fo-readout");
@@ -2983,27 +2986,37 @@ Promise.all([
 
     var inner = FO_W - SIDE * 2;
     var live = SOURCES.filter(function(s){ return (SHARES[win][s.id] || 0) > 0; });
-    var nGap = (live.length - 1) * GAP;
 
-    var yTopBot = TOP_Y + TOP_H;                 // underside of the destination bar
+    var yTopBot = TOP_Y + TOP_H;                 // underside of the grey bar
     var yNodeTop = FO_H - BOT_PAD - NODE_H;      // top of the source blocks
     var mid = (yTopBot + yNodeTop) / 2;
 
-    // The top bar and the bottom blocks are cut in the same proportions and the
-    // same order, so ribbons only converge to close the gaps -- none can cross.
-    var xt = SIDE, xb = SIDE;
+    // Streams are wide and well separated at the bottom and narrow into a neck
+    // under the bar, so each one visibly tapers instead of butting against its
+    // neighbour. Order is identical at both ends, so none of them cross.
+    var totB = inner - (live.length - 1) * GAP_B;
+    var neckW = inner * NECK;
+    var totT = neckW - (live.length - 1) * GAP_T;
+
+    var xt = SIDE + (inner - neckW) / 2, xb = SIDE;
     var bands = live.map(function(s){
       var share = SHARES[win][s.id];
-      var wTop = inner * share / 100;
-      var wBot = (inner - nGap) * share / 100;
       var b = { id: s.id, name: s.name, share: share,
-                xt: xt, wt: wTop, xb: xb, wb: wBot };
-      xt += wTop;
-      xb += wBot + GAP;
+                xt: xt, wt: totT * share / 100,
+                xb: xb, wb: totB * share / 100 };
+      xt += b.wt + GAP_T;
+      xb += b.wb + GAP_B;
       return b;
     });
 
-    // ribbons first, so the solid blocks sit over their ends
+    // the destination: one solid grey bar, not cut up by source
+    svg.append("rect").attr("class", "fo-bar")
+      .attr("x", SIDE).attr("y", TOP_Y)
+      .attr("width", inner).attr("height", TOP_H).attr("rx", 2);
+    svg.append("text").attr("class", "fo-cap")
+      .attr("x", SIDE + inner / 2).attr("y", TOP_Y - 10)
+      .attr("text-anchor", "middle").text("all foremen");
+
     svg.append("g").selectAll("path").data(bands).join("path")
       .attr("class", "fo-ribbon")
       .attr("data-src", function(d){ return d.id; })
@@ -3017,40 +3030,29 @@ Promise.all([
       })
       .on("mouseover", over).on("mouseout", out);
 
-    svg.append("g").selectAll("rect.fo-top").data(bands).join("rect")
-      .attr("class", "fo-top")
-      .attr("data-src", function(d){ return d.id; })
-      .attr("x", function(d){ return d.xt; }).attr("y", TOP_Y)
-      .attr("width", function(d){ return d.wt; }).attr("height", TOP_H)
-      .attr("fill", function(d){ return colour[d.id]; })
-      .on("mouseover", over).on("mouseout", out);
-
     svg.append("g").selectAll("rect.fo-node").data(bands).join("rect")
       .attr("class", "fo-node")
       .attr("data-src", function(d){ return d.id; })
       .attr("x", function(d){ return d.xb; }).attr("y", yNodeTop)
       .attr("width", function(d){ return d.wb; }).attr("height", NODE_H)
+      .attr("rx", 1.5)
       .attr("fill", function(d){ return colour[d.id]; })
       .on("mouseover", over).on("mouseout", out);
-
-    svg.append("text").attr("class", "fo-cap")
-      .attr("x", SIDE).attr("y", TOP_Y - 9)
-      .text("all foremen");
   });
 
   function over(event, d){
-    d3.selectAll(".fo-ribbon, .fo-top, .fo-node")
+    d3.selectAll(".fo-ribbon, .fo-node")
       .classed("fo-dim", function(){ return this.getAttribute("data-src") !== d.id; });
     var trail = WINDOWS.map(function(w){
       var v = SHARES[w][d.id] || 0;
-      return '<span class="fo-step"><span class="fo-step__w">' + w.replace(/→/, "–") +
+      return '<span class="fo-step"><span class="fo-step__w">' + w.replace("→", "–") +
              '</span><span class="fo-step__v">' + fmt(v) + '%</span></span>';
     }).join("");
     readout.html('<span class="fo-readout__sw" style="background:' + colour[d.id] + '"></span>' +
                  '<span class="fo-readout__name">' + d.name + '</span>' + trail);
   }
   function out(){
-    d3.selectAll(".fo-ribbon, .fo-top, .fo-node").classed("fo-dim", false);
+    d3.selectAll(".fo-ribbon, .fo-node").classed("fo-dim", false);
     readout.html('<span class="fo-readout__hint">Hover a source to name it and trace it across the windows.</span>');
   }
 })();
@@ -3082,9 +3084,10 @@ Promise.all([
     margin-top: 4px;
   }
 
-  .fo-ribbon { opacity: .58; transition: opacity .12s; cursor: pointer; }
-  .fo-top, .fo-node { cursor: pointer; transition: opacity .12s; }
-  .fo-dim { opacity: .08 !important; }
+  .fo-bar { fill: #c9ccd1; }
+  .fo-ribbon { opacity: .62; stroke: #fff; stroke-width: .5; transition: opacity .12s; cursor: pointer; }
+  .fo-node { cursor: pointer; transition: opacity .12s; }
+  .fo-dim { opacity: .07 !important; }
   .fo-cap { fill: #9a9a9a; font-size: 11px; }
 
   .fo-note {
