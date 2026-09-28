@@ -2795,13 +2795,14 @@ Promise.all([
         .attr("y", function(d){ return y(val(d.total, d)); })
         .attr("height", function(d){ return y(val(d.topSum, d)) - y(val(d.total, d)); })
         .on("mouseover", function(event, d){
+          place();
           tip.style("visibility", "visible").html(
             "<strong>All other occupations</strong>" +
             "<div style='color:#777'>" + fmN(d.nOther) + " occupations</div>" +
             "<div>" + fmN(d.total - d.topSum) + " foremen &middot; " +
               fmP(100 - 100 * d.topSum / d.total) + "% of " + d.year + "</div>");
         })
-        .on("mousemove", move).on("mouseout", out);
+        .on("mouseout", out);
 
       var flat = [];
       series.forEach(function(s){
@@ -2826,13 +2827,14 @@ Promise.all([
         .on("mouseover", function(event, d){
           // light this occupation up in every year it appears
           g.selectAll("rect.fm-seg").classed("fm-dim", function(o){ return o.code !== d.code; });
+          place();
           tip.style("visibility", "visible").html(
             "<strong>" + (names[d.code] || ("Occode " + d.code)) + "</strong>" +
             "<div style='color:#777'>occode " + d.code + " &middot; rank " + d.rank + " in " + d.year +
               " &middot; in the top half of " + d.appears + " of 6 censuses</div>" +
             "<div>" + fmN(d.n) + " foremen &middot; " + fmP(d.pct) + "% of " + d.year + "</div>");
         })
-        .on("mousemove", move).on("mouseout", out);
+        .on("mouseout", out);
 
       // over each bar: how many occupations it took, or the headcount itself
       g.selectAll("text.fm-count").data(series).join("text").attr("class", "fm-count")
@@ -2847,10 +2849,16 @@ Promise.all([
         .call(d3.axisLeft(y).ticks(5).tickSizeOuter(0)
           .tickFormat(share ? function(v){ return v + "%"; } : fmN));
 
-      function move(event){
-        var r = this.closest(".fm-panel").getBoundingClientRect();
-        tip.style("left", Math.min(r.width - 290, event.clientX - r.left + 14) + "px")
-           .style("top", Math.max(4, event.clientY - r.top - 10) + "px");
+      // Fixed position rather than cursor-following: map a viewBox point in
+      // the empty top-left of the plot into panel pixels, so the box never
+      // lands on top of the bars whatever the svg has been scaled to.
+      function place(){
+        var node = svg.node();
+        var p = node.closest(".fm-panel").getBoundingClientRect();
+        var r = node.getBoundingClientRect();
+        if (!r.width) return;
+        tip.style("left", (r.left - p.left + (FM_M.left + 20) * (r.width / FM_W)) + "px")
+           .style("top",  (r.top  - p.top  + (FM_M.top  + 16) * (r.height / FM_H)) + "px");
       }
       function out(){
         g.selectAll("rect.fm-seg").classed("fm-dim", false);
@@ -2885,7 +2893,7 @@ Promise.all([
   .fm-tip {
     position: absolute; pointer-events: none; visibility: hidden; background: #fff;
     border: 1px solid #ddd; border-radius: 4px; padding: 8px 11px; font-size: .84rem;
-    color: #333; box-shadow: 0 2px 8px rgba(0,0,0,.09); max-width: 280px; line-height: 1.45;
+    color: #333; box-shadow: 0 2px 10px rgba(0,0,0,.10); width: 300px; line-height: 1.45;
   }
   .fm-tip strong { display: block; margin-bottom: 3px; }
 
