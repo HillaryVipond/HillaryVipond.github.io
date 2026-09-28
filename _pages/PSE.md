@@ -3102,6 +3102,371 @@ Promise.all([
 </style>
 
 
+<section class="frame frame--tall">
+  <div class="in-kicker">Results · B: Social Mobility</div>
+<h3>2.4. Fathers&rsquo; occupations &mdash; option A: the flow</h3>
+  <div class="frame__body">
+
+  <div class="fo-mock">
+    Option A of three. Layout mock-up &mdash; <strong>invented placeholder shares</strong>, not
+    results. This is slide 2.3&rsquo;s chart pointed at fathers instead of previous jobs.
+  </div>
+
+  <div class="fo-readout" id="fa-readout">
+    <span class="fo-readout__hint">Hover a source to name it and trace it across the cohorts.</span>
+  </div>
+  <div class="fo-grid" id="fa-grid"></div>
+  <div class="fo-note">
+    Each panel is one linked cohort: boys observed in the first census, their occupation as adults
+    in the second. The grey bar is all the sons; the blocks below are what their fathers did.
+    Normalised, so the panels compare composition.
+  </div>
+
+  </div>
+</section>
+
+<section class="frame frame--tall">
+  <div class="in-kicker">Results · B: Social Mobility</div>
+<h3>2.5. Fathers&rsquo; occupations &mdash; option B: the occupation space</h3>
+  <div class="frame__body">
+
+  <div class="fo-mock">
+    Option B of three. <strong>The nodes, the clusters and the edges are all invented</strong> —
+    but there are 797 of them, the real number of occodes, split across the nine HISCO major
+    groups in their real proportions, so this is an honest preview of how busy the real thing
+    would look. Positions come from a placeholder layout, not a real proximity matrix.
+  </div>
+
+  <div class="sp-readout" id="sp-readout">
+    <span class="fo-readout__hint">Hover an occupation to follow it across the three cohorts.</span>
+  </div>
+  <div class="sp-legend" id="sp-legend"></div>
+  <div class="fo-grid" id="sp-grid"></div>
+  <div class="fo-note">
+    One fixed skeleton of occupations, drawn three times. Node size is the share of fathers in
+    that occupation for that cohort, so the cloud shifts across the space as the composition
+    changes. The layout is computed once and frozen &mdash; it must be identical in all three
+    panels or they cannot be compared.
+  </div>
+
+  </div>
+</section>
+
+<section class="frame">
+  <div class="in-kicker">Results · B: Social Mobility</div>
+<h3>2.6. Fathers&rsquo; occupations &mdash; option C: status</h3>
+  <div class="frame__body">
+
+  <div class="fo-mock">
+    Option C of three. <strong>Invented distributions</strong> on a real HISCAM scale.
+  </div>
+
+  <div class="fo-row">
+    <div class="hc-panel">
+      <svg id="hc-svg"></svg>
+    </div>
+    <div class="fo-aside2">
+      <ul class="in-list fo-points">
+        <li>One curve per cohort, on the HISCAM status scale.</li>
+        <li>Answers whether fathers got higher status, not which trades they were in.</li>
+        <li>You already hold HISCAM for 783 of the 797 occodes.</li>
+      </ul>
+    </div>
+  </div>
+
+  </div>
+</section>
+
+<script>
+(function(){
+  // ============================================================== shared bits
+  // deterministic pseudo-random, so every reload draws exactly the same mock
+  function rng(seed){
+    return function(){
+      seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+      var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  function gauss(r){ return (r() + r() + r() + r() - 2) * 0.9; }
+  var fmt0 = d3.format(".0f"), fmt1 = d3.format(".1f");
+
+  var COHORTS = ["1851 → 1881", "1861 → 1891", "1881 → 1911"];
+
+  // the nine HISCO major groups, with the occode counts actually in the file
+  var HISCO = [
+    { g:"1", name:"Professional & technical",   n:40,  col:"#9C6FA8" },
+    { g:"2", name:"Administrative & managerial", n:36,  col:"#6A5ACD" },
+    { g:"3", name:"Clerical",                    n:31,  col:"#3C7DB1" },
+    { g:"4", name:"Sales",                       n:120, col:"#7FA9CB" },
+    { g:"5", name:"Service",                     n:56,  col:"#5FA8A0" },
+    { g:"6", name:"Agriculture & fishing",       n:37,  col:"#6B9E78" },
+    { g:"7", name:"Production — materials", n:189, col:"#C08A2E" },
+    { g:"8", name:"Production — metal, wood", n:153, col:"#E0B66A" },
+    { g:"9", name:"Transport & labourers",       n:134, col:"#B07C5A" }
+  ];
+
+  // ============================================ option A: the three-panel flow
+  (function(){
+    var SOURCES = [
+      { id:"6",     name:"Agriculture & fishing",        col:"#6B9E78" },
+      { id:"7",     name:"Production — materials",  col:"#C08A2E" },
+      { id:"8",     name:"Production — metal, wood",col:"#E0B66A" },
+      { id:"9",     name:"Transport & labourers",        col:"#B07C5A" },
+      { id:"4",     name:"Sales",                        col:"#7FA9CB" },
+      { id:"5",     name:"Service",                      col:"#5FA8A0" },
+      { id:"3",     name:"Clerical",                     col:"#3C7DB1" },
+      { id:"1",     name:"Professional & technical",     col:"#9C6FA8" },
+      { id:"NONE",  name:"No father recorded",           col:"#B9BFC6" }
+    ];
+    var SHARES = {
+      "1851 → 1881": { "6":27, "7":18, "8":16, "9":12, "4":9,  "5":6,  "3":3, "1":3, NONE:6 },
+      "1861 → 1891": { "6":22, "7":18, "8":16, "9":13, "4":11, "5":7,  "3":5, "1":3, NONE:5 },
+      "1881 → 1911": { "6":15, "7":16, "8":15, "9":14, "4":14, "5":9,  "3":9, "1":4, NONE:4 }
+    };
+    var colour = {};
+    SOURCES.forEach(function(s){ colour[s.id] = s.col; });
+
+    var W = 320, H = 620, TOP_Y = 30, TOP_H = 26, NODE_H = 26, BOT_PAD = 26;
+    var SIDE = 10, GAP_B = 5.5, GAP_T = 3, NECK = 0.82;
+    var grid = d3.select("#fa-grid"), readout = d3.select("#fa-readout");
+
+    COHORTS.forEach(function(win){
+      var cell = grid.append("div").attr("class", "fo-cell");
+      var svg = cell.append("svg").attr("class", "fo-svg").attr("viewBox", [0, 0, W, H]);
+      cell.append("div").attr("class", "fo-wlab").text(win);
+
+      var inner = W - SIDE * 2;
+      var live = SOURCES.filter(function(s){ return (SHARES[win][s.id] || 0) > 0; });
+      var yTopBot = TOP_Y + TOP_H, yNodeTop = H - BOT_PAD - NODE_H;
+      var mid = (yTopBot + yNodeTop) / 2;
+      var totB = inner - (live.length - 1) * GAP_B;
+      var neckW = inner * NECK, totT = neckW - (live.length - 1) * GAP_T;
+
+      var xt = SIDE + (inner - neckW) / 2, xb = SIDE;
+      var bands = live.map(function(s){
+        var sh = SHARES[win][s.id];
+        var b = { id:s.id, name:s.name, share:sh, xt:xt, wt:totT*sh/100, xb:xb, wb:totB*sh/100 };
+        xt += b.wt + GAP_T; xb += b.wb + GAP_B;
+        return b;
+      });
+
+      svg.append("rect").attr("class","fo-bar").attr("x",SIDE).attr("y",TOP_Y)
+        .attr("width",inner).attr("height",TOP_H).attr("rx",2);
+      svg.append("text").attr("class","fo-cap").attr("x",SIDE+inner/2).attr("y",TOP_Y-10)
+        .attr("text-anchor","middle").text("all sons");
+
+      svg.append("g").selectAll("path").data(bands).join("path")
+        .attr("class","fo-ribbon").attr("data-fa",function(d){return d.id;})
+        .attr("fill",function(d){return colour[d.id];})
+        .attr("d",function(d){
+          var l0=d.xb, l1=d.xt, r0=d.xb+d.wb, r1=d.xt+d.wt;
+          return "M"+l0+","+yNodeTop+"C"+l0+","+mid+" "+l1+","+mid+" "+l1+","+yTopBot+
+                 "L"+r1+","+yTopBot+"C"+r1+","+mid+" "+r0+","+mid+" "+r0+","+yNodeTop+"Z";
+        })
+        .on("mouseover", over).on("mouseout", out);
+
+      svg.append("g").selectAll("rect.fo-node").data(bands).join("rect")
+        .attr("class","fo-node").attr("data-fa",function(d){return d.id;})
+        .attr("x",function(d){return d.xb;}).attr("y",yNodeTop)
+        .attr("width",function(d){return d.wb;}).attr("height",NODE_H).attr("rx",1.5)
+        .attr("fill",function(d){return colour[d.id];})
+        .on("mouseover", over).on("mouseout", out);
+    });
+
+    function over(event, d){
+      d3.selectAll("[data-fa]").classed("fo-dim", function(){
+        return this.getAttribute("data-fa") !== d.id;
+      });
+      var trail = COHORTS.map(function(c){
+        return '<span class="fo-step"><span class="fo-step__w">' + c.replace("→","–") +
+               '</span><span class="fo-step__v">' + fmt0(SHARES[c][d.id] || 0) + '%</span></span>';
+      }).join("");
+      readout.html('<span class="fo-readout__sw" style="background:'+colour[d.id]+'"></span>' +
+                   '<span class="fo-readout__name">'+d.name+'</span>' + trail);
+    }
+    function out(){
+      d3.selectAll("[data-fa]").classed("fo-dim", false);
+      readout.html('<span class="fo-readout__hint">Hover a source to name it and trace it across the cohorts.</span>');
+    }
+  })();
+
+  // ============================================ option B: the occupation space
+  (function(){
+    var W = 400, H = 400, PAD = 16;
+    var r = rng(20260928);
+
+    // cluster anchors, loosely ringed so the space has regions
+    var ring = [[.30,.22],[.52,.14],[.74,.24],[.84,.46],[.72,.72],[.48,.84],[.26,.74],[.15,.50],[.50,.50]];
+    var nodes = [];
+    HISCO.forEach(function(h, gi){
+      var cx = ring[gi][0] * (W - PAD*2) + PAD, cy = ring[gi][1] * (H - PAD*2) + PAD;
+      var spread = 20 + Math.sqrt(h.n) * 4.2;
+      for (var i = 0; i < h.n; i++){
+        nodes.push({
+          id: h.g + "-" + i, grp: h.g, col: h.col, gname: h.name,
+          name: h.name + " occupation " + (i + 1),
+          x: Math.max(PAD, Math.min(W-PAD, cx + gauss(r) * spread)),
+          y: Math.max(PAD, Math.min(H-PAD, cy + gauss(r) * spread)),
+          f: 0.25 + r() * 0.75
+        });
+      }
+    });
+
+    // edges to the two nearest neighbours: enough to read as a web, cheap to draw
+    var seg = [];
+    nodes.forEach(function(a, i){
+      var best = [];
+      nodes.forEach(function(b, j){
+        if (i === j) return;
+        var d2 = (a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y);
+        if (best.length < 2) { best.push({ j:j, d2:d2 }); best.sort(function(p,q){return p.d2-q.d2;}); }
+        else if (d2 < best[1].d2) { best[1] = { j:j, d2:d2 }; best.sort(function(p,q){return p.d2-q.d2;}); }
+      });
+      best.forEach(function(b){
+        if (i < b.j) seg.push("M"+a.x.toFixed(1)+","+a.y.toFixed(1)+
+                              "L"+nodes[b.j].x.toFixed(1)+","+nodes[b.j].y.toFixed(1));
+      });
+    });
+    var edgePath = seg.join("");
+
+    // how each major group's weight shifts: land and craft give way to commerce
+    var TREND = {
+      "1":[0.6,0.9,1.5], "2":[0.5,0.8,1.5], "3":[0.4,0.8,1.9], "4":[0.8,1.1,1.5],
+      "5":[0.9,1.1,1.3], "6":[2.2,1.7,1.0], "7":[1.4,1.3,1.0], "8":[1.2,1.2,1.1],
+      "9":[1.0,1.1,1.2]
+    };
+    var share = {};
+    COHORTS.forEach(function(c, ci){
+      var tot = 0;
+      nodes.forEach(function(n){ tot += n.f * TREND[n.grp][ci]; });
+      nodes.forEach(function(n){ share[n.id + "|" + ci] = 100 * n.f * TREND[n.grp][ci] / tot; });
+    });
+    var maxShare = d3.max(Object.values(share));
+    var rad = d3.scaleSqrt().domain([0, maxShare]).range([0.7, 8]);
+
+    var grid = d3.select("#sp-grid"), readout = d3.select("#sp-readout");
+    d3.select("#sp-legend").selectAll("span").data(HISCO).join("span")
+      .attr("class", "sp-key")
+      .html(function(h){ return '<i style="background:'+h.col+'"></i>'+h.name+
+                                ' <em>'+h.n+'</em>'; });
+
+    COHORTS.forEach(function(c, ci){
+      var cell = grid.append("div").attr("class", "fo-cell");
+      var svg = cell.append("svg").attr("class", "fo-svg").attr("viewBox", [0, 0, W, H]);
+      cell.append("div").attr("class", "fo-wlab").text(c);
+      svg.append("path").attr("class", "sp-edges").attr("d", edgePath);
+      svg.append("g").selectAll("circle").data(nodes).join("circle")
+        .attr("class", "sp-node").attr("data-sp", function(d){ return d.id; })
+        .attr("cx", function(d){ return d.x; }).attr("cy", function(d){ return d.y; })
+        .attr("r", function(d){ return rad(share[d.id + "|" + ci]); })
+        .attr("fill", function(d){ return d.col; })
+        .on("mouseover", function(event, d){ over(d); }).on("mouseout", out);
+    });
+
+    function over(d){
+      d3.selectAll(".sp-node").classed("fo-dim", function(){
+        return this.getAttribute("data-sp") !== d.id;
+      });
+      var trail = COHORTS.map(function(c, ci){
+        return '<span class="fo-step"><span class="fo-step__w">'+c.replace("→","–")+
+               '</span><span class="fo-step__v">'+fmt1(share[d.id+"|"+ci])+'%</span></span>';
+      }).join("");
+      readout.html('<span class="fo-readout__sw" style="background:'+d.col+'"></span>'+
+                   '<span class="fo-readout__name">'+d.name+'</span>'+
+                   '<span class="fo-step__w">'+d.gname+'</span>'+trail);
+    }
+    function out(){
+      d3.selectAll(".sp-node").classed("fo-dim", false);
+      readout.html('<span class="fo-readout__hint">Hover an occupation to follow it across the three cohorts.</span>');
+    }
+  })();
+
+  // ================================================== option C: HISCAM status
+  (function(){
+    var W = 900, H = 420, M = { top:20, right:24, bottom:52, left:56 };
+    var iW = W-M.left-M.right, iH = H-M.top-M.bottom;
+    var svg = d3.select("#hc-svg").attr("viewBox", [0, 0, W, H]);
+    var g = svg.append("g").attr("transform","translate("+M.left+","+M.top+")");
+
+    // placeholder distributions on the real HISCAM range; the real data is a
+    // weighted histogram of fathers' occodes against census_taxonomy.csv
+    var CURVES = [
+      { c: COHORTS[0], mu: 46, sd: 7.5,  col: "#6B9E78" },
+      { c: COHORTS[1], mu: 48, sd: 8.5,  col: "#C08A2E" },
+      { c: COHORTS[2], mu: 51, sd: 10.0, col: "#3C7DB1" }
+    ];
+    var xs = d3.range(25, 80.5, 0.5);
+    var series = CURVES.map(function(k){
+      return { k:k, pts: xs.map(function(v){
+        var z = (v - k.mu) / k.sd;
+        return { x:v, y: Math.exp(-0.5*z*z) / (k.sd * Math.sqrt(2*Math.PI)) };
+      })};
+    });
+
+    var x = d3.scaleLinear().domain([25, 80]).range([0, iW]);
+    var y = d3.scaleLinear().domain([0, d3.max(series, function(s){
+      return d3.max(s.pts, function(p){ return p.y; }); }) * 1.12]).range([iH, 0]);
+
+    g.append("g").attr("class","fo-grid2").selectAll("line").data(y.ticks(5)).join("line")
+      .attr("x1",0).attr("x2",iW).attr("y1",y).attr("y2",y);
+
+    var area = d3.area().x(function(p){return x(p.x);}).y0(iH).y1(function(p){return y(p.y);})
+      .curve(d3.curveBasis);
+    var line = d3.line().x(function(p){return x(p.x);}).y(function(p){return y(p.y);})
+      .curve(d3.curveBasis);
+
+    series.forEach(function(s){
+      g.append("path").datum(s.pts).attr("d", area).attr("fill", s.k.col).attr("opacity", .16);
+      g.append("path").datum(s.pts).attr("d", line).attr("fill","none")
+        .attr("stroke", s.k.col).attr("stroke-width", 2);
+      g.append("line").attr("x1",x(s.k.mu)).attr("x2",x(s.k.mu))
+        .attr("y1",iH).attr("y2",y(d3.max(s.pts,function(p){return p.y;})))
+        .attr("stroke",s.k.col).attr("stroke-dasharray","4 4").attr("opacity",.55);
+    });
+
+    g.append("g").attr("class","fo-axis2").attr("transform","translate(0,"+iH+")")
+      .call(d3.axisBottom(x).ticks(8).tickSizeOuter(0));
+    g.append("text").attr("class","fo-axt").attr("x",iW/2).attr("y",iH+40)
+      .attr("text-anchor","middle").text("Father's HISCAM occupational status");
+
+    var lg = g.append("g").attr("transform","translate("+(iW-200)+",6)");
+    series.forEach(function(s, i){
+      lg.append("rect").attr("x",0).attr("y",i*20).attr("width",11).attr("height",11)
+        .attr("fill",s.k.col).attr("rx",2);
+      lg.append("text").attr("class","fo-axt").attr("x",18).attr("y",i*20+10)
+        .text(s.k.c.replace("→","–"));
+    });
+  })();
+})();
+</script>
+
+<style>
+  .fo-aside2 { flex: 0 1 300px; min-width: 230px; padding-top: 40px; }
+  .fo-row { display: flex; gap: 30px; align-items: flex-start; flex-wrap: wrap; }
+  .hc-panel { flex: 0 1 900px; min-width: 420px; }
+  .fo-points li { font-size: .96rem; line-height: 1.55; color: #444; margin-bottom: 18px; }
+
+  .sp-readout {
+    min-height: 34px; display: flex; align-items: center; flex-wrap: wrap; gap: 0 16px;
+    margin: 0 0 8px; font-size: .92rem; color: #333;
+  }
+  .sp-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 14px; }
+  .sp-key { font-size: .8rem; color: #666; display: inline-flex; align-items: center; }
+  .sp-key i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 6px; }
+  .sp-key em { color: #aaa; font-style: normal; margin-left: 5px; font-variant-numeric: tabular-nums; }
+
+  .sp-edges { fill: none; stroke: #e3e3e3; stroke-width: .5; }
+  .sp-node { cursor: pointer; transition: opacity .12s; stroke: #fff; stroke-width: .4; }
+
+  .fo-grid2 line { stroke: #f1f1f1; }
+  .fo-axis2 text { fill: #666; font-size: 12px; }
+  .fo-axis2 path, .fo-axis2 line { stroke: #ccc; }
+  .fo-axt { fill: #666; font-size: 12px; }
+</style>
+
+
 <section class="frame">
 <div class="frame__body">
 <div class="fig-flow">
