@@ -1889,9 +1889,124 @@ Promise.all([
 </section>
 
 
+<section class="frame frame--nonum">
+  <div class="in-kicker">Results · A: Workforce in Transition</div>
+<h3>Measuring displacement</h3>
+  <div class="frame__body">
+
+    <p class="eq-lead">
+      I estimate, for each occupation, how much its exit rate moved once mechanization
+      arrived &mdash; relative to the same occupation&rsquo;s own county and relative to the
+      period before.
+    </p>
+
+    <div class="eq-box"><div id="eq-did"></div></div>
+
+    <div class="eq-split">
+      <div class="eq-terms">
+        <div class="eq-term"><span class="eq-sym" data-tex="Exit_{ic\tau}"></span>
+          <span>rate at which workers leave occupation <em>i</em> in county <em>c</em> at census <em>&tau;</em></span></div>
+        <div class="eq-term"><span class="eq-sym" data-tex="\delta_c"></span>
+          <span>county fixed effects &mdash; local labour markets differ</span></div>
+        <div class="eq-term"><span class="eq-sym" data-tex="Boot_{i\tau}"></span>
+          <span>indicator for the treated occupation</span></div>
+        <div class="eq-term"><span class="eq-sym" data-tex="Post_\tau"></span>
+          <span>censuses after mechanization</span></div>
+        <div class="eq-term eq-term--key"><span class="eq-sym" data-tex="\beta"></span>
+          <span><strong>the coefficient of interest</strong> &mdash; the difference-in-differences</span></div>
+        <div class="eq-term"><span class="eq-sym" data-tex="X_{i\tau}"></span>
+          <span>occupation covariates, interacted with <span class="eq-sym-i" data-tex="Post_\tau"></span>
+            so controls are free to trend differently</span></div>
+      </div>
+
+      <div class="eq-logic">
+        <h4>How this picks out an outlier</h4>
+        <p>
+          A single <span class="eq-sym-i" data-tex="\beta"></span> is hard to read. Large or
+          small compared to what?
+        </p>
+        <p>
+          So I re-estimate the same equation <strong>231 times</strong>, each time putting a
+          different large male occupation in the treated position. Every one of those is a
+          placebo: an occupation that was <em>not</em> mechanized in this way should show no
+          systematic break.
+        </p>
+        <p>
+          That gives a whole distribution of <span class="eq-sym-i" data-tex="\beta"></span>&rsquo;s.
+          Bootmakers can then be read against it &mdash; not as a number on its own, but as a
+          position in the spread of what ordinary occupations were doing at the same time.
+        </p>
+        <p class="eq-next">The next slide is that distribution.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script>
+(function(){
+  var DID = "\\begin{aligned}"
+    + "Exit_{ic\\tau} ={}& \\delta_c + \\theta\\, Boot_{i\\tau} + \\phi\\, Post_\\tau"
+    + " + \\beta\\, (Boot_{i\\tau} \\times Post_\\tau) \\\\"
+    + "&+ \\gamma' X_{i\\tau} + \\kappa'(X_{i\\tau} \\times Post_\\tau) + \\varepsilon_{ic\\tau}."
+    + "\\end{aligned}";
+
+  function draw(){
+    if (!window.katex) return;
+    var main = document.getElementById("eq-did");
+    if (main) katex.render(DID, main, { displayMode: true, throwOnError: false });
+    document.querySelectorAll(".eq-sym, .eq-sym-i").forEach(function(el){
+      katex.render(el.getAttribute("data-tex"), el, { throwOnError: false });
+    });
+  }
+
+  if (window.katex) draw();
+  else window.addEventListener("load", draw);
+})();
+</script>
+
+<style>
+  /* the DiD equation slide */
+  .eq-lead { font-size: 1.02rem; color: #444; margin: 0 0 20px; max-width: 1000px; line-height: 1.55; }
+
+  .eq-box {
+    border-left: 3px solid #238B45; background: #fafafa;
+    padding: 22px 30px; margin: 0 0 30px; max-width: 1050px; overflow-x: auto;
+  }
+  .eq-box .katex-display { margin: 0; }
+  .eq-box .katex { font-size: 1.18em; }
+
+  .eq-split { display: flex; gap: 56px; align-items: flex-start; flex-wrap: wrap; }
+  .eq-terms { flex: 1 1 440px; min-width: 320px; }
+  .eq-logic { flex: 1 1 420px; min-width: 300px; }
+
+  .eq-term {
+    display: flex; gap: 16px; align-items: baseline;
+    padding: 7px 0; border-bottom: 1px solid #f0f0f0;
+    font-size: .95rem; line-height: 1.5; color: #444;
+  }
+  .eq-term:last-child { border-bottom: 0; }
+  .eq-term .eq-sym { flex: 0 0 86px; text-align: right; color: #1c1c1c; }
+  .eq-term--key { color: #1c1c1c; }
+  .eq-term--key .eq-sym { color: #238B45; }
+  .eq-sym-i { white-space: nowrap; }
+
+  .eq-logic h4 { font-size: 1rem; font-weight: 700; color: #222; margin: 0 0 12px; }
+  .eq-logic p { font-size: .95rem; line-height: 1.6; color: #444; margin: 0 0 12px; }
+  .eq-next { color: #8a8a8a !important; font-style: italic; }
+
+  @media (max-width: 860px) {
+    .eq-split { gap: 26px; }
+    .eq-term .eq-sym { flex-basis: 70px; }
+  }
+</style>
+
+
 <section class="frame">
-  <div class="in-kicker">Results · Workforce in Transition</div>
-<h3>1. Who was displaced</h3>
+  <div class="in-kicker">Results · A: Workforce in Transition</div>
+<h3>1.1. Who was displaced</h3>
   <div class="frame__body">
 
   <div id="placebo-men">
@@ -2073,11 +2188,6 @@ Promise.all([
       g.append("circle").attr("class", "ph-boot-pt")
         .attr("cx", x(boot.beta)).attr("cy", y(boot.density)).attr("r", 5.7);
 
-      var lx = x(boot.beta) - 11, ly = Math.max(M.top + 30, y(boot.density) - 20);
-      var lab = g.append("text").attr("class", "ph-boot-label").attr("x", lx).attr("y", ly).attr("text-anchor", "end");
-      lab.append("tspan").attr("x", lx).text("Bootmakers");
-      lab.append("tspan").attr("x", lx).attr("dy", 15)
-         .text(fB(boot.beta) + " pp · " + fP(boot.percentile) + "th pct.");
 
       g.append("g").attr("class", "ph-axis")
         .attr("transform", "translate(0," + (M.top + iH) + ")")
@@ -2132,8 +2242,8 @@ Promise.all([
 
 
 <section class="frame">
-  <div class="in-kicker">Results · Workforce in Transition</div>
-<h3>2. Did contraction push workers out, or stop new ones coming in?</h3>
+  <div class="in-kicker">Results · A: Workforce in Transition</div>
+<h3>1.2. Did contraction push workers out, or stop new ones coming in?</h3>
   <div class="frame__body">
 
   <p class="sc-sub">
@@ -2169,8 +2279,8 @@ Promise.all([
 </section>
 
 <section class="frame">
-  <div class="in-kicker">Results · Workforce in Transition</div>
-<h3>3. Do the two margins move together?</h3>
+  <div class="in-kicker">Results · A: Workforce in Transition</div>
+<h3>1.3. Do the two margins move together?</h3>
   <div class="frame__body">
 
   <div id="sc-legend-b" class="sc-legend"></div>
@@ -2573,23 +2683,11 @@ Promise.all([
 </script>
 
 
-<section class="frame frame--todo">
-  <div class="in-kicker">Results · Fertility</div>
-<h3>1. Fertility</h3>
-  <div class="frame__body">
-    <div class="box">
-      <strong>Placeholder.</strong> Send the data and a sketch of what this should show,
-      and I will build it here.
-    </div>
-  </div>
-</section>
-
-
 <section class="frame">
 <div class="frame__body">
 <div class="fig-flow">
-<div class="in-kicker">Results · Social Mobility</div>
-<h3>1. Occupational Skills Inheritance</h3>
+<div class="in-kicker">Results · B: Social Mobility</div>
+<h3>Occupational Skills Inheritance</h3>
 
 <style>
   .table-wrap { overflow-x:auto; margin: 0 0 12px; }
@@ -2711,8 +2809,8 @@ Promise.all([
 
 
 <section class="frame frame--todo">
-  <div class="in-kicker">Results · Social Mobility</div>
-<h3>2. Social Mobility</h3>
+  <div class="in-kicker">Results · C: Fertility</div>
+<h3>Fertility</h3>
   <div class="frame__body">
     <div class="box">
       <strong>Placeholder.</strong> Send the data and a sketch of what this should show,
