@@ -2659,9 +2659,9 @@ Promise.all([
 <h3>2.1. Who were the managers?</h3>
   <div class="frame__body">
 
-  <div class="fm-row">
+  <div class="fm-row fm-row--low">
     <div class="fm-panel">
-      <div class="fm-ptitle">Occupations holding the first half of all managers, by census year</div>
+      <div class="fm-ptitle">Occupations totaling 50% of all managers by census year</div>
       <svg id="fm-svg"></svg>
       <div class="fm-tip" id="fm-tip"></div>
     </div>
@@ -2684,13 +2684,7 @@ Promise.all([
 
   <div class="fm-row">
     <div class="fm-panel">
-      <div class="fm-ptitle">The same occupations, counted rather than shared out</div>
       <svg id="fm-svg-abs"></svg>
-      <div class="fm-note">
-        The same selection, the same order and the same colours, now on a count axis. Each bar is
-        still half coloured &mdash; the shares have not changed &mdash; but the quantity behind
-        them has.
-      </div>
       <div class="fm-tip" id="fm-tip-abs"></div>
     </div>
     <div class="fm-aside">
@@ -2883,6 +2877,7 @@ Promise.all([
 <style>
   .fm-row { display: flex; gap: 30px; align-items: flex-start; flex-wrap: wrap; }
   .fm-panel { flex: 0 1 980px; min-width: 420px; position: relative; margin-top: 18px; }
+  .fm-row--low { margin-top: 70px; }
   .fm-aside { flex: 0 1 280px; min-width: 210px; padding-top: 66px; }
   .fm-ptitle { font-size: 1.02rem; font-weight: 700; color: #222; margin: 0 0 8px; }
 
@@ -2912,18 +2907,14 @@ Promise.all([
 </style>
 
 
-<section class="frame frame--tall">
+<section class="frame">
   <div class="in-kicker">Results · B: Social Mobility</div>
 <h3>2.3. Where did managers come from?</h3>
   <div class="frame__body">
 
-  <div class="fo-readout" id="fo-readout">
-    <span class="fo-readout__hint">Hover a source to name it and trace it across the windows.</span>
-  </div>
+  <div class="fo-readout" id="fo-readout"></div>
 
   <div class="fo-grid" id="fo-grid"></div>
-
-  <div class="fo-note" id="fo-note"></div>
 
   </div>
 </section>
@@ -3003,16 +2994,6 @@ Promise.all([
 
     var grid = d3.select("#fo-grid"), readout = d3.select("#fo-readout");
 
-    d3.select("#fo-note").html(
-      "Each panel is one transition window. The grey bar at the top is every manager at the end " +
-      "of it; the blocks below are what they were doing in the census before. Between " +
-      fmtN(d3.min(wins, function(w){ return w.nOrigins; })) + " and " +
-      fmtN(d3.max(wins, function(w){ return w.nOrigins; })) +
-      " distinct occupations feed in each window, so seven are named and the rest go into the " +
-      "dashed block on the right, which is held at a fixed narrow width rather than drawn to " +
-      "scale. The named branches are then stretched to fill the panel, so within a panel their " +
-      "widths are in true proportion to one another, but a branch is not comparable across " +
-      "panels by width — hover it and read the percentages instead.");
 
     wins.forEach(function(w){
       var cell = grid.append("div").attr("class", "fo-cell");
@@ -3090,7 +3071,7 @@ Promise.all([
     }
     function out(){
       d3.selectAll(".fo-ribbon, .fo-node").classed("fo-dim", false);
-      readout.html('<span class="fo-readout__hint">Hover a source to name it and trace it across the windows.</span>');
+      readout.html('');
     }
   });
 })();
@@ -3102,7 +3083,7 @@ Promise.all([
      grid down as the pointer moved. */
   .fo-readout {
     height: 30px; display: flex; align-items: center; flex-wrap: nowrap;
-    overflow: hidden; gap: 0 16px; margin: 2px 0 14px;
+    overflow: hidden; gap: 0 16px; margin: 0 0 6px;
     font-size: .92rem; color: #333; white-space: nowrap;
   }
   .fo-readout__hint { color: #9a9a9a; font-size: .86rem; }
