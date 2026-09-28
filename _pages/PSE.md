@@ -3126,175 +3126,180 @@ Promise.all([
 <h3>2.4. Fathers&rsquo; occupations in occupation space</h3>
   <div class="frame__body">
 
-  <div class="fo-mock">
-    Still a mock-up. <strong>The nodes, the clusters and the edges are all invented</strong> —
-    but there are 797 of them, the real number of occodes, split across the nine HISCO major
-    groups in their real proportions, so this is an honest preview of how busy the real thing
-    would look. Positions come from a placeholder layout, not a real proximity matrix: the real
-    one needs a proximity built from something other than mobility, or the clusters are circular.
-  </div>
-
-  <div class="sp-readout" id="sp-readout">
-    <span class="fo-readout__hint">Hover an occupation to follow it across the three cohorts.</span>
-  </div>
+  <div class="sp-readout" id="sp-readout"></div>
   <div class="sp-legend" id="sp-legend"></div>
-  <div class="fo-grid" id="sp-grid"></div>
-  <div class="fo-note">
-    One fixed skeleton of occupations, drawn three times. Node size is the share of fathers in
-    that occupation for that cohort, so the cloud shifts across the space as the composition
-    changes. The layout is computed once and frozen &mdash; it must be identical in all three
-    panels or they cannot be compared.
-  </div>
+  <div class="sp-grid" id="sp-grid"></div>
+  <div class="sp-note" id="sp-note"></div>
 
   </div>
 </section>
 
 <script>
 (function(){
-  // ============================================================== shared bits
-  // deterministic pseudo-random, so every reload draws exactly the same mock
-  function rng(seed){
-    return function(){
-      seed |= 0; seed = seed + 0x6D2B79F5 | 0;
-      var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
-      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-      return ((t ^ t >>> 14) >>> 0) / 4294967296;
-    };
-  }
-  function gauss(r){ return (r() + r() + r() + r() - 2) * 0.9; }
-  var fmt1 = d3.format(".1f");
+  var SP_W = 380, SP_H = 620, SP_M = { top: 14, right: 12, bottom: 30, left: 40 };
 
-  var COHORTS = ["1851 → 1881", "1861 → 1891", "1881 → 1911"];
-
-  // the nine HISCO major groups, with the occode counts actually in the file
-  var HISCO = [
-    { g:"1", name:"Professional & technical",   n:40,  col:"#9C6FA8" },
-    { g:"2", name:"Administrative & managerial", n:36,  col:"#6A5ACD" },
-    { g:"3", name:"Clerical",                    n:31,  col:"#3C7DB1" },
-    { g:"4", name:"Sales",                       n:120, col:"#7FA9CB" },
-    { g:"5", name:"Service",                     n:56,  col:"#5FA8A0" },
-    { g:"6", name:"Agriculture & fishing",       n:37,  col:"#6B9E78" },
-    { g:"7", name:"Production — materials", n:189, col:"#C08A2E" },
-    { g:"8", name:"Production — metal, wood", n:153, col:"#E0B66A" },
-    { g:"9", name:"Transport & labourers",       n:134, col:"#B07C5A" }
+  var GROUPS = [
+    { g: "1", name: "Professional & technical", col: "#9C6FA8" },
+    { g: "2", name: "Administrative & managerial", col: "#6A5ACD" },
+    { g: "3", name: "Clerical", col: "#3C7DB1" },
+    { g: "4", name: "Sales", col: "#7FA9CB" },
+    { g: "5", name: "Service", col: "#5FA8A0" },
+    { g: "6", name: "Agriculture & fishing", col: "#6B9E78" },
+    { g: "7", name: "Production — materials", col: "#C08A2E" },
+    { g: "8", name: "Production — metal, wood", col: "#E0B66A" },
+    { g: "9", name: "Transport & labourers", col: "#B07C5A" }
   ];
+  var GCOL = {}, GNAME = {};
+  GROUPS.forEach(function(d){ GCOL[d.g] = d.col; GNAME[d.g] = d.name; });
 
-  // ============================================ option B: the occupation space
-  (function(){
-    var W = 400, H = 400, PAD = 16;
-    var r = rng(20260928);
+  var COH = ["1851", "1861", "1881"], ENDS = { "1851": "1881", "1861": "1891", "1881": "1911" };
+  var f1 = d3.format(".1f"), f2 = d3.format(".2f"), fN = d3.format(",");
 
-    // cluster anchors, loosely ringed so the space has regions
-    var ring = [[.30,.22],[.52,.14],[.74,.24],[.84,.46],[.72,.72],[.48,.84],[.26,.74],[.15,.50],[.50,.50]];
-    var nodes = [];
-    HISCO.forEach(function(h, gi){
-      var cx = ring[gi][0] * (W - PAD*2) + PAD, cy = ring[gi][1] * (H - PAD*2) + PAD;
-      var spread = 20 + Math.sqrt(h.n) * 4.2;
-      for (var i = 0; i < h.n; i++){
-        nodes.push({
-          id: h.g + "-" + i, grp: h.g, col: h.col, gname: h.name,
-          name: h.name + " occupation " + (i + 1),
-          x: Math.max(PAD, Math.min(W-PAD, cx + gauss(r) * spread)),
-          y: Math.max(PAD, Math.min(H-PAD, cy + gauss(r) * spread)),
-          f: 0.25 + r() * 0.75
-        });
-      }
+  // a stable offset per occupation, so a node sits in the same place in all
+  // three panels and the eye can follow it
+  function jitter(code){
+    var h = 0;
+    for (var i = 0; i < code.length; i++) h = (h * 31 + code.charCodeAt(i)) % 100000;
+    return (h % 1000) / 1000;
+  }
+
+  Promise.all([
+    d3.csv("/assets/Results/father_space_by_cohort.csv?v=1"),
+    d3.csv("/assets/data/occode_names.csv")
+  ]).then(function(res){
+    var names = {};
+    res[1].forEach(function(r){
+      names[r.occode] = String(r.occ_name || "").toLowerCase()
+        .replace(/\s+/g, " ").trim()
+        .replace(/\b[a-z]/g, function(m){ return m.toUpperCase(); });
     });
 
-    // edges to the two nearest neighbours: enough to read as a web, cheap to draw
-    var seg = [];
-    nodes.forEach(function(a, i){
-      var best = [];
-      nodes.forEach(function(b, j){
-        if (i === j) return;
-        var d2 = (a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y);
-        if (best.length < 2) { best.push({ j:j, d2:d2 }); best.sort(function(p,q){return p.d2-q.d2;}); }
-        else if (d2 < best[1].d2) { best[1] = { j:j, d2:d2 }; best.sort(function(p,q){return p.d2-q.d2;}); }
-      });
-      best.forEach(function(b){
-        if (i < b.j) seg.push("M"+a.x.toFixed(1)+","+a.y.toFixed(1)+
-                              "L"+nodes[b.j].x.toFixed(1)+","+nodes[b.j].y.toFixed(1));
-      });
+    var nodes = res[0].filter(function(r){ return GCOL[r.hisco]; }).map(function(r){
+      return { code: r.occode, g: r.hisco, hiscam: +r.hiscam,
+               name: names[r.occode] || ("Occode " + r.occode),
+               n: { "1851": r.n_1851 === "" ? null : +r.n_1851,
+                    "1861": r.n_1861 === "" ? null : +r.n_1861,
+                    "1881": r.n_1881 === "" ? null : +r.n_1881 },
+               j: jitter(r.occode) };
     });
-    var edgePath = seg.join("");
 
-    // how each major group's weight shifts: land and craft give way to commerce
-    var TREND = {
-      "1":[0.6,0.9,1.5], "2":[0.5,0.8,1.5], "3":[0.4,0.8,1.9], "4":[0.8,1.1,1.5],
-      "5":[0.9,1.1,1.3], "6":[2.2,1.7,1.0], "7":[1.4,1.3,1.0], "8":[1.2,1.2,1.1],
-      "9":[1.0,1.1,1.2]
-    };
-    var share = {};
-    COHORTS.forEach(function(c, ci){
-      var tot = 0;
-      nodes.forEach(function(n){ tot += n.f * TREND[n.grp][ci]; });
-      nodes.forEach(function(n){ share[n.id + "|" + ci] = 100 * n.f * TREND[n.grp][ci] / tot; });
+    var totals = {};
+    COH.forEach(function(y){
+      totals[y] = d3.sum(nodes, function(d){ return d.n[y] || 0; });
     });
-    var maxShare = d3.max(Object.values(share));
-    var rad = d3.scaleSqrt().domain([0, maxShare]).range([0.7, 8]);
+    var maxShare = d3.max(nodes, function(d){
+      return d3.max(COH, function(y){ return 100 * (d.n[y] || 0) / totals[y]; });
+    });
+    var rad = d3.scaleSqrt().domain([0, maxShare]).range([0, 11]);
+    var SUPP_R = 0.9;   // a cell too thin to publish still gets a dot
 
-    var grid = d3.select("#sp-grid"), readout = d3.select("#sp-readout");
-    d3.select("#sp-legend").selectAll("span").data(HISCO).join("span")
+    var iW = SP_W - SP_M.left - SP_M.right, iH = SP_H - SP_M.top - SP_M.bottom;
+    var gx = d3.scaleBand().domain(GROUPS.map(function(d){ return d.g; }))
+      .range([0, iW]).paddingInner(0.12);
+    var yext = d3.extent(nodes, function(d){ return d.hiscam; });
+    var y = d3.scaleLinear().domain([yext[0] - 2, yext[1] + 2]).nice().range([iH, 0]);
+
+    d3.select("#sp-legend").selectAll("span").data(GROUPS).join("span")
       .attr("class", "sp-key")
-      .html(function(h){ return '<i style="background:'+h.col+'"></i>'+h.name+
-                                ' <em>'+h.n+'</em>'; });
+      .html(function(d){ return '<i style="background:' + d.col + '"></i>' + d.name; });
 
-    COHORTS.forEach(function(c, ci){
-      var cell = grid.append("div").attr("class", "fo-cell");
-      var svg = cell.append("svg").attr("class", "fo-svg").attr("viewBox", [0, 0, W, H]);
-      cell.append("div").attr("class", "fo-wlab").text(c);
-      svg.append("path").attr("class", "sp-edges").attr("d", edgePath);
-      svg.append("g").selectAll("circle").data(nodes).join("circle")
-        .attr("class", "sp-node").attr("data-sp", function(d){ return d.id; })
-        .attr("cx", function(d){ return d.x; }).attr("cy", function(d){ return d.y; })
-        .attr("r", function(d){ return rad(share[d.id + "|" + ci]); })
-        .attr("fill", function(d){ return d.col; })
-        .on("mouseover", function(event, d){ over(d); }).on("mouseout", out);
+    var readout = d3.select("#sp-readout");
+    var grid = d3.select("#sp-grid");
+
+    COH.forEach(function(yr){
+      var cell = grid.append("div").attr("class", "sp-cell");
+      var svg = cell.append("svg").attr("class", "sp-svg").attr("viewBox", [0, 0, SP_W, SP_H]);
+      cell.append("div").attr("class", "sp-wlab").text(yr + " → " + ENDS[yr]);
+      var g = svg.append("g").attr("transform", "translate(" + SP_M.left + "," + SP_M.top + ")");
+
+      g.append("g").attr("class", "sp-grid-l").selectAll("line").data(y.ticks(6)).join("line")
+        .attr("x1", 0).attr("x2", iW).attr("y1", y).attr("y2", y);
+      g.append("g").attr("class", "sp-axis")
+        .call(d3.axisLeft(y).ticks(6).tickSizeOuter(0));
+
+      // faint bands so the nine families read as regions of the space
+      g.selectAll("rect.sp-band").data(GROUPS).join("rect").attr("class", "sp-band")
+        .attr("x", function(d){ return gx(d.g); }).attr("y", 0)
+        .attr("width", gx.bandwidth()).attr("height", iH)
+        .attr("fill", function(d){ return d.col; });
+
+      g.selectAll("circle").data(nodes).join("circle")
+        .attr("class", "sp-node").attr("data-sp", function(d){ return d.code; })
+        .attr("cx", function(d){ return gx(d.g) + 3 + d.j * (gx.bandwidth() - 6); })
+        .attr("cy", function(d){ return y(d.hiscam); })
+        .attr("r", function(d){
+          return d.n[yr] === null ? SUPP_R : rad(100 * d.n[yr] / totals[yr]); })
+        .attr("fill", function(d){ return GCOL[d.g]; })
+        .attr("opacity", function(d){ return d.n[yr] === null ? .3 : .72; })
+        .on("mouseover", function(event, d){ over(d); })
+        .on("mouseout", out);
     });
 
     function over(d){
-      d3.selectAll(".sp-node").classed("fo-dim", function(){
-        return this.getAttribute("data-sp") !== d.id;
-      });
-      var trail = COHORTS.map(function(c, ci){
-        return '<span class="fo-step"><span class="fo-step__w">'+c.replace("→","–")+
-               '</span><span class="fo-step__v">'+fmt1(share[d.id+"|"+ci])+'%</span></span>';
+      d3.selectAll(".sp-node").classed("sp-dim", function(){
+        return this.getAttribute("data-sp") !== d.code; });
+      var trail = COH.map(function(yr){
+        var v = d.n[yr] === null ? "&lt;5" : f2(100 * d.n[yr] / totals[yr]) + "%";
+        return '<span class="sp-step"><span class="sp-step__w">' + yr + "–" + ENDS[yr] +
+               '</span><span class="sp-step__v">' + v + '</span></span>';
       }).join("");
-      readout.html('<span class="fo-readout__sw" style="background:'+d.col+'"></span>'+
-                   '<span class="fo-readout__name">'+d.name+'</span>'+
-                   '<span class="fo-step__w">'+d.gname+'</span>'+trail);
+      readout.html('<span class="sp-sw" style="background:' + GCOL[d.g] + '"></span>' +
+                   '<span class="sp-name">' + d.name + '</span>' +
+                   '<span class="sp-step__w">' + GNAME[d.g] + ' &middot; HISCAM ' +
+                   f1(d.hiscam) + '</span>' + trail);
     }
     function out(){
-      d3.selectAll(".sp-node").classed("fo-dim", false);
-      readout.html('<span class="fo-readout__hint">Hover an occupation to follow it across the three cohorts.</span>');
+      d3.selectAll(".sp-node").classed("sp-dim", false);
+      readout.html("");
     }
-  })();
 
+    d3.select("#sp-note").html(
+      "One dot per father&rsquo;s occupation, " + fN(nodes.length) + " of them, in the same " +
+      "position in all three panels. Across: the nine HISCO occupational families. Up the side: " +
+      "HISCAM occupational status. Dot size is that occupation&rsquo;s share of the manager " +
+      "sons in that cohort, so the mass of the cloud is what moves. Horizontal placement within " +
+      "a family is arbitrary spacing, not a measurement. Cells with fewer than five sons are " +
+      "not published and show as faint dots. " +
+      "<em>A true proximity network &mdash; occupations joined by how alike their tasks are &mdash; " +
+      "still needs the task matrix; this is the honest version until then.</em>");
+  });
 })();
 </script>
 
 <style>
-  /* the placeholder banner; its rule used to live in the origins frame,
-     which now runs on real data and no longer carries one */
-  .fo-mock {
-    border-left: 3px solid #d8a93a; background: #fffbe9; color: #7a5c00;
-    padding: 12px 18px; margin: 2px 0 18px; max-width: 1100px;
-    font-size: .88rem; line-height: 1.55; border-radius: 3px;
-  }
-  .fo-points li { font-size: .96rem; line-height: 1.55; color: #444; margin-bottom: 18px; }
-
   .sp-readout {
-    min-height: 34px; display: flex; align-items: center; flex-wrap: wrap; gap: 0 16px;
-    margin: 0 0 8px; font-size: .92rem; color: #333;
+    height: 30px; display: flex; align-items: center; flex-wrap: nowrap; overflow: hidden;
+    gap: 0 16px; margin: 2px 0 10px; font-size: .92rem; color: #333; white-space: nowrap;
   }
-  .sp-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 14px; }
+  .sp-sw { width: 12px; height: 12px; border-radius: 2px; display: inline-block; margin-right: 9px; flex: none; }
+  .sp-name { font-weight: 600; margin-right: 10px; flex: none; }
+  .sp-step { color: #666; font-size: .86rem; white-space: nowrap; flex: none; }
+  .sp-step__w { color: #a0a0a0; margin-right: 6px; }
+  .sp-step__v { font-variant-numeric: tabular-nums; color: #222; }
+
+  .sp-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 0 0 12px; }
   .sp-key { font-size: .8rem; color: #666; display: inline-flex; align-items: center; }
   .sp-key i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 6px; }
-  .sp-key em { color: #aaa; font-style: normal; margin-left: 5px; font-variant-numeric: tabular-nums; }
 
-  .sp-edges { fill: none; stroke: #e3e3e3; stroke-width: .5; }
-  .sp-node { cursor: pointer; transition: opacity .12s; stroke: #fff; stroke-width: .4; }
+  .sp-grid { display: flex; gap: 22px; align-items: flex-start; }
+  .sp-cell { flex: 1 1 0; min-width: 0; }
+  .sp-svg { width: 100%; height: auto; display: block; }
+  .sp-wlab {
+    text-align: center; font-size: .9rem; color: #444;
+    font-variant-numeric: tabular-nums; margin-top: 4px;
+  }
 
+  .sp-band { opacity: .045; }
+  .sp-grid-l line { stroke: #f2f2f2; }
+  .sp-axis text { fill: #888; font-size: 11px; }
+  .sp-axis path, .sp-axis line { stroke: #ddd; }
+  .sp-node { cursor: pointer; transition: opacity .12s; stroke: #fff; stroke-width: .35; }
+  .sp-dim { opacity: .06 !important; }
+
+  .sp-note {
+    font-size: .84rem; color: #8a8a8a; line-height: 1.65; margin: 18px 0 0; max-width: 1150px;
+  }
+  .sp-note em { color: #9a8a5a; font-style: italic; }
 </style>
 
 
