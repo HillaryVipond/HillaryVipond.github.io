@@ -2656,23 +2656,18 @@ Promise.all([
 
 <section class="frame">
   <div class="in-kicker">Results · B: Social Mobility</div>
-<h3>2.1. Who were the foremen?</h3>
+<h3>2.1. Who were the managers?</h3>
   <div class="frame__body">
 
   <div class="fm-row">
     <div class="fm-panel">
-      <div class="fm-ptitle">Occupations holding the first half of all foremen, by census year</div>
+      <div class="fm-ptitle">Occupations holding the first half of all managers, by census year</div>
       <svg id="fm-svg"></svg>
-      <div class="fm-note">
-        Each bar is every foreman recorded that year. The coloured blocks are the occupations that,
-        taken together, account for the first 50%, stacked in the same order every year so a trade
-        keeps its place. Hover one to follow it across the censuses.
-      </div>
       <div class="fm-tip" id="fm-tip"></div>
     </div>
     <div class="fm-aside">
       <ul class="in-list fm-points">
-        <li>In 1851, seven occupations held half the foremen.</li>
+        <li>In 1851, seven occupations held half the managers.</li>
         <li>By 1901 it took thirty-one.</li>
         <li>Supervision spread out across the economy.</li>
       </ul>
@@ -2684,7 +2679,7 @@ Promise.all([
 
 <section class="frame">
   <div class="in-kicker">Results · B: Social Mobility</div>
-<h3>2.2. How many foremen?</h3>
+<h3>2.2. How many managers?</h3>
   <div class="frame__body">
 
   <div class="fm-row">
@@ -2700,7 +2695,7 @@ Promise.all([
     </div>
     <div class="fm-aside">
       <ul class="in-list fm-points">
-        <li>25,000 foremen in 1851.</li>
+        <li>25,000 managers in 1851.</li>
         <li>282,000 by 1911, an elevenfold rise.</li>
         <li>More supervisors, spread over more trades.</li>
       </ul>
@@ -2731,7 +2726,7 @@ Promise.all([
     res[1].forEach(function(r){ names[r.occode] = fmTitle(r.occ_name); });
 
     // Per year: rank the occupations and take them until they cover half the
-    // foremen. That cut-off is the point -- it needs 7 occupations in 1851 and
+    // managers. That cut-off is the point -- it needs 7 occupations in 1851 and
     // 31 by 1901. Both charts use this same selection.
     var byYear = d3.group(rows, function(r){ return +r.census_year; });
     var years = Array.from(byYear.keys()).sort(d3.ascending);
@@ -2739,7 +2734,7 @@ Promise.all([
 
     years.forEach(function(y){
       var v = byYear.get(y)
-        .map(function(r){ return { code: r.occode, n: +r.foreman_n }; })
+        .map(function(r){ return { code: r.occode, n: +r.manager_n }; })
         .sort(function(a, b){ return b.n - a.n; });
       var total = d3.sum(v, function(d){ return d.n; });
       var cum = 0, top = [];
@@ -2780,7 +2775,7 @@ Promise.all([
     var maxTotal = d3.max(series, function(s){ return s.total; });
 
     // mode "share": every bar is 100% tall, so composition is comparable.
-    // mode "count": bars are the actual number of foremen, so the growth from
+    // mode "count": bars are the actual number of managers, so the growth from
     // 25k to 282k is what you see instead.
     function draw(svgSel, tipSel, mode){
       var share = mode === "share";
@@ -2807,7 +2802,7 @@ Promise.all([
           tip.style("visibility", "visible").html(
             "<strong>All other occupations</strong>" +
             "<div style='color:#777'>" + fmN(d.nOther) + " occupations</div>" +
-            "<div>" + fmN(d.total - d.topSum) + " foremen &middot; " +
+            "<div>" + fmN(d.total - d.topSum) + " managers &middot; " +
               fmP(100 - 100 * d.topSum / d.total) + "% of " + d.year + "</div>");
         })
         .on("mouseout", out);
@@ -2840,7 +2835,7 @@ Promise.all([
             "<strong>" + (names[d.code] || ("Occode " + d.code)) + "</strong>" +
             "<div style='color:#777'>occode " + d.code + " &middot; rank " + d.rank + " in " + d.year +
               " &middot; in the top half of " + d.appears + " of 6 censuses</div>" +
-            "<div>" + fmN(d.n) + " foremen &middot; " + fmP(d.pct) + "% of " + d.year + "</div>");
+            "<div>" + fmN(d.n) + " managers &middot; " + fmP(d.pct) + "% of " + d.year + "</div>");
         })
         .on("mouseout", out);
 
@@ -2914,7 +2909,7 @@ Promise.all([
 
 <section class="frame frame--tall">
   <div class="in-kicker">Results · B: Social Mobility</div>
-<h3>2.3. Where did foremen come from?</h3>
+<h3>2.3. Where did managers come from?</h3>
   <div class="frame__body">
 
   <div class="fo-mock">
@@ -2929,7 +2924,7 @@ Promise.all([
   <div class="fo-grid" id="fo-grid"></div>
 
   <div class="fo-note">
-    Each panel is one transition window. The grey bar at the top is every foreman at the end of it;
+    Each panel is one transition window. The grey bar at the top is every manager at the end of it;
     the blocks along the bottom are where they were in the census before, sized by share. Every
     panel is normalised, so the panels compare composition rather than size. Sources keep the same
     colour and the same left-to-right place in every panel, so no two streams cross.
@@ -2944,7 +2939,7 @@ Promise.all([
   // Replace this block with a d3.csv load of window,origin_occode,n and the rest
   // of the file works unchanged -- it only ever reads SOURCES, WINDOWS, SHARES.
   var SOURCES = [
-    { id: "SELF",  name: "Already a foreman",                        kind: "self"  },
+    { id: "SELF",  name: "Already a manager",                        kind: "self"  },
     { id: "177",   name: "Farm – bailiffs, stewards, foremen",  kind: "occ"   },
     { id: "181",   name: "Agricultural labourers",                   kind: "occ"   },
     { id: "555",   name: "Cotton & cotton goods manufacture",        kind: "occ"   },
@@ -3023,7 +3018,7 @@ Promise.all([
       .attr("width", inner).attr("height", TOP_H).attr("rx", 2);
     svg.append("text").attr("class", "fo-cap")
       .attr("x", SIDE + inner / 2).attr("y", TOP_Y - 10)
-      .attr("text-anchor", "middle").text("all foremen");
+      .attr("text-anchor", "middle").text("all managers");
 
     svg.append("g").selectAll("path").data(bands).join("path")
       .attr("class", "fo-ribbon")
