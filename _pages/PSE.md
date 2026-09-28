@@ -2734,7 +2734,12 @@ Promise.all([
 
     years.forEach(function(y){
       var v = byYear.get(y)
-        .map(function(r){ return { code: r.occode, n: +r.manager_n }; })
+        // the column is foreman_n in the file; accept either spelling so a
+        // rename of the wording can never silently zero the chart again
+        .map(function(r){
+          return { code: r.occode,
+                   n: +(r.foreman_n !== undefined ? r.foreman_n : r.manager_n) };
+        })
         .sort(function(a, b){ return b.n - a.n; });
       var total = d3.sum(v, function(d){ return d.n; });
       var cum = 0, top = [];
