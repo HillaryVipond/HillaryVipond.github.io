@@ -57,6 +57,7 @@ noindex: true
 .fig-flow { width: 100%; }
 /* space between the drill-down controls and the chart they drive */
 .deck #treemap, .deck #mech-legend { margin-top: 16px; }
+.deck #treemap-time { margin-top: 34px; }
 /* .frame__body is a flex column, so its direct children stretch to the full
    frame width. That turned the ported control buttons into full-width bars.
    Keep interactive controls at their natural size, as on the website. */
@@ -381,7 +382,6 @@ body.present .page__content { padding-top: 0 !important; }
 <div class="fig-flow">
 <div class="in-kicker">Descriptive Evidence</div>
 <h2>1. Occupational Orders over Time</h2>
-<p>Click a year to view the treemap of the different sectors of the British economy by census year.</p>
 
 <div style="margin-bottom: 1em;">
   <button onclick="loadYear(1851)">1851</button>
@@ -1897,11 +1897,9 @@ Promise.all([
 
     <div class="eq-split">
       <div class="eq-terms">
-        <div class="eq-term eq-term--note">
-          <span class="eq-sym">2&nbsp;&times;&nbsp;2</span>
-          <span>difference-in-differences, over two stacked transition windows:
-            1851&ndash;1861 and 1861&ndash;1881</span>
-        </div>
+        <div class="eq-term"><span class="eq-sym" data-tex="\textit{Data}"></span>
+          <span>2&nbsp;&times;&nbsp;2 difference-in-differences, over two stacked transition
+            windows: 1851&ndash;1861 and 1861&ndash;1881</span></div>
         <div class="eq-term"><span class="eq-sym" data-tex="Exit_{ic\tau}"></span>
           <span>exit rate, occupation <em>i</em>, county <em>c</em>, census <em>&tau;</em></span></div>
         <div class="eq-term"><span class="eq-sym" data-tex="\delta_c"></span>
@@ -1962,7 +1960,7 @@ Promise.all([
   .eq-box .katex-display { margin: 0; }
   .eq-box .katex { font-size: 1.72em; }
 
-  .eq-split { display: flex; gap: 70px; align-items: flex-start; flex-wrap: wrap; }
+  .eq-split { display: flex; gap: 70px; align-items: flex-start; flex-wrap: wrap; max-width: 1480px; }
   .eq-terms { flex: 0 1 660px; min-width: 340px; }
   .eq-logic { flex: 0 1 400px; min-width: 290px; margin-left: auto; padding-top: 4px; }
 
@@ -1973,8 +1971,6 @@ Promise.all([
   }
   .eq-term .eq-sym { flex: 0 0 96px; text-align: right; color: #333; }
   .eq-term em { color: #777; }
-  .eq-term--note { color: #8a8a8a; border-bottom: 1px solid #e4e4e4; padding-bottom: 11px; }
-  .eq-term--note .eq-sym { color: #8a8a8a; font-variant-numeric: tabular-nums; }
   .eq-sym-i { white-space: nowrap; color: #555; }
 
   .eq-label {
@@ -2229,7 +2225,6 @@ Promise.all([
   <div class="frame__body">
 
   <div id="sc-legend-a" class="sc-legend"></div>
-  <div class="sc-hint">Click a category to remove it.</div>
 
   <div class="sc-row">
     <div class="sc-panel" style="flex:0 1 880px;">
@@ -2249,7 +2244,6 @@ Promise.all([
   <div class="frame__body">
 
   <div id="sc-legend-c" class="sc-legend"></div>
-  <div class="sc-hint">Click a category to remove it.</div>
 
   <div class="sc-row">
     <div class="sc-panel" style="flex:0 1 880px;">
@@ -2276,7 +2270,6 @@ Promise.all([
   </p>
 
   <div id="sc-legend-b" class="sc-legend"></div>
-  <div class="sc-hint">Click a category to remove it.</div>
 
   <div class="sc-row">
     <div class="sc-panel" style="flex:1 1 840px;">
@@ -2883,7 +2876,12 @@ Promise.all([
         svg.removeAttribute("height");
         svg.style.width = "100%";
         svg.style.height = "auto";
-        svg.style.maxHeight = svg.closest(".frame--tall") ? "150vh" : "68vh";
+        var host = svg.parentElement ? svg.parentElement.id : "";
+        if (host === "treemap-time" || host === "growth-chart") {
+          svg.setAttribute("preserveAspectRatio", "xMinYMid meet");
+        }
+        svg.style.maxHeight = svg.closest(".frame--tall") ? "150vh"
+                            : (host === "growth-chart" ? "76vh" : "68vh");
         svg.dataset.fitted = "1";
       });
     }
