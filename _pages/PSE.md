@@ -2654,6 +2654,161 @@ Promise.all([
 </script>
 
 
+<section class="frame">
+  <div class="in-kicker">Results · A: Workforce in Transition</div>
+<h3>1.6. Where the new bootmaking jobs were</h3>
+  <div class="frame__body">
+
+  <div class="bm-row">
+    <div class="bm-panel">
+      <svg id="bm-svg"></svg>
+    </div>
+    <div class="bm-aside">
+      <div class="bm-readout" id="bm-readout"></div>
+      <div class="bm-legend" id="bm-legend"></div>
+      <ul class="in-list bm-points" id="bm-points"></ul>
+    </div>
+  </div>
+
+  <div class="bm-note" id="bm-note"></div>
+
+  </div>
+</section>
+
+<script>
+(function(){
+  var YEAR = 1881;
+  var MW = 560, MH = 660;
+
+  // one green ramp, bands anchored on the maximum and rounded to 1/2/5, so the
+  // handful of standout counties separate from the long flat tail
+  function nice125(v){
+    var p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p;
+    return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p;
+  }
+  var RAMP = ["#EDF8E9", "#C7E9C0", "#A1D99B", "#74C476", "#41AB5D", "#238B45"];
+  var f1 = d3.format(".1f"), fN = d3.format(",");
+
+  Promise.all([
+    d3.json("/assets/maps/Counties1851.geojson"),
+    d3.json("/assets/maps/bootmaker_counts_by_county.json")
+  ]).then(function(res){
+    var geo = res[0];
+    var rows = res[1].filter(function(r){ return r.year === YEAR; });
+
+    var totalNew = d3.sum(rows, function(r){ return r.new; });
+    var by = {};
+    rows.forEach(function(r){
+      by[r.county] = { share: 100 * r.new / totalNew, n: r.new,
+                       all: r.new + r.old, intensity: 100 * r.new / (r.new + r.old) };
+    });
+
+    // one path per county, not per polygon, or a county becomes many targets
+    var byCty = new Map();
+    geo.features.forEach(function(f){
+      var c = f.properties && f.properties.R_CTY;
+      if (!c) return;
+      if (!byCty.has(c)) byCty.set(c, { type: "Feature", properties: { R_CTY: c },
+                                        geometry: { type: "MultiPolygon", coordinates: [] } });
+      var g = f.geometry;
+      if (!g) return;
+      if (g.type === "Polygon") byCty.get(c).geometry.coordinates.push(g.coordinates);
+      else if (g.type === "MultiPolygon") g.coordinates.forEach(function(p){
+        byCty.get(c).geometry.coordinates.push(p); });
+    });
+    var COUNTIES = Array.from(byCty.values());
+
+    var hi = d3.max(Object.keys(by), function(c){ return by[c].share; });
+    var cuts = [hi / 16, hi / 8, hi / 4, hi / 2].map(nice125);
+    function band(v){
+      if (v == null) return null;
+      for (var i = 0; i < cuts.length; i++) if (v < cuts[i]) return i;
+      return cuts.length;
+    }
+    function fill(c){
+      var d = by[c];
+      if (!d) return "#F2F2F2";
+      return RAMP[band(d.share) + 1];
+    }
+
+    var svg = d3.select("#bm-svg").attr("viewBox", [0, 0, MW, MH]);
+    var projection = d3.geoMercator()
+      .fitSize([MW, MH - 12], { type: "FeatureCollection", features: COUNTIES });
+    var path = d3.geoPath().projection(projection);
+
+    svg.append("g").selectAll("path").data(COUNTIES).join("path")
+      .attr("class", "bm-cty").attr("d", path)
+      .attr("fill", function(f){ return fill(f.properties.R_CTY); })
+      .on("mouseover", function(event, f){ show(f.properties.R_CTY); })
+      .on("mouseout", clear);
+
+    var hl = svg.append("path").attr("class", "bm-hl");
+
+    function show(c){
+      var d = by[c];
+      hl.attr("d", path(byCty.get(c)));
+      var name = c.toLowerCase().replace(/\b[a-z]/g, function(m){ return m.toUpperCase(); });
+      if (!d) {
+        d3.select("#bm-readout").html('<div class="bm-l1">' + name + '</div>' +
+          '<div class="bm-l2">not in the data</div>');
+        return;
+      }
+      d3.select("#bm-readout").html(
+        '<div class="bm-l1">' + name + '</div>' +
+        '<div class="bm-l2">' + f1(d.share) + '% of all new jobs &middot; ' +
+        fN(d.n) + ' of ' + fN(d.all) + ' bootmakers &middot; ' +
+        f1(d.intensity) + '% new locally</div>');
+    }
+    function clear(){ hl.attr("d", null); d3.select("#bm-readout").html(""); }
+
+    var lo = [0].concat(cuts);
+    d3.select("#bm-legend").selectAll("div").data(lo).join("div")
+      .attr("class", "bm-key")
+      .html(function(v, i){
+        var label = i === lo.length - 1 ? f1(v) + "% and over"
+                  : f1(v) + " to " + f1(cuts[i]) + "%";
+        return '<i style="background:' + RAMP[i + 1] + '"></i>' + label;
+      });
+
+    var top = rows.slice().sort(function(a, b){ return b.new - a.new; });
+    var t3 = d3.sum(top.slice(0, 3), function(r){ return r.new; });
+    d3.select("#bm-points").selectAll("li").data([
+      "Northamptonshire, Leicestershire and London hold " +
+        Math.round(100 * t3 / totalNew) + "% of them between them.",
+      "Leicestershire's own bootmaking is " +
+        Math.round(by["LEICESTERSHIRE"].intensity) + "% new work."
+    ]).join("li").text(function(d){ return d; });
+
+    d3.select("#bm-note").text(
+      "Each county's share of all " + fN(totalNew) + " new-task bootmaking jobs in " + YEAR +
+      ". Counties in pale grey are not in the data. Hover a county for its own figures.");
+  });
+})();
+</script>
+
+<style>
+  .bm-row { display: flex; gap: 46px; align-items: flex-start; flex-wrap: wrap; margin-top: 26px; }
+  .bm-panel { flex: 0 1 560px; min-width: 320px; }
+  #bm-svg { width: 100%; height: auto; display: block; }
+  .bm-aside { flex: 1 1 380px; min-width: 280px; max-width: 560px; padding-top: 30px; }
+
+  .bm-cty { stroke: #fff; stroke-width: 0.5; cursor: pointer; }
+  .bm-hl { fill: none; stroke: #1c1c1c; stroke-width: 1.6; pointer-events: none; }
+
+  .bm-readout { height: 46px; overflow: hidden; margin-bottom: 18px; white-space: nowrap; }
+  .bm-l1 { font-weight: 600; font-size: .98rem; color: #222; height: 22px; }
+  .bm-l2 { font-size: .86rem; color: #666; height: 22px; font-variant-numeric: tabular-nums; }
+
+  .bm-legend { display: flex; flex-direction: column; gap: 5px; margin-bottom: 24px; }
+  .bm-key { font-size: .84rem; color: #666; display: flex; align-items: center; }
+  .bm-key i { width: 15px; height: 11px; border-radius: 2px; display: inline-block; margin-right: 9px; }
+
+  .bm-points li { font-size: .98rem; line-height: 1.55; color: #444; margin-bottom: 16px; }
+
+  .bm-note { font-size: .78rem; color: #8f8f8f; line-height: 1.6; margin: 24px 0 0; max-width: 1100px; }
+</style>
+
+
 <section class="frame frame--section frame--block">
   <h2>Results</h2>
   <div class="blocklab">B: Social Mobility</div>
