@@ -2269,16 +2269,14 @@ Promise.all([
   <div class="frame__body">
 
   <p class="sc-sub sc-sub--wide">
-    Each occupation is ranked twice against the same universe of 235 large male occupations:
-    once on how far its exit rate rose, once on how far its entry collapsed. Putting both on a
-    percentile scale makes the two margins comparable, and asks which of them an occupation is
-    really an outlier on.
+    Each occupation is ranked twice against the same universe of 235 large male occupations.
+    Once on exit rate increasing, once on how much entry collapsed.
   </p>
 
   <div id="sc-legend-b" class="sc-legend"></div>
 
   <div class="sc-row">
-    <div class="sc-panel sc-panel--joint" style="flex:0 1 820px;">
+    <div class="sc-panel sc-panel--joint" style="flex:0 1 810px;">
       <div class="sc-ptitle">Exit percentile against entry percentile</div>
       <svg id="sc-svg-joint"></svg>
       <div class="sc-tip" id="sc-tip-joint"></div>
@@ -2308,8 +2306,10 @@ Promise.all([
   #sc-legend-a button .n, #sc-legend-c button .n { color:#999; font-variant-numeric:tabular-nums; }
   #sc-legend-a button.off, #sc-legend-c button.off { opacity:.4; background:#fafafa; text-decoration:line-through; }
   .sc-sub--wide { max-width: none; }
-  .sc-aside { flex: 0 1 280px; min-width: 210px; padding-top: 74px; }
-  .sc-panel--joint { margin-top: 30px; }
+  /* let the bullets take the room the chart does not need, so they stop
+     wrapping every few words */
+  .sc-aside { flex: 1 1 400px; min-width: 260px; max-width: 580px; padding-top: 96px; }
+  .sc-panel--joint { margin-top: 56px; }
   .sc-row--low { margin-top: 96px; }
   .sc-points li { font-size: .98rem; line-height: 1.55; color: #444; margin-bottom: 18px; }
   .sc-hint { font-size:.82rem; color:#999; margin:2px 0 14px; }
@@ -3857,8 +3857,12 @@ Promise.all([
             || svg.id === "sc-svg-joint") {
           svg.setAttribute("preserveAspectRatio", "xMinYMid meet");
         }
-        svg.style.maxHeight = svg.closest(".frame--tall") ? "150vh"
-                            : (host === "growth-chart" ? "76vh" : "68vh");
+        // the joint scatter is square, so its size is set by the height cap
+        // rather than the panel width -- it needs its own, larger allowance
+        var cap = "68vh";
+        if (host === "growth-chart") cap = "76vh";
+        else if (svg.id === "sc-svg-joint") cap = "73vh";
+        svg.style.maxHeight = svg.closest(".frame--tall") ? "150vh" : cap;
         svg.dataset.fitted = "1";
       });
     }
