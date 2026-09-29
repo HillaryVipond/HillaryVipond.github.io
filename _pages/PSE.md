@@ -53,6 +53,15 @@ noindex: true
 .frame > h4 { font-size: 1rem; font-weight: 600; color: #444; margin: 2px 0 10px; }
 
 .frame__body { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; }
+/* Captions come in with the ported website figures as bare <p>, so they
+   render at body size and compete with the chart. Shrink and lighten them
+   to match the notes written for the deck. :not([class]) keeps this off
+   the slide copy written here, and !important is needed because some of
+   the ported captions carry an inline font-size. */
+.frame__body > p:not([class]),
+.fig-flow > p:not([class]) {
+  font-size: 0.78rem !important; line-height: 1.6; color: #8f8f8f; max-width: 1000px;
+}
 .frame__body > p { font-size: 0.95rem; line-height: 1.55; max-width: 1000px; }
 .fig-flow { width: 100%; }
 /* space between the drill-down controls and the chart they drive */
