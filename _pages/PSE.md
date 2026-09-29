@@ -726,9 +726,8 @@ body.present .page__content { padding-top: 0 !important; }
 <div class="in-kicker">Descriptive Evidence</div>
 <h2>4. Micro-Occupations: Growth and Decline</h2>
 
-<p>Each industry is itself made up of many different jobs: micro-occupations. In moving one level deeper, we can see the distinct occupations within each industry. This makes it possible to track how they grew and declined over the 2nd Industrial Revolution.</p>
+<p>Each industry is itself made up of many different jobs &mdash; micro-occupations.</p>
 
-<p style="font-size:0.9em;color:#666;margin-top:-0.4em;">Click the <strong>Dress</strong> order to open it up, then click a highlighted occupation to see how its tasks changed over time. Click the background to step back out.</p>
 
 <button id="treemap-back" style="display:none;margin:0 0 10px;padding:5px 12px;font-size:13px;cursor:pointer;">← Back to all orders</button>
 <button id="treemap-mech" style="display:none;margin:0 0 10px 6px;padding:5px 12px;font-size:13px;cursor:pointer;">Shade by mechanization</button>
@@ -932,8 +931,7 @@ body.present .page__content { padding-top: 0 !important; }
 <h3>1. Map of specific new jobs</h3>
 
 <p>
-  Where did specific new occupations emerge across the country? Choose a trade and a census
-  year to see the share of the workforce it accounted for in each county.
+  Where did specific new occupations emerge across the country?
 </p>
 
 <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
@@ -1263,7 +1261,7 @@ body.present .page__content { padding-top: 0 !important; }
   An initial mapping of the emergence of new technologies in the UK, by county.
 </h4>
 
-<p>Unlike the apprenticeship system, mechanization rises on <em>both</em> measures &mdash; in share <em>and</em> in absolute numbers: by 1911 there are at least about 1.5 million more people working with machines.</p>
+<p>Mechanization rises on both measures. In share and absolute numbers, by 1911 there are 1.5 million more people working with machines.</p>
 
 <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">
   <label for="tech-year-slider">Select year: <span id="tech-year-label">1851</span></label>
