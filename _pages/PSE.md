@@ -3890,9 +3890,8 @@ Promise.all([
       </div>
 
       <div class="eq-logic">
-        <p class="eq-label">What the two coefficients ask</p>
         <ul class="in-list eq-points">
-          <li>The family fixed effect holds parents, place and upbringing constant, so the
+          <li>Family FE holds parents, place and upbringing constant, and therefore
               comparison is between brothers.</li>
           <li><span class="eq-sym-i" data-tex="\theta"></span> is the gap between the son who
               followed his father and the son who did not.</li>
@@ -3926,6 +3925,12 @@ Promise.all([
   else window.addEventListener("load", draw);
 })();
 </script>
+
+<style>
+  /* only this slide; slide 1.1 uses the same classes and stays where it is */
+  #wf-eq .eq-box { margin-top: 52px; }
+  #wf-eq .eq-logic { padding-top: 0; }
+</style>
 
 
 <section class="frame">
@@ -4026,7 +4031,7 @@ Promise.all([
 
 <style>
   .wf-tab {
-    border-collapse: collapse; margin: 34px 0 0; font-variant-numeric: tabular-nums;
+    border-collapse: collapse; margin: 76px 0 0; font-variant-numeric: tabular-nums;
     font-size: 1.06rem; color: #222;
   }
   .wf-tab th, .wf-tab td { padding: 7px 26px; text-align: right; white-space: nowrap; }
@@ -4057,6 +4062,36 @@ Promise.all([
   .wf-note {
     font-size: .78rem; color: #8f8f8f; line-height: 1.6; margin: 26px 0 0; max-width: 1100px;
   }
+</style>
+
+
+<section class="frame">
+  <div class="in-kicker">Results · C: Fertility</div>
+<h3>3.5. Why carpenter brothers differ anyway</h3>
+  <div class="frame__body">
+
+  <ul class="in-list cp-points">
+    <li>No carpenter interaction with bootmaking decline is distinguishable from zero.
+        The shock does not travel into carpentry.</li>
+
+    <li>The brother gap itself is still there. Carpenter sons who followed their father
+        had about <span class="cp-num">0.3</span> more children than their brothers, in
+        both panels, and the estimate is tight.</li>
+
+    <li>So the gap is a feature of carpentry, not an echo of bootmaking. It shows up in the
+        Decline counties because those counties are where carpentry was growing.</li>
+
+    <li>Following your father paid where his trade was expanding, and cost where it was
+        collapsing. The two tables are the same mechanism with the sign reversed.</li>
+  </ul>
+
+  </div>
+</section>
+
+<style>
+  .cp-points { max-width: 1080px; margin-top: 56px; }
+  .cp-points li { font-size: 1.12rem; line-height: 1.6; color: #333; margin-bottom: 26px; }
+  .cp-num { font-variant-numeric: tabular-nums; color: #238B45; }
 </style>
 
 
