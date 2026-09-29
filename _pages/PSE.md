@@ -3862,6 +3862,204 @@ Promise.all([
 </section>
 
 
+<!-- the builder matches the opening frame tag exactly, so the id used to
+     scope the katex render goes on the body, not on that tag -->
+<section class="frame">
+  <div class="in-kicker">Results · C: Fertility</div>
+<h3>3.3. Comparing brothers</h3>
+  <div class="frame__body" id="wf-eq">
+
+    <div class="eq-box"><div id="wf-did"></div></div>
+
+    <div class="eq-split">
+      <div class="eq-terms">
+        <div class="eq-term"><span class="eq-sym" data-tex="\textit{Data}"></span>
+          <span>brothers in bootmaker-father households where some sons entered the trade and
+            some did not</span></div>
+        <div class="eq-term"><span class="eq-sym" data-tex="Y_{if}"></span>
+          <span>adult outcome for son <em>i</em> in family <em>f</em></span></div>
+        <div class="eq-term"><span class="eq-sym" data-tex="\delta_f"></span>
+          <span>family fixed effects</span></div>
+        <div class="eq-term"><span class="eq-sym" data-tex="B_{if}"></span>
+          <span>the son became a bootmaker</span></div>
+        <div class="eq-term"><span class="eq-sym" data-tex="\text{Decline}_c"></span>
+          <span>local bootmaking fell by 20% or more; Growth counties are the reference,
+            the middle is dropped</span></div>
+        <div class="eq-term"><span class="eq-sym" data-tex="X_{if}"></span>
+          <span>age and birth order; errors clustered by county</span></div>
+      </div>
+
+      <div class="eq-logic">
+        <p class="eq-label">What the two coefficients ask</p>
+        <ul class="in-list eq-points">
+          <li>The family fixed effect holds parents, place and upbringing constant, so the
+              comparison is between brothers.</li>
+          <li><span class="eq-sym-i" data-tex="\theta"></span> is the gap between the son who
+              followed his father and the son who did not.</li>
+          <li><span class="eq-sym-i" data-tex="\beta"></span> is how much wider that gap is
+              where the trade was collapsing.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+(function(){
+  var WF = "Y_{if} = \\delta_f + \\theta\\, B_{if}"
+         + " + \\beta\\, (B_{if} \\times \\text{Decline}_c)"
+         + " + X_{if}'\\gamma + \\varepsilon_{if}.";
+
+  function draw(){
+    if (!window.katex) return;
+    var main = document.getElementById("wf-did");
+    if (main) katex.render(WF, main, { displayMode: true, throwOnError: false });
+    // scoped to this slide; the equation slide earlier on the page renders its
+    // own, and re-rendering the same tex is harmless either way
+    document.querySelectorAll("#wf-eq .eq-sym[data-tex], #wf-eq .eq-sym-i[data-tex]")
+      .forEach(function(el){
+        katex.render(el.getAttribute("data-tex"), el, { throwOnError: false });
+      });
+  }
+  if (window.katex) draw();
+  else window.addEventListener("load", draw);
+})();
+</script>
+
+
+<section class="frame">
+  <div class="in-kicker">Results · C: Fertility</div>
+<h3>3.4. The cost of persistence: children under 18</h3>
+  <div class="frame__body">
+
+  <table class="wf-tab">
+    <thead>
+      <tr>
+        <th></th>
+        <th class="wf-grp" colspan="2">Bootmaker sons</th>
+        <th class="wf-grp wf-sep" colspan="2">Carpenter sons &mdash; placebo</th>
+      </tr>
+      <tr class="wf-yrs">
+        <th></th>
+        <th>1851&ndash;1881</th><th>1861&ndash;1891</th>
+        <th class="wf-sep">1851&ndash;1881</th><th>1861&ndash;1891</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="wf-lab">Entered the trade <span class="wf-sym" data-tex="\theta"></span></td>
+        <td>0.448<sup>***</sup></td><td>0.261<sup>*</sup></td>
+        <td class="wf-sep">&minus;0.011</td><td>0.659<sup>**</sup></td>
+      </tr>
+      <tr class="wf-se">
+        <td></td>
+        <td>(0.107)</td><td>(0.137)</td>
+        <td class="wf-sep">(0.270)</td><td>(0.243)</td>
+      </tr>
+
+      <tr class="wf-key">
+        <td class="wf-lab">&times; Decline county <span class="wf-sym" data-tex="\beta"></span></td>
+        <td>&minus;0.240<sup>*</sup></td><td>&minus;0.220</td>
+        <td class="wf-sep">0.351</td><td>&minus;0.348</td>
+      </tr>
+      <tr class="wf-se wf-key">
+        <td></td>
+        <td>(0.137)</td><td>(0.161)</td>
+        <td class="wf-sep">(0.276)</td><td>(0.256)</td>
+      </tr>
+
+      <tr class="wf-tot">
+        <td class="wf-lab">Total gap in Decline
+          <span class="wf-sym" data-tex="\theta + \beta"></span></td>
+        <td>0.208<sup>**</sup></td><td>0.041</td>
+        <td class="wf-sep">0.340<sup>***</sup></td><td>0.312<sup>***</sup></td>
+      </tr>
+      <tr class="wf-se">
+        <td></td>
+        <td>[0.082]</td><td>[0.096]</td>
+        <td class="wf-sep">[0.060]</td><td>[0.073]</td>
+      </tr>
+
+      <tr class="wf-foot">
+        <td class="wf-lab">Observations</td>
+        <td>3,329</td><td>2,816</td>
+        <td class="wf-sep">3,356</td><td>2,920</td>
+      </tr>
+      <tr class="wf-foot">
+        <td class="wf-lab">R<sup>2</sup></td>
+        <td>0.488</td><td>0.487</td>
+        <td class="wf-sep">0.468</td><td>0.499</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="wf-side">
+    <ul class="in-list wf-points">
+      <li>Bootmaker sons had more children than their brothers, and Decline takes about half
+          of that back.</li>
+      <li>No carpenter interaction is distinguishable from zero.</li>
+    </ul>
+  </div>
+
+  <div class="wf-note">
+    Family fixed effects throughout; controls are age and birth order. Standard errors
+    clustered by county in parentheses, and for the linear combination in square brackets.
+    <sup>*</sup> p&lt;0.10, <sup>**</sup> p&lt;0.05, <sup>***</sup> p&lt;0.01.
+  </div>
+
+  </div>
+</section>
+
+<script>
+(function(){
+  function draw(){
+    if (!window.katex) return;
+    document.querySelectorAll(".wf-sym[data-tex]").forEach(function(el){
+      katex.render(el.getAttribute("data-tex"), el, { throwOnError: false });
+    });
+  }
+  if (window.katex) draw();
+  else window.addEventListener("load", draw);
+})();
+</script>
+
+<style>
+  .wf-tab {
+    border-collapse: collapse; margin: 34px 0 0; font-variant-numeric: tabular-nums;
+    font-size: 1.06rem; color: #222;
+  }
+  .wf-tab th, .wf-tab td { padding: 7px 26px; text-align: right; white-space: nowrap; }
+  .wf-tab .wf-lab { text-align: left; padding-left: 0; color: #333; white-space: nowrap; }
+  .wf-tab thead th { font-weight: 400; color: #555; }
+  .wf-grp {
+    font-size: 1.02rem; color: #222; border-bottom: 2px solid #238B45;
+    padding-bottom: 4px;
+  }
+  .wf-yrs th { font-size: .9rem; color: #888; padding-top: 6px; padding-bottom: 12px; }
+  /* a gap, not a rule, between the two groups */
+  .wf-sep { padding-left: 54px !important; }
+
+  .wf-se td, tr.wf-se td { color: #999; font-size: .9rem; padding-top: 0; padding-bottom: 12px; }
+  /* the interaction is the row the slide is about */
+  .wf-key td { background: #f6faf7; }
+  .wf-tot td { border-top: 1px solid #e2e2e2; padding-top: 14px; }
+  .wf-foot td { color: #888; font-size: .92rem; padding-top: 2px; padding-bottom: 2px; }
+  .wf-foot:first-of-type td { padding-top: 16px; border-top: 1px solid #e2e2e2; }
+  .wf-tab sup { font-size: .72em; }
+
+  .wf-sym { margin-left: 8px; color: #238B45; }
+
+  .wf-side { margin-top: 34px; }
+  .wf-points { max-width: 900px; }
+  .wf-points li { font-size: 1rem; line-height: 1.55; color: #444; margin-bottom: 12px; }
+
+  .wf-note {
+    font-size: .78rem; color: #8f8f8f; line-height: 1.6; margin: 26px 0 0; max-width: 1100px;
+  }
+</style>
+
+
 <section class="frame frame--plain">
 <div class="frame__body">
 <div class="fig-flow">
