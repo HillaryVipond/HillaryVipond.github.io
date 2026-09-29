@@ -3815,8 +3815,8 @@ Promise.all([
   .sk-step__w { color: #a0a0a0; margin-right: 6px; }
   .sk-step__v { font-variant-numeric: tabular-nums; color: #222; }
 
-  .sk-row { display: flex; margin-top: 18px; }
-  .sk-panel { flex: 0 1 980px; min-width: 420px; }
+  .sk-row { display: flex; margin-top: 62px; }
+  .sk-panel { flex: 0 1 1080px; min-width: 420px; }
   #sk-svg { width: 100%; height: auto; display: block; }
 
   .sk-dot, .sk-end, .sk-hit { cursor: pointer; }
@@ -3857,8 +3857,6 @@ Promise.all([
       <ul class="in-list bm-points"></ul>
     </div>
   </div>
-
-  <div class="bm-note"></div>
 
   </div>
 </section>
