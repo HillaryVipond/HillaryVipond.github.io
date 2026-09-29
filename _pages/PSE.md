@@ -3625,8 +3625,6 @@ Promise.all([
     <div class="sk-panel"><svg id="sk-svg"></svg></div>
   </div>
 
-  <div class="sk-note" id="sk-note"></div>
-
   </div>
 </section>
 
@@ -3650,7 +3648,7 @@ Promise.all([
   var BOOT_CODE = "663", BOOT_SHORT = "Bootmakers", BOOT_NUDGE = 0.0;
   var AVG_NUDGE = 0.1;
 
-  var BOOT_BLUE = "#2E6DA4", OTHER_GREY = "#BDBDBD",
+  var HOVER_BLUE = "#2E6DA4", OTHER_GREY = "#BDBDBD",
       AVG_BLACK = "#141414", LABEL_GREY = "#7A7A7A", GRID_GREY = "#E6E6E6";
 
   var W = 880, H = 580, M = { top: 18, right: 210, bottom: 58, left: 66 };
@@ -3704,42 +3702,36 @@ Promise.all([
 
     var line = d3.line().x(function(d, i){ return x(i + 1); }).y(function(d){ return y(d); });
 
+    // data-base carries the resting colour so a hover can be undone exactly
     function series(d, colour, lw, r){
       g.append("path").datum(d.share).attr("class", "sk-line")
-        .attr("data-sk", d.occupation).attr("d", line)
+        .attr("data-sk", d.occupation).attr("data-base", colour).attr("d", line)
         .attr("stroke", colour).attr("stroke-width", lw).attr("fill", "none")
         .attr("stroke-linecap", "round").attr("stroke-linejoin", "round");
       g.selectAll(null).data(d.share).join("circle")
-        .attr("class", "sk-dot").attr("data-sk", d.occupation)
+        .attr("class", "sk-dot").attr("data-sk", d.occupation).attr("data-base", colour)
         .attr("cx", function(v, i){ return x(i + 1); })
         .attr("cy", function(v){ return y(v); })
         .attr("r", r).attr("fill", colour)
-        .on("mouseover", function(){ over(d, colour); }).on("mouseout", out);
+        .on("mouseover", function(){ over(d); }).on("mouseout", out);
     }
 
+    // everything rests grey; only the average is set apart, and only on request
     OTHERS.forEach(function(d){ series(d, OTHER_GREY, 1.7, 4.4); });
+    series(BOOT, OTHER_GREY, 1.7, 4.4);
     series(AVERAGE, AVG_BLACK, 2.4, 4.4);
-    series(BOOT, BOOT_BLUE, 3.0, 6.2);
 
-    function endLabel(d, colour, bold){
+    function endLabel(d, colour){
       g.append("text").attr("class", "sk-end").attr("data-sk", d.occupation)
+        .attr("data-base", colour)
         .attr("x", x(LABEL_X)).attr("y", y(d.share[2] + d.nudge) + 5)
-        .attr("fill", colour).attr("font-weight", bold ? 700 : 400)
-        .attr("font-size", bold ? 15 : 14)
+        .attr("fill", colour).attr("font-size", 14)
         .text(d.short + "  " + pc(d.share[2]))
-        .on("mouseover", function(){ over(d, colour); }).on("mouseout", out);
+        .on("mouseover", function(){ over(d); }).on("mouseout", out);
     }
-    OTHERS.forEach(function(d){ endLabel(d, LABEL_GREY, false); });
-    endLabel(AVERAGE, AVG_BLACK, false);
-    endLabel(BOOT, BOOT_BLUE, true);
-
-    g.selectAll(null).data(BOOT.share.slice(0, 2)).join("text")
-      .attr("class", "sk-bootval").attr("data-sk", BOOT.occupation)
-      .attr("x", function(d, i){ return x(i + 1); })
-      .attr("y", function(d){ return y(d) - 15; })
-      .attr("text-anchor", "middle").attr("fill", BOOT_BLUE)
-      .attr("font-weight", 700).attr("font-size", 15)
-      .text(pc);
+    OTHERS.forEach(function(d){ endLabel(d, LABEL_GREY); });
+    endLabel(BOOT, LABEL_GREY);
+    endLabel(AVERAGE, AVG_BLACK);
 
     // theme_classic: black axis lines, no x ticks, no panel border
     var ax = g.append("g").attr("transform", "translate(0," + iH + ")")
@@ -3772,9 +3764,14 @@ Promise.all([
     btn.on("click", function(){ avgOn = !avgOn; paintAvg(); });
     paintAvg();
 
-    function over(d, colour){
+    function over(d){
       d3.selectAll("[data-sk]").classed("sk-dim", function(){
         return this.getAttribute("data-sk") !== d.occupation; });
+      var live = d3.selectAll('[data-sk="' + d.occupation + '"]');
+      live.filter(".sk-line").attr("stroke", HOVER_BLUE);
+      live.filter(".sk-dot").attr("fill", HOVER_BLUE);
+      live.filter(".sk-end").attr("fill", HOVER_BLUE);
+      var colour = HOVER_BLUE;
       var trail = YEARS.map(function(yr, i){
         return '<span class="sk-step"><span class="sk-step__w">' + yr +
                '</span><span class="sk-step__v">' + pc(d.share[i]) + '</span></span>';
@@ -3789,12 +3786,12 @@ Promise.all([
     }
     function out(){
       d3.selectAll("[data-sk]").classed("sk-dim", false);
+      d3.selectAll(".sk-line").attr("stroke", function(){ return this.getAttribute("data-base"); });
+      d3.selectAll(".sk-dot").attr("fill", function(){ return this.getAttribute("data-base"); });
+      d3.selectAll(".sk-end").attr("fill", function(){ return this.getAttribute("data-base"); });
       readout.html("");
     }
 
-    d3.select("#sk-note").text(
-      "The average line is every occupation weighted together, " + fN(full.length) +
-      " of them, across " + fN(Math.round(linked[2])) + " linked sons in 1881.");
   });
 })();
 </script>
@@ -3813,11 +3810,11 @@ Promise.all([
   .sk-step__v { font-variant-numeric: tabular-nums; color: #222; }
 
   .sk-row { display: flex; margin-top: 18px; }
-  .sk-panel { flex: 0 1 880px; min-width: 420px; }
+  .sk-panel { flex: 0 1 980px; min-width: 420px; }
   #sk-svg { width: 100%; height: auto; display: block; }
 
   .sk-dot, .sk-end { cursor: pointer; }
-  .sk-line, .sk-dot, .sk-end, .sk-bootval { transition: opacity .12s; }
+  .sk-line, .sk-dot, .sk-end { transition: opacity .12s, stroke .12s, fill .12s; }
   .sk-dim { opacity: .16 !important; }
   .sk-off { display: none; }
 
@@ -3835,7 +3832,6 @@ Promise.all([
   .sk-toggle.on { color: #141414; border-color: #bbb; }
   .sk-toggle.on::before { background: #141414; border-color: #141414; }
 
-  .sk-note { font-size: .78rem; color: #8f8f8f; line-height: 1.6; margin: 20px 0 0; max-width: 1100px; }
 </style>
 
 
