@@ -2659,18 +2659,16 @@ Promise.all([
 <h3>1.6. Where the new bootmaking jobs were</h3>
   <div class="frame__body">
 
-  <div class="bm-row">
-    <div class="bm-panel">
-      <svg id="bm-svg"></svg>
-    </div>
+  <div class="bm-row bm-mount">
+    <div class="bm-panel"><svg class="bm-svg"></svg></div>
     <div class="bm-aside">
-      <div class="bm-readout" id="bm-readout"></div>
-      <div class="bm-legend" id="bm-legend"></div>
-      <ul class="in-list bm-points" id="bm-points"></ul>
+      <div class="bm-readout"></div>
+      <div class="bm-legend"></div>
+      <ul class="in-list bm-points"></ul>
     </div>
   </div>
 
-  <div class="bm-note" id="bm-note"></div>
+  <div class="bm-note"></div>
 
   </div>
 </section>
@@ -2689,13 +2687,8 @@ Promise.all([
   var RAMP = ["#EDF8E9", "#C7E9C0", "#A1D99B", "#74C476", "#41AB5D", "#238B45"];
   var f1 = d3.format(".1f"), fN = d3.format(",");
 
-  Promise.all([
-    d3.json("/assets/maps/Counties1851.geojson"),
-    d3.json("/assets/maps/bootmaker_counts_by_county.json")
-  ]).then(function(res){
-    var geo = res[0];
-    var rows = res[1].filter(function(r){ return r.year === YEAR; });
-
+  function draw(mount, geo, rows){
+    var root = d3.select(mount);
     var totalNew = d3.sum(rows, function(r){ return r.new; });
     var by = {};
     rows.forEach(function(r){
@@ -2721,48 +2714,41 @@ Promise.all([
     var hi = d3.max(Object.keys(by), function(c){ return by[c].share; });
     var cuts = [hi / 16, hi / 8, hi / 4, hi / 2].map(nice125);
     function band(v){
-      if (v == null) return null;
       for (var i = 0; i < cuts.length; i++) if (v < cuts[i]) return i;
       return cuts.length;
     }
-    function fill(c){
-      var d = by[c];
-      if (!d) return "#F2F2F2";
-      return RAMP[band(d.share) + 1];
-    }
 
-    var svg = d3.select("#bm-svg").attr("viewBox", [0, 0, MW, MH]);
+    var svg = root.select(".bm-svg").attr("viewBox", [0, 0, MW, MH]);
     var projection = d3.geoMercator()
       .fitSize([MW, MH - 12], { type: "FeatureCollection", features: COUNTIES });
     var path = d3.geoPath().projection(projection);
 
     svg.append("g").selectAll("path").data(COUNTIES).join("path")
       .attr("class", "bm-cty").attr("d", path)
-      .attr("fill", function(f){ return fill(f.properties.R_CTY); })
+      .attr("fill", function(f){
+        var d = by[f.properties.R_CTY];
+        return d ? RAMP[band(d.share) + 1] : "#F2F2F2";
+      })
       .on("mouseover", function(event, f){ show(f.properties.R_CTY); })
       .on("mouseout", clear);
 
     var hl = svg.append("path").attr("class", "bm-hl");
+    var readout = root.select(".bm-readout");
 
     function show(c){
       var d = by[c];
       hl.attr("d", path(byCty.get(c)));
       var name = c.toLowerCase().replace(/\b[a-z]/g, function(m){ return m.toUpperCase(); });
-      if (!d) {
-        d3.select("#bm-readout").html('<div class="bm-l1">' + name + '</div>' +
-          '<div class="bm-l2">not in the data</div>');
-        return;
-      }
-      d3.select("#bm-readout").html(
-        '<div class="bm-l1">' + name + '</div>' +
-        '<div class="bm-l2">' + f1(d.share) + '% of all new jobs &middot; ' +
-        fN(d.n) + ' of ' + fN(d.all) + ' bootmakers &middot; ' +
-        f1(d.intensity) + '% new locally</div>');
+      readout.html('<div class="bm-l1">' + name + '</div>' +
+        (d ? '<div class="bm-l2">' + f1(d.share) + '% of all new jobs &middot; ' +
+               fN(d.n) + ' of ' + fN(d.all) + ' bootmakers &middot; ' +
+               f1(d.intensity) + '% new locally</div>'
+           : '<div class="bm-l2">not in the data</div>'));
     }
-    function clear(){ hl.attr("d", null); d3.select("#bm-readout").html(""); }
+    function clear(){ hl.attr("d", null); readout.html(""); }
 
     var lo = [0].concat(cuts);
-    d3.select("#bm-legend").selectAll("div").data(lo).join("div")
+    root.select(".bm-legend").selectAll("div").data(lo).join("div")
       .attr("class", "bm-key")
       .html(function(v, i){
         var label = i === lo.length - 1 ? f1(v) + "% and over"
@@ -2772,24 +2758,44 @@ Promise.all([
 
     var top = rows.slice().sort(function(a, b){ return b.new - a.new; });
     var t3 = d3.sum(top.slice(0, 3), function(r){ return r.new; });
-    d3.select("#bm-points").selectAll("li").data([
+    root.select(".bm-points").selectAll("li").data([
       "Northamptonshire, Leicestershire and London hold " +
         Math.round(100 * t3 / totalNew) + "% of them between them.",
       "Leicestershire's own bootmaking is " +
         Math.round(by["LEICESTERSHIRE"].intensity) + "% new work."
     ]).join("li").text(function(d){ return d; });
 
-    d3.select("#bm-note").text(
+    var note = root.node().parentNode.querySelector(".bm-note");
+    if (note) note.textContent =
       "Each county's share of all " + fN(totalNew) + " new-task bootmaking jobs in " + YEAR +
-      ". Counties in pale grey are not in the data. Hover a county for its own figures.");
-  });
+      ". Counties in pale grey are not in the data. Hover a county for its own figures.";
+  }
+
+  // The same map appears on more than one slide, so render into every mount
+  // rather than an id. Waiting for load means mounts further down the page
+  // exist by the time this runs.
+  function go(){
+    Promise.all([
+      d3.json("/assets/maps/Counties1851.geojson"),
+      d3.json("/assets/maps/bootmaker_counts_by_county.json")
+    ]).then(function(res){
+      var rows = res[1].filter(function(r){ return r.year === YEAR; });
+      document.querySelectorAll(".bm-mount").forEach(function(m){
+        if (m.dataset.bmDone) return;
+        m.dataset.bmDone = "1";
+        draw(m, res[0], rows);
+      });
+    });
+  }
+  if (document.readyState === "complete") go();
+  else window.addEventListener("load", go);
 })();
 </script>
 
 <style>
   .bm-row { display: flex; gap: 46px; align-items: flex-start; flex-wrap: wrap; margin-top: 26px; }
   .bm-panel { flex: 0 1 560px; min-width: 320px; }
-  #bm-svg { width: 100%; height: auto; display: block; }
+  .bm-svg { width: 100%; height: auto; display: block; }
   .bm-aside { flex: 1 1 380px; min-width: 280px; max-width: 560px; padding-top: 30px; }
 
   .bm-cty { stroke: #fff; stroke-width: 0.5; cursor: pointer; }
@@ -3787,10 +3793,32 @@ Promise.all([
 
 
 <section class="frame">
+  <div class="in-kicker">Results · C: Fertility</div>
+<h3>3.2. Where the new bootmaking jobs were</h3>
+  <div class="frame__body">
+
+  <!-- markup only: the script and styles come with the first copy of this map,
+       which renders into every .bm-mount on the page -->
+  <div class="bm-row bm-mount">
+    <div class="bm-panel"><svg class="bm-svg"></svg></div>
+    <div class="bm-aside">
+      <div class="bm-readout"></div>
+      <div class="bm-legend"></div>
+      <ul class="in-list bm-points"></ul>
+    </div>
+  </div>
+
+  <div class="bm-note"></div>
+
+  </div>
+</section>
+
+
+<section class="frame">
 <div class="frame__body">
 <div class="fig-flow">
 <div class="in-kicker">Results · C: Fertility</div>
-<h3>3.2. Occupational Skills Inheritance</h3>
+<h3>3.3. Occupational Skills Inheritance</h3>
 
 <style>
   .table-wrap { overflow-x:auto; margin: 0 0 12px; }
