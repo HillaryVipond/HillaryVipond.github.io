@@ -1648,7 +1648,7 @@ Promise.all([
 <div class="in-kicker">Methods</div>
 <h3>2. Changing Taxonomies: Census Waves 1851–1911</h3>
 
-<p>The grey treemap is the <strong>1911 classification</strong> — Orders, their sub-Orders, and the occupations within them: the structure everything eventually settled into. Pick an earlier census and <strong>hover any occupation</strong> to light up the others it was lumped with <em>that</em> year — wherever they ended up on the 1911 map. The more scattered the highlight, the more that early census cut across the modern Orders.</p>
+<p>The grey treemap is the 1911 classification: Orders, their sub-Orders and the occupations within them. Hovering an occupation in an earlier census lights up the others it was lumped with &mdash; the more scattered, the more that census cut across the modern Orders.</p>
 
 <div style="display:flex;align-items:center;gap:10px;margin:8px 0;flex-wrap:wrap;">
   <span>Census year:</span>
@@ -1913,7 +1913,7 @@ Promise.all([
           <span>exit rate, occupation <em>i</em>, county <em>c</em>, census <em>&tau;</em></span></div>
         <div class="eq-term"><span class="eq-sym" data-tex="\delta_c"></span>
           <span>county fixed effects</span></div>
-        <div class="eq-term"><span class="eq-sym" data-tex="Boot_{i\tau}"></span>
+        <div class="eq-term"><span class="eq-sym" data-tex="OCC_{i\tau}"></span>
           <span>treated occupation</span></div>
         <div class="eq-term"><span class="eq-sym" data-tex="Post_\tau"></span>
           <span>after mechanization</span></div>
@@ -1941,8 +1941,8 @@ Promise.all([
 <script>
 (function(){
   var DID = "\\begin{aligned}"
-    + "Exit_{ic\\tau} ={}& \\delta_c + \\theta\\, Boot_{i\\tau} + \\phi\\, Post_\\tau"
-    + " + \\beta\\, (Boot_{i\\tau} \\times Post_\\tau) \\\\"
+    + "Exit_{ic\\tau} ={}& \\delta_c + \\theta\\, OCC_{i\\tau} + \\phi\\, Post_\\tau"
+    + " + \\beta\\, (OCC_{i\\tau} \\times Post_\\tau) \\\\"
     + "&+ \\gamma' X_{i\\tau} + \\kappa'(X_{i\\tau} \\times Post_\\tau) + \\varepsilon_{ic\\tau}."
     + "\\end{aligned}";
 
@@ -2234,7 +2234,7 @@ Promise.all([
 
   <div id="sc-legend-a" class="sc-legend"></div>
 
-  <div class="sc-row">
+  <div class="sc-row sc-row--low">
     <div class="sc-panel" style="flex:0 1 880px;">
       <div class="sc-ptitle">Change in exit</div>
       <svg id="sc-svg-exit"></svg>
@@ -2252,11 +2252,10 @@ Promise.all([
 
   <div id="sc-legend-c" class="sc-legend"></div>
 
-  <div class="sc-row">
+  <div class="sc-row sc-row--low">
     <div class="sc-panel" style="flex:0 1 1060px;">
       <div class="sc-ptitle">Change in entry</div>
       <svg id="sc-svg-entry"></svg>
-      <div class="sc-pnote sc-pnote--below" id="sc-entry-note">Change in entry relative to the occupation's own 1851&ndash;61 rate</div>
       <div class="sc-tip" id="sc-tip-entry"></div>
     </div>
   </div>
@@ -2311,7 +2310,7 @@ Promise.all([
   .sc-sub--wide { max-width: none; }
   .sc-aside { flex: 0 1 280px; min-width: 210px; padding-top: 74px; }
   .sc-panel--joint { margin-top: 30px; }
-  .sc-pnote--below { margin: 10px 0 0; min-height: 0; }
+  .sc-row--low { margin-top: 96px; }
   .sc-points li { font-size: .98rem; line-height: 1.55; color: #444; margin-bottom: 18px; }
   .sc-hint { font-size:.82rem; color:#999; margin:2px 0 14px; }
 
