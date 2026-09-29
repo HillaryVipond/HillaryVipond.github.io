@@ -3617,6 +3617,8 @@ Promise.all([
 <h3>3.1. Sons entering their father&rsquo;s occupation</h3>
   <div class="frame__body">
 
+  <button type="button" class="sk-toggle" id="sk-avg">Show average</button>
+
   <div class="sk-readout" id="sk-readout"></div>
 
   <div class="sk-row">
@@ -3649,7 +3651,7 @@ Promise.all([
   var AVG_NUDGE = 0.1;
 
   var BOOT_BLUE = "#2E6DA4", OTHER_GREY = "#BDBDBD",
-      AVG_GREY = "#595959", LABEL_GREY = "#7A7A7A", GRID_GREY = "#E6E6E6";
+      AVG_BLACK = "#141414", LABEL_GREY = "#7A7A7A", GRID_GREY = "#E6E6E6";
 
   var W = 880, H = 580, M = { top: 18, right: 210, bottom: 58, left: 66 };
   var pc = function(v){ return v.toFixed(1) + "%"; };
@@ -3716,7 +3718,7 @@ Promise.all([
     }
 
     OTHERS.forEach(function(d){ series(d, OTHER_GREY, 1.7, 4.4); });
-    series(AVERAGE, AVG_GREY, 2.4, 4.4);
+    series(AVERAGE, AVG_BLACK, 2.4, 4.4);
     series(BOOT, BOOT_BLUE, 3.0, 6.2);
 
     function endLabel(d, colour, bold){
@@ -3728,7 +3730,7 @@ Promise.all([
         .on("mouseover", function(){ over(d, colour); }).on("mouseout", out);
     }
     OTHERS.forEach(function(d){ endLabel(d, LABEL_GREY, false); });
-    endLabel(AVERAGE, "#4D4D4D", false);
+    endLabel(AVERAGE, AVG_BLACK, false);
     endLabel(BOOT, BOOT_BLUE, true);
 
     g.selectAll(null).data(BOOT.share.slice(0, 2)).join("text")
@@ -3760,6 +3762,16 @@ Promise.all([
       .attr("text-anchor", "middle").attr("fill", "#000").attr("font-size", 15)
       .text("Sons entering father's occupation");
 
+    // the average is an overlay, off until it is called for
+    var avgOn = false;
+    var btn = d3.select("#sk-avg");
+    function paintAvg(){
+      d3.selectAll('[data-sk="Average"]').classed("sk-off", !avgOn);
+      btn.classed("on", avgOn).text(avgOn ? "Hide average" : "Show average");
+    }
+    btn.on("click", function(){ avgOn = !avgOn; paintAvg(); });
+    paintAvg();
+
     function over(d, colour){
       d3.selectAll("[data-sk]").classed("sk-dim", function(){
         return this.getAttribute("data-sk") !== d.occupation; });
@@ -3781,7 +3793,7 @@ Promise.all([
     }
 
     d3.select("#sk-note").text(
-      "The heavy grey line is every occupation weighted together, " + fN(full.length) +
+      "The average line is every occupation weighted together, " + fN(full.length) +
       " of them, across " + fN(Math.round(linked[2])) + " linked sons in 1881.");
   });
 })();
@@ -3807,6 +3819,21 @@ Promise.all([
   .sk-dot, .sk-end { cursor: pointer; }
   .sk-line, .sk-dot, .sk-end, .sk-bootval { transition: opacity .12s; }
   .sk-dim { opacity: .16 !important; }
+  .sk-off { display: none; }
+
+  .sk-toggle {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid #ddd; border-radius: 16px; background: #fff;
+    color: #444; cursor: pointer; font-size: 13px; padding: 5px 15px;
+    margin: 2px 0 0;
+  }
+  .sk-toggle::before {
+    content: ""; width: 11px; height: 11px; border-radius: 50%;
+    background: #fff; border: 1.5px solid #bbb;
+  }
+  .sk-toggle:hover { background: #fafafa; }
+  .sk-toggle.on { color: #141414; border-color: #bbb; }
+  .sk-toggle.on::before { background: #141414; border-color: #141414; }
 
   .sk-note { font-size: .78rem; color: #8f8f8f; line-height: 1.6; margin: 20px 0 0; max-width: 1100px; }
 </style>
