@@ -2308,8 +2308,8 @@ Promise.all([
   .sc-sub--wide { max-width: none; }
   /* let the bullets take the room the chart does not need, so they stop
      wrapping every few words */
-  .sc-aside { flex: 1 1 400px; min-width: 260px; max-width: 580px; padding-top: 96px; }
-  .sc-panel--joint { margin-top: 56px; }
+  .sc-aside { flex: 1 1 400px; min-width: 260px; max-width: 580px; padding-top: 78px; }
+  .sc-panel--joint { margin-top: 38px; }
   .sc-row--low { margin-top: 96px; }
   .sc-points li { font-size: .98rem; line-height: 1.55; color: #444; margin-bottom: 18px; }
   .sc-hint { font-size:.82rem; color:#999; margin:2px 0 14px; }
@@ -3861,7 +3861,7 @@ Promise.all([
         // rather than the panel width -- it needs its own, larger allowance
         var cap = "68vh";
         if (host === "growth-chart") cap = "76vh";
-        else if (svg.id === "sc-svg-joint") cap = "73vh";
+        else if (svg.id === "sc-svg-joint") cap = "70vh";
         svg.style.maxHeight = svg.closest(".frame--tall") ? "150vh" : cap;
         svg.dataset.fitted = "1";
       });
