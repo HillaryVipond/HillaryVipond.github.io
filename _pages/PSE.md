@@ -3451,147 +3451,181 @@ Promise.all([
 
 <section class="frame">
   <div class="in-kicker">Results · C: Fertility</div>
-<h3>3.1. Fertility</h3>
+<h3>3.1. Sons entering their father&rsquo;s occupation</h3>
   <div class="frame__body">
 
-  <div class="fe-mock">
-    Layout mock-up. The numbers below are <strong>invented placeholders</strong>, and I have
-    guessed at the shape of the figure &mdash; mean children by census year, one line per group.
-    Send the data and tell me what it really plots.
+  <div class="sk-mock">
+    Layout mock-up of the ggplot. The <strong>percentages are invented</strong> &mdash; the
+    shape, the colours and the labelling follow the R code. Send
+    <code>skills_results</code> and <code>average_trend</code> and it fills with the real figures.
   </div>
 
-  <div class="fe-readout" id="fe-readout"></div>
+  <div class="sk-readout" id="sk-readout"></div>
 
-  <div class="fe-row">
-    <div class="fe-panel">
-      <svg id="fe-svg"></svg>
-    </div>
-    <div class="fe-aside">
-      <ul class="in-list fe-points" id="fe-points"></ul>
-    </div>
+  <div class="sk-row">
+    <div class="sk-panel"><svg id="sk-svg"></svg></div>
   </div>
-
-  <div class="fe-note" id="fe-note"></div>
 
   </div>
 </section>
 
 <script>
 (function(){
-  // ------------------------------------------------------------- mock data
-  // Replace with a d3.csv load of year,group,value and nothing below changes.
-  var YEARS = [1851, 1861, 1881, 1891, 1901, 1911];
-  var SERIES = [
-    { key: "Managers",              col: "#3C7DB1", v: [4.9, 4.9, 4.7, 4.3, 3.7, 3.1] },
-    { key: "All other workers",     col: "#C08A2E", v: [5.4, 5.5, 5.3, 4.9, 4.3, 3.6] },
-    { key: "Agricultural labourers", col: "#6B9E78", v: [5.7, 5.8, 5.7, 5.3, 4.7, 4.0] }
+  // ---------------------------------------------------------------- mock data
+  // Replace with a load of year_position/share per occupation plus the weighted
+  // average_trend; nothing below this block depends on where it comes from.
+  var YEARS = ["1851", "1861", "1881"];
+  var OTHERS = [
+    { occupation: "Coal Miners",     short: "Coal Miners", share: [52.1, 50.4, 47.8], nudge:  0.7 },
+    { occupation: "Farmer, Grazier", short: "Farmers",     share: [41.6, 39.8, 36.2], nudge:  0.5 },
+    { occupation: "Tailors",         short: "Tailors",     share: [22.7, 21.3, 18.9], nudge: -0.4 },
+    { occupation: "Innkeepers",      short: "Innkeepers",  share: [11.2, 10.4,  9.1], nudge: -0.5 }
   ];
+  var BOOT    = { occupation: "Bootmakers", short: "Bootmakers", share: [28.4, 24.1, 15.3], nudge: 0.4 };
+  var AVERAGE = { occupation: "Average",    short: "Average",    share: [18.9, 17.8, 16.2], nudge: 0 };
 
-  var W = 940, H = 470, M = { top: 18, right: 150, bottom: 48, left: 58 };
-  var f1 = d3.format(".1f"), fD = d3.format("+.2f");
+  // the palette named in the R code
+  var BOOT_BLUE  = "#2E6DA4";
+  var OTHER_GREY = "#BDBDBD";
+  var AVG_GREY   = "#595959";   // grey35
+  var LABEL_GREY = "#7A7A7A";
+  var GRID_GREY  = "#E6E6E6";
 
-  var svg = d3.select("#fe-svg").attr("viewBox", [0, 0, W, H]);
+  var W = 860, H = 570, M = { top: 18, right: 200, bottom: 58, left: 66 };
+  var pc = function(v){ return v.toFixed(1) + "%"; };
+
+  var svg = d3.select("#sk-svg").attr("viewBox", [0, 0, W, H]);
   var iW = W - M.left - M.right, iH = H - M.top - M.bottom;
   var g = svg.append("g").attr("transform", "translate(" + M.left + "," + M.top + ")");
-  var readout = d3.select("#fe-readout");
+  var readout = d3.select("#sk-readout");
 
-  var x = d3.scalePoint().domain(YEARS).range([0, iW]).padding(0.06);
-  var lo = d3.min(SERIES, function(s){ return d3.min(s.v); });
-  var hi = d3.max(SERIES, function(s){ return d3.max(s.v); });
-  var y = d3.scaleLinear().domain([Math.floor(lo - 0.6), Math.ceil(hi + 0.3)]).range([iH, 0]);
+  // limits c(0.82, 3.68) with expand 0, so the label column at 3.08 sits inside
+  var x = d3.scaleLinear().domain([0.82, 3.68]).range([0, iW]);
+  var y = d3.scaleLinear().domain([0, 58]).range([iH, 0]);
+  var LABEL_X = 3.08;
 
-  g.append("g").attr("class", "fe-grid").selectAll("line").data(y.ticks(6)).join("line")
-    .attr("x1", 0).attr("x2", iW).attr("y1", y).attr("y2", y);
+  // geom_hline at every 10 up to 60, under everything
+  g.append("g").selectAll("line").data(d3.range(0, 61, 10)).join("line")
+    .attr("x1", 0).attr("x2", iW)
+    .attr("y1", function(d){ return y(d); }).attr("y2", function(d){ return y(d); })
+    .attr("stroke", GRID_GREY).attr("stroke-width", 0.8)
+    .attr("display", function(d){ return d > 58 ? "none" : null; });
 
-  var line = d3.line().x(function(d, i){ return x(YEARS[i]); }).y(y).curve(d3.curveMonotoneX);
+  var line = d3.line()
+    .x(function(d, i){ return x(i + 1); })
+    .y(function(d){ return y(d); });
 
-  SERIES.forEach(function(s){
-    g.append("path").datum(s.v).attr("class", "fe-line").attr("data-fe", s.key)
-      .attr("d", line).attr("stroke", s.col);
-    g.selectAll(null).data(s.v).join("circle")
-      .attr("class", "fe-dot").attr("data-fe", s.key)
-      .attr("cx", function(d, i){ return x(YEARS[i]); }).attr("cy", y)
-      .attr("r", 4.5).attr("fill", s.col)
-      .on("mouseover", function(){ over(s); }).on("mouseout", out);
-    g.append("text").attr("class", "fe-lab").attr("data-fe", s.key)
-      .attr("x", iW + 10).attr("y", y(s.v[s.v.length - 1]) + 4)
-      .attr("fill", s.col).text(s.key)
-      .on("mouseover", function(){ over(s); }).on("mouseout", out);
-  });
+  function series(d, colour, lw, r, cls){
+    g.append("path").datum(d.share).attr("class", "sk-line " + cls)
+      .attr("data-sk", d.occupation).attr("d", line)
+      .attr("stroke", colour).attr("stroke-width", lw)
+      .attr("fill", "none").attr("stroke-linecap", "round")
+      .attr("stroke-linejoin", "round");
+    g.selectAll(null).data(d.share).join("circle")
+      .attr("class", "sk-dot").attr("data-sk", d.occupation)
+      .attr("cx", function(v, i){ return x(i + 1); })
+      .attr("cy", function(v){ return y(v); })
+      .attr("r", r).attr("fill", colour)
+      .on("mouseover", function(){ over(d, colour); }).on("mouseout", out);
+  }
 
-  g.append("g").attr("class", "fe-axis").attr("transform", "translate(0," + iH + ")")
-    .call(d3.axisBottom(x).tickFormat(d3.format("d")).tickSizeOuter(0));
-  g.append("g").attr("class", "fe-axis").call(d3.axisLeft(y).ticks(6).tickSizeOuter(0));
-  g.append("text").attr("class", "fe-axt").attr("transform", "rotate(-90)")
-    .attr("x", -(iH / 2)).attr("y", -40).attr("text-anchor", "middle")
-    .text("Mean children");
+  OTHERS.forEach(function(d){ series(d, OTHER_GREY, 1.7, 4.4, "sk-other"); });
+  series(AVERAGE, AVG_GREY, 2.4, 4.4, "sk-avg");
+  series(BOOT, BOOT_BLUE, 3.0, 6.2, "sk-boot");
 
-  function over(s){
-    d3.selectAll("[data-fe]").classed("fe-dim", function(){
-      return this.getAttribute("data-fe") !== s.key; });
+  // end labels, nudged exactly as the R code nudges them
+  function endLabel(d, colour, bold, prefix){
+    g.append("text").attr("class", "sk-end").attr("data-sk", d.occupation)
+      .attr("x", x(LABEL_X)).attr("y", y(d.share[2] + d.nudge) + 5)
+      .attr("fill", colour)
+      .attr("font-weight", bold ? 700 : 400)
+      .attr("font-size", bold ? 15 : 14)
+      .text((prefix || d.short) + "  " + pc(d.share[2]))
+      .on("mouseover", function(){ over(d, colour); }).on("mouseout", out);
+  }
+  OTHERS.forEach(function(d){ endLabel(d, LABEL_GREY, false); });
+  endLabel(AVERAGE, "#4D4D4D", false, "Average");
+  endLabel(BOOT, BOOT_BLUE, true);
+
+  // the bootmaker figures sit above the first two points
+  g.selectAll(null).data(BOOT.share.slice(0, 2)).join("text")
+    .attr("class", "sk-bootval").attr("data-sk", BOOT.occupation)
+    .attr("x", function(d, i){ return x(i + 1); })
+    .attr("y", function(d){ return y(d) - 15; })
+    .attr("text-anchor", "middle").attr("fill", BOOT_BLUE)
+    .attr("font-weight", 700).attr("font-size", 15)
+    .text(pc);
+
+  // theme_classic: black axis lines, no x ticks, no panel border
+  var ax = g.append("g").attr("transform", "translate(0," + iH + ")")
+    .call(d3.axisBottom(x).tickValues([1, 2, 3])
+      .tickFormat(function(d, i){ return YEARS[i]; }).tickSize(0).tickPadding(12));
+  ax.select(".domain").attr("stroke", "#000").attr("stroke-width", 1);
+  ax.selectAll("text").attr("fill", "#000").attr("font-size", 14);
+
+  var ay = g.append("g").call(d3.axisLeft(y).tickValues(d3.range(0, 61, 10))
+    .tickFormat(function(d){ return d + "%"; }).tickSizeOuter(0));
+  ay.select(".domain").attr("stroke", "#000").attr("stroke-width", 1);
+  ay.selectAll("line").attr("stroke", "#000");
+  ay.selectAll("text").attr("fill", "#000").attr("font-size", 14);
+
+  g.append("text").attr("x", iW / 2).attr("y", iH + 48)
+    .attr("text-anchor", "middle").attr("fill", "#000").attr("font-size", 15)
+    .text("Father's baseline census year");
+  g.append("text").attr("transform", "rotate(-90)")
+    .attr("x", -(iH / 2)).attr("y", -48)
+    .attr("text-anchor", "middle").attr("fill", "#000").attr("font-size", 15)
+    .text("Sons entering father's occupation");
+
+  function over(d, colour){
+    d3.selectAll("[data-sk]").classed("sk-dim", function(){
+      return this.getAttribute("data-sk") !== d.occupation; });
     var trail = YEARS.map(function(yr, i){
-      return '<span class="fe-step"><span class="fe-step__w">' + yr +
-             '</span><span class="fe-step__v">' + f1(s.v[i]) + '</span></span>';
+      return '<span class="sk-step"><span class="sk-step__w">' + yr +
+             '</span><span class="sk-step__v">' + pc(d.share[i]) + '</span></span>';
     }).join("");
-    readout.html('<div class="fe-l1">' +
-                   '<span class="fe-sw" style="background:' + s.col + '"></span>' +
-                   '<span class="fe-name">' + s.key + '</span>' +
-                   '<span class="fe-step__w">' + fD(s.v[s.v.length - 1] - s.v[0]) +
-                   ' children, 1851 to 1911</span></div>' +
-                 '<div class="fe-l2">' + trail + '</div>');
+    var drop = d.share[2] - d.share[0];
+    readout.html('<div class="sk-l1">' +
+                   '<span class="sk-sw" style="background:' + colour + '"></span>' +
+                   '<span class="sk-name">' + d.occupation + '</span>' +
+                   '<span class="sk-step__w">' + (drop >= 0 ? "+" : "") + drop.toFixed(1) +
+                   ' points, 1851 to 1881</span></div>' +
+                 '<div class="sk-l2">' + trail + '</div>');
   }
   function out(){
-    d3.selectAll("[data-fe]").classed("fe-dim", false);
+    d3.selectAll("[data-sk]").classed("sk-dim", false);
     readout.html("");
   }
-
-  d3.select("#fe-points").selectAll("li").data([
-    "Fertility falls across every group after 1881.",
-    "Managers start lower and stay lower.",
-    "The gap between groups narrows as the decline sets in."
-  ]).join("li").text(function(d){ return d; });
-
-  d3.select("#fe-note").text(
-    "Hover a line to read it year by year. Mean children per man observed in that census.");
 })();
 </script>
 
 <style>
-  .fe-mock {
+  .sk-mock {
     border-left: 3px solid #d8a93a; background: #fffbe9; color: #7a5c00;
-    padding: 12px 18px; margin: 2px 0 16px; max-width: 1100px;
+    padding: 12px 18px; margin: 2px 0 14px; max-width: 1100px;
     font-size: .88rem; line-height: 1.55; border-radius: 3px;
   }
+  .sk-mock code { background: #fff6d8; padding: 0 4px; border-radius: 2px; font-size: .92em; }
 
-  .fe-readout {
-    height: 48px; overflow: hidden; margin: 0 0 6px;
+  .sk-readout {
+    height: 48px; overflow: hidden; margin: 0 0 4px;
     font-size: .92rem; color: #333; white-space: nowrap;
   }
-  .fe-l1 { display: flex; align-items: center; height: 24px; }
-  .fe-l2 { display: flex; align-items: center; height: 24px; gap: 0 20px; padding-left: 21px; }
-  .fe-sw { width: 12px; height: 12px; border-radius: 2px; display: inline-block; margin-right: 9px; flex: none; }
-  .fe-name { font-weight: 600; margin-right: 10px; flex: none; }
-  .fe-step { color: #666; font-size: .86rem; white-space: nowrap; flex: none; }
-  .fe-step__w { color: #a0a0a0; margin-right: 6px; }
-  .fe-step__v { font-variant-numeric: tabular-nums; color: #222; }
+  .sk-l1 { display: flex; align-items: center; height: 24px; }
+  .sk-l2 { display: flex; align-items: center; height: 24px; gap: 0 20px; padding-left: 21px; }
+  .sk-sw { width: 12px; height: 12px; border-radius: 2px; display: inline-block; margin-right: 9px; flex: none; }
+  .sk-name { font-weight: 600; margin-right: 10px; flex: none; }
+  .sk-step { color: #666; font-size: .86rem; white-space: nowrap; flex: none; }
+  .sk-step__w { color: #a0a0a0; margin-right: 6px; }
+  .sk-step__v { font-variant-numeric: tabular-nums; color: #222; }
 
-  .fe-row { display: flex; gap: 34px; align-items: flex-start; flex-wrap: wrap; }
-  .fe-panel { flex: 0 1 940px; min-width: 420px; }
-  .fe-aside { flex: 0 1 290px; min-width: 230px; padding-top: 40px; }
-  .fe-points li { font-size: .98rem; line-height: 1.55; color: #444; margin-bottom: 18px; }
+  .sk-row { display: flex; }
+  .sk-panel { flex: 0 1 860px; min-width: 420px; }
+  #sk-svg { width: 100%; height: auto; display: block; }
 
-  .fe-grid line { stroke: #f1f1f1; }
-  .fe-axis text { fill: #666; font-size: 12px; }
-  .fe-axis path, .fe-axis line { stroke: #ccc; }
-  .fe-axt { fill: #666; font-size: 12px; }
-  .fe-line { fill: none; stroke-width: 2.2; transition: opacity .12s; }
-  .fe-dot { stroke: #fff; stroke-width: 1.4; cursor: pointer; transition: opacity .12s; }
-  .fe-lab { font-size: 12.5px; cursor: pointer; transition: opacity .12s; }
-  .fe-dim { opacity: .13 !important; }
-
-  .fe-note {
-    font-size: .84rem; color: #8a8a8a; line-height: 1.65; margin: 26px 0 0; max-width: 1150px;
-  }
+  .sk-dot, .sk-end { cursor: pointer; }
+  .sk-line, .sk-dot, .sk-end, .sk-bootval { transition: opacity .12s; }
+  .sk-dim { opacity: .16 !important; }
 </style>
 
 
