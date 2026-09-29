@@ -3617,161 +3617,179 @@ Promise.all([
 <h3>3.1. Sons entering their father&rsquo;s occupation</h3>
   <div class="frame__body">
 
-  <div class="sk-mock">
-    Layout mock-up of the ggplot. The <strong>percentages are invented</strong> &mdash; the
-    shape, the colours and the labelling follow the R code. Send
-    <code>skills_results</code> and <code>average_trend</code> and it fills with the real figures.
-  </div>
-
   <div class="sk-readout" id="sk-readout"></div>
 
   <div class="sk-row">
     <div class="sk-panel"><svg id="sk-svg"></svg></div>
   </div>
 
+  <div class="sk-note" id="sk-note"></div>
+
   </div>
 </section>
 
 <script>
 (function(){
-  // ---------------------------------------------------------------- mock data
-  // Replace with a load of year_position/share per occupation plus the weighted
-  // average_trend; nothing below this block depends on where it comes from.
   var YEARS = ["1851", "1861", "1881"];
-  var OTHERS = [
-    { occupation: "Coal Miners",     short: "Coal Miners", share: [52.1, 50.4, 47.8], nudge:  0.7 },
-    { occupation: "Farmer, Grazier", short: "Farmers",     share: [41.6, 39.8, 36.2], nudge:  0.5 },
-    { occupation: "Tailors",         short: "Tailors",     share: [22.7, 21.3, 18.9], nudge: -0.4 },
-    { occupation: "Innkeepers",      short: "Innkeepers",  share: [11.2, 10.4,  9.1], nudge: -0.5 }
+
+  // The occupations drawn, with the label nudge each one needs at 1881 to keep
+  // the right-hand column legible; four of them otherwise land within three
+  // points of each other.
+  var SELECT = [
+    { code: "196", short: "Coal Miners",    nudge:  0.0 },
+    { code: "173", short: "Farmers",        nudge:  0.0 },
+    { code: "551", short: "Cotton Weaving", nudge:  0.0 },
+    { code: "181", short: "Ag. Labourers",  nudge:  1.3 },
+    { code: "414", short: "Masons",         nudge:  0.8 },
+    { code: "653", short: "Tailors",        nudge: -1.2 },
+    { code: "686", short: "Corn Millers",   nudge:  0.0 },
+    { code: "713", short: "Innkeepers",     nudge:  0.0 }
   ];
-  var BOOT    = { occupation: "Bootmakers", short: "Bootmakers", share: [28.4, 24.1, 15.3], nudge: 0.4 };
-  var AVERAGE = { occupation: "Average",    short: "Average",    share: [18.9, 17.8, 16.2], nudge: 0 };
+  var BOOT_CODE = "663", BOOT_SHORT = "Bootmakers", BOOT_NUDGE = 0.0;
+  var AVG_NUDGE = 0.1;
 
-  // the palette named in the R code
-  var BOOT_BLUE  = "#2E6DA4";
-  var OTHER_GREY = "#BDBDBD";
-  var AVG_GREY   = "#595959";   // grey35
-  var LABEL_GREY = "#7A7A7A";
-  var GRID_GREY  = "#E6E6E6";
+  var BOOT_BLUE = "#2E6DA4", OTHER_GREY = "#BDBDBD",
+      AVG_GREY = "#595959", LABEL_GREY = "#7A7A7A", GRID_GREY = "#E6E6E6";
 
-  var W = 860, H = 570, M = { top: 18, right: 200, bottom: 58, left: 66 };
+  var W = 880, H = 580, M = { top: 18, right: 210, bottom: 58, left: 66 };
   var pc = function(v){ return v.toFixed(1) + "%"; };
+  var fN = d3.format(",");
 
-  var svg = d3.select("#sk-svg").attr("viewBox", [0, 0, W, H]);
-  var iW = W - M.left - M.right, iH = H - M.top - M.bottom;
-  var g = svg.append("g").attr("transform", "translate(" + M.left + "," + M.top + ")");
-  var readout = d3.select("#sk-readout");
+  d3.csv("/assets/Results/Occupation_transmission_by_occode.csv?v=1").then(function(rows){
+    var num = function(v){ var x = +v; return v === "" || v === "NA" || isNaN(x) ? null : x; };
+    var byCode = {};
+    rows.forEach(function(r){ byCode[r.father_occode] = r; });
 
-  // limits c(0.82, 3.68) with expand 0, so the label column at 3.08 sits inside
-  var x = d3.scaleLinear().domain([0.82, 3.68]).range([0, iW]);
-  var y = d3.scaleLinear().domain([0, 58]).range([iH, 0]);
-  var LABEL_X = 3.08;
+    // the weighted average uses every occupation observed in all three
+    // censuses, not just the handful drawn
+    var full = rows.filter(function(r){
+      return YEARS.every(function(y){
+        return num(r["n_" + y]) !== null && num(r["same_" + y]) !== null; });
+    });
+    var avg = YEARS.map(function(y){
+      return 100 * d3.sum(full, function(r){ return num(r["same_" + y]); })
+                 / d3.sum(full, function(r){ return num(r["n_" + y]); });
+    });
+    var linked = YEARS.map(function(y){
+      return d3.sum(full, function(r){ return num(r["n_" + y]); }); });
 
-  // geom_hline at every 10 up to 60, under everything
-  g.append("g").selectAll("line").data(d3.range(0, 61, 10)).join("line")
-    .attr("x1", 0).attr("x2", iW)
-    .attr("y1", function(d){ return y(d); }).attr("y2", function(d){ return y(d); })
-    .attr("stroke", GRID_GREY).attr("stroke-width", 0.8)
-    .attr("display", function(d){ return d > 58 ? "none" : null; });
+    function pick(code, short, nudge){
+      var r = byCode[code];
+      return { occupation: short, short: short, name: r.level3,
+               share: YEARS.map(function(y){ return num(r["share_" + y]); }),
+               n: YEARS.map(function(y){ return num(r["n_" + y]); }),
+               nudge: nudge };
+    }
+    var OTHERS = SELECT.map(function(d){ return pick(d.code, d.short, d.nudge); });
+    var BOOT = pick(BOOT_CODE, BOOT_SHORT, BOOT_NUDGE);
+    var AVERAGE = { occupation: "Average", short: "Average", name: "All occupations, weighted",
+                    share: avg, n: linked, nudge: AVG_NUDGE };
 
-  var line = d3.line()
-    .x(function(d, i){ return x(i + 1); })
-    .y(function(d){ return y(d); });
+    var svg = d3.select("#sk-svg").attr("viewBox", [0, 0, W, H]);
+    var iW = W - M.left - M.right, iH = H - M.top - M.bottom;
+    var g = svg.append("g").attr("transform", "translate(" + M.left + "," + M.top + ")");
+    var readout = d3.select("#sk-readout");
 
-  function series(d, colour, lw, r, cls){
-    g.append("path").datum(d.share).attr("class", "sk-line " + cls)
-      .attr("data-sk", d.occupation).attr("d", line)
-      .attr("stroke", colour).attr("stroke-width", lw)
-      .attr("fill", "none").attr("stroke-linecap", "round")
-      .attr("stroke-linejoin", "round");
-    g.selectAll(null).data(d.share).join("circle")
-      .attr("class", "sk-dot").attr("data-sk", d.occupation)
-      .attr("cx", function(v, i){ return x(i + 1); })
-      .attr("cy", function(v){ return y(v); })
-      .attr("r", r).attr("fill", colour)
-      .on("mouseover", function(){ over(d, colour); }).on("mouseout", out);
-  }
+    // limits c(0.82, 3.68) with expand 0, so the label column at 3.08 is inside
+    var x = d3.scaleLinear().domain([0.82, 3.68]).range([0, iW]);
+    var y = d3.scaleLinear().domain([0, 58]).range([iH, 0]);
+    var LABEL_X = 3.08;
 
-  OTHERS.forEach(function(d){ series(d, OTHER_GREY, 1.7, 4.4, "sk-other"); });
-  series(AVERAGE, AVG_GREY, 2.4, 4.4, "sk-avg");
-  series(BOOT, BOOT_BLUE, 3.0, 6.2, "sk-boot");
+    g.append("g").selectAll("line").data(d3.range(0, 61, 10).filter(function(d){ return d <= 58; }))
+      .join("line").attr("x1", 0).attr("x2", iW)
+      .attr("y1", function(d){ return y(d); }).attr("y2", function(d){ return y(d); })
+      .attr("stroke", GRID_GREY).attr("stroke-width", 0.8);
 
-  // end labels, nudged exactly as the R code nudges them
-  function endLabel(d, colour, bold, prefix){
-    g.append("text").attr("class", "sk-end").attr("data-sk", d.occupation)
-      .attr("x", x(LABEL_X)).attr("y", y(d.share[2] + d.nudge) + 5)
-      .attr("fill", colour)
-      .attr("font-weight", bold ? 700 : 400)
-      .attr("font-size", bold ? 15 : 14)
-      .text((prefix || d.short) + "  " + pc(d.share[2]))
-      .on("mouseover", function(){ over(d, colour); }).on("mouseout", out);
-  }
-  OTHERS.forEach(function(d){ endLabel(d, LABEL_GREY, false); });
-  endLabel(AVERAGE, "#4D4D4D", false, "Average");
-  endLabel(BOOT, BOOT_BLUE, true);
+    var line = d3.line().x(function(d, i){ return x(i + 1); }).y(function(d){ return y(d); });
 
-  // the bootmaker figures sit above the first two points
-  g.selectAll(null).data(BOOT.share.slice(0, 2)).join("text")
-    .attr("class", "sk-bootval").attr("data-sk", BOOT.occupation)
-    .attr("x", function(d, i){ return x(i + 1); })
-    .attr("y", function(d){ return y(d) - 15; })
-    .attr("text-anchor", "middle").attr("fill", BOOT_BLUE)
-    .attr("font-weight", 700).attr("font-size", 15)
-    .text(pc);
+    function series(d, colour, lw, r){
+      g.append("path").datum(d.share).attr("class", "sk-line")
+        .attr("data-sk", d.occupation).attr("d", line)
+        .attr("stroke", colour).attr("stroke-width", lw).attr("fill", "none")
+        .attr("stroke-linecap", "round").attr("stroke-linejoin", "round");
+      g.selectAll(null).data(d.share).join("circle")
+        .attr("class", "sk-dot").attr("data-sk", d.occupation)
+        .attr("cx", function(v, i){ return x(i + 1); })
+        .attr("cy", function(v){ return y(v); })
+        .attr("r", r).attr("fill", colour)
+        .on("mouseover", function(){ over(d, colour); }).on("mouseout", out);
+    }
 
-  // theme_classic: black axis lines, no x ticks, no panel border
-  var ax = g.append("g").attr("transform", "translate(0," + iH + ")")
-    .call(d3.axisBottom(x).tickValues([1, 2, 3])
-      .tickFormat(function(d, i){ return YEARS[i]; }).tickSize(0).tickPadding(12));
-  ax.select(".domain").attr("stroke", "#000").attr("stroke-width", 1);
-  ax.selectAll("text").attr("fill", "#000").attr("font-size", 14);
+    OTHERS.forEach(function(d){ series(d, OTHER_GREY, 1.7, 4.4); });
+    series(AVERAGE, AVG_GREY, 2.4, 4.4);
+    series(BOOT, BOOT_BLUE, 3.0, 6.2);
 
-  var ay = g.append("g").call(d3.axisLeft(y).tickValues(d3.range(0, 61, 10))
-    .tickFormat(function(d){ return d + "%"; }).tickSizeOuter(0));
-  ay.select(".domain").attr("stroke", "#000").attr("stroke-width", 1);
-  ay.selectAll("line").attr("stroke", "#000");
-  ay.selectAll("text").attr("fill", "#000").attr("font-size", 14);
+    function endLabel(d, colour, bold){
+      g.append("text").attr("class", "sk-end").attr("data-sk", d.occupation)
+        .attr("x", x(LABEL_X)).attr("y", y(d.share[2] + d.nudge) + 5)
+        .attr("fill", colour).attr("font-weight", bold ? 700 : 400)
+        .attr("font-size", bold ? 15 : 14)
+        .text(d.short + "  " + pc(d.share[2]))
+        .on("mouseover", function(){ over(d, colour); }).on("mouseout", out);
+    }
+    OTHERS.forEach(function(d){ endLabel(d, LABEL_GREY, false); });
+    endLabel(AVERAGE, "#4D4D4D", false);
+    endLabel(BOOT, BOOT_BLUE, true);
 
-  g.append("text").attr("x", iW / 2).attr("y", iH + 48)
-    .attr("text-anchor", "middle").attr("fill", "#000").attr("font-size", 15)
-    .text("Father's baseline census year");
-  g.append("text").attr("transform", "rotate(-90)")
-    .attr("x", -(iH / 2)).attr("y", -48)
-    .attr("text-anchor", "middle").attr("fill", "#000").attr("font-size", 15)
-    .text("Sons entering father's occupation");
+    g.selectAll(null).data(BOOT.share.slice(0, 2)).join("text")
+      .attr("class", "sk-bootval").attr("data-sk", BOOT.occupation)
+      .attr("x", function(d, i){ return x(i + 1); })
+      .attr("y", function(d){ return y(d) - 15; })
+      .attr("text-anchor", "middle").attr("fill", BOOT_BLUE)
+      .attr("font-weight", 700).attr("font-size", 15)
+      .text(pc);
 
-  function over(d, colour){
-    d3.selectAll("[data-sk]").classed("sk-dim", function(){
-      return this.getAttribute("data-sk") !== d.occupation; });
-    var trail = YEARS.map(function(yr, i){
-      return '<span class="sk-step"><span class="sk-step__w">' + yr +
-             '</span><span class="sk-step__v">' + pc(d.share[i]) + '</span></span>';
-    }).join("");
-    var drop = d.share[2] - d.share[0];
-    readout.html('<div class="sk-l1">' +
-                   '<span class="sk-sw" style="background:' + colour + '"></span>' +
-                   '<span class="sk-name">' + d.occupation + '</span>' +
-                   '<span class="sk-step__w">' + (drop >= 0 ? "+" : "") + drop.toFixed(1) +
-                   ' points, 1851 to 1881</span></div>' +
-                 '<div class="sk-l2">' + trail + '</div>');
-  }
-  function out(){
-    d3.selectAll("[data-sk]").classed("sk-dim", false);
-    readout.html("");
-  }
+    // theme_classic: black axis lines, no x ticks, no panel border
+    var ax = g.append("g").attr("transform", "translate(0," + iH + ")")
+      .call(d3.axisBottom(x).tickValues([1, 2, 3])
+        .tickFormat(function(d, i){ return YEARS[i]; }).tickSize(0).tickPadding(12));
+    ax.select(".domain").attr("stroke", "#000").attr("stroke-width", 1);
+    ax.selectAll("text").attr("fill", "#000").attr("font-size", 14);
+
+    var ay = g.append("g").call(d3.axisLeft(y).tickValues(d3.range(0, 61, 10))
+      .tickFormat(function(d){ return d + "%"; }).tickSizeOuter(0));
+    ay.select(".domain").attr("stroke", "#000").attr("stroke-width", 1);
+    ay.selectAll("line").attr("stroke", "#000");
+    ay.selectAll("text").attr("fill", "#000").attr("font-size", 14);
+
+    g.append("text").attr("x", iW / 2).attr("y", iH + 48)
+      .attr("text-anchor", "middle").attr("fill", "#000").attr("font-size", 15)
+      .text("Father's baseline census year");
+    g.append("text").attr("transform", "rotate(-90)")
+      .attr("x", -(iH / 2)).attr("y", -48)
+      .attr("text-anchor", "middle").attr("fill", "#000").attr("font-size", 15)
+      .text("Sons entering father's occupation");
+
+    function over(d, colour){
+      d3.selectAll("[data-sk]").classed("sk-dim", function(){
+        return this.getAttribute("data-sk") !== d.occupation; });
+      var trail = YEARS.map(function(yr, i){
+        return '<span class="sk-step"><span class="sk-step__w">' + yr +
+               '</span><span class="sk-step__v">' + pc(d.share[i]) + '</span></span>';
+      }).join("");
+      var drop = d.share[2] - d.share[0];
+      readout.html('<div class="sk-l1">' +
+                     '<span class="sk-sw" style="background:' + colour + '"></span>' +
+                     '<span class="sk-name">' + d.name + '</span>' +
+                     '<span class="sk-step__w">' + (drop >= 0 ? "+" : "") + drop.toFixed(1) +
+                     ' points &middot; ' + fN(d.n[2]) + ' sons in 1881</span></div>' +
+                   '<div class="sk-l2">' + trail + '</div>');
+    }
+    function out(){
+      d3.selectAll("[data-sk]").classed("sk-dim", false);
+      readout.html("");
+    }
+
+    d3.select("#sk-note").text(
+      "The heavy grey line is every occupation weighted together, " + fN(full.length) +
+      " of them, across " + fN(Math.round(linked[2])) + " linked sons in 1881.");
+  });
 })();
 </script>
 
 <style>
-  .sk-mock {
-    border-left: 3px solid #d8a93a; background: #fffbe9; color: #7a5c00;
-    padding: 12px 18px; margin: 2px 0 14px; max-width: 1100px;
-    font-size: .88rem; line-height: 1.55; border-radius: 3px;
-  }
-  .sk-mock code { background: #fff6d8; padding: 0 4px; border-radius: 2px; font-size: .92em; }
-
   .sk-readout {
-    height: 48px; overflow: hidden; margin: 0 0 4px;
+    height: 48px; overflow: hidden; margin: 4px 0 2px;
     font-size: .92rem; color: #333; white-space: nowrap;
   }
   .sk-l1 { display: flex; align-items: center; height: 24px; }
@@ -3782,13 +3800,15 @@ Promise.all([
   .sk-step__w { color: #a0a0a0; margin-right: 6px; }
   .sk-step__v { font-variant-numeric: tabular-nums; color: #222; }
 
-  .sk-row { display: flex; }
-  .sk-panel { flex: 0 1 860px; min-width: 420px; }
+  .sk-row { display: flex; margin-top: 18px; }
+  .sk-panel { flex: 0 1 880px; min-width: 420px; }
   #sk-svg { width: 100%; height: auto; display: block; }
 
   .sk-dot, .sk-end { cursor: pointer; }
   .sk-line, .sk-dot, .sk-end, .sk-bootval { transition: opacity .12s; }
   .sk-dim { opacity: .16 !important; }
+
+  .sk-note { font-size: .78rem; color: #8f8f8f; line-height: 1.6; margin: 20px 0 0; max-width: 1100px; }
 </style>
 
 
