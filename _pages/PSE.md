@@ -2688,7 +2688,7 @@ Promise.all([
 <h3>2.2. How many managers?</h3>
   <div class="frame__body">
 
-  <div class="fm-row">
+  <div class="fm-row fm-row--mid">
     <div class="fm-panel">
       <svg id="fm-svg-abs"></svg>
       <div class="fm-tip" id="fm-tip-abs"></div>
@@ -2883,12 +2883,13 @@ Promise.all([
 <style>
   .fm-row { display: flex; gap: 30px; align-items: flex-start; flex-wrap: wrap; }
   .fm-panel { flex: 0 1 980px; min-width: 420px; position: relative; margin-top: 18px; }
-  .fm-row--low { margin-top: 70px; }
+  .fm-row--low { margin-top: 140px; }
+  .fm-row--mid { margin-top: 90px; }
   .fm-aside { flex: 0 1 280px; min-width: 210px; padding-top: 66px; }
   .fm-ptitle { font-size: 1.02rem; font-weight: 700; color: #222; margin: 0 0 8px; }
 
   .fm-grid line { stroke: #f1f1f1; }
-  .fm-axis text { fill: #666; font-size: 12px; }
+  .fm-axis text { fill: #555; font-size: 13.5px; }
   .fm-axis path, .fm-axis line { stroke: #ccc; }
 
   .fm-seg { stroke: #fff; stroke-width: 1; cursor: pointer; transition: opacity .12s; }
@@ -3099,7 +3100,7 @@ Promise.all([
   .fo-step__w { color: #a0a0a0; margin-right: 6px; }
   .fo-step__v { font-variant-numeric: tabular-nums; color: #222; }
 
-  .fo-grid { display: flex; gap: 18px; align-items: flex-start; }
+  .fo-grid { display: flex; gap: 18px; align-items: flex-start; margin-top: 60px; }
   .fo-cell { flex: 1 1 0; min-width: 0; }
   .fo-svg { width: 100%; height: auto; display: block; }
   .fo-wlab {
@@ -3195,8 +3196,8 @@ Promise.all([
     var maxShare = d3.max(nodes, function(d){
       return d3.max(COH, function(y){ return 100 * (d.n[y] || 0) / totals[y]; });
     });
-    var rad = d3.scalePow().exponent(0.4).domain([0, maxShare]).range([1.5, 14]);
-    var SUPP_R = 1.5;   // a cell too thin to publish still gets a dot
+    var rad = d3.scalePow().exponent(0.4).domain([0, maxShare]).range([1.9, 16]);
+    var SUPP_R = 1.9;   // a cell too thin to publish still gets a dot
 
     var iW = SP_W - SP_M.left - SP_M.right, iH = SP_H - SP_M.top - SP_M.bottom;
     var gx = d3.scaleBand().domain(GROUPS.map(function(d){ return d.g; }))
@@ -3270,7 +3271,7 @@ Promise.all([
   /* two fixed lines, so a hover can never change the height and shunt the
      panels down the page */
   .sp-readout {
-    height: 48px; overflow: hidden; margin: 0 0 4px;
+    height: 48px; overflow: hidden; margin: 56px 0 4px;
     font-size: .92rem; color: #333; white-space: nowrap;
   }
   .sp-l1 { display: flex; align-items: center; height: 24px; }
@@ -3298,7 +3299,8 @@ Promise.all([
   .sp-dim { opacity: .06 !important; }
 
   .sp-note {
-    font-size: .84rem; color: #8a8a8a; line-height: 1.65; margin: 34px 0 0; max-width: 1150px;
+    font-size: .76rem; color: #8a8a8a; line-height: 1.65;
+    margin: 30px 0 0 46px; max-width: 1100px;
   }
   .sp-note em { color: #9a8a5a; font-style: italic; }
 </style>
@@ -3413,19 +3415,13 @@ Promise.all([
 
     var a = cohorts[0], z = cohorts[cohorts.length - 1];
     d3.select("#hc-points").selectAll("li").data([
-      "The middle barely moves: median " + f1(a.med) + " to " + f1(z.med) + ".",
-      "The spread widens: interquartile range " + f1(a.iqr) + " to " + f1(z.iqr) + ".",
-      "Managers were drawn from a broader range of homes, not a higher one."
+      "Median increases from " + f1(a.med) + " to " + f1(z.med) + ".",
+      "The spread widens: interquartile range " + f1(a.iqr) + " to " + f1(z.iqr) + "."
     ]).join("li").text(function(d){ return d; });
 
     d3.select("#hc-note").text(
-      "Each curve is the distribution of father's HISCAM status among men observed as managers " +
-      "at the end of the window, weighted by the number of sons. " +
-      fN(a.total) + ", " + fN(cohorts[1].total) + " and " + fN(z.total) +
-      " sons respectively. Occupations HISCAM does not scale — private means, no specified " +
-      "occupation, and the wives categories — are left out rather than counted as status " +
-      "zero, which is " + f1(100 * a.unscaled / a.total) + "% to " +
-      f1(100 * cohorts[1].unscaled / cohorts[1].total) + "% of sons.");
+      "Each curve is the distribution of father's HISCAM status among men observed "
+      + "as managers at the end of the window.");
   });
 })();
 </script>
