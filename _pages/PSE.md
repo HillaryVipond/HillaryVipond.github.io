@@ -165,7 +165,7 @@ body.present .page__content { padding-top: 0 !important; }
 
 <section class="frame">
   <div class="in-kicker">Introduction</div>
-  <h3>This Paper: Map Emergence of New Jobs in 2nd IR</h3>
+  <h3>This Paper: Quantify Jobs Lost and Jobs Created in 2nd IR</h3>
   <div class="frame__body">
     <ol class="in-num">
       <li><strong>Aim:</strong> Understand how and where job creation mapped on to job loss</li>
@@ -3585,7 +3585,7 @@ Promise.all([
 </script>
 
 <style>
-  .hc-row { display: flex; gap: 34px; align-items: flex-start; flex-wrap: wrap; }
+  .hc-row { display: flex; gap: 34px; align-items: flex-start; flex-wrap: wrap; margin-top: 80px; }
   .hc-panel { flex: 0 1 940px; min-width: 420px; }
   .hc-aside { flex: 0 1 300px; min-width: 230px; padding-top: 46px; }
   .hc-points li { font-size: .98rem; line-height: 1.55; color: #444; margin-bottom: 18px; }
