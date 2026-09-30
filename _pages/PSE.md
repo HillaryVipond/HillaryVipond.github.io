@@ -3448,11 +3448,31 @@ Promise.all([
 </style>
 
 
+<section class="frame">
+  <div class="in-kicker">Results · B: Social Mobility</div>
+<h3>2.6. Where the new bootmaking jobs were</h3>
+  <div class="frame__body">
+
+  <!-- markup only: the script and styles travel with the copy in the fertility
+       block, and its render loop is async, so it picks up every .bm-mount -->
+  <div class="bm-row bm-mount">
+    <div class="bm-panel"><svg class="bm-svg"></svg></div>
+    <div class="bm-aside">
+      <div class="bm-readout"></div>
+      <div class="bm-legend"></div>
+      <ul class="in-list bm-points"></ul>
+    </div>
+  </div>
+
+  </div>
+</section>
+
+
 <!-- the builder matches the opening frame tag exactly, so the id that scopes
      the katex render goes on the body, not on that tag -->
 <section class="frame">
   <div class="in-kicker">Results · B: Social Mobility</div>
-<h3>2.6. Growing up in a mechanizing county</h3>
+<h3>2.7. Growing up in a mechanizing county</h3>
   <div class="frame__body" id="fc-eq">
 
     <p class="fc-q">Were boys raised in Leicestershire or Northamptonshire more likely to
@@ -3476,12 +3496,10 @@ Promise.all([
 
       <div class="eq-logic">
         <ul class="in-list eq-points">
-          <li>Boys raised in the mechanizing counties were
-              <strong class="fc-hit">0.45 percentage points</strong> more likely to become
-              bootmaking foremen.</li>
-          <li>The estimate is unchanged after controlling for baseline age and cohort.</li>
-          <li>The sample is all boys, so this is entry into bootmaking and advancement to
-              foreman together &mdash; not promotion within the trade alone.</li>
+          <li>0.45pp more likely to become bootmaking foremen.</li>
+          <li>Unchanged with age and cohort controls.</li>
+          <li>All boys, so entry and advancement together &mdash; not promotion
+              within the trade.</li>
         </ul>
       </div>
     </div>
@@ -3513,9 +3531,8 @@ Promise.all([
   /* only this slide; the earlier equation slides keep their own spacing */
   #fc-eq .fc-q { font-size: 1.16rem; line-height: 1.5; color: #333; max-width: 1000px; margin: 8px 0 0; }
   #fc-eq .eq-box { margin-top: 34px; }
-  #fc-eq .eq-split { margin-top: 30px; }
-  #fc-eq .eq-logic { padding-top: 0; }
-  #fc-eq .fc-hit { color: #238B45; font-weight: 600; }
+  #fc-eq .eq-split { margin-top: 30px; gap: 64px; }
+  #fc-eq .eq-logic { padding-top: 0; flex-basis: 480px; }
 </style>
 
 
@@ -4114,37 +4131,7 @@ Promise.all([
 
 <section class="frame">
   <div class="in-kicker">Results · C: Fertility</div>
-<h3>3.5. Why carpenter brothers differ anyway</h3>
-  <div class="frame__body">
-
-  <ul class="in-list cp-points">
-    <li>No carpenter interaction with bootmaking decline is distinguishable from zero.
-        The shock does not travel into carpentry.</li>
-
-    <li>The brother gap itself is still there. Carpenter sons who followed their father
-        had about <span class="cp-num">0.3</span> more children than their brothers, in
-        both panels, and the estimate is tight.</li>
-
-    <li>So the gap is a feature of carpentry, not an echo of bootmaking. It shows up in the
-        Decline counties because those counties are where carpentry was growing.</li>
-
-    <li>Following your father paid where his trade was expanding, and cost where it was
-        collapsing. The two tables are the same mechanism with the sign reversed.</li>
-  </ul>
-
-  </div>
-</section>
-
-<style>
-  .cp-points { max-width: 1080px; margin-top: 56px; }
-  .cp-points li { font-size: 1.12rem; line-height: 1.6; color: #333; margin-bottom: 26px; }
-  .cp-num { font-variant-numeric: tabular-nums; color: #238B45; }
-</style>
-
-
-<section class="frame">
-  <div class="in-kicker">Results · C: Fertility</div>
-<h3>3.6. Age at marriage in old and new bootmaking</h3>
+<h3>3.5. Age at marriage in old and new bootmaking</h3>
   <div class="frame__body">
 
   <div class="sm-readout" id="sm-readout"></div>
