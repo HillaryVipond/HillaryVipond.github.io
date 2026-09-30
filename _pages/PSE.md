@@ -165,7 +165,7 @@ body.present .page__content { padding-top: 0 !important; }
 
 <section class="frame">
   <div class="in-kicker">Introduction</div>
-  <h3>This Paper: Quantify Jobs Lost and Jobs Created in 2nd IR</h3>
+  <h3>This Paper: Quantify Jobs Lost &amp; Jobs Created in 2nd IR</h3>
   <div class="frame__body">
     <ol class="in-num">
       <li><strong>Aim:</strong> Understand how and where job creation mapped on to job loss</li>
@@ -173,7 +173,7 @@ body.present .page__content { padding-top: 0 !important; }
           Victorian Britain</li>
       <li><strong>Solution:</strong> Generate &ldquo;micro-occupation&rdquo; data.
           800 industries &rarr; 10,000 micro-occupations.</li>
-      <li><strong>Quantify:</strong> new and declining occupations in Britain 1851&ndash;1921</li>
+      <li><strong>Quantify:</strong> new and declining occupations in Britain 1851&ndash;1911</li>
     </ol>
   </div>
 </section>
@@ -2657,161 +2657,6 @@ Promise.all([
 </script>
 
 
-<section class="frame">
-  <div class="in-kicker">Results · A: Workforce in Transition</div>
-<h3>1.6. Where the new bootmaking jobs were</h3>
-  <div class="frame__body">
-
-  <div class="bm-row bm-mount">
-    <div class="bm-panel"><svg class="bm-svg"></svg></div>
-    <div class="bm-aside">
-      <div class="bm-readout"></div>
-      <div class="bm-legend"></div>
-      <ul class="in-list bm-points"></ul>
-    </div>
-  </div>
-
-
-  </div>
-</section>
-
-<script>
-(function(){
-  var YEAR = 1881;
-  var MW = 560, MH = 660;
-
-  // one green ramp, bands anchored on the maximum and rounded to 1/2/5, so the
-  // handful of standout counties separate from the long flat tail
-  function nice125(v){
-    var p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p;
-    return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p;
-  }
-  var RAMP = ["#EDF8E9", "#C7E9C0", "#A1D99B", "#74C476", "#41AB5D", "#238B45"];
-  var f1 = d3.format(".1f"), fN = d3.format(",");
-
-  function draw(mount, geo, rows){
-    var root = d3.select(mount);
-    var totalNew = d3.sum(rows, function(r){ return r.new; });
-    var by = {};
-    rows.forEach(function(r){
-      by[r.county] = { share: 100 * r.new / totalNew, n: r.new,
-                       all: r.new + r.old, intensity: 100 * r.new / (r.new + r.old) };
-    });
-
-    // one path per county, not per polygon, or a county becomes many targets
-    var byCty = new Map();
-    geo.features.forEach(function(f){
-      var c = f.properties && f.properties.R_CTY;
-      if (!c) return;
-      if (!byCty.has(c)) byCty.set(c, { type: "Feature", properties: { R_CTY: c },
-                                        geometry: { type: "MultiPolygon", coordinates: [] } });
-      var g = f.geometry;
-      if (!g) return;
-      if (g.type === "Polygon") byCty.get(c).geometry.coordinates.push(g.coordinates);
-      else if (g.type === "MultiPolygon") g.coordinates.forEach(function(p){
-        byCty.get(c).geometry.coordinates.push(p); });
-    });
-    var COUNTIES = Array.from(byCty.values());
-
-    var hi = d3.max(Object.keys(by), function(c){ return by[c].share; });
-    var cuts = [hi / 16, hi / 8, hi / 4, hi / 2].map(nice125);
-    function band(v){
-      for (var i = 0; i < cuts.length; i++) if (v < cuts[i]) return i;
-      return cuts.length;
-    }
-
-    var svg = root.select(".bm-svg").attr("viewBox", [0, 0, MW, MH]);
-    var projection = d3.geoMercator()
-      .fitSize([MW, MH - 12], { type: "FeatureCollection", features: COUNTIES });
-    var path = d3.geoPath().projection(projection);
-
-    svg.append("g").selectAll("path").data(COUNTIES).join("path")
-      .attr("class", "bm-cty").attr("d", path)
-      .attr("fill", function(f){
-        var d = by[f.properties.R_CTY];
-        return d ? RAMP[band(d.share) + 1] : "#F2F2F2";
-      })
-      .on("mouseover", function(event, f){ show(f.properties.R_CTY); })
-      .on("mouseout", clear);
-
-    var hl = svg.append("path").attr("class", "bm-hl");
-    var readout = root.select(".bm-readout");
-
-    function show(c){
-      var d = by[c];
-      hl.attr("d", path(byCty.get(c)));
-      var name = c.toLowerCase().replace(/\b[a-z]/g, function(m){ return m.toUpperCase(); });
-      readout.html('<div class="bm-l1">' + name + '</div>' +
-        (d ? '<div class="bm-l2">' + f1(d.share) + '% of all new jobs &middot; ' +
-               fN(d.n) + ' of ' + fN(d.all) + ' bootmakers &middot; ' +
-               f1(d.intensity) + '% new locally</div>'
-           : '<div class="bm-l2">not in the data</div>'));
-    }
-    function clear(){ hl.attr("d", null); readout.html(""); }
-
-    var lo = [0].concat(cuts);
-    root.select(".bm-legend").selectAll("div").data(lo).join("div")
-      .attr("class", "bm-key")
-      .html(function(v, i){
-        var label = i === lo.length - 1 ? f1(v) + "% and over"
-                  : f1(v) + " to " + f1(cuts[i]) + "%";
-        return '<i style="background:' + RAMP[i + 1] + '"></i>' + label;
-      });
-
-    var top = rows.slice().sort(function(a, b){ return b.new - a.new; });
-    var t3 = d3.sum(top.slice(0, 3), function(r){ return r.new; });
-    root.select(".bm-points").selectAll("li").data([
-      "Northamptonshire, Leicestershire and London hold " +
-        Math.round(100 * t3 / totalNew) + "% of them between them.",
-      "Leicestershire's own bootmaking is " +
-        Math.round(by["LEICESTERSHIRE"].intensity) + "% new work."
-    ]).join("li").text(function(d){ return d; });
-
-  }
-
-  // The same map appears on more than one slide, so render into every mount
-  // rather than an id. Waiting for load means mounts further down the page
-  // exist by the time this runs.
-  function go(){
-    Promise.all([
-      d3.json("/assets/maps/Counties1851.geojson"),
-      d3.json("/assets/maps/bootmaker_counts_by_county.json")
-    ]).then(function(res){
-      var rows = res[1].filter(function(r){ return r.year === YEAR; });
-      document.querySelectorAll(".bm-mount").forEach(function(m){
-        if (m.dataset.bmDone) return;
-        m.dataset.bmDone = "1";
-        draw(m, res[0], rows);
-      });
-    });
-  }
-  if (document.readyState === "complete") go();
-  else window.addEventListener("load", go);
-})();
-</script>
-
-<style>
-  .bm-row { display: flex; gap: 46px; align-items: flex-start; flex-wrap: wrap; margin-top: 26px; }
-  .bm-panel { flex: 0 1 560px; min-width: 320px; }
-  .bm-svg { width: 100%; height: auto; display: block; }
-  .bm-aside { flex: 1 1 380px; min-width: 280px; max-width: 560px; padding-top: 30px; }
-
-  .bm-cty { stroke: #fff; stroke-width: 0.5; cursor: pointer; }
-  .bm-hl { fill: none; stroke: #1c1c1c; stroke-width: 1.6; pointer-events: none; }
-
-  .bm-readout { height: 46px; overflow: hidden; margin-bottom: 44px; white-space: nowrap; }
-  .bm-l1 { font-weight: 600; font-size: .98rem; color: #222; height: 22px; }
-  .bm-l2 { font-size: .86rem; color: #666; height: 22px; font-variant-numeric: tabular-nums; }
-
-  .bm-legend { display: flex; flex-direction: column; gap: 5px; margin-bottom: 24px; }
-  .bm-key { font-size: .84rem; color: #666; display: flex; align-items: center; }
-  .bm-key i { width: 15px; height: 11px; border-radius: 2px; display: inline-block; margin-right: 9px; }
-
-  .bm-points li { font-size: .98rem; line-height: 1.55; color: #444; margin-bottom: 16px; }
-
-</style>
-
-
 <section class="frame frame--section frame--block">
   <h2>Results</h2>
   <div class="blocklab">B: Social Mobility</div>
@@ -3603,6 +3448,77 @@ Promise.all([
 </style>
 
 
+<!-- the builder matches the opening frame tag exactly, so the id that scopes
+     the katex render goes on the body, not on that tag -->
+<section class="frame">
+  <div class="in-kicker">Results · B: Social Mobility</div>
+<h3>2.6. Growing up in a mechanizing county</h3>
+  <div class="frame__body" id="fc-eq">
+
+    <p class="fc-q">Were boys raised in Leicestershire or Northamptonshire more likely to
+      become bootmaking foremen thirty years later?</p>
+
+    <div class="eq-box"><div id="fc-reg"></div></div>
+
+    <div class="eq-split">
+      <div class="eq-terms">
+        <div class="eq-term"><span class="eq-sym" data-tex="\text{Foreman}_{ic}"></span>
+          <span>boy <em>i</em>, raised in county <em>c</em>, is a bootmaking foreman as
+            an adult</span></div>
+        <div class="eq-term"><span class="eq-sym" data-tex="\text{Mech}_i"></span>
+          <span>raised in a mechanizing county &mdash; Leicestershire or
+            Northamptonshire</span></div>
+        <div class="eq-term"><span class="eq-sym" data-tex="\beta"></span>
+          <span>the difference that childhood county made</span></div>
+        <div class="eq-term"><span class="eq-sym" data-tex="\text{FE}"></span>
+          <span>cohort and age fixed effects</span></div>
+      </div>
+
+      <div class="eq-logic">
+        <ul class="in-list eq-points">
+          <li>Boys raised in the mechanizing counties were
+              <strong class="fc-hit">0.45 percentage points</strong> more likely to become
+              bootmaking foremen.</li>
+          <li>The estimate is unchanged after controlling for baseline age and cohort.</li>
+          <li>The sample is all boys, so this is entry into bootmaking and advancement to
+              foreman together &mdash; not promotion within the trade alone.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+(function(){
+  var FC = "\\text{Foreman}_{ic} = \\beta\\, \\text{Mech}_i"
+         + " + \\text{cohort FE} + \\text{age FE} + \\varepsilon_{ic}.";
+
+  function draw(){
+    if (!window.katex) return;
+    var main = document.getElementById("fc-reg");
+    if (main) katex.render(FC, main, { displayMode: true, throwOnError: false });
+    // scoped to this slide; the other equation slides render their own
+    document.querySelectorAll("#fc-eq .eq-sym[data-tex], #fc-eq .eq-sym-i[data-tex]")
+      .forEach(function(el){
+        katex.render(el.getAttribute("data-tex"), el, { throwOnError: false });
+      });
+  }
+  if (window.katex) draw();
+  else window.addEventListener("load", draw);
+})();
+</script>
+
+<style>
+  /* only this slide; the earlier equation slides keep their own spacing */
+  #fc-eq .fc-q { font-size: 1.16rem; line-height: 1.5; color: #333; max-width: 1000px; margin: 8px 0 0; }
+  #fc-eq .eq-box { margin-top: 34px; }
+  #fc-eq .eq-split { margin-top: 30px; }
+  #fc-eq .eq-logic { padding-top: 0; }
+  #fc-eq .fc-hit { color: #238B45; font-weight: 600; }
+</style>
+
+
 <section class="frame frame--section frame--block">
   <h2>Results</h2>
   <div class="blocklab">C: Fertility</div>
@@ -3844,8 +3760,6 @@ Promise.all([
 <h3>3.2. Where the new bootmaking jobs were</h3>
   <div class="frame__body">
 
-  <!-- markup only: the script and styles come with the first copy of this map,
-       which renders into every .bm-mount on the page -->
   <div class="bm-row bm-mount">
     <div class="bm-panel"><svg class="bm-svg"></svg></div>
     <div class="bm-aside">
@@ -3857,6 +3771,142 @@ Promise.all([
 
   </div>
 </section>
+
+<script>
+(function(){
+  var YEAR = 1881;
+  var MW = 560, MH = 660;
+
+  // one green ramp, bands anchored on the maximum and rounded to 1/2/5, so the
+  // handful of standout counties separate from the long flat tail
+  function nice125(v){
+    var p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p;
+    return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p;
+  }
+  var RAMP = ["#EDF8E9", "#C7E9C0", "#A1D99B", "#74C476", "#41AB5D", "#238B45"];
+  var f1 = d3.format(".1f"), fN = d3.format(",");
+
+  function draw(mount, geo, rows){
+    var root = d3.select(mount);
+    var totalNew = d3.sum(rows, function(r){ return r.new; });
+    var by = {};
+    rows.forEach(function(r){
+      by[r.county] = { share: 100 * r.new / totalNew, n: r.new,
+                       all: r.new + r.old, intensity: 100 * r.new / (r.new + r.old) };
+    });
+
+    // one path per county, not per polygon, or a county becomes many targets
+    var byCty = new Map();
+    geo.features.forEach(function(f){
+      var c = f.properties && f.properties.R_CTY;
+      if (!c) return;
+      if (!byCty.has(c)) byCty.set(c, { type: "Feature", properties: { R_CTY: c },
+                                        geometry: { type: "MultiPolygon", coordinates: [] } });
+      var g = f.geometry;
+      if (!g) return;
+      if (g.type === "Polygon") byCty.get(c).geometry.coordinates.push(g.coordinates);
+      else if (g.type === "MultiPolygon") g.coordinates.forEach(function(p){
+        byCty.get(c).geometry.coordinates.push(p); });
+    });
+    var COUNTIES = Array.from(byCty.values());
+
+    var hi = d3.max(Object.keys(by), function(c){ return by[c].share; });
+    var cuts = [hi / 16, hi / 8, hi / 4, hi / 2].map(nice125);
+    function band(v){
+      for (var i = 0; i < cuts.length; i++) if (v < cuts[i]) return i;
+      return cuts.length;
+    }
+
+    var svg = root.select(".bm-svg").attr("viewBox", [0, 0, MW, MH]);
+    var projection = d3.geoMercator()
+      .fitSize([MW, MH - 12], { type: "FeatureCollection", features: COUNTIES });
+    var path = d3.geoPath().projection(projection);
+
+    svg.append("g").selectAll("path").data(COUNTIES).join("path")
+      .attr("class", "bm-cty").attr("d", path)
+      .attr("fill", function(f){
+        var d = by[f.properties.R_CTY];
+        return d ? RAMP[band(d.share) + 1] : "#F2F2F2";
+      })
+      .on("mouseover", function(event, f){ show(f.properties.R_CTY); })
+      .on("mouseout", clear);
+
+    var hl = svg.append("path").attr("class", "bm-hl");
+    var readout = root.select(".bm-readout");
+
+    function show(c){
+      var d = by[c];
+      hl.attr("d", path(byCty.get(c)));
+      var name = c.toLowerCase().replace(/\b[a-z]/g, function(m){ return m.toUpperCase(); });
+      readout.html('<div class="bm-l1">' + name + '</div>' +
+        (d ? '<div class="bm-l2">' + f1(d.share) + '% of all new jobs &middot; ' +
+               fN(d.n) + ' of ' + fN(d.all) + ' bootmakers &middot; ' +
+               f1(d.intensity) + '% new locally</div>'
+           : '<div class="bm-l2">not in the data</div>'));
+    }
+    function clear(){ hl.attr("d", null); readout.html(""); }
+
+    var lo = [0].concat(cuts);
+    root.select(".bm-legend").selectAll("div").data(lo).join("div")
+      .attr("class", "bm-key")
+      .html(function(v, i){
+        var label = i === lo.length - 1 ? f1(v) + "% and over"
+                  : f1(v) + " to " + f1(cuts[i]) + "%";
+        return '<i style="background:' + RAMP[i + 1] + '"></i>' + label;
+      });
+
+    var top = rows.slice().sort(function(a, b){ return b.new - a.new; });
+    var t3 = d3.sum(top.slice(0, 3), function(r){ return r.new; });
+    root.select(".bm-points").selectAll("li").data([
+      "Northamptonshire, Leicestershire and London hold " +
+        Math.round(100 * t3 / totalNew) + "% of them between them.",
+      "Leicestershire's own bootmaking is " +
+        Math.round(by["LEICESTERSHIRE"].intensity) + "% new work."
+    ]).join("li").text(function(d){ return d; });
+
+  }
+
+  // The same map appears on more than one slide, so render into every mount
+  // rather than an id. Waiting for load means mounts further down the page
+  // exist by the time this runs.
+  function go(){
+    Promise.all([
+      d3.json("/assets/maps/Counties1851.geojson"),
+      d3.json("/assets/maps/bootmaker_counts_by_county.json")
+    ]).then(function(res){
+      var rows = res[1].filter(function(r){ return r.year === YEAR; });
+      document.querySelectorAll(".bm-mount").forEach(function(m){
+        if (m.dataset.bmDone) return;
+        m.dataset.bmDone = "1";
+        draw(m, res[0], rows);
+      });
+    });
+  }
+  if (document.readyState === "complete") go();
+  else window.addEventListener("load", go);
+})();
+</script>
+
+<style>
+  .bm-row { display: flex; gap: 46px; align-items: flex-start; flex-wrap: wrap; margin-top: 26px; }
+  .bm-panel { flex: 0 1 560px; min-width: 320px; }
+  .bm-svg { width: 100%; height: auto; display: block; }
+  .bm-aside { flex: 1 1 380px; min-width: 280px; max-width: 560px; padding-top: 30px; }
+
+  .bm-cty { stroke: #fff; stroke-width: 0.5; cursor: pointer; }
+  .bm-hl { fill: none; stroke: #1c1c1c; stroke-width: 1.6; pointer-events: none; }
+
+  .bm-readout { height: 46px; overflow: hidden; margin-bottom: 44px; white-space: nowrap; }
+  .bm-l1 { font-weight: 600; font-size: .98rem; color: #222; height: 22px; }
+  .bm-l2 { font-size: .86rem; color: #666; height: 22px; font-variant-numeric: tabular-nums; }
+
+  .bm-legend { display: flex; flex-direction: column; gap: 5px; margin-bottom: 24px; }
+  .bm-key { font-size: .84rem; color: #666; display: flex; align-items: center; }
+  .bm-key i { width: 15px; height: 11px; border-radius: 2px; display: inline-block; margin-right: 9px; }
+
+  .bm-points li { font-size: .98rem; line-height: 1.55; color: #444; margin-bottom: 16px; }
+
+</style>
 
 
 <!-- the builder matches the opening frame tag exactly, so the id used to
