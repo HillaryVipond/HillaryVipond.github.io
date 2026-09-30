@@ -86,6 +86,7 @@ noindex: true
 .frame--section .kicker { font-size: .78rem; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 12px; }
 .frame--section h2 { font-size: 2.3rem; margin: 0; border: 0; padding: 0; }
 .frame--section .blocklab { font-size: 1.32rem; color: #9a9a9a; margin-top: 14px; letter-spacing: .01em; }
+.frame--section .blocklab + .blocklab { margin-top: 9px; }
 .frame--section h2::after { display: none; }
 
 /* a frame that needs more than one screen: roughly two slides tall */
@@ -1894,6 +1895,8 @@ Promise.all([
 <section class="frame frame--section">
   <h2>Results</h2>
   <div class="blocklab">A: Workforce in Transition</div>
+  <div class="blocklab">B: Social Mobility</div>
+  <div class="blocklab">C: Fertility</div>
 </section>
 
 
@@ -2668,7 +2671,6 @@ Promise.all([
     </div>
   </div>
 
-  <div class="bm-note"></div>
 
   </div>
 </section>
@@ -2765,10 +2767,6 @@ Promise.all([
         Math.round(by["LEICESTERSHIRE"].intensity) + "% new work."
     ]).join("li").text(function(d){ return d; });
 
-    var note = root.node().parentNode.querySelector(".bm-note");
-    if (note) note.textContent =
-      "Each county's share of all " + fN(totalNew) + " new-task bootmaking jobs in " + YEAR +
-      ". Counties in pale grey are not in the data. Hover a county for its own figures.";
   }
 
   // The same map appears on more than one slide, so render into every mount
@@ -2801,7 +2799,7 @@ Promise.all([
   .bm-cty { stroke: #fff; stroke-width: 0.5; cursor: pointer; }
   .bm-hl { fill: none; stroke: #1c1c1c; stroke-width: 1.6; pointer-events: none; }
 
-  .bm-readout { height: 46px; overflow: hidden; margin-bottom: 18px; white-space: nowrap; }
+  .bm-readout { height: 46px; overflow: hidden; margin-bottom: 44px; white-space: nowrap; }
   .bm-l1 { font-weight: 600; font-size: .98rem; color: #222; height: 22px; }
   .bm-l2 { font-size: .86rem; color: #666; height: 22px; font-variant-numeric: tabular-nums; }
 
@@ -2811,7 +2809,6 @@ Promise.all([
 
   .bm-points li { font-size: .98rem; line-height: 1.55; color: #444; margin-bottom: 16px; }
 
-  .bm-note { font-size: .78rem; color: #8f8f8f; line-height: 1.6; margin: 24px 0 0; max-width: 1100px; }
 </style>
 
 
@@ -2823,7 +2820,7 @@ Promise.all([
 
 <section class="frame">
   <div class="in-kicker">Results · B: Social Mobility</div>
-<h3>2.1. Who were the managers?</h3>
+<h3>2.1. Which industries had managers?</h3>
   <div class="frame__body">
 
   <div class="fm-row fm-row--low">
@@ -3862,130 +3859,11 @@ Promise.all([
 </section>
 
 
-<section class="frame">
-  <div class="in-kicker">Results · C: Fertility</div>
-<h3>3.3. Age at marriage in old and new bootmaking</h3>
-  <div class="frame__body">
-
-  <div class="sm-readout" id="sm-readout"></div>
-
-  <div class="sm-row">
-    <div class="sm-panel"><svg id="sm-svg"></svg></div>
-  </div>
-
-  <div class="sm-note" id="sm-note"></div>
-
-  </div>
-</section>
-
-<script>
-(function(){
-  var NEW_COL = "#238B45", OLD_COL = "#7A7A7A", GRID = "#EDEDED";
-  var W = 980, H = 560, M = { top: 20, right: 190, bottom: 58, left: 74 };
-  var f2 = d3.format(".1f"), fd = d3.format("+.1f");
-
-  d3.csv("/assets/Results/Bootmaker_SMAM_OLD_NEW_comparison.csv?v=1").then(function(rows){
-    // men only, and only the censuses where both series are present
-    var men = rows.filter(function(r){
-      return r.sex === "M" && r.NEW !== "NA" && r.OLD !== "NA" && r.NEW !== "" && r.OLD !== "";
-    }).map(function(r){
-      return { year: +r.year, neu: +r.NEW, old: +r.OLD, gap: +r.NEW - +r.OLD };
-    }).sort(function(a, b){ return a.year - b.year; });
-
-    var years = men.map(function(d){ return d.year; });
-    var svg = d3.select("#sm-svg").attr("viewBox", [0, 0, W, H]);
-    var iW = W - M.left - M.right, iH = H - M.top - M.bottom;
-    var g = svg.append("g").attr("transform", "translate(" + M.left + "," + M.top + ")");
-    var readout = d3.select("#sm-readout");
-
-    var x = d3.scalePoint().domain(years).range([0, iW]).padding(0.08);
-    var y = d3.scaleLinear().domain([23, 29]).range([iH, 0]);
-
-    g.append("g").selectAll("line").data(y.ticks(7)).join("line")
-      .attr("x1", 0).attr("x2", iW)
-      .attr("y1", function(d){ return y(d); }).attr("y2", function(d){ return y(d); })
-      .attr("stroke", GRID).attr("stroke-width", 0.9);
-
-    // the gap itself, shaded, so the distance is the thing you look at
-    g.append("path").datum(men).attr("fill", NEW_COL).attr("opacity", 0.09)
-      .attr("d", d3.area().x(function(d){ return x(d.year); })
-        .y0(function(d){ return y(d.old); }).y1(function(d){ return y(d.neu); }));
-
-    [["old", OLD_COL, "Old artisanal tasks"], ["neu", NEW_COL, "New machine tasks"]]
-      .forEach(function(s){
-        var key = s[0], col = s[1], lab = s[2];
-        g.append("path").datum(men).attr("fill", "none")
-          .attr("stroke", col).attr("stroke-width", 2.6)
-          .attr("stroke-linecap", "round").attr("stroke-linejoin", "round")
-          .attr("d", d3.line().x(function(d){ return x(d.year); })
-                              .y(function(d){ return y(d[key]); }));
-        g.selectAll(null).data(men).join("circle")
-          .attr("cx", function(d){ return x(d.year); })
-          .attr("cy", function(d){ return y(d[key]); })
-          .attr("r", 5.4).attr("fill", col).attr("stroke", "#fff").attr("stroke-width", 1.4);
-        var last = men[men.length - 1];
-        g.append("text").attr("x", iW + 14).attr("y", y(last[key]) + 5)
-          .attr("fill", col).attr("font-size", 14.5)
-          .attr("font-weight", key === "neu" ? 600 : 400).text(lab);
-      });
-
-    // one invisible band per census, so hovering anywhere in a column works
-    g.selectAll(null).data(men).join("rect")
-      .attr("x", function(d){ return x(d.year) - iW / (men.length * 2); })
-      .attr("y", 0).attr("width", iW / men.length).attr("height", iH)
-      .attr("fill", "transparent")
-      .on("mouseover", function(event, d){
-        readout.html('<div class="sm-l1">' + d.year + '</div>' +
-          '<div class="sm-l2">' +
-          '<span style="color:' + NEW_COL + '">new ' + f2(d.neu) + '</span>' +
-          '<span style="color:' + OLD_COL + '">old ' + f2(d.old) + '</span>' +
-          '<span>' + fd(d.gap) + ' years</span></div>');
-      })
-      .on("mouseout", function(){ readout.html(""); });
-
-    var ax = g.append("g").attr("transform", "translate(0," + iH + ")")
-      .call(d3.axisBottom(x).tickFormat(d3.format("d")).tickSize(0).tickPadding(12));
-    ax.select(".domain").attr("stroke", "#000");
-    ax.selectAll("text").attr("fill", "#000").attr("font-size", 14);
-
-    var ay = g.append("g").call(d3.axisLeft(y).ticks(7).tickSizeOuter(0));
-    ay.select(".domain").attr("stroke", "#000");
-    ay.selectAll("line").attr("stroke", "#000");
-    ay.selectAll("text").attr("fill", "#000").attr("font-size", 14);
-
-    g.append("text").attr("transform", "rotate(-90)")
-      .attr("x", -(iH / 2)).attr("y", -52).attr("text-anchor", "middle")
-      .attr("fill", "#000").attr("font-size", 15).text("Age at marriage");
-
-    var worst = men.slice().sort(function(a, b){ return a.gap - b.gap; })[0];
-    d3.select("#sm-note").text(
-      "Singulate mean age at marriage, men. New-task bootmakers married younger in every "
-      + "census, by " + f2(Math.abs(worst.gap)) + " years at the widest, in " + worst.year + ".");
-  });
-})();
-</script>
-
-<style>
-  .sm-readout {
-    height: 48px; overflow: hidden; margin: 6px 0 2px;
-    font-size: .95rem; color: #333; white-space: nowrap;
-  }
-  .sm-l1 { font-weight: 600; height: 24px; font-variant-numeric: tabular-nums; }
-  .sm-l2 { display: flex; gap: 0 22px; height: 24px; font-variant-numeric: tabular-nums; color: #666; font-size: .9rem; }
-
-  .sm-row { display: flex; margin-top: 46px; }
-  .sm-panel { flex: 0 1 980px; min-width: 420px; }
-  #sm-svg { width: 100%; height: auto; display: block; }
-
-  .sm-note { font-size: .78rem; color: #8f8f8f; line-height: 1.6; margin: 26px 0 0; max-width: 1100px; }
-</style>
-
-
 <!-- the builder matches the opening frame tag exactly, so the id used to
      scope the katex render goes on the body, not on that tag -->
 <section class="frame">
   <div class="in-kicker">Results · C: Fertility</div>
-<h3>3.4. Comparing brothers</h3>
+<h3>3.3. Comparing brothers</h3>
   <div class="frame__body" id="wf-eq">
 
     <div class="eq-box"><div id="wf-did"></div></div>
@@ -4054,7 +3932,7 @@ Promise.all([
 
 <section class="frame">
   <div class="in-kicker">Results · C: Fertility</div>
-<h3>3.5. The cost of persistence: children under 18</h3>
+<h3>3.4. The cost of persistence: children under 18</h3>
   <div class="frame__body">
 
   <table class="wf-tab">
@@ -4186,7 +4064,7 @@ Promise.all([
 
 <section class="frame">
   <div class="in-kicker">Results · C: Fertility</div>
-<h3>3.6. Why carpenter brothers differ anyway</h3>
+<h3>3.5. Why carpenter brothers differ anyway</h3>
   <div class="frame__body">
 
   <ul class="in-list cp-points">
@@ -4211,6 +4089,125 @@ Promise.all([
   .cp-points { max-width: 1080px; margin-top: 56px; }
   .cp-points li { font-size: 1.12rem; line-height: 1.6; color: #333; margin-bottom: 26px; }
   .cp-num { font-variant-numeric: tabular-nums; color: #238B45; }
+</style>
+
+
+<section class="frame">
+  <div class="in-kicker">Results · C: Fertility</div>
+<h3>3.6. Age at marriage in old and new bootmaking</h3>
+  <div class="frame__body">
+
+  <div class="sm-readout" id="sm-readout"></div>
+
+  <div class="sm-row">
+    <div class="sm-panel"><svg id="sm-svg"></svg></div>
+  </div>
+
+  <div class="sm-note" id="sm-note"></div>
+
+  </div>
+</section>
+
+<script>
+(function(){
+  var NEW_COL = "#238B45", OLD_COL = "#7A7A7A", GRID = "#EDEDED";
+  var W = 980, H = 560, M = { top: 20, right: 190, bottom: 58, left: 74 };
+  var f2 = d3.format(".1f"), fd = d3.format("+.1f");
+
+  d3.csv("/assets/Results/Bootmaker_SMAM_OLD_NEW_comparison.csv?v=1").then(function(rows){
+    // men only, and only the censuses where both series are present
+    var men = rows.filter(function(r){
+      return r.sex === "M" && r.NEW !== "NA" && r.OLD !== "NA" && r.NEW !== "" && r.OLD !== "";
+    }).map(function(r){
+      return { year: +r.year, neu: +r.NEW, old: +r.OLD, gap: +r.NEW - +r.OLD };
+    }).sort(function(a, b){ return a.year - b.year; });
+
+    var years = men.map(function(d){ return d.year; });
+    var svg = d3.select("#sm-svg").attr("viewBox", [0, 0, W, H]);
+    var iW = W - M.left - M.right, iH = H - M.top - M.bottom;
+    var g = svg.append("g").attr("transform", "translate(" + M.left + "," + M.top + ")");
+    var readout = d3.select("#sm-readout");
+
+    var x = d3.scalePoint().domain(years).range([0, iW]).padding(0.08);
+    var y = d3.scaleLinear().domain([23, 29]).range([iH, 0]);
+
+    g.append("g").selectAll("line").data(y.ticks(7)).join("line")
+      .attr("x1", 0).attr("x2", iW)
+      .attr("y1", function(d){ return y(d); }).attr("y2", function(d){ return y(d); })
+      .attr("stroke", GRID).attr("stroke-width", 0.9);
+
+    // the gap itself, shaded, so the distance is the thing you look at
+    g.append("path").datum(men).attr("fill", NEW_COL).attr("opacity", 0.09)
+      .attr("d", d3.area().x(function(d){ return x(d.year); })
+        .y0(function(d){ return y(d.old); }).y1(function(d){ return y(d.neu); }));
+
+    [["old", OLD_COL, "Old artisanal tasks"], ["neu", NEW_COL, "New machine tasks"]]
+      .forEach(function(s){
+        var key = s[0], col = s[1], lab = s[2];
+        g.append("path").datum(men).attr("fill", "none")
+          .attr("stroke", col).attr("stroke-width", 2.6)
+          .attr("stroke-linecap", "round").attr("stroke-linejoin", "round")
+          .attr("d", d3.line().x(function(d){ return x(d.year); })
+                              .y(function(d){ return y(d[key]); }));
+        g.selectAll(null).data(men).join("circle")
+          .attr("cx", function(d){ return x(d.year); })
+          .attr("cy", function(d){ return y(d[key]); })
+          .attr("r", 5.4).attr("fill", col).attr("stroke", "#fff").attr("stroke-width", 1.4);
+        var last = men[men.length - 1];
+        g.append("text").attr("x", iW + 14).attr("y", y(last[key]) + 5)
+          .attr("fill", col).attr("font-size", 14.5)
+          .attr("font-weight", key === "neu" ? 600 : 400).text(lab);
+      });
+
+    // one invisible band per census, so hovering anywhere in a column works
+    g.selectAll(null).data(men).join("rect")
+      .attr("x", function(d){ return x(d.year) - iW / (men.length * 2); })
+      .attr("y", 0).attr("width", iW / men.length).attr("height", iH)
+      .attr("fill", "transparent")
+      .on("mouseover", function(event, d){
+        readout.html('<div class="sm-l1">' + d.year + '</div>' +
+          '<div class="sm-l2">' +
+          '<span style="color:' + NEW_COL + '">new ' + f2(d.neu) + '</span>' +
+          '<span style="color:' + OLD_COL + '">old ' + f2(d.old) + '</span>' +
+          '<span>' + fd(d.gap) + ' years</span></div>');
+      })
+      .on("mouseout", function(){ readout.html(""); });
+
+    var ax = g.append("g").attr("transform", "translate(0," + iH + ")")
+      .call(d3.axisBottom(x).tickFormat(d3.format("d")).tickSize(0).tickPadding(12));
+    ax.select(".domain").attr("stroke", "#000");
+    ax.selectAll("text").attr("fill", "#000").attr("font-size", 14);
+
+    var ay = g.append("g").call(d3.axisLeft(y).ticks(7).tickSizeOuter(0));
+    ay.select(".domain").attr("stroke", "#000");
+    ay.selectAll("line").attr("stroke", "#000");
+    ay.selectAll("text").attr("fill", "#000").attr("font-size", 14);
+
+    g.append("text").attr("transform", "rotate(-90)")
+      .attr("x", -(iH / 2)).attr("y", -52).attr("text-anchor", "middle")
+      .attr("fill", "#000").attr("font-size", 15).text("Age at marriage");
+
+    var worst = men.slice().sort(function(a, b){ return a.gap - b.gap; })[0];
+    d3.select("#sm-note").text(
+      "Singulate mean age at marriage, men. New-task bootmakers married younger in every "
+      + "census, by " + f2(Math.abs(worst.gap)) + " years at the widest, in " + worst.year + ".");
+  });
+})();
+</script>
+
+<style>
+  .sm-readout {
+    height: 48px; overflow: hidden; margin: 6px 0 2px;
+    font-size: .95rem; color: #333; white-space: nowrap;
+  }
+  .sm-l1 { font-weight: 600; height: 24px; font-variant-numeric: tabular-nums; }
+  .sm-l2 { display: flex; gap: 0 22px; height: 24px; font-variant-numeric: tabular-nums; color: #666; font-size: .9rem; }
+
+  .sm-row { display: flex; margin-top: 46px; }
+  .sm-panel { flex: 0 1 980px; min-width: 420px; }
+  #sm-svg { width: 100%; height: auto; display: block; }
+
+  .sm-note { font-size: .78rem; color: #8f8f8f; line-height: 1.6; margin: 26px 0 0; max-width: 1100px; }
 </style>
 
 
