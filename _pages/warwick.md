@@ -855,41 +855,61 @@ body.present .page__content { padding-top: 0 !important; }
         ["x", "1", "The crosswalk", "by occupation code and rec ID", "xw"],
         ["x", "2", "The report", "the industry in brief and a little history for context, the core tasks, what we found, the share assigned, and the key decisions taken in coding it"],
         ["x", "3", "The R file", "everything decided for the occode, by hand, with the reason"],
-        ["x", "4", "The task descriptions", "a definition for every label the occode uses"]
+        ["x", "4", "The task descriptions", "a definition for every label the occode uses", "td"]
       ] }
   ];
 
   // record identifiers stand in for the linked census records; every string and
   // every coding beside them is real, from occode 663
-  var RECID = ["10418827","10418903","10419264","10419518","10420077","10420431",
-               "10420884","10421250","10421693","10422018","10422547","10422961",
-               "10423304","10423752","10424186","10424530","10425097","10425418",
-               "10425863","10426204"];
+  var RECID = ["10418186", "10418698", "10418861", "10419456", "10419851", "10420011", "10420590",
+               "10421082", "10421583", "10421850", "10422380", "10422754", "10423187", "10423434", "10423662",
+               "10423783", "10423870", "10424047", "10424392", "10424890", "10425044", "10425584", "10425791",
+               "10426303", "10426689", "10426914", "10427071"];
 
   var XW = [
-    ["SHOEMAKER",                 "shoemaker",  "",          "shoe", "", "",                ""],
-    ["BOOT MAKER",                "bootmaker",  "",          "boot", "", "",                ""],
-    ["CORDWAINER",                "cordwainer", "",          "",     "", "",                ""],
-    ["BOOT &amp; SHOE MAKER",     "bootmaker",  "shoemaker", "boot", "", "",                ""],
-    ["SHOE BINDER",               "binder",     "",          "shoe", "", "",                ""],
-    ["SHOE FINISHER",             "finisher",   "",          "shoe", "", "",                ""],
-    ["BOOT CLOSER",               "closer",     "",          "boot", "", "",                ""],
-    ["SHOE CLICKER",              "clicker",    "",          "shoe", "", "",                ""],
-    ["BOOT LASTER",               "laster",     "",          "boot", "", "",                ""],
-    ["SHOE RIVETTER",             "rivetter",   "",          "shoe", "", "",                ""],
-    ["BOOT MACHINIST",            "machinist",  "",          "boot", "", "",                ""],
-    ["SHOE PRESSMAN",             "pressman",   "",          "shoe", "", "",                ""],
-    ["BOOT REPAIRER",             "repairer",   "",          "boot", "", "",                ""],
-    ["PASTE FITTER",              "fitter",     "",          "",     "paste",  "",          ""],
-    ["RUBBER SHOE MAKER",         "shoemaker",  "",          "shoe", "rubber", "",          ""],
-    ["CORDWAINER JOURNEYMAN",     "cordwainer", "",          "",     "", "journeyman",      ""],
-    ["SHOEMAKERS APPRENTICE",     "shoemaker",  "",          "shoe", "", "apprentice",      ""],
-    ["RETIRED BOOTMAKER",         "bootmaker",  "",          "boot", "", "retired",         ""],
-    ["BOOT SHOP ASSISTANT",       "assistant",  "",          "boot", "", "assistant, shop", ""],
-    ["SHOEMAKER EMPLOYING 1 MAN", "shoemaker",  "",          "shoe", "", "",                "employing"]
+    ["SHOEMAKER                ", "maker       ", "     ", "       ", "shoe", "          ", "         "],
+    ["BOOT MAKER               ", "maker       ", "     ", "       ", "boot", "          ", "         "],
+    ["CORDWAINER               ", "cordwainer  ", "     ", "       ", "    ", "          ", "         "],
+    ["SHOE BINDER              ", "binder      ", "     ", "       ", "shoe", "          ", "         "],
+    ["SHOE FINISHER            ", "finisher    ", "     ", "       ", "shoe", "          ", "         "],
+    ["BOOT CLOSER              ", "closer      ", "     ", "       ", "boot", "          ", "         "],
+    ["SHOE CLICKER             ", "clicker     ", "     ", "       ", "shoe", "          ", "         "],
+    ["BOOT LASTER              ", "laster      ", "     ", "       ", "boot", "          ", "         "],
+    ["BOOT MACHINIST           ", "machinist   ", "     ", "       ", "boot", "          ", "         "],
+    ["BOOT REPAIRER            ", "repairer    ", "     ", "       ", "boot", "          ", "         "],
+    ["CORD WAINER              ", "cordwainer  ", "     ", "       ", "    ", "          ", "         "],
+    ["CORDWINER                ", "cordwainer  ", "     ", "       ", "    ", "          ", "         "],
+    ["CORDWAINDER              ", "cordwainer  ", "     ", "       ", "    ", "          ", "         "],
+    ["COARDWAINER              ", "cordwainer  ", "     ", "       ", "    ", "          ", "         "],
+    ["CORDWANER                ", "cordwainer  ", "     ", "       ", "    ", "          ", "         "],
+    ["BOOT MAKER AND REPAIRER  ", "repairer    ", "maker", "       ", "boot", "          ", "         "],
+    ["SHOEMAKER RIVETTER       ", "riveter     ", "maker", "       ", "shoe", "          ", "         "],
+    ["SHOEMAKER FINISHER       ", "finisher    ", "maker", "       ", "shoe", "          ", "         "],
+    ["BOOT MAKER LASTER        ", "laster      ", "maker", "       ", "boot", "          ", "         "],
+    ["BOOTMAKER CLICKER        ", "clicker     ", "maker", "       ", "boot", "          ", "         "],
+    ["BOOT MAKER AND DEALER    ", "dealer      ", "maker", "       ", "boot", "          ", "         "],
+    ["SHOE MACHINE OPERATOR    ", "operator    ", "     ", "machine", "shoe", "          ", "         "],
+    ["SHOEMAKER JOURNEYMAN     ", "maker       ", "     ", "       ", "shoe", "journeyman", "         "],
+    ["RETIRED SHOEMAKER        ", "maker       ", "     ", "       ", "shoe", "retired   ", "         "],
+    ["BOOTMAKERS ASSISTANT     ", "maker       ", "     ", "       ", "boot", "assistant ", "         "],
+    ["BOOT SHOP MANAGER        ", "shop manager", "     ", "       ", "boot", "manager   ", "         "],
+    ["SHOEMAKER EMPLOYING 1 MAN", "maker       ", "     ", "       ", "shoe", "          ", "employing"]
   ];
 
-
+  var TD = [
+    ["maker     ", "Makes the whole article (boot, shoe, slipper); the general craft label, used when no more specific process is named"],
+    ["cordwainer", "Traditional term for a shoemaker working in new leather; a craft title rather than a process"],
+    ["binder    ", "Stitches the upper parts together before they are attached to the sole; in footwear, often women working at home"],
+    ["finisher  ", "Completes the boot after the sole is on: trims, scours, inks and polishes edges and bottoms"],
+    ["closer    ", "Sews the upper together (closes the seams), by hand or machine"],
+    ["clicker   ", "Cuts the upper leather to pattern; the most skilled cutting job in the trade"],
+    ["laster    ", "Pulls and shapes the upper over the last and fastens it ready for the sole"],
+    ["machinist ", "Operates a sewing or other machine on uppers or soles"],
+    ["repairer  ", "Mends worn boots and shoes; also mender"],
+    ["riveter   ", "Fastens soles to uppers with rivets or nails, a mechanised alternative to sewing"],
+    ["dealer    ", "Buys and sells the product without making it"],
+    ["operator  ", "Works a machine; the machine is usually named in the string"]
+  ];
   function xwTable(){
     var h = '<table class="cp-xw"><thead><tr><th>RecID</th><th>OCC</th>'
           + '<th>task 1</th><th>task 2</th>'
@@ -905,6 +925,16 @@ body.present .page__content { padding-top: 0 !important; }
     return h + '</tbody></table>'
       + '<p class="cp-xwn">Strings and codings are real, from occode 663. '
       + 'RecIDs stand in for the linked census records.</p>';
+  }
+
+  function tdTable(){
+    var h = '<table class="cp-xw cp-td"><thead><tr><th>task</th><th>definition</th>'
+          + '</tr></thead><tbody>';
+    TD.forEach(function(r){
+      h += '<tr><td class="cp-xwt">' + r[0] + '</td><td>' + r[1] + '</td></tr>';
+    });
+    return h + '</tbody></table>'
+      + '<p class="cp-xwn">The labels used above, as the library defines them.</p>';
   }
 
   var flow = document.getElementById("cp-flow");
@@ -936,7 +966,8 @@ body.present .page__content { padding-top: 0 !important; }
          + '><span class="cp-sn">' + s[1] + '</span>'
          + '<span class="cp-sb"><span class="cp-st">' + s[2] + ex + '</span>'
          + '<span class="cp-sd">' + s[3] + '</span></span></li>';
-      if (s[4]) h += '<li class="cp-exwrap" hidden>' + xwTable() + '</li>';
+      if (s[4]) h += '<li class="cp-exwrap" hidden>'
+                   + (s[4] === "td" ? tdTable() : xwTable()) + '</li>';
     });
     h += '</ol>';
     if (r.input) {
@@ -1051,6 +1082,8 @@ body.present .page__content { padding-top: 0 !important; }
     color: #1f2429; white-space: nowrap; }
   #cp .cp-xwt { font-weight: 600; color: #1a6b36; }
   #cp .cp-xwt2 { color: #4a7c5e; }
+  #cp .cp-td td { font-size: .76rem; line-height: 1.45; }
+  #cp .cp-td td:first-child { white-space: nowrap; vertical-align: top; }
   #cp .cp-xwn { font-size: .7rem; color: #a0a0a0; margin: 9px 0 0; }
   #cp .cp-st { display: block; font-weight: 600; font-size: .97rem; color: #1f2429; }
   #cp .cp-sd { display: block; font-size: .84rem; line-height: 1.5; color: #555d66; margin-top: 2px; }
