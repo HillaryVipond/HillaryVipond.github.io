@@ -513,15 +513,47 @@ body.present .page__content { padding-top: 0 !important; }
         <div class="pl-head">3</div>
         <div class="pl-body">
           <div class="pl-mini">
-            <div class="pl-m pl-ms">Run A</div>
-            <span class="pl-arr">&rsaquo;</span>
-            <div class="pl-m pl-ms">Run B</div>
-            <span class="pl-arr">&rsaquo;</span>
-            <div class="pl-m pl-ms">Run C</div>
-            <span class="pl-arr">&rsaquo;</span>
-            <div class="pl-m pl-mf">Final</div>
+            <div class="pl-blk">
+              <div class="pl-bh">Run A</div>
+              <ul class="pl-bl">
+                <li class="d">load and count</li>
+                <li class="d">qualifiers</li>
+                <li class="d">top 100</li>
+                <li class="d">draft from the dictionary</li>
+              </ul>
+            </div>
+            <div class="pl-you"><b>1</b> I decide</div>
+
+            <div class="pl-blk">
+              <div class="pl-bh">Run B</div>
+              <ul class="pl-bl">
+                <li class="d">pre-scan the library</li>
+                <li class="d">deterministic rules</li>
+                <li class="d">search + known pairs</li>
+                <li class="d">magnet</li>
+                <li class="m">LLM confirms</li>
+                <li class="d">cluster decisions</li>
+              </ul>
+            </div>
+            <div class="pl-you"><b>2</b> I decide</div>
+
+            <div class="pl-blk">
+              <div class="pl-bh">Run C</div>
+              <ul class="pl-bl">
+                <li class="d">priority rules</li>
+                <li class="d">fragment + industry-only</li>
+                <li class="m">residue pass</li>
+              </ul>
+            </div>
+            <div class="pl-you"><b>3</b> I sign off</div>
+
+            <div class="pl-blk pl-blkf">
+              <div class="pl-bh pl-bhf">Final</div>
+              <ul class="pl-bl">
+                <li class="d">deliverables &mdash; five files</li>
+              </ul>
+            </div>
           </div>
-          <div class="pl-cap">This is what I do now. Next slide, in full.</div>
 
           <div class="pl-who">
             <svg class="pl-both" viewBox="0 0 86 50" aria-hidden="true">
@@ -586,15 +618,21 @@ body.present .page__content { padding-top: 0 !important; }
   }
   .pl-stick { width: 52px; height: 62px; flex: 0 0 auto; }
   .pl-both { width: 86px; height: 50px; flex: 0 0 auto; }
-  .pl-mini { display: flex; align-items: center; justify-content: space-between; gap: 2px; }
-  .pl-m {
-    flex: 1 1 0; min-width: 0; text-align: center; font-size: .8rem; font-weight: 600;
-    line-height: 1.2; padding: 9px 2px; border-radius: 3px; color: #1f2429;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .pl-ms { background: #dfe8f3; border-top: 3px solid #1f4f86; }
-  .pl-mf { background: #e6f2ea; border-top: 3px solid #238B45; }
-  .pl-arr { flex: 0 0 auto; color: #b4b4b4; font-size: .9rem; padding: 0 1px; }
+  .pl-mini { display: flex; flex-direction: column; gap: 5px; }
+  .pl-blk { border: 1px solid #dfe4ea; border-radius: 4px; overflow: hidden; }
+  .pl-bh { background: #1f4f86; color: #fff; font-size: .72rem; font-weight: 700;
+           letter-spacing: .06em; text-transform: uppercase; padding: 4px 9px; }
+  .pl-bhf { background: #238B45; }
+  .pl-bl { list-style: none; margin: 0; padding: 5px 9px 6px; }
+  .pl-bl li { position: relative; padding-left: 14px; margin: 0 0 1px;
+              font-size: .78rem; line-height: 1.4; color: #2b2b2b; }
+  .pl-bl li::before { content: ""; position: absolute; left: 0; top: .48em;
+                      width: 7px; height: 7px; border-radius: 2px; }
+  .pl-bl li.d::before { background: #dfe8f3; border: 1px solid #1f4f86; }
+  .pl-bl li.m::before { background: #f6cdea; border: 1px solid #8a1462; }
+  .pl-you { background: #ffdf9e; border-left: 4px solid #7a4300; border-radius: 3px;
+            padding: 5px 10px; font-size: .8rem; font-weight: 600; color: #1f2429; }
+  .pl-you b { color: #7a4300; margin-right: 5px; }
   .pl-claude { width: 50px; height: 50px; flex: 0 0 auto; }
   .pl-wholab { font-size: 1.12rem; font-weight: 600; color: #2b2b2b; line-height: 1.3; }
 
