@@ -529,7 +529,7 @@ body.present .page__content { padding-top: 0 !important; }
 
   var CH = [
     { n: "1", t: "Topic discovery",
-      lead: "What tasks are there?",
+      lead: "",
       body: tableStrings },
     { n: "2", t: "Entity resolution and spelling",
       lead: "Every spelling of <strong>tailor</strong> found in the census strings:",
@@ -557,14 +557,14 @@ body.present .page__content { padding-top: 0 !important; }
     list.querySelectorAll(".ch-item").forEach(function(el){
       el.setAttribute("aria-current", +el.getAttribute("data-i") === i ? "true" : "false");
     });
-    panel.innerHTML = '<p class="ch-lead">' + c.lead + '</p>' + c.body();
+    panel.innerHTML = (c.lead ? '<p class="ch-lead">' + c.lead + '</p>' : '') + c.body();
   }
   show(0);
 })();
 </script>
 
 <style>
-  #ch .ch-wrap { display: flex; gap: 88px; align-items: flex-start; margin: 18px auto 0;
+  #ch .ch-wrap { display: flex; gap: 88px; align-items: flex-start; margin: 18px 0 0;
     max-width: 1148px; }
   #ch .ch-list { flex: 0 0 340px; display: flex; flex-direction: column; gap: 12px; }
   #ch .ch-panel { flex: 1 1 auto; min-width: 0; max-width: 720px; min-height: 420px; }
@@ -678,7 +678,7 @@ body.present .page__content { padding-top: 0 !important; }
                 <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(327.27)"/>
               </g>
             </svg>
-            <div class="pl-wholab">Claude in the loop</div>
+            <div class="pl-wholab">LLM in the loop</div>
           </div>
         </div>
       </div>
@@ -829,15 +829,15 @@ body.present .page__content { padding-top: 0 !important; }
         ["d", "3a", "Top 100", "the hundred most frequent strings"],
         ["d", "3b", "Draft from the dictionary", "the top 100 run through every label, type, material and spelling decided so far"]
       ],
-      input: ["1", "The draft page", "opened in the browser with every column filled; I amend, it is redrafted, until agreed"] },
+      input: ["1", "Human decision", "the human amends and decides; the draft is redone and shown again until agreed"] },
 
     { id: "b", name: "Run B", sub: "the cluster loop",
       steps: [
-        ["d", "0", "Pre-scan the library", "library labels holding at least 10 records here, so the loop searches dozens of labels rather than a thousand"],
+        ["d", "0", "Leverage lookup dictionary", "the library labels that actually occur in this occode, so the loop searches dozens rather than thousands"],
         ["d", "a", "Deterministic rules", "each label generates its own spellings: joined form, -er to -ing, -man to -men, -woman, -women"],
         ["d", "b", "Search + known pairs", "letters-only substring match, so CORD WAINER and CORDWAINER are the same; where a string names two jobs, the orderings already decided are applied"],
-        ["d", "c", "Magnet", "unassigned words of at least 10 records scored against every accepted spelling by character n-gram cosine; each keeps its best three tasks"],
-        ["m", "d", "LLM confirms", "Haiku 5.5 merges or rejects every candidate with a reason citing an example, against the full label set"],
+        ["d", "c", "Magnet", "words still unassigned are matched to the nearest canonical tasks by character similarity, which is what catches misspellings; each keeps its best three candidates for the model"],
+        ["m", "d", "LLM confirms", "Haiku filters the magnet results"],
         ["d", "e", "Cluster decisions", "the low-confidence merges and the labels to strike, settled on the standing rules"]
       ],
       input: ["2", "Another pass?", "yes only if a new label holds at least 10 records — a pass exists to find a label's misspellings"] },
@@ -902,7 +902,7 @@ body.present .page__content { padding-top: 0 !important; }
 <style>
   #cp { --sc: #dfe8f3; --sci: #1f4f86; --hu: #ffdf9e; --hui: #7a4300; --mo: #f6cdea; --moi: #8a1462; }
 
-  #cp .cp-top { max-width: 1104px; margin: 4px auto 44px; }
+  #cp .cp-top { max-width: 1104px; margin: 4px 0 44px; }
   /* legend lifted from the pipeline artifact: light fill, thick coloured left
      edge, so each swatch mirrors the step block it stands for */
   #cp .cp-key { gap: 14px; flex-wrap: wrap; font-size: .85rem; color: #5e6670; }
@@ -917,7 +917,7 @@ body.present .page__content { padding-top: 0 !important; }
   #cp .cp-stat strong { color: #238B45; }
 
   #cp .cp-wrap { display: flex; gap: 52px; align-items: flex-start;
-    max-width: 1104px; margin: 0 auto; }
+    max-width: 1104px; }
   #cp .cp-left { flex: 0 0 372px; }
   #cp .cp-flow { display: flex; flex-direction: column; }
   /* the legend and the panel heading share a height, so Run A and the panel's
