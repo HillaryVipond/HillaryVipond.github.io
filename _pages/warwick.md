@@ -456,8 +456,6 @@ body.present .page__content { padding-top: 0 !important; }
                       track feeds an ML-hybrid loop that auto-assigns confident cases, asks the
                       user about uncertain ones, and updates the model iteratively.">
           </a>
-          <div class="pl-cap">Incremental ML model for topic assignment
-            <span class="pl-src">&mdash; Figure D1, Appendix D.2</span></div>
 
           <div class="pl-who">
             <svg class="pl-stick" viewBox="0 0 64 76" aria-hidden="true">
@@ -489,8 +487,6 @@ body.present .page__content { padding-top: 0 !important; }
                  alt="The same incremental machine learning model, with the user decisions
                       now taken by Claude rather than by a person.">
           </a>
-          <div class="pl-cap">The same loop, one substitution
-            <span class="pl-src">&mdash; the user decisions</span></div>
 
           <div class="pl-who">
             <svg class="pl-claude" viewBox="-20 -20 40 40" aria-hidden="true">
@@ -518,11 +514,12 @@ body.present .page__content { padding-top: 0 !important; }
         <div class="pl-body">
           <div class="pl-mini">
             <div class="pl-m pl-ms">Run A</div>
-            <div class="pl-m pl-mh"><b>1</b> I decide</div>
+            <span class="pl-arr">&rsaquo;</span>
             <div class="pl-m pl-ms">Run B</div>
-            <div class="pl-m pl-mh"><b>2</b> I decide</div>
+            <span class="pl-arr">&rsaquo;</span>
             <div class="pl-m pl-ms">Run C</div>
-            <div class="pl-m pl-mh"><b>3</b> I sign off</div>
+            <span class="pl-arr">&rsaquo;</span>
+            <div class="pl-m pl-mf">Final</div>
           </div>
           <div class="pl-cap">This is what I do now. Next slide, in full.</div>
 
@@ -589,12 +586,15 @@ body.present .page__content { padding-top: 0 !important; }
   }
   .pl-stick { width: 52px; height: 62px; flex: 0 0 auto; }
   .pl-both { width: 86px; height: 50px; flex: 0 0 auto; }
-  .pl-mini { display: flex; flex-direction: column; gap: 5px; }
-  .pl-m { font-size: .98rem; line-height: 1.3; padding: 9px 12px; border-radius: 3px; font-weight: 600; }
-  .pl-m span { display: block; font-size: .74rem; color: #5e6670; margin-top: 2px; }
-  .pl-ms { background: #dfe8f3; border-left: 4px solid #1f4f86; font-weight: 600; color: #1f2429; }
-  .pl-mh { background: #ffdf9e; border-left: 4px solid #7a4300; color: #1f2429; }
-  .pl-mh b { color: #7a4300; margin-right: 5px; }
+  .pl-mini { display: flex; align-items: center; justify-content: space-between; gap: 2px; }
+  .pl-m {
+    flex: 1 1 0; min-width: 0; text-align: center; font-size: .8rem; font-weight: 600;
+    line-height: 1.2; padding: 9px 2px; border-radius: 3px; color: #1f2429;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .pl-ms { background: #dfe8f3; border-top: 3px solid #1f4f86; }
+  .pl-mf { background: #e6f2ea; border-top: 3px solid #238B45; }
+  .pl-arr { flex: 0 0 auto; color: #b4b4b4; font-size: .9rem; padding: 0 1px; }
   .pl-claude { width: 50px; height: 50px; flex: 0 0 auto; }
   .pl-wholab { font-size: 1.12rem; font-weight: 600; color: #2b2b2b; line-height: 1.3; }
 
