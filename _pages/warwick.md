@@ -409,10 +409,12 @@ body.present .page__content { padding-top: 0 !important; }
 
 <style>
   /* shared by the five Methods slides */
-  .mth-alpha { counter-reset: mthalpha; }
-  .mth-alpha > li { counter-increment: mthalpha; position: relative; padding-left: 26px; }
+  /* the sub-list is an <ol>, so its native numbers have to go or they show
+     alongside these: 1. a., 2. b. */
+  .mth-alpha { counter-reset: mthalpha; list-style: none; padding-left: 0; }
+  .mth-alpha > li { counter-increment: mthalpha; position: relative; padding-left: 38px; }
   .mth-alpha > li::before {
-    content: counter(mthalpha, lower-alpha) "."; position: absolute; left: 0; top: 0;
+    content: "3" counter(mthalpha, lower-alpha) "."; position: absolute; left: 0; top: 0;
     color: #238B45; font-weight: 700;
   }
   .mth-slot { color: #a89a73; font-style: italic; }
@@ -426,17 +428,161 @@ body.present .page__content { padding-top: 0 !important; }
 
 <section class="frame">
   <div class="in-kicker">Methods</div>
-<h3>2. Process: Three Challenges</h3>
-  <div class="frame__body">
+<h3>2. Three Main Challenges</h3>
+  <div class="frame__body" id="ch">
 
-    <ol class="in-num in-list--wide">
-      <li>Topic discovery</li>
-      <li>Entity resolution and spelling</li>
-      <li>Order of priority when there are two or more tasks</li>
-    </ol>
+    <div class="ch-wrap">
+      <nav class="ch-list" id="ch-list" aria-label="The three challenges"></nav>
+      <section class="ch-panel" id="ch-panel" aria-live="polite"></section>
+    </div>
 
   </div>
 </section>
+
+<script>
+(function(){
+  var TAILOR = "&hellip;tailor', 'failor', 'tailar', 'tailaress', 'tailer', 'taileres', "
+    + "'taileress', 'tailering', 'tailers', 'taillor', 'tailloress', 'tailor', \"tailor's\", "
+    + "'tailor(journeyman', 'tailor(master', 'tailor,', 'tailor-', 'tailor-maker', "
+    + "'tailor&hellip;', 'tailor:', 'tailore', \"tailore's\", \"tailore'ss\", 'tailorees', "
+    + "'tailorefs', 'tailorer', 'tailorers', 'tailorerss', 'tailores', \"tailores's\", "
+    + "'tailoress', \"tailoress's\", 'tailoress-', 'tailoress&hellip;', 'tailoresse', "
+    + "'tailoresses', 'tailoresss', 'tailorest', 'tailories', 'tailoriess', 'tailoring', "
+    + "'tailorings', 'tailoris', 'tailoriss', 'tailorist', 'tailorists', 'tailormaker', "
+    + "'tailorman', 'tailorness', 'tailorous', 'tailorress', 'tailors', 'tailors&hellip;', "
+    + "'tailorss', 'tailory', 'tailorys', 'tailoting', 'tailour', 'tailouress', 'tailours', "
+    + "'tailress', 'tailroess', 'taioleress', 'tairloress', 'taitor', 'taitoress', 'talior', "
+    + "'talioress', 'tallor', 'talloress', 'talloring', 'talor', 'talores', 'taloress', "
+    + "'taloring', 'tayler', 'tayleress', 'taylor', \"taylor's\", 'taylores', 'tayloress', "
+    + "'taylorest', 'tayloring', 'tayloris', 'tayloriss', 'taylorist', 'taylors', 'tialor', "
+    + "'tialoress', 'tilloter', 'tailess'";
+
+  var STRINGS = [
+    ["CORDWAINER", "Cordwainer"],
+    ["BOOT &amp; SHOE MAKER", "Maker"],
+    ["BOOT AND SHOE BINDER", "Binder"],
+    ["BOOT &amp; SHOE RIVETTER", "Rivetter"],
+    ["SEWING MACHINIST", "Sewing Machinist"]
+  ];
+
+  var PAIRS = [
+    ["BOOT &amp; SHOE MAKER",    "24,391", "bootmaker", "shoemaker", "one trade, two products"],
+    ["BOOT MAKER AND REPAIRER",  "2,199",  "bootmaker", "repairer",  "making or mending?"],
+    ["BOOT AND SHOE DEALER",     "1,164",  "bootdealer", "shoedealer", "selling, not making"],
+    ["SHOE HAND FINISHER",       "1,005",  "hand",      "finisher",  "generic word, specific job"],
+    ["SHOEMAKER RIVETTER",       "536",    "shoemaker", "rivetter",  "no conjunction at all"],
+    ["BOOT MAKER AND DEALER",    "502",    "bootmaker", "dealer",    "maker or seller?"]
+  ];
+
+  function tableStrings(){
+    var h = '<table class="ch-tab"><thead><tr><th>Original string</th>'
+          + '<th>New variable: &ldquo;Task&rdquo;</th></tr></thead><tbody>';
+    STRINGS.forEach(function(r){
+      h += '<tr><td class="ch-raw">' + r[0] + '</td><td class="ch-task">' + r[1] + '</td></tr>';
+    });
+    return h + '</tbody></table>'
+      + '<p class="ch-note">Occode 663, bootmakers. The deterministic pass reaches 97% of '
+      + 'observations; the far tail is where new tasks are still hiding.</p>';
+  }
+
+  function tablePairs(){
+    var h = '<table class="ch-tab"><thead><tr><th>Original string</th><th class="ch-n">records</th>'
+          + '<th>task 1</th><th>task 2</th><th>why it is hard</th></tr></thead><tbody>';
+    PAIRS.forEach(function(r){
+      h += '<tr><td class="ch-raw">' + r[0] + '</td><td class="ch-n">' + r[1] + '</td>'
+         + '<td class="ch-task">' + r[2] + '</td><td class="ch-task2">' + r[3] + '</td>'
+         + '<td class="ch-why">' + r[4] + '</td></tr>';
+    });
+    return h + '</tbody></table>'
+      + '<p class="ch-note">8,871 of occode 663’s strings name two jobs. Which one is the '
+      + 'person’s own, and which is the employer’s trade, the product, or a second '
+      + 'sideline?</p>';
+  }
+
+  var CH = [
+    { n: "1", t: "Topic discovery",
+      lead: "What tasks are even in there? The strings have to give up their own categories.",
+      body: tableStrings },
+    { n: "2", t: "Entity resolution and spelling",
+      lead: "Every spelling of <strong>tailor</strong> found in the census strings:",
+      body: function(){ return '<div class="ch-strings">' + TAILOR + '</div>'
+        + '<p class="ch-note">Ninety-odd spellings of one word. Every task label carries a tail '
+        + 'like this, and a misspelling missed is a worker lost.</p>'; } },
+    { n: "3", t: "Order of priority when there are two or more tasks",
+      lead: "When a string names more than one job, which is Task 1?",
+      body: tablePairs }
+  ];
+
+  var list = document.getElementById("ch-list");
+  var panel = document.getElementById("ch-panel");
+  if (!list || !panel) return;
+
+  CH.forEach(function(c, i){
+    var b = document.createElement("button");
+    b.className = "ch-item"; b.type = "button"; b.setAttribute("data-i", i);
+    b.innerHTML = '<span class="ch-num">' + c.n + '</span><span class="ch-t">' + c.t + '</span>';
+    b.addEventListener("click", function(){ show(i); });
+    list.appendChild(b);
+  });
+
+  function show(i){
+    var c = CH[i];
+    list.querySelectorAll(".ch-item").forEach(function(el){
+      el.setAttribute("aria-current", +el.getAttribute("data-i") === i ? "true" : "false");
+    });
+    panel.innerHTML = '<p class="ch-lead">' + c.lead + '</p>' + c.body();
+  }
+  show(0);
+})();
+</script>
+
+<style>
+  #ch .ch-wrap { display: flex; gap: 56px; align-items: flex-start; margin-top: 18px; }
+  #ch .ch-list { flex: 0 0 340px; display: flex; flex-direction: column; gap: 12px; }
+  #ch .ch-panel { flex: 1 1 auto; min-width: 0; min-height: 420px; }
+
+  #ch .ch-item {
+    display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start;
+    width: 100%; text-align: left; cursor: pointer; font: inherit; color: #1f2429;
+    background: #f7f7f5; border: 1px solid #e4e4e0; border-left: 6px solid #238B45;
+    border-radius: 5px; padding: 15px 16px;
+    transition: box-shadow .12s ease, border-color .12s ease;
+  }
+  #ch .ch-item:hover { border-color: #bcd8c6; }
+  #ch .ch-item[aria-current="true"] { background: #fff; box-shadow: 0 0 0 2px #238B45 inset; }
+  #ch .ch-num { font-size: 1.1rem; font-weight: 700; color: #238B45; text-align: center; }
+  #ch .ch-t { font-size: 1.04rem; font-weight: 600; line-height: 1.35; }
+
+  #ch .ch-lead { font-size: 1.04rem; line-height: 1.5; color: #2b2b2b; margin: 2px 0 18px; }
+
+  #ch .ch-tab { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+  #ch .ch-tab th { text-align: left; font-size: .76rem; letter-spacing: .05em;
+    text-transform: uppercase; color: #222; font-weight: 700;
+    padding: 0 16px 7px 0; border-bottom: 2px solid #238B45; }
+  #ch .ch-tab td { padding: 7px 16px 7px 0; border-bottom: 1px solid #f0f0f0; font-size: .95rem; }
+  #ch .ch-tab tr:last-child td { border-bottom: 0; }
+  #ch .ch-raw { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: .88rem; color: #1f2429; white-space: nowrap; }
+  #ch .ch-task { font-weight: 600; color: #1a6b36; }
+  #ch .ch-task2 { color: #4a7c5e; }
+  #ch .ch-why { color: #8a8a8a; font-size: .88rem; }
+  #ch .ch-n { text-align: right; padding-right: 16px; color: #666; }
+
+  #ch .ch-strings {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: .8rem; line-height: 1.75; color: #3b3b3b; word-spacing: .04em;
+    background: #faf9f7; border: 1px solid #ececea; border-radius: 4px;
+    padding: 16px 18px; max-height: 340px; overflow: auto;
+  }
+  #ch .ch-note { font-size: .82rem; color: #8a8a8a; line-height: 1.6; margin: 16px 0 0;
+    max-width: 820px; }
+
+  @media (max-width: 1000px) {
+    #ch .ch-wrap { flex-direction: column; }
+    #ch .ch-list { flex: 1 1 auto; width: 100%; }
+    #ch .ch-panel { width: 100%; min-height: 0; }
+  }
+</style>
 
 
 <section class="frame">
@@ -514,7 +660,7 @@ body.present .page__content { padding-top: 0 !important; }
         <div class="pl-body">
           <div class="pl-mini">
             <div class="pl-blk">
-              <div class="pl-bh">Run A</div>
+              <div class="pl-bh">Block A</div>
               <ul class="pl-bl">
                 <li class="d">load and count</li>
                 <li class="d">cleaning</li>
@@ -525,7 +671,7 @@ body.present .page__content { padding-top: 0 !important; }
             <div class="pl-you"><b>1</b> I decide</div>
 
             <div class="pl-blk">
-              <div class="pl-bh">Run B</div>
+              <div class="pl-bh">Block B</div>
               <ul class="pl-bl">
                 <li class="d">magnet</li>
                 <li class="m">LLM confirms</li>
@@ -534,7 +680,7 @@ body.present .page__content { padding-top: 0 !important; }
             <div class="pl-you"><b>2</b> I decide</div>
 
             <div class="pl-blk">
-              <div class="pl-bh">Run C</div>
+              <div class="pl-bh">Block C</div>
               <ul class="pl-bl">
                 <li class="d">priority rules</li>
                 <li class="d">fragment + industry-only</li>
@@ -626,10 +772,10 @@ body.present .page__content { padding-top: 0 !important; }
 
     <div class="cp-top">
       <div class="cp-key">
-        <span><i class="cp-ks"></i>SCRIPT &middot; deterministic</span>
-        <span><i class="cp-km"></i>MODEL &middot; model call</span>
-        <span><i class="cp-kh"></i>YOU &middot; I decide</span>
-        <span><i class="cp-kx"></i>OUTPUT &middot; deliverable</span>
+        <span><i class="cp-ks"></i>SCRIPT</span>
+        <span><i class="cp-km"></i>MODEL</span>
+        <span><i class="cp-kh"></i>HUMAN</span>
+        <span><i class="cp-kx"></i>DELIVERABLE</span>
       </div>
       <div class="cp-stat">19 occodes &middot; 5,510,622 records &middot;
         <strong>99.59%</strong> with a Task&nbsp;1</div>
@@ -741,7 +887,7 @@ body.present .page__content { padding-top: 0 !important; }
   #cp .cp-stat { font-size: .92rem; color: #555; }
   #cp .cp-stat strong { color: #238B45; }
 
-  #cp .cp-wrap { display: flex; gap: 72px; align-items: flex-start; }
+  #cp .cp-wrap { display: flex; gap: 104px; align-items: flex-start; }
   #cp .cp-flow { flex: 0 0 372px; display: flex; flex-direction: column; }
   #cp .cp-arrow { color: #c4c4c4; font-size: 1.15rem; line-height: 1; margin: 6px 0 6px 28px; }
 
@@ -779,8 +925,8 @@ body.present .page__content { padding-top: 0 !important; }
   #cp .cp-x  { background: #e6f2ea; border-left: 6px solid #238B45; }
   #cp .cp-d::after { content: "SCRIPT"; color: var(--sci); }
   #cp .cp-m::after { content: "MODEL";  color: var(--moi); }
-  #cp .cp-h::after { content: "YOU";    color: var(--hui); }
-  #cp .cp-x::after { content: "OUTPUT"; color: #1a6b36; }
+  #cp .cp-h::after { content: "HUMAN";       color: var(--hui); }
+  #cp .cp-x::after { content: "DELIVERABLE"; color: #1a6b36; }
 
   #cp .cp-sn { text-align: center; font-size: .76rem; font-weight: 700; border-radius: 3px;
     padding: 3px 0; background: #fff; font-variant-numeric: tabular-nums; }
