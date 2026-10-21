@@ -902,7 +902,7 @@ body.present .page__content { padding-top: 0 !important; }
 <style>
   #cp { --sc: #dfe8f3; --sci: #1f4f86; --hu: #ffdf9e; --hui: #7a4300; --mo: #f6cdea; --moi: #8a1462; }
 
-  #cp .cp-top { max-width: 1104px; margin: 4px 0 44px; }
+  #cp .cp-top { max-width: 1192px; margin: 4px 0 44px; }
   /* legend lifted from the pipeline artifact: light fill, thick coloured left
      edge, so each swatch mirrors the step block it stands for */
   #cp .cp-key { gap: 14px; flex-wrap: wrap; font-size: .85rem; color: #5e6670; }
@@ -916,8 +916,8 @@ body.present .page__content { padding-top: 0 !important; }
   #cp .cp-stat { font-size: .92rem; color: #555; }
   #cp .cp-stat strong { color: #238B45; }
 
-  #cp .cp-wrap { display: flex; gap: 52px; align-items: flex-start;
-    max-width: 1104px; }
+  #cp .cp-wrap { display: flex; gap: 140px; align-items: flex-start;
+    max-width: 1192px; }
   #cp .cp-left { flex: 0 0 372px; }
   #cp .cp-flow { display: flex; flex-direction: column; }
   /* the legend and the panel heading share a height, so Run A and the panel's
