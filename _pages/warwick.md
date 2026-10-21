@@ -199,24 +199,6 @@ body.present .page__content { padding-top: 0 !important; }
 
 <section class="frame">
   <div class="in-kicker">History</div>
-  <h3>History: British Census</h3>
-  <div class="frame__body">
-    <div class="in-split">
-      <ul class="in-list">
-        <li><strong>1753 Thomas Potter:</strong> bill introduced to Parliament. Army, emigration to
-            the colonies, burden of the poor law. Population growth.</li>
-        <li><strong>1801&ndash;1831:</strong> Parish (township) register aggregates</li>
-        <li><strong>1841&ndash;1921:</strong> Individual Level</li>
-      </ul>
-      <figure class="in-fig in-fig--narrow">
-        <img src="/assets/images/Census1851.jpg" alt="Title page of the Census of Great Britain, 1851">
-      </figure>
-    </div>
-  </div>
-</section>
-
-<section class="frame">
-  <div class="in-kicker">History</div>
   <h3>History: British Census Classification Schema</h3>
   <div class="frame__body">
     <div class="in-split">
@@ -269,10 +251,6 @@ body.present .page__content { padding-top: 0 !important; }
         <tr><td>663 (Bootmaker)</td><td>SEWING MACHINIST</td><td>Sewing Machinist</td></tr>
       </tbody>
     </table>
-    <p class="in-note">
-      The table shows examples of original occupation strings from Census records and their
-      corresponding new variable &ldquo;Task&rdquo;. I assign 97% of them to &ldquo;Task&rdquo;.
-    </p>
   </div>
 </section>
 
@@ -395,7 +373,7 @@ body.present .page__content { padding-top: 0 !important; }
 
     <ol class="in-num">
       <li>6.5 million unique strings describing occupation</li>
-      <li>Around 800 occupation codes</li>
+      <li>797 occupation codes</li>
       <li>The census gives us some help: enumerators worked to written instructions
         <ol class="in-sub mth-alpha">
           <li>Most important job first</li>
@@ -462,7 +440,8 @@ body.present .page__content { padding-top: 0 !important; }
     ["BOOT &amp; SHOE MAKER", "Maker"],
     ["BOOT AND SHOE BINDER", "Binder"],
     ["BOOT &amp; SHOE RIVETTER", "Rivetter"],
-    ["SEWING MACHINIST", "Sewing Machinist"]
+    ["SEWING MACHINIST", "Sewing Machinist"],
+    ["HAB", "Haberdasher"]
   ];
 
   var PAIRS = [
@@ -480,9 +459,7 @@ body.present .page__content { padding-top: 0 !important; }
     STRINGS.forEach(function(r){
       h += '<tr><td class="ch-raw">' + r[0] + '</td><td class="ch-task">' + r[1] + '</td></tr>';
     });
-    return h + '</tbody></table>'
-      + '<p class="ch-note">Occode 663, bootmakers. The deterministic pass reaches 97% of '
-      + 'observations; the far tail is where new tasks are still hiding.</p>';
+    return h + '</tbody></table>';
   }
 
   function tablePairs(){
@@ -501,13 +478,12 @@ body.present .page__content { padding-top: 0 !important; }
 
   var CH = [
     { n: "1", t: "Topic discovery",
-      lead: "What tasks are even in there? The strings have to give up their own categories.",
+      lead: "What tasks are there?",
       body: tableStrings },
     { n: "2", t: "Entity resolution and spelling",
       lead: "Every spelling of <strong>tailor</strong> found in the census strings:",
       body: function(){ return '<div class="ch-strings">' + TAILOR + '</div>'
-        + '<p class="ch-note">Ninety-odd spellings of one word. Every task label carries a tail '
-        + 'like this, and a misspelling missed is a worker lost.</p>'; } },
+        + '<p class="ch-note">Every task label carries a tail like this.</p>'; } },
     { n: "3", t: "Order of priority when there are two or more tasks",
       lead: "When a string names more than one job, which is Task 1?",
       body: tablePairs }
@@ -771,18 +747,20 @@ body.present .page__content { padding-top: 0 !important; }
   <div class="frame__body" id="cp">
 
     <div class="cp-top">
-      <div class="cp-key">
-        <span><i class="cp-ks"></i>SCRIPT</span>
-        <span><i class="cp-km"></i>MODEL</span>
-        <span><i class="cp-kh"></i>HUMAN</span>
-        <span><i class="cp-kx"></i>DELIVERABLE</span>
-      </div>
-      <div class="cp-stat">19 occodes &middot; 5,510,622 records &middot;
-        <strong>99.59%</strong> with a Task&nbsp;1</div>
+      <div class="cp-stat">31 occodes &middot; 5,802,712 records &middot;
+        <strong>97.85%</strong> with a Task&nbsp;1</div>
     </div>
 
     <div class="cp-wrap">
-      <nav class="cp-flow" id="cp-flow" aria-label="Pipeline runs"></nav>
+      <div class="cp-left">
+        <div class="cp-key">
+          <span><i class="cp-ks"></i>SCRIPT</span>
+          <span><i class="cp-km"></i>MODEL</span>
+          <span><i class="cp-kh"></i>HUMAN</span>
+          <span><i class="cp-kx"></i>DELIVERABLE</span>
+        </div>
+        <nav class="cp-flow" id="cp-flow" aria-label="Pipeline runs"></nav>
+      </div>
       <section class="cp-panel" id="cp-panel" aria-live="polite"></section>
     </div>
 
@@ -872,11 +850,10 @@ body.present .page__content { padding-top: 0 !important; }
 <style>
   #cp { --sc: #dfe8f3; --sci: #1f4f86; --hu: #ffdf9e; --hui: #7a4300; --mo: #f6cdea; --moi: #8a1462; }
 
-  #cp .cp-top { display: flex; justify-content: space-between; align-items: baseline;
-    flex-wrap: wrap; gap: 12px; margin: 4px 0 20px; }
+  #cp .cp-top { margin: 4px 0 18px; }
   /* legend lifted from the pipeline artifact: light fill, thick coloured left
      edge, so each swatch mirrors the step block it stands for */
-  #cp .cp-key { display: flex; gap: 14px; flex-wrap: wrap; font-size: .85rem; color: #5e6670; }
+  #cp .cp-key { gap: 14px; flex-wrap: wrap; font-size: .85rem; color: #5e6670; }
   #cp .cp-key span { display: inline-flex; align-items: center; gap: 6px; }
   #cp .cp-key i { width: 14px; height: 14px; border-radius: 3px; border: 1px solid #d8d4cc;
                   display: inline-block; }
@@ -887,8 +864,13 @@ body.present .page__content { padding-top: 0 !important; }
   #cp .cp-stat { font-size: .92rem; color: #555; }
   #cp .cp-stat strong { color: #238B45; }
 
-  #cp .cp-wrap { display: flex; gap: 104px; align-items: flex-start; }
-  #cp .cp-flow { flex: 0 0 372px; display: flex; flex-direction: column; }
+  #cp .cp-wrap { display: flex; gap: 52px; align-items: flex-start; }
+  #cp .cp-left { flex: 0 0 372px; }
+  #cp .cp-flow { display: flex; flex-direction: column; }
+  /* the legend and the panel heading share a height, so Run A and the panel's
+     first step block line up exactly */
+  #cp .cp-key, #cp .cp-ph { min-height: 30px; margin: 0 0 14px; display: flex;
+    align-items: center; }
   #cp .cp-arrow { color: #c4c4c4; font-size: 1.15rem; line-height: 1; margin: 6px 0 6px 28px; }
 
   #cp .cp-blk {
@@ -905,8 +887,8 @@ body.present .page__content { padding-top: 0 !important; }
   #cp .cp-blk--fin[aria-current="true"] { box-shadow: 0 0 0 2px #238B45 inset; }
   #cp .cp-bn { font-weight: 700; font-size: 1.3rem; letter-spacing: -.01em; }
 
-  #cp .cp-panel { flex: 1 1 auto; min-width: 0; min-height: 430px; }
-  #cp .cp-ph { font-size: 1.1rem; margin: 2px 0 14px; font-weight: 700; color: #1f2429; }
+  #cp .cp-panel { flex: 1 1 auto; min-width: 0; max-width: 680px; min-height: 430px; }
+  #cp .cp-ph { font-size: 1.1rem; font-weight: 700; color: #1f2429; gap: 7px; }
   #cp .cp-ph span { font-weight: 400; color: #8a8a8a; font-size: .9rem; }
 
   #cp .cp-steps { list-style: none; margin: 0; padding: 0; }
@@ -940,7 +922,7 @@ body.present .page__content { padding-top: 0 !important; }
 
   @media (max-width: 1000px) {
     #cp .cp-wrap { flex-direction: column; }
-    #cp .cp-flow { flex: 1 1 auto; width: 100%; }
+    #cp .cp-left { flex: 1 1 auto; width: 100%; }
     #cp .cp-panel { width: 100%; min-height: 0; }
   }
 </style>
