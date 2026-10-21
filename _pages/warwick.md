@@ -447,7 +447,7 @@ body.present .page__content { padding-top: 0 !important; }
     <div class="pl-cols">
 
       <div class="pl-col">
-        <div class="pl-head">Pre-LLM</div>
+        <div class="pl-head"><span class="pl-no">1</span>Pre-LLM</div>
         <div class="pl-body">
           <a class="pl-figlink" href="/assets/images/ml_topic_assignment.png" target="_blank"
              rel="noopener" title="open full size">
@@ -479,7 +479,7 @@ body.present .page__content { padding-top: 0 !important; }
       </div>
 
       <div class="pl-col">
-        <div class="pl-head">Early LLM era</div>
+        <div class="pl-head"><span class="pl-no">2</span>Early LLM era</div>
         <div class="pl-body">
           <a class="pl-figlink" href="/assets/images/ml_topic_assignment.png" target="_blank"
              rel="noopener" title="open full size">
@@ -510,7 +510,7 @@ body.present .page__content { padding-top: 0 !important; }
       </div>
 
       <div class="pl-col">
-        <div class="pl-head">100% Human Labelling (*kind of)</div>
+        <div class="pl-head"><span class="pl-no">3</span>100% Human Labelling (*kind of)</div>
         <div class="pl-body">
           <div class="pl-mini">
             <div class="pl-blk">
@@ -551,38 +551,6 @@ body.present .page__content { padding-top: 0 !important; }
             </div>
           </div>
 
-          <div class="pl-who">
-            <svg class="pl-both" viewBox="0 0 86 50" aria-hidden="true">
-              <g fill="none" stroke="#3b3b3b" stroke-width="2.4"
-                 stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="17" cy="11" r="7" fill="#fff"/>
-                <line x1="17" y1="18" x2="17" y2="33"/>
-                <line x1="17" y1="33" x2="9"  y2="46"/>
-                <line x1="17" y1="33" x2="25" y2="46"/>
-                <line x1="17" y1="23" x2="8"  y2="29"/>
-                <line x1="17" y1="23" x2="27" y2="28"/>
-              </g>
-              <circle cx="14.6" cy="10.2" r="1.2" fill="#3b3b3b"/>
-              <circle cx="19.4" cy="10.2" r="1.2" fill="#3b3b3b"/>
-              <path d="M14.4 13.6 Q17 15.8 19.6 13.6" fill="none" stroke="#3b3b3b"
-                    stroke-width="1.3" stroke-linecap="round"/>
-              <text x="40" y="31" font-size="15" fill="#9a9a9a">+</text>
-              <g fill="#D97757" transform="translate(68 25) scale(0.86)">
-                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z"/>
-                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(32.73)"/>
-                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(65.45)"/>
-                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(98.18)"/>
-                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(130.91)"/>
-                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(163.64)"/>
-                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(196.36)"/>
-                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(229.09)"/>
-                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(261.82)"/>
-                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(294.55)"/>
-                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(327.27)"/>
-              </g>
-            </svg>
-            <div class="pl-wholab">Both in the loop</div>
-          </div>
         </div>
       </div>
 
@@ -600,6 +568,7 @@ body.present .page__content { padding-top: 0 !important; }
   }
   .pl-head { font-size: 1.02rem; font-weight: 700; color: #238B45; margin-bottom: 14px;
              line-height: 1.3; min-height: 2.6em; }
+  .pl-no { display: inline-block; min-width: 1.35em; color: #8fc3a4; }
   .pl-body { font-size: 1rem; line-height: 1.6; color: #333; }
 
   .pl-figlink { display: block; border: 1px solid #ececec; border-radius: 3px; padding: 6px; background: #fff; }
@@ -657,9 +626,10 @@ body.present .page__content { padding-top: 0 !important; }
 
     <div class="cp-top">
       <div class="cp-key">
-        <span><i class="cp-ks"></i>deterministic</span>
-        <span><i class="cp-km"></i>model</span>
-        <span><i class="cp-kh"></i>I decide</span>
+        <span><i class="cp-ks"></i>SCRIPT &middot; deterministic</span>
+        <span><i class="cp-km"></i>MODEL &middot; model call</span>
+        <span><i class="cp-kh"></i>YOU &middot; I decide</span>
+        <span><i class="cp-kx"></i>OUTPUT &middot; deliverable</span>
       </div>
       <div class="cp-stat">19 occodes &middot; 5,510,622 records &middot;
         <strong>99.59%</strong> with a Task&nbsp;1</div>
@@ -724,9 +694,7 @@ body.present .page__content { padding-top: 0 !important; }
     b.className = "cp-blk" + (r.fin ? " cp-blk--fin" : "");
     b.type = "button";
     b.setAttribute("data-id", r.id);
-    b.innerHTML = '<span class="cp-bn">' + r.name + '</span>' +
-                  '<span class="cp-bs">' + r.sub + '</span>' +
-                  '<span class="cp-bc">' + r.steps.length + ' steps</span>';
+    b.innerHTML = '<span class="cp-bn">' + r.name + '</span>';
     b.addEventListener("click", function(){ show(r.id); });
     flow.appendChild(b);
   });
@@ -760,16 +728,20 @@ body.present .page__content { padding-top: 0 !important; }
 
   #cp .cp-top { display: flex; justify-content: space-between; align-items: baseline;
     flex-wrap: wrap; gap: 12px; margin: 4px 0 20px; }
-  #cp .cp-key { display: flex; gap: 18px; font-size: .84rem; color: #6b6b6b; }
-  #cp .cp-key span { display: inline-flex; align-items: center; gap: 7px; }
-  #cp .cp-key i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
-  #cp .cp-key i.cp-ks { background: var(--sc); border: 1px solid var(--sci); }
-  #cp .cp-key i.cp-km { background: var(--mo); border: 1px solid var(--moi); }
-  #cp .cp-key i.cp-kh { background: var(--hu); border: 1px solid var(--hui); }
+  /* legend lifted from the pipeline artifact: light fill, thick coloured left
+     edge, so each swatch mirrors the step block it stands for */
+  #cp .cp-key { display: flex; gap: 14px; flex-wrap: wrap; font-size: .85rem; color: #5e6670; }
+  #cp .cp-key span { display: inline-flex; align-items: center; gap: 6px; }
+  #cp .cp-key i { width: 14px; height: 14px; border-radius: 3px; border: 1px solid #d8d4cc;
+                  display: inline-block; }
+  #cp .cp-key i.cp-ks { background: var(--sc); border-left: 4px solid var(--sci); }
+  #cp .cp-key i.cp-km { background: var(--mo); border-left: 4px solid var(--moi); }
+  #cp .cp-key i.cp-kh { background: var(--hu); border-left: 4px solid var(--hui); }
+  #cp .cp-key i.cp-kx { background: #e6f2ea; border-left: 4px solid #238B45; }
   #cp .cp-stat { font-size: .92rem; color: #555; }
   #cp .cp-stat strong { color: #238B45; }
 
-  #cp .cp-wrap { display: flex; gap: 34px; align-items: flex-start; }
+  #cp .cp-wrap { display: flex; gap: 72px; align-items: flex-start; }
   #cp .cp-flow { flex: 0 0 372px; display: flex; flex-direction: column; }
   #cp .cp-arrow { color: #c4c4c4; font-size: 1.15rem; line-height: 1; margin: 6px 0 6px 28px; }
 
@@ -786,9 +758,6 @@ body.present .page__content { padding-top: 0 !important; }
   #cp .cp-blk[aria-current="true"] { box-shadow: 0 0 0 2px var(--sci) inset; }
   #cp .cp-blk--fin[aria-current="true"] { box-shadow: 0 0 0 2px #238B45 inset; }
   #cp .cp-bn { font-weight: 700; font-size: 1.3rem; letter-spacing: -.01em; }
-  #cp .cp-bs { font-size: .88rem; color: #5e6670; flex: 1 1 auto; }
-  #cp .cp-bc { font-size: .72rem; color: #8a8a8a; letter-spacing: .05em;
-    text-transform: uppercase; white-space: nowrap; }
 
   #cp .cp-panel { flex: 1 1 auto; min-width: 0; min-height: 430px; }
   #cp .cp-ph { font-size: 1.1rem; margin: 2px 0 14px; font-weight: 700; color: #1f2429; }
@@ -834,12 +803,75 @@ body.present .page__content { padding-top: 0 !important; }
 <section class="frame">
   <div class="in-kicker">Methods</div>
 <h3>5. Output</h3>
-  <div class="frame__body">
+  <div class="frame__body" id="xw">
 
-    <div class="mth-todo">Content to come.</div>
+    <div class="xw-head">
+      <div class="xw-who"><strong>occode 663</strong> &middot; Shoe and boot makers
+        (and repairers)</div>
+      <div class="xw-fig">34,685 distinct strings &middot; 1,300,892 records &middot;
+        <strong>99.64%</strong> with a Task&nbsp;1</div>
+    </div>
+
+    <table class="xw-table">
+      <thead><tr>
+        <th>string</th><th class="xw-n">records</th><th class="xw-n">cum&nbsp;%</th>
+        <th>task 1</th><th>task 2</th><th>product</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="xw-s">SHOEMAKER</td><td class="xw-n">204,192</td><td class="xw-n xw-c">15.8%</td><td class="xw-t1">shoemaker</td><td class="xw-t2">&mdash;</td><td class="xw-p">shoe</td></tr>
+        <tr><td class="xw-s">SHOE MAKER</td><td class="xw-n">168,665</td><td class="xw-n xw-c">28.9%</td><td class="xw-t1">shoemaker</td><td class="xw-t2">&mdash;</td><td class="xw-p">shoe</td></tr>
+        <tr><td class="xw-s">BOOT MAKER</td><td class="xw-n">95,594</td><td class="xw-n xw-c">36.3%</td><td class="xw-t1">bootmaker</td><td class="xw-t2">&mdash;</td><td class="xw-p">boot</td></tr>
+        <tr><td class="xw-s">CORDWAINER</td><td class="xw-n">77,458</td><td class="xw-n xw-c">42.3%</td><td class="xw-t1">cordwainer</td><td class="xw-t2">&mdash;</td><td class="xw-p">&mdash;</td></tr>
+        <tr><td class="xw-s">BOOTMAKER</td><td class="xw-n">50,830</td><td class="xw-n xw-c">46.2%</td><td class="xw-t1">bootmaker</td><td class="xw-t2">&mdash;</td><td class="xw-p">boot</td></tr>
+        <tr><td class="xw-s">SHOE BINDER</td><td class="xw-n">33,703</td><td class="xw-n xw-c">48.9%</td><td class="xw-t1">binder</td><td class="xw-t2">&mdash;</td><td class="xw-p">shoe</td></tr>
+        <tr><td class="xw-s">SHOE FINISHER</td><td class="xw-n">31,231</td><td class="xw-n xw-c">51.3%</td><td class="xw-t1">finisher</td><td class="xw-t2">&mdash;</td><td class="xw-p">shoe</td></tr>
+        <tr><td class="xw-s">BOOT MACHINIST</td><td class="xw-n">28,036</td><td class="xw-n xw-c">53.4%</td><td class="xw-t1">machinist</td><td class="xw-t2">&mdash;</td><td class="xw-p">boot</td></tr>
+        <tr><td class="xw-s">BOOT &amp; SHOE MAKER</td><td class="xw-n">24,391</td><td class="xw-n xw-c">55.3%</td><td class="xw-t1">bootmaker</td><td class="xw-t2">shoemaker</td><td class="xw-p">boot</td></tr>
+        <tr><td class="xw-s">BOOT FINISHER</td><td class="xw-n">24,324</td><td class="xw-n xw-c">57.2%</td><td class="xw-t1">finisher</td><td class="xw-t2">&mdash;</td><td class="xw-p">boot</td></tr>
+        <tr><td class="xw-s">BOOT REPAIRER</td><td class="xw-n">23,769</td><td class="xw-n xw-c">59.1%</td><td class="xw-t1">repairer</td><td class="xw-t2">&mdash;</td><td class="xw-p">boot</td></tr>
+        <tr><td class="xw-s">SHOE MACHINIST</td><td class="xw-n">18,997</td><td class="xw-n xw-c">60.5%</td><td class="xw-t1">machinist</td><td class="xw-t2">&mdash;</td><td class="xw-p">shoe</td></tr>
+        <tr><td class="xw-s">BOOT BINDER</td><td class="xw-n">17,434</td><td class="xw-n xw-c">61.9%</td><td class="xw-t1">binder</td><td class="xw-t2">&mdash;</td><td class="xw-p">boot</td></tr>
+        <tr><td class="xw-s">BOOT CLOSER</td><td class="xw-n">15,216</td><td class="xw-n xw-c">63.1%</td><td class="xw-t1">closer</td><td class="xw-t2">&mdash;</td><td class="xw-p">boot</td></tr>
+        <tr><td class="xw-s">SHOE RIVETTER</td><td class="xw-n">14,889</td><td class="xw-n xw-c">64.2%</td><td class="xw-t1">rivetter</td><td class="xw-t2">&mdash;</td><td class="xw-p">shoe</td></tr>
+        <tr><td class="xw-s">SHOE FITTER</td><td class="xw-n">12,722</td><td class="xw-n xw-c">65.2%</td><td class="xw-t1">fitter</td><td class="xw-t2">&mdash;</td><td class="xw-p">shoe</td></tr>
+        <tr><td class="xw-s">BOOT AND SHOE MAKER</td><td class="xw-n">12,056</td><td class="xw-n xw-c">66.1%</td><td class="xw-t1">bootmaker</td><td class="xw-t2">shoemaker</td><td class="xw-p">boot</td></tr>
+        <tr><td class="xw-s">BOOT FITTER</td><td class="xw-n">10,400</td><td class="xw-n xw-c">66.9%</td><td class="xw-t1">fitter</td><td class="xw-t2">&mdash;</td><td class="xw-p">boot</td></tr>
+        <tr><td class="xw-s">SHOE CLICKER</td><td class="xw-n">9,089</td><td class="xw-n xw-c">67.6%</td><td class="xw-t1">clicker</td><td class="xw-t2">&mdash;</td><td class="xw-p">shoe</td></tr>
+        <tr><td class="xw-s">CLICKER</td><td class="xw-n">8,955</td><td class="xw-n xw-c">68.3%</td><td class="xw-t1">clicker</td><td class="xw-t2">&mdash;</td><td class="xw-p">&mdash;</td></tr>
+      </tbody>
+    </table>
+
+    <div class="xw-note">The twenty most frequent strings, 68% of all records in the
+      occode. One row per distinct string; the map runs to every string of ten records
+      or more.</div>
 
   </div>
 </section>
+
+<style>
+  #xw .xw-head { display: flex; justify-content: space-between; align-items: baseline;
+    flex-wrap: wrap; gap: 14px; margin: 4px 0 20px; }
+  #xw .xw-who { font-size: 1.04rem; color: #2b2b2b; }
+  #xw .xw-fig { font-size: .9rem; color: #666; }
+  #xw .xw-fig strong { color: #238B45; }
+
+  #xw .xw-table { border-collapse: collapse; width: 100%; max-width: 1180px;
+    font-size: .93rem; font-variant-numeric: tabular-nums; }
+  #xw .xw-table th { text-align: left; font-weight: 700; color: #222; font-size: .8rem;
+    letter-spacing: .04em; text-transform: uppercase;
+    padding: 0 18px 8px 0; border-bottom: 2px solid #238B45; }
+  #xw .xw-table td { padding: 6px 18px 6px 0; border-bottom: 1px solid #f0f0f0; color: #2b2b2b; }
+  #xw .xw-table tr:last-child td { border-bottom: 0; }
+  #xw .xw-n { text-align: right; padding-right: 18px; }
+  #xw .xw-c { color: #8a8a8a; }
+  #xw .xw-s { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: .88rem; color: #1f2429; white-space: nowrap; }
+  #xw .xw-t1 { font-weight: 600; color: #1a6b36; }
+  #xw .xw-t2 { color: #4a7c5e; }
+  #xw .xw-p  { color: #777; }
+  #xw .xw-note { font-size: .78rem; color: #8f8f8f; line-height: 1.6; margin: 20px 0 0;
+    max-width: 1000px; }
+</style>
 
 
 <section class="frame frame--section">
