@@ -1,7 +1,7 @@
 ---
 layout: single
 title: "Mapping the Second Industrial Revolution"
-permalink: /Warwick/
+permalink: /warwick/
 classes: wide
 noindex: true
 ---
@@ -381,6 +381,120 @@ body.present .page__content { padding-top: 0 !important; }
     .in-list li, .in-num li { font-size:1rem; }
   }
 </style>
+
+
+<section class="frame frame--section">
+  <h2>Methods</h2>
+</section>
+
+
+<section class="frame">
+  <div class="in-kicker">Methods</div>
+<h3>1. Overview</h3>
+  <div class="frame__body" id="mth-ov">
+
+    <ol class="in-num">
+      <li>6.5 million unique strings describing occupation</li>
+      <li>Around 800 occupation codes</li>
+      <li>The census gives us some help: enumerators worked to written instructions
+        <ol class="in-sub mth-alpha">
+          <li>Most important job first</li>
+          <li class="mth-slot">second instruction &mdash; to come</li>
+        </ol>
+      </li>
+    </ol>
+
+  </div>
+</section>
+
+<style>
+  /* shared by the five Methods slides */
+  .mth-alpha { counter-reset: mthalpha; }
+  .mth-alpha > li { counter-increment: mthalpha; position: relative; padding-left: 26px; }
+  .mth-alpha > li::before {
+    content: counter(mthalpha, lower-alpha) "."; position: absolute; left: 0; top: 0;
+    color: #238B45; font-weight: 700;
+  }
+  .mth-slot { color: #a89a73; font-style: italic; }
+  .mth-todo {
+    border: 1px dashed #d8c48a; background: #fffbe9; color: #7a5c00;
+    padding: 18px 22px; border-radius: 4px; max-width: 760px;
+    line-height: 1.6; font-size: 1rem;
+  }
+</style>
+
+
+<section class="frame">
+  <div class="in-kicker">Methods</div>
+<h3>2. Process: Three Challenges</h3>
+  <div class="frame__body">
+
+    <ol class="in-num in-list--wide">
+      <li>Topic discovery</li>
+      <li>Entity resolution and spelling</li>
+      <li>Order of priority when the tasks differ</li>
+    </ol>
+
+  </div>
+</section>
+
+
+<section class="frame">
+  <div class="in-kicker">Methods</div>
+<h3>3. Pipeline</h3>
+  <div class="frame__body">
+
+    <div class="pl-cols">
+      <div class="pl-col">
+        <div class="pl-head">1</div>
+        <div class="pl-body mth-slot">to come</div>
+      </div>
+      <div class="pl-col">
+        <div class="pl-head">2</div>
+        <div class="pl-body mth-slot">to come</div>
+      </div>
+      <div class="pl-col">
+        <div class="pl-head">3</div>
+        <div class="pl-body mth-slot">to come</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .pl-cols { display: flex; gap: 34px; align-items: stretch; margin-top: 30px; }
+  .pl-col {
+    flex: 1 1 0; min-width: 0; display: flex; flex-direction: column;
+    border: 1px solid #e4e4e4; border-top: 3px solid #238B45;
+    border-radius: 3px; padding: 20px 22px; min-height: 420px;
+  }
+  .pl-head { font-size: 1.05rem; font-weight: 700; color: #238B45; margin-bottom: 14px; }
+  .pl-body { font-size: 1rem; line-height: 1.6; color: #333; }
+  @media (max-width: 900px) { .pl-cols { flex-direction: column; } .pl-col { min-height: 0; } }
+</style>
+
+
+<section class="frame">
+  <div class="in-kicker">Methods</div>
+<h3>4. Current Process</h3>
+  <div class="frame__body">
+
+    <div class="mth-todo">Content to come.</div>
+
+  </div>
+</section>
+
+
+<section class="frame">
+  <div class="in-kicker">Methods</div>
+<h3>5. Output</h3>
+  <div class="frame__body">
+
+    <div class="mth-todo">Content to come.</div>
+
+  </div>
+</section>
 
 
 <section class="frame frame--section">
@@ -917,120 +1031,6 @@ body.present .page__content { padding-top: 0 !important; }
 </script>
 </div>
 </div>
-</section>
-
-
-<section class="frame frame--section">
-  <h2>Methods</h2>
-</section>
-
-
-<section class="frame">
-  <div class="in-kicker">Methods</div>
-<h3>1. Overview</h3>
-  <div class="frame__body" id="mth-ov">
-
-    <ol class="in-num">
-      <li>6.5 million unique strings describing occupation</li>
-      <li>Around 800 occupation codes</li>
-      <li>The census gives us some help: enumerators worked to written instructions
-        <ol class="in-sub mth-alpha">
-          <li>Most important job first</li>
-          <li class="mth-slot">second instruction &mdash; to come</li>
-        </ol>
-      </li>
-    </ol>
-
-  </div>
-</section>
-
-<style>
-  /* shared by the five Methods slides */
-  .mth-alpha { counter-reset: mthalpha; }
-  .mth-alpha > li { counter-increment: mthalpha; position: relative; padding-left: 26px; }
-  .mth-alpha > li::before {
-    content: counter(mthalpha, lower-alpha) "."; position: absolute; left: 0; top: 0;
-    color: #238B45; font-weight: 700;
-  }
-  .mth-slot { color: #a89a73; font-style: italic; }
-  .mth-todo {
-    border: 1px dashed #d8c48a; background: #fffbe9; color: #7a5c00;
-    padding: 18px 22px; border-radius: 4px; max-width: 760px;
-    line-height: 1.6; font-size: 1rem;
-  }
-</style>
-
-
-<section class="frame">
-  <div class="in-kicker">Methods</div>
-<h3>2. Process: Three Challenges</h3>
-  <div class="frame__body">
-
-    <ol class="in-num in-list--wide">
-      <li>Topic discovery</li>
-      <li>Entity resolution and spelling</li>
-      <li>Order of priority when the tasks differ</li>
-    </ol>
-
-  </div>
-</section>
-
-
-<section class="frame">
-  <div class="in-kicker">Methods</div>
-<h3>3. Pipeline</h3>
-  <div class="frame__body">
-
-    <div class="pl-cols">
-      <div class="pl-col">
-        <div class="pl-head">1</div>
-        <div class="pl-body mth-slot">to come</div>
-      </div>
-      <div class="pl-col">
-        <div class="pl-head">2</div>
-        <div class="pl-body mth-slot">to come</div>
-      </div>
-      <div class="pl-col">
-        <div class="pl-head">3</div>
-        <div class="pl-body mth-slot">to come</div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<style>
-  .pl-cols { display: flex; gap: 34px; align-items: stretch; margin-top: 30px; }
-  .pl-col {
-    flex: 1 1 0; min-width: 0; display: flex; flex-direction: column;
-    border: 1px solid #e4e4e4; border-top: 3px solid #238B45;
-    border-radius: 3px; padding: 20px 22px; min-height: 420px;
-  }
-  .pl-head { font-size: 1.05rem; font-weight: 700; color: #238B45; margin-bottom: 14px; }
-  .pl-body { font-size: 1rem; line-height: 1.6; color: #333; }
-  @media (max-width: 900px) { .pl-cols { flex-direction: column; } .pl-col { min-height: 0; } }
-</style>
-
-
-<section class="frame">
-  <div class="in-kicker">Methods</div>
-<h3>4. Current Process</h3>
-  <div class="frame__body">
-
-    <div class="mth-todo">Content to come.</div>
-
-  </div>
-</section>
-
-
-<section class="frame">
-  <div class="in-kicker">Methods</div>
-<h3>5. Output</h3>
-  <div class="frame__body">
-
-    <div class="mth-todo">Content to come.</div>
-
-  </div>
 </section>
 
 
