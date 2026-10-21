@@ -852,13 +852,38 @@ body.present .page__content { padding-top: 0 !important; }
 
     { id: "f", name: "Final", sub: "deliverables", fin: true,
       steps: [
-        ["x", "1", "The R file", "everything decided for the occode, by hand, with the reason"],
-        ["x", "2", "The decisions", "the occode's signed-off block in the order file"],
-        ["x", "3", "The report", "coverage by step, passes, priority, residue, in trade, cost"],
-        ["x", "4", "The task descriptions", "a definition for every label the occode uses"],
-        ["x", "5", "The crosswalk", "the task map itself: one row per distinct string"]
+        ["x", "1", "The crosswalk", "by occupation code and rec ID", "xw"],
+        ["x", "2", "The report", "the industry in brief and a little history for context, the core tasks, what we found, the share assigned, and the key decisions taken in coding it"],
+        ["x", "3", "The R file", "everything decided for the occode, by hand, with the reason"],
+        ["x", "4", "The task descriptions", "a definition for every label the occode uses"]
       ] }
   ];
+
+  var XW = [
+    ["SHOEMAKER",                "shoemaker", "",          "shoe", "", "",                  ""],
+    ["BOOT &amp; SHOE MAKER",    "bootmaker", "shoemaker", "boot", "", "",                  ""],
+    ["BOOT MACHINIST",           "machinist", "",          "boot", "", "",                  ""],
+    ["SHOEMAKER MASTER",         "shoemaker", "",          "shoe", "", "master",            ""],
+    ["SHOEMAKERS APPRENTICE",    "shoemaker", "",          "shoe", "", "apprentice",        ""],
+    ["SHOEMAKER JOURNEYMAN",     "shoemaker", "",          "shoe", "", "journeyman",        ""],
+    ["RETIRED SHOEMAKER",        "shoemaker", "",          "shoe", "", "retired",           ""],
+    ["BOOT SHOP ASSISTANT",      "assistant", "",          "boot", "", "assistant, shop",   ""],
+    ["RUBBER SHOE MAKER",        "shoemaker", "",          "shoe", "rubber", "",            ""],
+    ["SHOEMAKER EMPLOYING 1 MAN","shoemaker", "",          "shoe", "", "",                  "employing"]
+  ];
+
+  function xwTable(){
+    var h = '<table class="cp-xw"><thead><tr><th>string</th><th>task 1</th><th>task 2</th>'
+          + '<th>product</th><th>material</th><th>qualifiers</th><th>employing</th>'
+          + '</tr></thead><tbody>';
+    XW.forEach(function(r){
+      h += '<tr><td class="cp-xwr">' + r[0] + '</td><td class="cp-xwt">' + r[1] + '</td>'
+         + '<td class="cp-xwt2">' + (r[2] || '&mdash;') + '</td>'
+         + '<td>' + (r[3] || '&mdash;') + '</td><td>' + (r[4] || '&mdash;') + '</td>'
+         + '<td>' + (r[5] || '&mdash;') + '</td><td>' + (r[6] || '&mdash;') + '</td></tr>';
+    });
+    return h + '</tbody></table>';
+  }
 
   var flow = document.getElementById("cp-flow");
   var panel = document.getElementById("cp-panel");
@@ -883,9 +908,13 @@ body.present .page__content { padding-top: 0 !important; }
     });
     var h = '<h4 class="cp-ph">' + r.name + ' <span>' + r.sub + '</span></h4><ol class="cp-steps">';
     r.steps.forEach(function(s){
-      h += '<li class="cp-step cp-' + s[0] + '"><span class="cp-sn">' + s[1] + '</span>' +
-           '<span class="cp-sb"><span class="cp-st">' + s[2] + '</span>' +
-           '<span class="cp-sd">' + s[3] + '</span></span></li>';
+      var ex = s[4] ? ' <span class="cp-car" aria-hidden="true">&#9656;</span>' : '';
+      h += '<li class="cp-step cp-' + s[0] + (s[4] ? ' cp-has' : '') + '"'
+         + (s[4] ? ' data-ex="' + s[4] + '" tabindex="0" role="button" aria-expanded="false"' : '')
+         + '><span class="cp-sn">' + s[1] + '</span>'
+         + '<span class="cp-sb"><span class="cp-st">' + s[2] + ex + '</span>'
+         + '<span class="cp-sd">' + s[3] + '</span></span></li>';
+      if (s[4]) h += '<li class="cp-exwrap" hidden>' + xwTable() + '</li>';
     });
     h += '</ol>';
     if (r.input) {
@@ -894,6 +923,17 @@ body.present .page__content { padding-top: 0 !important; }
            '<span class="cp-sd">' + r.input[2] + '</span></span></div>';
     }
     panel.innerHTML = h;
+    panel.querySelectorAll(".cp-has").forEach(function(el){
+      function toggle(){
+        var open = el.getAttribute("aria-expanded") === "true";
+        el.setAttribute("aria-expanded", open ? "false" : "true");
+        el.nextElementSibling.hidden = open;
+      }
+      el.addEventListener("click", toggle);
+      el.addEventListener("keydown", function(e){
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
+      });
+    });
   }
   show("a");
 })();
@@ -970,6 +1010,23 @@ body.present .page__content { padding-top: 0 !important; }
   #cp .cp-h .cp-sn { color: var(--hui); }
   #cp .cp-x .cp-sn { color: #1a6b36; }
   #cp .cp-sb { min-width: 0; padding-right: 58px; }
+  #cp .cp-has { cursor: pointer; }
+  #cp .cp-has:hover .cp-car { color: #1a6b36; }
+  #cp .cp-car { display: inline-block; color: #238B45; font-size: .8em; margin-left: 5px;
+    transition: transform .14s ease; }
+  #cp .cp-has[aria-expanded="true"] .cp-car { transform: rotate(90deg); }
+  #cp .cp-exwrap { list-style: none; margin: -2px 0 9px; }
+  #cp .cp-xw { border-collapse: collapse; width: 100%; font-size: .78rem;
+    font-variant-numeric: tabular-nums; }
+  #cp .cp-xw th { text-align: left; font-size: .64rem; letter-spacing: .05em;
+    text-transform: uppercase; color: #555; font-weight: 700;
+    padding: 0 10px 5px 0; border-bottom: 1px solid #238B45; }
+  #cp .cp-xw td { padding: 4px 10px 4px 0; border-bottom: 1px solid #f2f2f2; color: #444; }
+  #cp .cp-xw tr:last-child td { border-bottom: 0; }
+  #cp .cp-xwr { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .74rem;
+    color: #1f2429; white-space: nowrap; }
+  #cp .cp-xwt { font-weight: 600; color: #1a6b36; }
+  #cp .cp-xwt2 { color: #4a7c5e; }
   #cp .cp-st { display: block; font-weight: 600; font-size: .97rem; color: #1f2429; }
   #cp .cp-sd { display: block; font-size: .84rem; line-height: 1.5; color: #555d66; margin-top: 2px; }
 
@@ -983,75 +1040,36 @@ body.present .page__content { padding-top: 0 !important; }
 
 <section class="frame">
   <div class="in-kicker">Methods</div>
-<h3>5. Output</h3>
-  <div class="frame__body" id="xw">
+<h3>5. Aims of the Method</h3>
+  <div class="frame__body" id="am">
 
-    <div class="xw-head">
-      <div class="xw-who"><strong>occode 663</strong> &middot; Shoe and boot makers
-        (and repairers)</div>
-      <div class="xw-fig">34,685 distinct strings &middot; 1,300,892 records &middot;
-        <strong>99.64%</strong> with a Task&nbsp;1</div>
-    </div>
-
-    <table class="xw-table">
-      <thead><tr>
-        <th>string</th><th class="xw-n">records</th><th class="xw-n">cum&nbsp;%</th>
-        <th>task 1</th><th>task 2</th><th>product</th>
-      </tr></thead>
-      <tbody>
-        <tr><td class="xw-s">SHOEMAKER</td><td class="xw-n">204,192</td><td class="xw-n xw-c">15.8%</td><td class="xw-t1">shoemaker</td><td class="xw-t2">&mdash;</td><td class="xw-p">shoe</td></tr>
-        <tr><td class="xw-s">SHOE MAKER</td><td class="xw-n">168,665</td><td class="xw-n xw-c">28.9%</td><td class="xw-t1">shoemaker</td><td class="xw-t2">&mdash;</td><td class="xw-p">shoe</td></tr>
-        <tr><td class="xw-s">BOOT MAKER</td><td class="xw-n">95,594</td><td class="xw-n xw-c">36.3%</td><td class="xw-t1">bootmaker</td><td class="xw-t2">&mdash;</td><td class="xw-p">boot</td></tr>
-        <tr><td class="xw-s">CORDWAINER</td><td class="xw-n">77,458</td><td class="xw-n xw-c">42.3%</td><td class="xw-t1">cordwainer</td><td class="xw-t2">&mdash;</td><td class="xw-p">&mdash;</td></tr>
-        <tr><td class="xw-s">BOOTMAKER</td><td class="xw-n">50,830</td><td class="xw-n xw-c">46.2%</td><td class="xw-t1">bootmaker</td><td class="xw-t2">&mdash;</td><td class="xw-p">boot</td></tr>
-        <tr><td class="xw-s">SHOE BINDER</td><td class="xw-n">33,703</td><td class="xw-n xw-c">48.9%</td><td class="xw-t1">binder</td><td class="xw-t2">&mdash;</td><td class="xw-p">shoe</td></tr>
-        <tr><td class="xw-s">SHOE FINISHER</td><td class="xw-n">31,231</td><td class="xw-n xw-c">51.3%</td><td class="xw-t1">finisher</td><td class="xw-t2">&mdash;</td><td class="xw-p">shoe</td></tr>
-        <tr><td class="xw-s">BOOT MACHINIST</td><td class="xw-n">28,036</td><td class="xw-n xw-c">53.4%</td><td class="xw-t1">machinist</td><td class="xw-t2">&mdash;</td><td class="xw-p">boot</td></tr>
-        <tr><td class="xw-s">BOOT &amp; SHOE MAKER</td><td class="xw-n">24,391</td><td class="xw-n xw-c">55.3%</td><td class="xw-t1">bootmaker</td><td class="xw-t2">shoemaker</td><td class="xw-p">boot</td></tr>
-        <tr><td class="xw-s">BOOT FINISHER</td><td class="xw-n">24,324</td><td class="xw-n xw-c">57.2%</td><td class="xw-t1">finisher</td><td class="xw-t2">&mdash;</td><td class="xw-p">boot</td></tr>
-        <tr><td class="xw-s">BOOT REPAIRER</td><td class="xw-n">23,769</td><td class="xw-n xw-c">59.1%</td><td class="xw-t1">repairer</td><td class="xw-t2">&mdash;</td><td class="xw-p">boot</td></tr>
-        <tr><td class="xw-s">SHOE MACHINIST</td><td class="xw-n">18,997</td><td class="xw-n xw-c">60.5%</td><td class="xw-t1">machinist</td><td class="xw-t2">&mdash;</td><td class="xw-p">shoe</td></tr>
-        <tr><td class="xw-s">BOOT BINDER</td><td class="xw-n">17,434</td><td class="xw-n xw-c">61.9%</td><td class="xw-t1">binder</td><td class="xw-t2">&mdash;</td><td class="xw-p">boot</td></tr>
-        <tr><td class="xw-s">BOOT CLOSER</td><td class="xw-n">15,216</td><td class="xw-n xw-c">63.1%</td><td class="xw-t1">closer</td><td class="xw-t2">&mdash;</td><td class="xw-p">boot</td></tr>
-        <tr><td class="xw-s">SHOE RIVETTER</td><td class="xw-n">14,889</td><td class="xw-n xw-c">64.2%</td><td class="xw-t1">rivetter</td><td class="xw-t2">&mdash;</td><td class="xw-p">shoe</td></tr>
-        <tr><td class="xw-s">SHOE FITTER</td><td class="xw-n">12,722</td><td class="xw-n xw-c">65.2%</td><td class="xw-t1">fitter</td><td class="xw-t2">&mdash;</td><td class="xw-p">shoe</td></tr>
-        <tr><td class="xw-s">BOOT AND SHOE MAKER</td><td class="xw-n">12,056</td><td class="xw-n xw-c">66.1%</td><td class="xw-t1">bootmaker</td><td class="xw-t2">shoemaker</td><td class="xw-p">boot</td></tr>
-        <tr><td class="xw-s">BOOT FITTER</td><td class="xw-n">10,400</td><td class="xw-n xw-c">66.9%</td><td class="xw-t1">fitter</td><td class="xw-t2">&mdash;</td><td class="xw-p">boot</td></tr>
-        <tr><td class="xw-s">SHOE CLICKER</td><td class="xw-n">9,089</td><td class="xw-n xw-c">67.6%</td><td class="xw-t1">clicker</td><td class="xw-t2">&mdash;</td><td class="xw-p">shoe</td></tr>
-        <tr><td class="xw-s">CLICKER</td><td class="xw-n">8,955</td><td class="xw-n xw-c">68.3%</td><td class="xw-t1">clicker</td><td class="xw-t2">&mdash;</td><td class="xw-p">&mdash;</td></tr>
-      </tbody>
-    </table>
-
-    <div class="xw-note">The twenty most frequent strings, 68% of all records in the
-      occode. One row per distinct string; the map runs to every string of ten records
-      or more.</div>
+    <ol class="am-list">
+      <li><span class="am-n">1</span><span class="am-w">Understandable</span></li>
+      <li><span class="am-n">2</span><span class="am-w">Replicable</span></li>
+      <li><span class="am-n">3</span><span class="am-w">Inexpensive</span></li>
+      <li><span class="am-n">4</span><span class="am-w">Modular</span></li>
+    </ol>
 
   </div>
 </section>
 
 <style>
-  #xw .xw-head { display: flex; justify-content: space-between; align-items: baseline;
-    flex-wrap: wrap; gap: 14px; margin: 4px 0 20px; }
-  #xw .xw-who { font-size: 1.04rem; color: #2b2b2b; }
-  #xw .xw-fig { font-size: .9rem; color: #666; }
-  #xw .xw-fig strong { color: #238B45; }
+  #am .am-list { list-style: none; margin: 26px 0 0; padding: 0; max-width: 820px; }
+  #am .am-list li {
+    display: flex; align-items: baseline; gap: 22px;
+    padding: 18px 0; border-bottom: 1px solid #ececec;
+  }
+  #am .am-list li:last-child { border-bottom: 0; }
+  #am .am-n {
+    flex: 0 0 auto; width: 1.5em; font-size: 1.5rem; font-weight: 700;
+    color: #8fc3a4; font-variant-numeric: tabular-nums;
+  }
+  #am .am-w { font-size: 2rem; font-weight: 600; color: #1f2429; letter-spacing: -.01em; }
 
-  #xw .xw-table { border-collapse: collapse; width: 100%; max-width: 1180px;
-    font-size: .93rem; font-variant-numeric: tabular-nums; }
-  #xw .xw-table th { text-align: left; font-weight: 700; color: #222; font-size: .8rem;
-    letter-spacing: .04em; text-transform: uppercase;
-    padding: 0 18px 8px 0; border-bottom: 2px solid #238B45; }
-  #xw .xw-table td { padding: 6px 18px 6px 0; border-bottom: 1px solid #f0f0f0; color: #2b2b2b; }
-  #xw .xw-table tr:last-child td { border-bottom: 0; }
-  #xw .xw-n { text-align: right; padding-right: 18px; }
-  #xw .xw-c { color: #8a8a8a; }
-  #xw .xw-s { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    font-size: .88rem; color: #1f2429; white-space: nowrap; }
-  #xw .xw-t1 { font-weight: 600; color: #1a6b36; }
-  #xw .xw-t2 { color: #4a7c5e; }
-  #xw .xw-p  { color: #777; }
-  #xw .xw-note { font-size: .78rem; color: #8f8f8f; line-height: 1.6; margin: 20px 0 0;
-    max-width: 1000px; }
+  @media (max-width: 760px) {
+    #am .am-w { font-size: 1.5rem; }
+    #am .am-n { font-size: 1.2rem; }
+  }
 </style>
 
 
