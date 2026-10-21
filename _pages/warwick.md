@@ -859,30 +859,52 @@ body.present .page__content { padding-top: 0 !important; }
       ] }
   ];
 
+  // record identifiers stand in for the linked census records; every string and
+  // every coding beside them is real, from occode 663
+  var RECID = ["10418827","10418903","10419264","10419518","10420077","10420431",
+               "10420884","10421250","10421693","10422018","10422547","10422961",
+               "10423304","10423752","10424186","10424530","10425097","10425418",
+               "10425863","10426204"];
+
   var XW = [
-    ["SHOEMAKER",                "shoemaker", "",          "shoe", "", "",                  ""],
-    ["BOOT &amp; SHOE MAKER",    "bootmaker", "shoemaker", "boot", "", "",                  ""],
-    ["BOOT MACHINIST",           "machinist", "",          "boot", "", "",                  ""],
-    ["SHOEMAKER MASTER",         "shoemaker", "",          "shoe", "", "master",            ""],
-    ["SHOEMAKERS APPRENTICE",    "shoemaker", "",          "shoe", "", "apprentice",        ""],
-    ["SHOEMAKER JOURNEYMAN",     "shoemaker", "",          "shoe", "", "journeyman",        ""],
-    ["RETIRED SHOEMAKER",        "shoemaker", "",          "shoe", "", "retired",           ""],
-    ["BOOT SHOP ASSISTANT",      "assistant", "",          "boot", "", "assistant, shop",   ""],
-    ["RUBBER SHOE MAKER",        "shoemaker", "",          "shoe", "rubber", "",            ""],
-    ["SHOEMAKER EMPLOYING 1 MAN","shoemaker", "",          "shoe", "", "",                  "employing"]
+    ["SHOEMAKER",                 "shoemaker",  "",          "shoe", "", "",                ""],
+    ["BOOT MAKER",                "bootmaker",  "",          "boot", "", "",                ""],
+    ["CORDWAINER",                "cordwainer", "",          "",     "", "",                ""],
+    ["BOOT &amp; SHOE MAKER",     "bootmaker",  "shoemaker", "boot", "", "",                ""],
+    ["SHOE BINDER",               "binder",     "",          "shoe", "", "",                ""],
+    ["SHOE FINISHER",             "finisher",   "",          "shoe", "", "",                ""],
+    ["BOOT CLOSER",               "closer",     "",          "boot", "", "",                ""],
+    ["SHOE CLICKER",              "clicker",    "",          "shoe", "", "",                ""],
+    ["BOOT LASTER",               "laster",     "",          "boot", "", "",                ""],
+    ["SHOE RIVETTER",             "rivetter",   "",          "shoe", "", "",                ""],
+    ["BOOT MACHINIST",            "machinist",  "",          "boot", "", "",                ""],
+    ["SHOE PRESSMAN",             "pressman",   "",          "shoe", "", "",                ""],
+    ["BOOT REPAIRER",             "repairer",   "",          "boot", "", "",                ""],
+    ["PASTE FITTER",              "fitter",     "",          "",     "paste",  "",          ""],
+    ["RUBBER SHOE MAKER",         "shoemaker",  "",          "shoe", "rubber", "",          ""],
+    ["CORDWAINER JOURNEYMAN",     "cordwainer", "",          "",     "", "journeyman",      ""],
+    ["SHOEMAKERS APPRENTICE",     "shoemaker",  "",          "shoe", "", "apprentice",      ""],
+    ["RETIRED BOOTMAKER",         "bootmaker",  "",          "boot", "", "retired",         ""],
+    ["BOOT SHOP ASSISTANT",       "assistant",  "",          "boot", "", "assistant, shop", ""],
+    ["SHOEMAKER EMPLOYING 1 MAN", "shoemaker",  "",          "shoe", "", "",                "employing"]
   ];
 
+
   function xwTable(){
-    var h = '<table class="cp-xw"><thead><tr><th>string</th><th>task 1</th><th>task 2</th>'
+    var h = '<table class="cp-xw"><thead><tr><th>RecID</th><th>OCC</th>'
+          + '<th>task 1</th><th>task 2</th>'
           + '<th>product</th><th>material</th><th>qualifiers</th><th>employing</th>'
           + '</tr></thead><tbody>';
-    XW.forEach(function(r){
-      h += '<tr><td class="cp-xwr">' + r[0] + '</td><td class="cp-xwt">' + r[1] + '</td>'
+    XW.forEach(function(r, i){
+      h += '<tr><td class="cp-xwid">' + RECID[i] + '</td>'
+         + '<td class="cp-xwr">' + r[0] + '</td><td class="cp-xwt">' + r[1] + '</td>'
          + '<td class="cp-xwt2">' + (r[2] || '&mdash;') + '</td>'
          + '<td>' + (r[3] || '&mdash;') + '</td><td>' + (r[4] || '&mdash;') + '</td>'
          + '<td>' + (r[5] || '&mdash;') + '</td><td>' + (r[6] || '&mdash;') + '</td></tr>';
     });
-    return h + '</tbody></table>';
+    return h + '</tbody></table>'
+      + '<p class="cp-xwn">Strings and codings are real, from occode 663. '
+      + 'RecIDs stand in for the linked census records.</p>';
   }
 
   var flow = document.getElementById("cp-flow");
@@ -942,7 +964,7 @@ body.present .page__content { padding-top: 0 !important; }
 <style>
   #cp { --sc: #dfe8f3; --sci: #1f4f86; --hu: #ffdf9e; --hui: #7a4300; --mo: #f6cdea; --moi: #8a1462; }
 
-  #cp .cp-top { max-width: 1192px; margin: 4px 0 44px; }
+  #cp .cp-top { max-width: 1412px; margin: 4px 0 44px; }
   /* legend lifted from the pipeline artifact: light fill, thick coloured left
      edge, so each swatch mirrors the step block it stands for */
   #cp .cp-key { gap: 14px; flex-wrap: wrap; font-size: .85rem; color: #5e6670; }
@@ -957,7 +979,7 @@ body.present .page__content { padding-top: 0 !important; }
   #cp .cp-stat strong { color: #238B45; }
 
   #cp .cp-wrap { display: flex; gap: 140px; align-items: flex-start;
-    max-width: 1192px; }
+    max-width: 1412px; }
   #cp .cp-left { flex: 0 0 372px; }
   #cp .cp-flow { display: flex; flex-direction: column; }
   /* the legend and the panel heading share a height, so Run A and the panel's
@@ -980,7 +1002,7 @@ body.present .page__content { padding-top: 0 !important; }
   #cp .cp-blk--fin[aria-current="true"] { box-shadow: 0 0 0 2px #238B45 inset; }
   #cp .cp-bn { font-weight: 700; font-size: 1.3rem; letter-spacing: -.01em; }
 
-  #cp .cp-panel { flex: 1 1 auto; min-width: 0; max-width: 680px; min-height: 430px; }
+  #cp .cp-panel { flex: 1 1 auto; min-width: 0; max-width: 900px; min-height: 430px; }
   #cp .cp-ph { font-size: 1.1rem; font-weight: 700; color: #1f2429; gap: 7px; }
   #cp .cp-ph span { font-weight: 400; color: #8a8a8a; font-size: .9rem; }
 
@@ -1023,10 +1045,13 @@ body.present .page__content { padding-top: 0 !important; }
     padding: 0 10px 5px 0; border-bottom: 1px solid #238B45; }
   #cp .cp-xw td { padding: 4px 10px 4px 0; border-bottom: 1px solid #f2f2f2; color: #444; }
   #cp .cp-xw tr:last-child td { border-bottom: 0; }
+  #cp .cp-xwid { color: #9a9a9a; font-variant-numeric: tabular-nums; text-align: right;
+    padding-right: 14px; }
   #cp .cp-xwr { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .74rem;
     color: #1f2429; white-space: nowrap; }
   #cp .cp-xwt { font-weight: 600; color: #1a6b36; }
   #cp .cp-xwt2 { color: #4a7c5e; }
+  #cp .cp-xwn { font-size: .7rem; color: #a0a0a0; margin: 9px 0 0; }
   #cp .cp-st { display: block; font-weight: 600; font-size: .97rem; color: #1f2429; }
   #cp .cp-sd { display: block; font-size: .84rem; line-height: 1.5; color: #555d66; margin-top: 2px; }
 
