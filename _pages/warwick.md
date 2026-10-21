@@ -922,9 +922,7 @@ body.present .page__content { padding-top: 0 !important; }
          + '<td>' + (r[3] || '&mdash;') + '</td><td>' + (r[4] || '&mdash;') + '</td>'
          + '<td>' + (r[5] || '&mdash;') + '</td><td>' + (r[6] || '&mdash;') + '</td></tr>';
     });
-    return h + '</tbody></table>'
-      + '<p class="cp-xwn">Strings and codings are real, from occode 663. '
-      + 'RecIDs stand in for the linked census records.</p>';
+    return h + '</tbody></table>';
   }
 
   function tdTable(){
