@@ -445,6 +445,7 @@ body.present .page__content { padding-top: 0 !important; }
   <div class="frame__body">
 
     <div class="pl-cols">
+
       <div class="pl-col">
         <div class="pl-head">1</div>
         <div class="pl-body">
@@ -457,16 +458,66 @@ body.present .page__content { padding-top: 0 !important; }
           </a>
           <div class="pl-cap">Incremental ML model for topic assignment
             <span class="pl-src">&mdash; Figure D1, Appendix D.2</span></div>
+
+          <div class="pl-who">
+            <svg class="pl-stick" viewBox="0 0 64 76" aria-hidden="true">
+              <g fill="none" stroke="#3b3b3b" stroke-width="3.2"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="32" cy="13" r="9.5" fill="#fff"/>
+                <line x1="32" y1="22.5" x2="32" y2="48"/>
+                <line x1="32" y1="48" x2="21" y2="68"/>
+                <line x1="32" y1="48" x2="43" y2="68"/>
+                <line x1="32" y1="31" x2="19" y2="40"/>
+                <g class="pl-wave"><line x1="32" y1="31" x2="47" y2="20"/></g>
+              </g>
+              <circle cx="28.5" cy="12" r="1.5" fill="#3b3b3b"/>
+              <circle cx="35.5" cy="12" r="1.5" fill="#3b3b3b"/>
+              <path d="M28 16.5 Q32 19.5 36 16.5" fill="none" stroke="#3b3b3b"
+                    stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+            <div class="pl-wholab">Human in the loop</div>
+          </div>
         </div>
       </div>
+
       <div class="pl-col">
         <div class="pl-head">2</div>
-        <div class="pl-body mth-slot">to come</div>
+        <div class="pl-body">
+          <a class="pl-figlink" href="/assets/images/ml_topic_assignment.png" target="_blank"
+             rel="noopener" title="open full size">
+            <img class="pl-fig" src="/assets/images/ml_topic_assignment.png"
+                 alt="The same incremental machine learning model, with the user decisions
+                      now taken by Claude rather than by a person.">
+          </a>
+          <div class="pl-cap">The same loop, one substitution
+            <span class="pl-src">&mdash; the user decisions</span></div>
+
+          <div class="pl-who">
+            <svg class="pl-claude" viewBox="-20 -20 40 40" aria-hidden="true">
+              <g fill="#D97757">
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z"/>
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(32.73)"/>
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(65.45)"/>
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(98.18)"/>
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(130.91)"/>
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(163.64)"/>
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(196.36)"/>
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(229.09)"/>
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(261.82)"/>
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(294.55)"/>
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(327.27)"/>
+              </g>
+            </svg>
+            <div class="pl-wholab">Claude in the loop</div>
+          </div>
+        </div>
       </div>
+
       <div class="pl-col">
         <div class="pl-head">3</div>
         <div class="pl-body mth-slot">to come</div>
       </div>
+
     </div>
 
   </div>
@@ -481,11 +532,35 @@ body.present .page__content { padding-top: 0 !important; }
   }
   .pl-head { font-size: 1.05rem; font-weight: 700; color: #238B45; margin-bottom: 14px; }
   .pl-body { font-size: 1rem; line-height: 1.6; color: #333; }
+
   .pl-figlink { display: block; border: 1px solid #ececec; border-radius: 3px; padding: 6px; background: #fff; }
   .pl-figlink:hover { border-color: #238B45; }
   .pl-fig { width: 100%; height: auto; display: block; }
   .pl-cap { font-size: .8rem; color: #777; line-height: 1.45; margin-top: 10px; }
   .pl-src { color: #a0a0a0; }
+
+  /* the punchline: same loop, different hands on it */
+  .pl-who {
+    margin-top: 26px; padding-top: 20px; border-top: 1px dashed #e0e0e0;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .pl-stick { width: 52px; height: 62px; flex: 0 0 auto; }
+  .pl-claude { width: 50px; height: 50px; flex: 0 0 auto; }
+  .pl-wholab { font-size: 1.12rem; font-weight: 600; color: #2b2b2b; line-height: 1.3; }
+
+  .pl-wave { transform-origin: 32px 31px; animation: pl-wave 2.4s ease-in-out infinite; }
+  @keyframes pl-wave {
+    0%, 62%, 100% { transform: rotate(0deg); }
+    70%           { transform: rotate(-17deg); }
+    78%           { transform: rotate(9deg); }
+    86%           { transform: rotate(-13deg); }
+  }
+  .pl-claude { animation: pl-spin 18s linear infinite; }
+  @keyframes pl-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    .pl-wave, .pl-claude { animation: none; }
+  }
+
   @media (max-width: 900px) { .pl-cols { flex-direction: column; } .pl-col { min-height: 0; } }
 </style>
 
