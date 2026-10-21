@@ -432,7 +432,7 @@ body.present .page__content { padding-top: 0 !important; }
     <ol class="in-num in-list--wide">
       <li>Topic discovery</li>
       <li>Entity resolution and spelling</li>
-      <li>Order of priority when the tasks differ</li>
+      <li>Order of priority when there are two or more tasks</li>
     </ol>
 
   </div>
@@ -441,13 +441,23 @@ body.present .page__content { padding-top: 0 !important; }
 
 <section class="frame">
   <div class="in-kicker">Methods</div>
-<h3>3. Pipeline</h3>
+<h3>3. AI-Assisted Human Labeling</h3>
   <div class="frame__body">
 
     <div class="pl-cols">
       <div class="pl-col">
         <div class="pl-head">1</div>
-        <div class="pl-body mth-slot">to come</div>
+        <div class="pl-body">
+          <a class="pl-figlink" href="/assets/images/ml_topic_assignment.png" target="_blank"
+             rel="noopener" title="open full size">
+            <img class="pl-fig" src="/assets/images/ml_topic_assignment.png"
+                 alt="Incremental machine learning model for topic assignment: a deterministic
+                      track feeds an ML-hybrid loop that auto-assigns confident cases, asks the
+                      user about uncertain ones, and updates the model iteratively.">
+          </a>
+          <div class="pl-cap">Incremental ML model for topic assignment
+            <span class="pl-src">&mdash; Figure D1, Appendix D.2</span></div>
+        </div>
       </div>
       <div class="pl-col">
         <div class="pl-head">2</div>
@@ -471,13 +481,18 @@ body.present .page__content { padding-top: 0 !important; }
   }
   .pl-head { font-size: 1.05rem; font-weight: 700; color: #238B45; margin-bottom: 14px; }
   .pl-body { font-size: 1rem; line-height: 1.6; color: #333; }
+  .pl-figlink { display: block; border: 1px solid #ececec; border-radius: 3px; padding: 6px; background: #fff; }
+  .pl-figlink:hover { border-color: #238B45; }
+  .pl-fig { width: 100%; height: auto; display: block; }
+  .pl-cap { font-size: .8rem; color: #777; line-height: 1.45; margin-top: 10px; }
+  .pl-src { color: #a0a0a0; }
   @media (max-width: 900px) { .pl-cols { flex-direction: column; } .pl-col { min-height: 0; } }
 </style>
 
 
 <section class="frame">
   <div class="in-kicker">Methods</div>
-<h3>4. Current Process</h3>
+<h3>4. Current Pipeline</h3>
   <div class="frame__body">
 
     <div class="mth-todo">Content to come.</div>
