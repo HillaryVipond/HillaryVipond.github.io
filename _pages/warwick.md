@@ -515,7 +515,50 @@ body.present .page__content { padding-top: 0 !important; }
 
       <div class="pl-col">
         <div class="pl-head">3</div>
-        <div class="pl-body mth-slot">to come</div>
+        <div class="pl-body">
+          <div class="pl-mini">
+            <div class="pl-m pl-ms">Run A</div>
+            <div class="pl-m pl-mh"><b>1</b> I decide</div>
+            <div class="pl-m pl-ms">Run B</div>
+            <div class="pl-m pl-mh"><b>2</b> I decide</div>
+            <div class="pl-m pl-ms">Run C</div>
+            <div class="pl-m pl-mh"><b>3</b> I sign off</div>
+          </div>
+          <div class="pl-cap">This is what I do now. Next slide, in full.</div>
+
+          <div class="pl-who">
+            <svg class="pl-both" viewBox="0 0 86 50" aria-hidden="true">
+              <g fill="none" stroke="#3b3b3b" stroke-width="2.4"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="17" cy="11" r="7" fill="#fff"/>
+                <line x1="17" y1="18" x2="17" y2="33"/>
+                <line x1="17" y1="33" x2="9"  y2="46"/>
+                <line x1="17" y1="33" x2="25" y2="46"/>
+                <line x1="17" y1="23" x2="8"  y2="29"/>
+                <line x1="17" y1="23" x2="27" y2="28"/>
+              </g>
+              <circle cx="14.6" cy="10.2" r="1.2" fill="#3b3b3b"/>
+              <circle cx="19.4" cy="10.2" r="1.2" fill="#3b3b3b"/>
+              <path d="M14.4 13.6 Q17 15.8 19.6 13.6" fill="none" stroke="#3b3b3b"
+                    stroke-width="1.3" stroke-linecap="round"/>
+              <text x="40" y="31" font-size="15" fill="#9a9a9a">+</text>
+              <g fill="#D97757" transform="translate(68 25) scale(0.86)">
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z"/>
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(32.73)"/>
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(65.45)"/>
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(98.18)"/>
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(130.91)"/>
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(163.64)"/>
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(196.36)"/>
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(229.09)"/>
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(261.82)"/>
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(294.55)"/>
+                <path d="M-1.15 -3.6 L1.15 -3.6 L2.25 -15.6 L-2.25 -15.6 Z" transform="rotate(327.27)"/>
+              </g>
+            </svg>
+            <div class="pl-wholab">Both in the loop</div>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -545,6 +588,13 @@ body.present .page__content { padding-top: 0 !important; }
     display: flex; align-items: center; gap: 16px;
   }
   .pl-stick { width: 52px; height: 62px; flex: 0 0 auto; }
+  .pl-both { width: 86px; height: 50px; flex: 0 0 auto; }
+  .pl-mini { display: flex; flex-direction: column; gap: 5px; }
+  .pl-m { font-size: .98rem; line-height: 1.3; padding: 9px 12px; border-radius: 3px; font-weight: 600; }
+  .pl-m span { display: block; font-size: .74rem; color: #5e6670; margin-top: 2px; }
+  .pl-ms { background: #dfe8f3; border-left: 4px solid #1f4f86; font-weight: 600; color: #1f2429; }
+  .pl-mh { background: #ffdf9e; border-left: 4px solid #7a4300; color: #1f2429; }
+  .pl-mh b { color: #7a4300; margin-right: 5px; }
   .pl-claude { width: 50px; height: 50px; flex: 0 0 auto; }
   .pl-wholab { font-size: 1.12rem; font-weight: 600; color: #2b2b2b; line-height: 1.3; }
 
@@ -568,12 +618,126 @@ body.present .page__content { padding-top: 0 !important; }
 <section class="frame">
   <div class="in-kicker">Methods</div>
 <h3>4. Current Pipeline</h3>
-  <div class="frame__body">
+  <div class="frame__body" id="cp">
 
-    <div class="mth-todo">Content to come.</div>
+    <div class="cp-top">
+      <div class="cp-key">
+        <span><i class="cp-s"></i>script</span>
+        <span><i class="cp-h"></i>researcher decides</span>
+        <span><i class="cp-m"></i>model call</span>
+      </div>
+      <div class="cp-stat">19 occodes &middot; 5,510,622 records &middot;
+        <strong>99.59%</strong> with a Task&nbsp;1</div>
+    </div>
+
+    <div class="cp-runs">
+
+      <div class="cp-run">
+        <div class="cp-rhead">Run A &middot; blocks 0&ndash;3</div>
+        <div class="cp-step cp-s"><span class="cp-n">1</span>Load and count
+          <span class="cp-d">distinct strings, pooled frequency</span></div>
+        <div class="cp-step cp-s"><span class="cp-n">2</span>Qualifiers
+          <span class="cp-d">the global dictionary</span></div>
+        <div class="cp-step cp-s"><span class="cp-n">3a</span>Top 100
+          <span class="cp-d">most frequent strings</span></div>
+        <div class="cp-step cp-s"><span class="cp-n">3b</span>Draft from the dictionary
+          <span class="cp-d">every label, type and material decided so far</span></div>
+        <div class="cp-in cp-h"><span class="cp-inn">1</span>The draft page
+          <span class="cp-d">amend in the browser until agreed</span></div>
+      </div>
+
+      <div class="cp-run">
+        <div class="cp-rhead">Run B &middot; the cluster loop</div>
+        <div class="cp-step cp-s"><span class="cp-n">0</span>Pre-scan the library
+          <span class="cp-d">labels holding &ge; 10 records here</span></div>
+        <div class="cp-step cp-s"><span class="cp-n">a</span>Deterministic rules
+          <span class="cp-d">labels &rarr; spellings</span></div>
+        <div class="cp-step cp-s"><span class="cp-n">b</span>Search + known pairs</div>
+        <div class="cp-step cp-s"><span class="cp-n">c</span>Magnet
+          <span class="cp-d">unassigned words &rarr; top-3 tasks</span></div>
+        <div class="cp-step cp-m"><span class="cp-n">d</span>Model confirms
+          <span class="cp-d">merge or reject, with a reason</span></div>
+        <div class="cp-step cp-s"><span class="cp-n">e</span>Cluster decisions
+          <span class="cp-d">on the standing rules</span></div>
+        <div class="cp-in cp-h"><span class="cp-inn">2</span>Another pass?
+          <span class="cp-d">yes only if a new label holds &ge; 10 records</span></div>
+      </div>
+
+      <div class="cp-run">
+        <div class="cp-rhead">Run C &middot; to the residue</div>
+        <div class="cp-step cp-s"><span class="cp-n">7</span>Priority rules
+          <span class="cp-d">which job comes first</span></div>
+        <div class="cp-step cp-s"><span class="cp-n">8</span>Fragment + industry-only
+          <span class="cp-d">job stems; no job word &rarr; worker</span></div>
+        <div class="cp-step cp-s"><span class="cp-n">9</span>Residue pass
+          <span class="cp-d">every string &ge; 10 left, decided whole</span></div>
+        <div class="cp-in cp-h"><span class="cp-inn">3</span>Sign off the occode
+          <span class="cp-d">walk the crosswalk, then the decisions and the report</span></div>
+      </div>
+
+    </div>
+
+    <div class="cp-out">
+      <span class="cp-outlab">Per occode</span>
+      <span class="cp-file">the R file</span>
+      <span class="cp-file">the decisions</span>
+      <span class="cp-file">the report</span>
+      <span class="cp-file">the task descriptions</span>
+      <span class="cp-file cp-last">the crosswalk</span>
+    </div>
 
   </div>
 </section>
+
+<style>
+  /* actor colours carried over from the pipeline artifact */
+  #cp { --sc: #dfe8f3; --sci: #1f4f86; --hu: #ffdf9e; --hui: #7a4300; --mo: #f6cdea; --moi: #8a1462; }
+
+  #cp .cp-top { display: flex; justify-content: space-between; align-items: baseline;
+    flex-wrap: wrap; gap: 12px; margin: 4px 0 20px; }
+  #cp .cp-key { display: flex; gap: 18px; font-size: .84rem; color: #6b6b6b; }
+  #cp .cp-key span { display: inline-flex; align-items: center; gap: 7px; }
+  #cp .cp-key i { width: 13px; height: 13px; border-radius: 3px; display: inline-block; }
+  #cp .cp-key i.cp-s { background: var(--sc); border-left: 4px solid var(--sci); }
+  #cp .cp-key i.cp-h { background: var(--hu); border-left: 4px solid var(--hui); }
+  #cp .cp-key i.cp-m { background: var(--mo); border-left: 4px solid var(--moi); }
+  #cp .cp-stat { font-size: .92rem; color: #555; }
+  #cp .cp-stat strong { color: #238B45; }
+
+  #cp .cp-runs { display: flex; gap: 26px; align-items: stretch; }
+  #cp .cp-run { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 7px; }
+  #cp .cp-rhead { font-size: .76rem; letter-spacing: .07em; text-transform: uppercase;
+    font-weight: 700; color: #fff; background: var(--sci);
+    padding: 5px 11px; border-radius: 4px; }
+
+  #cp .cp-step, #cp .cp-in {
+    position: relative; padding: 8px 12px 8px 40px; border-radius: 4px;
+    font-size: .95rem; line-height: 1.35; color: #1f2429;
+  }
+  #cp .cp-step.cp-s { background: var(--sc); border-left: 5px solid var(--sci); }
+  #cp .cp-step.cp-m { background: var(--mo); border-left: 5px solid var(--moi); }
+  #cp .cp-in       { background: var(--hu); border-left: 5px solid var(--hui);
+                     margin-top: 5px; font-weight: 600; }
+  #cp .cp-n, #cp .cp-inn {
+    position: absolute; left: 11px; top: 8px; width: 21px; text-align: center;
+    font-size: .76rem; font-weight: 700; border-radius: 3px; background: #fff;
+    font-variant-numeric: tabular-nums;
+  }
+  #cp .cp-n { color: var(--sci); }
+  #cp .cp-step.cp-m .cp-n { color: var(--moi); }
+  #cp .cp-inn { color: var(--hui); }
+  #cp .cp-d { display: block; font-size: .8rem; font-weight: 400; color: #5e6670; margin-top: 2px; }
+
+  #cp .cp-out { display: flex; align-items: center; flex-wrap: wrap; gap: 9px;
+    margin-top: 22px; padding-top: 16px; border-top: 1px solid #e8e8e8; }
+  #cp .cp-outlab { font-size: .76rem; letter-spacing: .07em; text-transform: uppercase;
+    font-weight: 700; color: #8a8a8a; margin-right: 4px; }
+  #cp .cp-file { font-size: .86rem; color: #333; background: #f4f4f2;
+    border: 1px solid #e2e2de; border-radius: 3px; padding: 4px 11px; }
+  #cp .cp-file.cp-last { border-color: #238B45; color: #1a6b36; font-weight: 600; }
+
+  @media (max-width: 1000px) { #cp .cp-runs { flex-direction: column; } }
+</style>
 
 
 <section class="frame">
