@@ -447,7 +447,7 @@ body.present .page__content { padding-top: 0 !important; }
     <div class="pl-cols">
 
       <div class="pl-col">
-        <div class="pl-head">1</div>
+        <div class="pl-head">Pre-LLM</div>
         <div class="pl-body">
           <a class="pl-figlink" href="/assets/images/ml_topic_assignment.png" target="_blank"
              rel="noopener" title="open full size">
@@ -479,7 +479,7 @@ body.present .page__content { padding-top: 0 !important; }
       </div>
 
       <div class="pl-col">
-        <div class="pl-head">2</div>
+        <div class="pl-head">Early LLM era</div>
         <div class="pl-body">
           <a class="pl-figlink" href="/assets/images/ml_topic_assignment.png" target="_blank"
              rel="noopener" title="open full size">
@@ -510,7 +510,7 @@ body.present .page__content { padding-top: 0 !important; }
       </div>
 
       <div class="pl-col">
-        <div class="pl-head">3</div>
+        <div class="pl-head">100% Human Labelling (*kind of)</div>
         <div class="pl-body">
           <div class="pl-mini">
             <div class="pl-blk">
@@ -598,7 +598,8 @@ body.present .page__content { padding-top: 0 !important; }
     border: 1px solid #e4e4e4; border-top: 3px solid #238B45;
     border-radius: 3px; padding: 20px 22px; min-height: 420px;
   }
-  .pl-head { font-size: 1.05rem; font-weight: 700; color: #238B45; margin-bottom: 14px; }
+  .pl-head { font-size: 1.02rem; font-weight: 700; color: #238B45; margin-bottom: 14px;
+             line-height: 1.3; min-height: 2.6em; }
   .pl-body { font-size: 1rem; line-height: 1.6; color: #333; }
 
   .pl-figlink { display: block; border: 1px solid #ececec; border-radius: 3px; padding: 6px; background: #fff; }
@@ -705,10 +706,10 @@ body.present .page__content { padding-top: 0 !important; }
 
     { id: "f", name: "Final", sub: "deliverables", fin: true,
       steps: [
-        ["d", "1", "The R file", "everything decided for the occode, by hand, with the reason"],
-        ["d", "2", "The decisions", "the occode's signed-off block in the order file"],
-        ["d", "3", "The report", "coverage by step, passes, priority, residue, in trade, cost"],
-        ["d", "4", "The task descriptions", "a definition for every label the occode uses"],
+        ["x", "1", "The R file", "everything decided for the occode, by hand, with the reason"],
+        ["x", "2", "The decisions", "the occode's signed-off block in the order file"],
+        ["x", "3", "The report", "coverage by step, passes, priority, residue, in trade, cost"],
+        ["x", "4", "The task descriptions", "a definition for every label the occode uses"],
         ["x", "5", "The crosswalk", "the task map itself: one row per distinct string"]
       ] }
   ];
@@ -738,15 +739,15 @@ body.present .page__content { padding-top: 0 !important; }
     });
     var h = '<h4 class="cp-ph">' + r.name + ' <span>' + r.sub + '</span></h4><ol class="cp-steps">';
     r.steps.forEach(function(s){
-      h += '<li class="cp-' + s[0] + '"><span class="cp-sn">' + s[1] + '</span>' +
-           '<span class="cp-st">' + s[2] + '</span>' +
-           '<span class="cp-sd">' + s[3] + '</span></li>';
+      h += '<li class="cp-step cp-' + s[0] + '"><span class="cp-sn">' + s[1] + '</span>' +
+           '<span class="cp-sb"><span class="cp-st">' + s[2] + '</span>' +
+           '<span class="cp-sd">' + s[3] + '</span></span></li>';
     });
     h += '</ol>';
     if (r.input) {
-      h += '<div class="cp-inp"><span class="cp-inn">' + r.input[0] + '</span>' +
-           '<span class="cp-int">' + r.input[1] + '</span>' +
-           '<span class="cp-ind">' + r.input[2] + '</span></div>';
+      h += '<div class="cp-step cp-h"><span class="cp-sn">' + r.input[0] + '</span>' +
+           '<span class="cp-sb"><span class="cp-st">' + r.input[1] + '</span>' +
+           '<span class="cp-sd">' + r.input[2] + '</span></span></div>';
     }
     panel.innerHTML = h;
   }
@@ -768,47 +769,59 @@ body.present .page__content { padding-top: 0 !important; }
   #cp .cp-stat { font-size: .92rem; color: #555; }
   #cp .cp-stat strong { color: #238B45; }
 
-  #cp .cp-wrap { display: flex; gap: 40px; align-items: flex-start; }
-  #cp .cp-flow { flex: 0 0 250px; display: flex; flex-direction: column; }
-  #cp .cp-arrow { color: #c4c4c4; font-size: 1.1rem; line-height: 1; margin: 5px 0 5px 22px; }
+  #cp .cp-wrap { display: flex; gap: 34px; align-items: flex-start; }
+  #cp .cp-flow { flex: 0 0 372px; display: flex; flex-direction: column; }
+  #cp .cp-arrow { color: #c4c4c4; font-size: 1.15rem; line-height: 1; margin: 6px 0 6px 28px; }
 
   #cp .cp-blk {
-    display: block; width: 100%; text-align: left; cursor: pointer; font: inherit;
-    background: var(--sc); border: 1px solid #cdd9e8; border-left: 6px solid var(--sci);
-    border-radius: 4px; padding: 11px 14px; color: #1f2429;
+    display: flex; align-items: baseline; gap: 12px; width: 100%; text-align: left;
+    cursor: pointer; font: inherit; color: #1f2429;
+    background: var(--sc); border: 1px solid #cdd9e8; border-left: 7px solid var(--sci);
+    border-radius: 5px; padding: 16px 18px;
+    transition: box-shadow .12s ease, border-color .12s ease;
   }
   #cp .cp-blk--fin { background: #e6f2ea; border-color: #c6e2d1; border-left-color: #238B45; }
   #cp .cp-blk:hover { border-color: #9fb8d6; }
+  #cp .cp-blk--fin:hover { border-color: #8fc8a6; }
   #cp .cp-blk[aria-current="true"] { box-shadow: 0 0 0 2px var(--sci) inset; }
   #cp .cp-blk--fin[aria-current="true"] { box-shadow: 0 0 0 2px #238B45 inset; }
-  #cp .cp-bn { display: block; font-weight: 700; font-size: 1.04rem; }
-  #cp .cp-bs { display: block; font-size: .8rem; color: #5e6670; margin-top: 1px; }
-  #cp .cp-bc { display: block; font-size: .72rem; color: #8a8a8a; margin-top: 5px;
-    letter-spacing: .04em; text-transform: uppercase; }
+  #cp .cp-bn { font-weight: 700; font-size: 1.3rem; letter-spacing: -.01em; }
+  #cp .cp-bs { font-size: .88rem; color: #5e6670; flex: 1 1 auto; }
+  #cp .cp-bc { font-size: .72rem; color: #8a8a8a; letter-spacing: .05em;
+    text-transform: uppercase; white-space: nowrap; }
 
-  #cp .cp-panel { flex: 1 1 auto; min-width: 0; border: 1px solid #e8e8e8;
-    border-radius: 4px; padding: 20px 24px; min-height: 430px; }
-  #cp .cp-ph { font-size: 1.12rem; margin: 0 0 16px; font-weight: 700; color: #1f2429; }
-  #cp .cp-ph span { font-weight: 400; color: #8a8a8a; font-size: .92rem; }
+  #cp .cp-panel { flex: 1 1 auto; min-width: 0; min-height: 430px; }
+  #cp .cp-ph { font-size: 1.1rem; margin: 2px 0 14px; font-weight: 700; color: #1f2429; }
+  #cp .cp-ph span { font-weight: 400; color: #8a8a8a; font-size: .9rem; }
 
   #cp .cp-steps { list-style: none; margin: 0; padding: 0; }
-  #cp .cp-steps li { position: relative; padding: 0 0 11px 46px; margin-bottom: 10px;
-    border-bottom: 1px solid #f1f1f1; }
-  #cp .cp-steps li:last-child { border-bottom: 0; margin-bottom: 0; }
-  #cp .cp-sn { position: absolute; left: 0; top: 1px; width: 32px; text-align: center;
-    font-size: .76rem; font-weight: 700; border-radius: 3px; padding: 2px 0;
-    background: var(--sc); color: var(--sci); font-variant-numeric: tabular-nums; }
-  #cp .cp-m .cp-sn { background: var(--mo); color: var(--moi); }
-  #cp .cp-x .cp-sn { background: #e6f2ea; color: #1a6b36; }
-  #cp .cp-st { display: block; font-weight: 600; font-size: .98rem; color: #1f2429; }
-  #cp .cp-sd { display: block; font-size: .85rem; line-height: 1.5; color: #5e6670; margin-top: 2px; }
+  #cp .cp-step {
+    position: relative; display: grid; grid-template-columns: 34px 1fr; gap: 11px;
+    align-items: start; padding: 9px 13px; margin-bottom: 7px;
+    border: 1px solid #e3e3e3; border-radius: 5px; background: #fff;
+  }
+  #cp .cp-step::after {
+    position: absolute; top: 7px; right: 10px; font-size: .62rem; font-weight: 700;
+    letter-spacing: .07em; padding: 1px 6px; border-radius: 3px; background: #fff;
+  }
+  #cp .cp-d  { background: var(--sc); border-left: 6px solid var(--sci); }
+  #cp .cp-m  { background: var(--mo); border-left: 6px solid var(--moi); }
+  #cp .cp-h  { background: var(--hu); border-left: 6px solid var(--hui); margin-top: 14px; }
+  #cp .cp-x  { background: #e6f2ea; border-left: 6px solid #238B45; }
+  #cp .cp-d::after { content: "SCRIPT"; color: var(--sci); }
+  #cp .cp-m::after { content: "MODEL";  color: var(--moi); }
+  #cp .cp-h::after { content: "YOU";    color: var(--hui); }
+  #cp .cp-x::after { content: "OUTPUT"; color: #1a6b36; }
 
-  #cp .cp-inp { position: relative; margin-top: 18px; padding: 11px 14px 11px 46px;
-    background: var(--hu); border-left: 5px solid var(--hui); border-radius: 4px; }
-  #cp .cp-inn { position: absolute; left: 12px; top: 11px; width: 22px; text-align: center;
-    font-size: .76rem; font-weight: 700; background: #fff; color: var(--hui); border-radius: 3px; }
-  #cp .cp-int { display: block; font-weight: 700; font-size: .98rem; }
-  #cp .cp-ind { display: block; font-size: .85rem; line-height: 1.5; color: #6b5420; margin-top: 2px; }
+  #cp .cp-sn { text-align: center; font-size: .76rem; font-weight: 700; border-radius: 3px;
+    padding: 3px 0; background: #fff; font-variant-numeric: tabular-nums; }
+  #cp .cp-d .cp-sn { color: var(--sci); }
+  #cp .cp-m .cp-sn { color: var(--moi); }
+  #cp .cp-h .cp-sn { color: var(--hui); }
+  #cp .cp-x .cp-sn { color: #1a6b36; }
+  #cp .cp-sb { min-width: 0; padding-right: 58px; }
+  #cp .cp-st { display: block; font-weight: 600; font-size: .97rem; color: #1f2429; }
+  #cp .cp-sd { display: block; font-size: .84rem; line-height: 1.5; color: #555d66; margin-top: 2px; }
 
   @media (max-width: 1000px) {
     #cp .cp-wrap { flex-direction: column; }
