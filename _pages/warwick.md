@@ -374,16 +374,51 @@ body.present .page__content { padding-top: 0 !important; }
     <ol class="in-num">
       <li>6.5 million unique strings describing occupation</li>
       <li>797 occupation codes</li>
-      <li>The census gives us some help: enumerators worked to written instructions
+      <li>The census gives us some help: the household schedule carried written
+          instructions
         <ol class="in-sub mth-alpha">
-          <li>Most important job first</li>
-          <li class="mth-slot">second instruction &mdash; to come</li>
+          <li>Most important job first
+            <blockquote class="mth-q">A person following more distinct occupations than
+              one, should insert each of them in order of their importance.</blockquote>
+          </li>
+          <li>
+            <button class="mth-more" type="button" aria-expanded="false"
+                    aria-controls="mth-onp">Specific instructions for particular
+              occupations <span class="mth-car" aria-hidden="true">&#9656;</span></button>
+            <div class="mth-onp" id="mth-onp" hidden>
+            <blockquote class="mth-q"><span class="mth-ql">(o)</span> Workers in
+              Manufactures, and generally in the Mechanical Arts, should distinctly state
+              the particular Branch of Work, and the Material, if they are not implied in
+              the names, as in Brass-founder, Silk-throwster. Where the trade is much
+              sub-divided, both trade and branch are to be returned, thus &mdash;
+              &ldquo;Watchmaker&mdash;Finisher;&rdquo;
+              &ldquo;Printer&mdash;Compositor.&rdquo;</blockquote>
+            <blockquote class="mth-q"><span class="mth-ql">(p)</span> Miners should state
+              the description of Mine in which they work. &mdash; Examples: &ldquo;Coal
+              Miner,&rdquo; &ldquo;Iron Miner,&rdquo; &ldquo;Lead Miner,&rdquo; &ldquo;Tin
+              Miner,&rdquo; &ldquo;Copper Miner,&rdquo; etc. The term Miner should never be
+              used alone.</blockquote>
+            </div>
+          </li>
         </ol>
       </li>
     </ol>
 
   </div>
 </section>
+
+<script>
+(function(){
+  var b = document.querySelector(".mth-more");
+  var p = document.getElementById("mth-onp");
+  if (!b || !p) return;
+  b.addEventListener("click", function(){
+    var open = b.getAttribute("aria-expanded") === "true";
+    b.setAttribute("aria-expanded", open ? "false" : "true");
+    p.hidden = open;
+  });
+})();
+</script>
 
 <style>
   /* shared by the five Methods slides */
@@ -396,6 +431,22 @@ body.present .page__content { padding-top: 0 !important; }
     color: #238B45; font-weight: 700;
   }
   .mth-slot { color: #a89a73; font-style: italic; }
+  /* verbatim from the census household schedule */
+  .mth-q {
+    margin: 8px 0 10px; padding: 0 0 0 14px; border-left: 3px solid #d8e5dc;
+    font-family: Georgia, "Times New Roman", serif; font-size: .92rem; line-height: 1.5;
+    color: #4a4a4a; max-width: 860px;
+  }
+  .mth-q:last-child { margin-bottom: 2px; }
+  .mth-ql { font-weight: 700; color: #238B45; margin-right: 4px; }
+  .mth-more {
+    font: inherit; color: inherit; background: none; border: 0; padding: 0;
+    text-align: left; cursor: pointer; line-height: inherit;
+  }
+  .mth-more:hover .mth-car { color: #1a6b36; }
+  .mth-car { display: inline-block; color: #238B45; font-size: .82em; margin-left: 5px;
+    transition: transform .14s ease; }
+  .mth-more[aria-expanded="true"] .mth-car { transform: rotate(90deg); }
   .mth-todo {
     border: 1px dashed #d8c48a; background: #fffbe9; color: #7a5c00;
     padding: 18px 22px; border-radius: 4px; max-width: 760px;
@@ -513,9 +564,10 @@ body.present .page__content { padding-top: 0 !important; }
 </script>
 
 <style>
-  #ch .ch-wrap { display: flex; gap: 56px; align-items: flex-start; margin-top: 18px; }
+  #ch .ch-wrap { display: flex; gap: 88px; align-items: flex-start; margin: 18px auto 0;
+    max-width: 1148px; }
   #ch .ch-list { flex: 0 0 340px; display: flex; flex-direction: column; gap: 12px; }
-  #ch .ch-panel { flex: 1 1 auto; min-width: 0; min-height: 420px; }
+  #ch .ch-panel { flex: 1 1 auto; min-width: 0; max-width: 720px; min-height: 420px; }
 
   #ch .ch-item {
     display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start;
@@ -747,8 +799,8 @@ body.present .page__content { padding-top: 0 !important; }
   <div class="frame__body" id="cp">
 
     <div class="cp-top">
-      <div class="cp-stat">31 occodes &middot; 5,802,712 records &middot;
-        <strong>97.85%</strong> with a Task&nbsp;1</div>
+      <div class="cp-stat">All 797 occodes &middot; 6.5 million unique strings &middot;
+        <strong>98%</strong> with a Task&nbsp;1</div>
     </div>
 
     <div class="cp-wrap">
@@ -850,7 +902,7 @@ body.present .page__content { padding-top: 0 !important; }
 <style>
   #cp { --sc: #dfe8f3; --sci: #1f4f86; --hu: #ffdf9e; --hui: #7a4300; --mo: #f6cdea; --moi: #8a1462; }
 
-  #cp .cp-top { margin: 4px 0 18px; }
+  #cp .cp-top { max-width: 1104px; margin: 4px auto 44px; }
   /* legend lifted from the pipeline artifact: light fill, thick coloured left
      edge, so each swatch mirrors the step block it stands for */
   #cp .cp-key { gap: 14px; flex-wrap: wrap; font-size: .85rem; color: #5e6670; }
@@ -864,7 +916,8 @@ body.present .page__content { padding-top: 0 !important; }
   #cp .cp-stat { font-size: .92rem; color: #555; }
   #cp .cp-stat strong { color: #238B45; }
 
-  #cp .cp-wrap { display: flex; gap: 52px; align-items: flex-start; }
+  #cp .cp-wrap { display: flex; gap: 52px; align-items: flex-start;
+    max-width: 1104px; margin: 0 auto; }
   #cp .cp-left { flex: 0 0 372px; }
   #cp .cp-flow { display: flex; flex-direction: column; }
   /* the legend and the panel heading share a height, so Run A and the panel's
