@@ -517,7 +517,7 @@ body.present .page__content { padding-top: 0 !important; }
               <div class="pl-bh">Run A</div>
               <ul class="pl-bl">
                 <li class="d">load and count</li>
-                <li class="d">qualifiers</li>
+                <li class="d">cleaning</li>
                 <li class="d">top 100</li>
                 <li class="d">draft from the dictionary</li>
               </ul>
@@ -527,12 +527,8 @@ body.present .page__content { padding-top: 0 !important; }
             <div class="pl-blk">
               <div class="pl-bh">Run B</div>
               <ul class="pl-bl">
-                <li class="d">pre-scan the library</li>
-                <li class="d">deterministic rules</li>
-                <li class="d">search + known pairs</li>
                 <li class="d">magnet</li>
                 <li class="m">LLM confirms</li>
-                <li class="d">cluster decisions</li>
               </ul>
             </div>
             <div class="pl-you"><b>2</b> I decide</div>
@@ -660,121 +656,165 @@ body.present .page__content { padding-top: 0 !important; }
 
     <div class="cp-top">
       <div class="cp-key">
-        <span><i class="cp-s"></i>script</span>
-        <span><i class="cp-h"></i>researcher decides</span>
-        <span><i class="cp-m"></i>model call</span>
+        <span><i class="cp-ks"></i>deterministic</span>
+        <span><i class="cp-km"></i>model</span>
+        <span><i class="cp-kh"></i>I decide</span>
       </div>
       <div class="cp-stat">19 occodes &middot; 5,510,622 records &middot;
         <strong>99.59%</strong> with a Task&nbsp;1</div>
     </div>
 
-    <div class="cp-runs">
-
-      <div class="cp-run">
-        <div class="cp-rhead">Run A &middot; blocks 0&ndash;3</div>
-        <div class="cp-step cp-s"><span class="cp-n">1</span>Load and count
-          <span class="cp-d">distinct strings, pooled frequency</span></div>
-        <div class="cp-step cp-s"><span class="cp-n">2</span>Qualifiers
-          <span class="cp-d">the global dictionary</span></div>
-        <div class="cp-step cp-s"><span class="cp-n">3a</span>Top 100
-          <span class="cp-d">most frequent strings</span></div>
-        <div class="cp-step cp-s"><span class="cp-n">3b</span>Draft from the dictionary
-          <span class="cp-d">every label, type and material decided so far</span></div>
-        <div class="cp-in cp-h"><span class="cp-inn">1</span>The draft page
-          <span class="cp-d">amend in the browser until agreed</span></div>
-      </div>
-
-      <div class="cp-run">
-        <div class="cp-rhead">Run B &middot; the cluster loop</div>
-        <div class="cp-step cp-s"><span class="cp-n">0</span>Pre-scan the library
-          <span class="cp-d">labels holding &ge; 10 records here</span></div>
-        <div class="cp-step cp-s"><span class="cp-n">a</span>Deterministic rules
-          <span class="cp-d">labels &rarr; spellings</span></div>
-        <div class="cp-step cp-s"><span class="cp-n">b</span>Search + known pairs</div>
-        <div class="cp-step cp-s"><span class="cp-n">c</span>Magnet
-          <span class="cp-d">unassigned words &rarr; top-3 tasks</span></div>
-        <div class="cp-step cp-m"><span class="cp-n">d</span>Model confirms
-          <span class="cp-d">merge or reject, with a reason</span></div>
-        <div class="cp-step cp-s"><span class="cp-n">e</span>Cluster decisions
-          <span class="cp-d">on the standing rules</span></div>
-        <div class="cp-in cp-h"><span class="cp-inn">2</span>Another pass?
-          <span class="cp-d">yes only if a new label holds &ge; 10 records</span></div>
-      </div>
-
-      <div class="cp-run">
-        <div class="cp-rhead">Run C &middot; to the residue</div>
-        <div class="cp-step cp-s"><span class="cp-n">7</span>Priority rules
-          <span class="cp-d">which job comes first</span></div>
-        <div class="cp-step cp-s"><span class="cp-n">8</span>Fragment + industry-only
-          <span class="cp-d">job stems; no job word &rarr; worker</span></div>
-        <div class="cp-step cp-s"><span class="cp-n">9</span>Residue pass
-          <span class="cp-d">every string &ge; 10 left, decided whole</span></div>
-        <div class="cp-in cp-h"><span class="cp-inn">3</span>Sign off the occode
-          <span class="cp-d">walk the crosswalk, then the decisions and the report</span></div>
-      </div>
-
-    </div>
-
-    <div class="cp-out">
-      <span class="cp-outlab">Per occode</span>
-      <span class="cp-file">the R file</span>
-      <span class="cp-file">the decisions</span>
-      <span class="cp-file">the report</span>
-      <span class="cp-file">the task descriptions</span>
-      <span class="cp-file cp-last">the crosswalk</span>
+    <div class="cp-wrap">
+      <nav class="cp-flow" id="cp-flow" aria-label="Pipeline runs"></nav>
+      <section class="cp-panel" id="cp-panel" aria-live="polite"></section>
     </div>
 
   </div>
 </section>
 
+<script>
+(function(){
+  var RUNS = [
+    { id: "a", name: "Run A", sub: "blocks 0&ndash;3",
+      steps: [
+        ["d", "1",  "Load and count", "the occode's uniques file; distinct strings pooled across the six census years with frequency and cumulative percent"],
+        ["d", "2",  "Cleaning", "the global qualifier dictionary: apprenticeship, employer, family, retired, supervisory, status, unemployed"],
+        ["d", "3a", "Top 100", "the hundred most frequent strings"],
+        ["d", "3b", "Draft from the dictionary", "the top 100 run through every label, type, material and spelling decided so far"]
+      ],
+      input: ["1", "The draft page", "opened in the browser with every column filled; I amend, it is redrafted, until agreed"] },
+
+    { id: "b", name: "Run B", sub: "the cluster loop",
+      steps: [
+        ["d", "0", "Pre-scan the library", "library labels holding at least 10 records here, so the loop searches dozens of labels rather than a thousand"],
+        ["d", "a", "Deterministic rules", "each label generates its own spellings: joined form, -er to -ing, -man to -men, -woman, -women"],
+        ["d", "b", "Search + known pairs", "letters-only substring match, so CORD WAINER and CORDWAINER are the same; where a string names two jobs, the orderings already decided are applied"],
+        ["d", "c", "Magnet", "unassigned words of at least 10 records scored against every accepted spelling by character n-gram cosine; each keeps its best three tasks"],
+        ["m", "d", "LLM confirms", "Haiku 5.5 merges or rejects every candidate with a reason citing an example, against the full label set"],
+        ["d", "e", "Cluster decisions", "the low-confidence merges and the labels to strike, settled on the standing rules"]
+      ],
+      input: ["2", "Another pass?", "yes only if a new label holds at least 10 records — a pass exists to find a label's misspellings"] },
+
+    { id: "c", name: "Run C", sub: "to the residue",
+      steps: [
+        ["d", "7", "Priority rules", "which job is task 1 when a string names two: the supervisor first, then the person's own job before the employer's trade"],
+        ["d", "8", "Fragment + industry-only", "a string with no task but a job stem takes that stem; a string naming the industry and no job becomes worker"],
+        ["m", "9", "Residue pass", "every string of 10 records or more still unassigned, decided whole; in trade is set, then the completion check"]
+      ],
+      input: ["3", "Sign off the occode", "walk the crosswalk most frequent first, then agree the decisions block and the report"] },
+
+    { id: "f", name: "Final", sub: "deliverables", fin: true,
+      steps: [
+        ["d", "1", "The R file", "everything decided for the occode, by hand, with the reason"],
+        ["d", "2", "The decisions", "the occode's signed-off block in the order file"],
+        ["d", "3", "The report", "coverage by step, passes, priority, residue, in trade, cost"],
+        ["d", "4", "The task descriptions", "a definition for every label the occode uses"],
+        ["x", "5", "The crosswalk", "the task map itself: one row per distinct string"]
+      ] }
+  ];
+
+  var flow = document.getElementById("cp-flow");
+  var panel = document.getElementById("cp-panel");
+  if (!flow || !panel) return;
+
+  RUNS.forEach(function(r, i){
+    if (i) flow.insertAdjacentHTML("beforeend", '<div class="cp-arrow">&darr;</div>');
+    var b = document.createElement("button");
+    b.className = "cp-blk" + (r.fin ? " cp-blk--fin" : "");
+    b.type = "button";
+    b.setAttribute("data-id", r.id);
+    b.innerHTML = '<span class="cp-bn">' + r.name + '</span>' +
+                  '<span class="cp-bs">' + r.sub + '</span>' +
+                  '<span class="cp-bc">' + r.steps.length + ' steps</span>';
+    b.addEventListener("click", function(){ show(r.id); });
+    flow.appendChild(b);
+  });
+
+  function show(id){
+    var r = RUNS.filter(function(x){ return x.id === id; })[0];
+    if (!r) return;
+    flow.querySelectorAll(".cp-blk").forEach(function(el){
+      el.setAttribute("aria-current", el.getAttribute("data-id") === id ? "true" : "false");
+    });
+    var h = '<h4 class="cp-ph">' + r.name + ' <span>' + r.sub + '</span></h4><ol class="cp-steps">';
+    r.steps.forEach(function(s){
+      h += '<li class="cp-' + s[0] + '"><span class="cp-sn">' + s[1] + '</span>' +
+           '<span class="cp-st">' + s[2] + '</span>' +
+           '<span class="cp-sd">' + s[3] + '</span></li>';
+    });
+    h += '</ol>';
+    if (r.input) {
+      h += '<div class="cp-inp"><span class="cp-inn">' + r.input[0] + '</span>' +
+           '<span class="cp-int">' + r.input[1] + '</span>' +
+           '<span class="cp-ind">' + r.input[2] + '</span></div>';
+    }
+    panel.innerHTML = h;
+  }
+  show("a");
+})();
+</script>
+
 <style>
-  /* actor colours carried over from the pipeline artifact */
   #cp { --sc: #dfe8f3; --sci: #1f4f86; --hu: #ffdf9e; --hui: #7a4300; --mo: #f6cdea; --moi: #8a1462; }
 
   #cp .cp-top { display: flex; justify-content: space-between; align-items: baseline;
     flex-wrap: wrap; gap: 12px; margin: 4px 0 20px; }
   #cp .cp-key { display: flex; gap: 18px; font-size: .84rem; color: #6b6b6b; }
   #cp .cp-key span { display: inline-flex; align-items: center; gap: 7px; }
-  #cp .cp-key i { width: 13px; height: 13px; border-radius: 3px; display: inline-block; }
-  #cp .cp-key i.cp-s { background: var(--sc); border-left: 4px solid var(--sci); }
-  #cp .cp-key i.cp-h { background: var(--hu); border-left: 4px solid var(--hui); }
-  #cp .cp-key i.cp-m { background: var(--mo); border-left: 4px solid var(--moi); }
+  #cp .cp-key i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+  #cp .cp-key i.cp-ks { background: var(--sc); border: 1px solid var(--sci); }
+  #cp .cp-key i.cp-km { background: var(--mo); border: 1px solid var(--moi); }
+  #cp .cp-key i.cp-kh { background: var(--hu); border: 1px solid var(--hui); }
   #cp .cp-stat { font-size: .92rem; color: #555; }
   #cp .cp-stat strong { color: #238B45; }
 
-  #cp .cp-runs { display: flex; gap: 26px; align-items: stretch; }
-  #cp .cp-run { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 7px; }
-  #cp .cp-rhead { font-size: .76rem; letter-spacing: .07em; text-transform: uppercase;
-    font-weight: 700; color: #fff; background: var(--sci);
-    padding: 5px 11px; border-radius: 4px; }
+  #cp .cp-wrap { display: flex; gap: 40px; align-items: flex-start; }
+  #cp .cp-flow { flex: 0 0 250px; display: flex; flex-direction: column; }
+  #cp .cp-arrow { color: #c4c4c4; font-size: 1.1rem; line-height: 1; margin: 5px 0 5px 22px; }
 
-  #cp .cp-step, #cp .cp-in {
-    position: relative; padding: 8px 12px 8px 40px; border-radius: 4px;
-    font-size: .95rem; line-height: 1.35; color: #1f2429;
+  #cp .cp-blk {
+    display: block; width: 100%; text-align: left; cursor: pointer; font: inherit;
+    background: var(--sc); border: 1px solid #cdd9e8; border-left: 6px solid var(--sci);
+    border-radius: 4px; padding: 11px 14px; color: #1f2429;
   }
-  #cp .cp-step.cp-s { background: var(--sc); border-left: 5px solid var(--sci); }
-  #cp .cp-step.cp-m { background: var(--mo); border-left: 5px solid var(--moi); }
-  #cp .cp-in       { background: var(--hu); border-left: 5px solid var(--hui);
-                     margin-top: 5px; font-weight: 600; }
-  #cp .cp-n, #cp .cp-inn {
-    position: absolute; left: 11px; top: 8px; width: 21px; text-align: center;
-    font-size: .76rem; font-weight: 700; border-radius: 3px; background: #fff;
-    font-variant-numeric: tabular-nums;
+  #cp .cp-blk--fin { background: #e6f2ea; border-color: #c6e2d1; border-left-color: #238B45; }
+  #cp .cp-blk:hover { border-color: #9fb8d6; }
+  #cp .cp-blk[aria-current="true"] { box-shadow: 0 0 0 2px var(--sci) inset; }
+  #cp .cp-blk--fin[aria-current="true"] { box-shadow: 0 0 0 2px #238B45 inset; }
+  #cp .cp-bn { display: block; font-weight: 700; font-size: 1.04rem; }
+  #cp .cp-bs { display: block; font-size: .8rem; color: #5e6670; margin-top: 1px; }
+  #cp .cp-bc { display: block; font-size: .72rem; color: #8a8a8a; margin-top: 5px;
+    letter-spacing: .04em; text-transform: uppercase; }
+
+  #cp .cp-panel { flex: 1 1 auto; min-width: 0; border: 1px solid #e8e8e8;
+    border-radius: 4px; padding: 20px 24px; min-height: 430px; }
+  #cp .cp-ph { font-size: 1.12rem; margin: 0 0 16px; font-weight: 700; color: #1f2429; }
+  #cp .cp-ph span { font-weight: 400; color: #8a8a8a; font-size: .92rem; }
+
+  #cp .cp-steps { list-style: none; margin: 0; padding: 0; }
+  #cp .cp-steps li { position: relative; padding: 0 0 11px 46px; margin-bottom: 10px;
+    border-bottom: 1px solid #f1f1f1; }
+  #cp .cp-steps li:last-child { border-bottom: 0; margin-bottom: 0; }
+  #cp .cp-sn { position: absolute; left: 0; top: 1px; width: 32px; text-align: center;
+    font-size: .76rem; font-weight: 700; border-radius: 3px; padding: 2px 0;
+    background: var(--sc); color: var(--sci); font-variant-numeric: tabular-nums; }
+  #cp .cp-m .cp-sn { background: var(--mo); color: var(--moi); }
+  #cp .cp-x .cp-sn { background: #e6f2ea; color: #1a6b36; }
+  #cp .cp-st { display: block; font-weight: 600; font-size: .98rem; color: #1f2429; }
+  #cp .cp-sd { display: block; font-size: .85rem; line-height: 1.5; color: #5e6670; margin-top: 2px; }
+
+  #cp .cp-inp { position: relative; margin-top: 18px; padding: 11px 14px 11px 46px;
+    background: var(--hu); border-left: 5px solid var(--hui); border-radius: 4px; }
+  #cp .cp-inn { position: absolute; left: 12px; top: 11px; width: 22px; text-align: center;
+    font-size: .76rem; font-weight: 700; background: #fff; color: var(--hui); border-radius: 3px; }
+  #cp .cp-int { display: block; font-weight: 700; font-size: .98rem; }
+  #cp .cp-ind { display: block; font-size: .85rem; line-height: 1.5; color: #6b5420; margin-top: 2px; }
+
+  @media (max-width: 1000px) {
+    #cp .cp-wrap { flex-direction: column; }
+    #cp .cp-flow { flex: 1 1 auto; width: 100%; }
+    #cp .cp-panel { width: 100%; min-height: 0; }
   }
-  #cp .cp-n { color: var(--sci); }
-  #cp .cp-step.cp-m .cp-n { color: var(--moi); }
-  #cp .cp-inn { color: var(--hui); }
-  #cp .cp-d { display: block; font-size: .8rem; font-weight: 400; color: #5e6670; margin-top: 2px; }
-
-  #cp .cp-out { display: flex; align-items: center; flex-wrap: wrap; gap: 9px;
-    margin-top: 22px; padding-top: 16px; border-top: 1px solid #e8e8e8; }
-  #cp .cp-outlab { font-size: .76rem; letter-spacing: .07em; text-transform: uppercase;
-    font-weight: 700; color: #8a8a8a; margin-right: 4px; }
-  #cp .cp-file { font-size: .86rem; color: #333; background: #f4f4f2;
-    border: 1px solid #e2e2de; border-radius: 3px; padding: 4px 11px; }
-  #cp .cp-file.cp-last { border-color: #238B45; color: #1a6b36; font-weight: 600; }
-
-  @media (max-width: 1000px) { #cp .cp-runs { flex-direction: column; } }
 </style>
 
 
