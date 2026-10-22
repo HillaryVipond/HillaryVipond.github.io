@@ -928,7 +928,7 @@ body.present .page__content { padding-top: 0 !important; }
     var h = '<div class="cp-xwscroll"><table class="cp-xw"><thead><tr>'
           + '<th>RecID</th><th>occode</th><th>OCC</th>'
           + '<th>task 1</th><th>task 2</th><th>detail</th><th>product</th><th>material</th>'
-          + '<th>qualifiers</th><th>employing</th><th>in trade</th>'
+          + '<th>qualifiers</th><th>employing</th>'
           + '</tr></thead><tbody>';
     XW.forEach(function(r, i){
       h += '<tr><td class="cp-xwid">' + RECID[i] + '</td>'
@@ -940,8 +940,7 @@ body.present .page__content { padding-top: 0 !important; }
          + '<td>' + (r[5] || '&mdash;') + '</td>'
          + '<td>' + (r[6] || '&mdash;') + '</td>'
          + '<td>' + (r[7] || '&mdash;') + '</td>'
-         + '<td>' + (r[8] || '&mdash;') + '</td>'
-         + '<td class="cp-xwtr">' + (r[9] || '&mdash;') + '</td></tr>';
+         + '<td>' + (r[8] || '&mdash;') + '</td></tr>';
     });
     return h + '</tbody></table></div>';
   }
@@ -1198,7 +1197,6 @@ body.present .page__content { padding-top: 0 !important; }
   #cp .cp-xwid { color: #9a9a9a; font-variant-numeric: tabular-nums; text-align: right;
     padding-right: 14px; }
   #cp .cp-xwo { color: #1f4f86; font-variant-numeric: tabular-nums; }
-  #cp .cp-xwtr { color: #b06a2c; }
   #cp .cp-xwr { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .74rem;
     color: #1f2429; white-space: nowrap; }
   #cp .cp-xwt { font-weight: 600; color: #1a6b36; }
