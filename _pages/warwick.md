@@ -860,7 +860,7 @@ body.present .page__content { padding-top: 0 !important; }
         ["d", "c", "Magnet", "words still unassigned are matched to the nearest canonical tasks by character similarity, which is what catches misspellings; each keeps its best three candidates for the model", "mag"],
         ["m", "d", "LLM confirms", "Haiku filters the magnet results"]
       ],
-      input: ["2", "Another pass?", "yes only if a new label holds at least 10 records — a pass exists to find a label's misspellings"] },
+      input: ["2", "Another pass?", ""] },
 
     { id: "c", name: "Run C", sub: "to the residue",
       steps: [
@@ -873,7 +873,7 @@ body.present .page__content { padding-top: 0 !important; }
     { id: "f", name: "Final", sub: "deliverables", fin: true,
       steps: [
         ["x", "1", "The crosswalk", "by occupation code and rec ID", "xw"],
-        ["x", "2", "The report", "the industry in brief and a little history for context, the core tasks, what we found, the share assigned, and the key decisions taken in coding it"],
+        ["x", "2", "The report", "the industry in brief and a little history for context, the core tasks, what we found, the share assigned, and the key decisions taken in coding it", "https://claude.ai/artifact/93mYqTnG8W7yuDRccVsa3W"],
         ["x", "3", "The R file", "everything decided for the occode, by hand, with the reason"],
         ["x", "4", "The task descriptions", "a definition for every label the occode uses", "td"]
       ] }
@@ -989,8 +989,7 @@ body.present .page__content { padding-top: 0 !important; }
       + '<p class="mag-note" id="mag-verdict"></p></div></div>'
       + '<p class="mag-why">Letters alone are not enough. RIVITTER, a misspelt riveter, '
       + 'sits closer to <i>fitter</i> and <i>knitter</i> than to <i>riveter</i>. PLATTER, '
-      + 'the commonest misspelling of plaiter (5,213 records), sits closer to <i>hatter</i>. '
-      + 'So the magnet only proposes; a word refused once is never a spelling again.</p>'
+      + 'the commonest misspelling of plaiter (5,213 records), sits closer to <i>hatter</i>.</p>'
       + '</div>';
     return h;
   }
@@ -1062,13 +1061,18 @@ body.present .page__content { padding-top: 0 !important; }
     });
     var h = '<h4 class="cp-ph">' + r.name + ' <span>' + r.sub + '</span></h4><ol class="cp-steps">';
     r.steps.forEach(function(s){
-      var ex = s[4] ? ' <span class="cp-car" aria-hidden="true">&#9656;</span>' : '';
-      h += '<li class="cp-step cp-' + s[0] + (s[4] ? ' cp-has' : '') + '"'
-         + (s[4] ? ' data-ex="' + s[4] + '" tabindex="0" role="button" aria-expanded="false"' : '')
+      var link = s[4] && s[4].indexOf("http") === 0;
+      var ex = s[4] && !link ? ' <span class="cp-car" aria-hidden="true">&#9656;</span>' : '';
+      var title = link
+        ? '<a class="cp-link" href="' + s[4] + '" target="_blank" rel="noopener">' + s[2]
+          + ' <span aria-hidden="true">&#8599;</span></a>'
+        : s[2] + ex;
+      h += '<li class="cp-step cp-' + s[0] + (s[4] && !link ? ' cp-has' : '') + '"'
+         + (s[4] && !link ? ' data-ex="' + s[4] + '" tabindex="0" role="button" aria-expanded="false"' : '')
          + '><span class="cp-sn">' + s[1] + '</span>'
-         + '<span class="cp-sb"><span class="cp-st">' + s[2] + ex + '</span>'
+         + '<span class="cp-sb"><span class="cp-st">' + title + '</span>'
          + '<span class="cp-sd">' + s[3] + '</span></span></li>';
-      if (s[4]) h += '<li class="cp-exwrap" hidden>'
+      if (s[4] && !link) h += '<li class="cp-exwrap" hidden>'
                    + (s[4] === "td" ? tdTable() : s[4] === "mag" ? magBlock() : xwTable())
                    + '</li>';
     });
@@ -1076,7 +1080,8 @@ body.present .page__content { padding-top: 0 !important; }
     if (r.input) {
       h += '<div class="cp-step cp-h"><span class="cp-sn">' + r.input[0] + '</span>' +
            '<span class="cp-sb"><span class="cp-st">' + r.input[1] + '</span>' +
-           '<span class="cp-sd">' + r.input[2] + '</span></span></div>';
+           (r.input[2] ? '<span class="cp-sd">' + r.input[2] + '</span>' : '') +
+           '</span></div>';
     }
     panel.innerHTML = h;
     panel.querySelectorAll(".cp-has").forEach(function(el){
@@ -1167,6 +1172,8 @@ body.present .page__content { padding-top: 0 !important; }
   #cp .cp-x .cp-sn { color: #1a6b36; }
   #cp .cp-sb { min-width: 0; padding-right: 58px; }
   #cp .cp-has { cursor: pointer; }
+  #cp .cp-link { color: #1a6b36; text-decoration: none; border-bottom: 1px solid #bcd8c6; }
+  #cp .cp-link:hover { border-bottom-color: #238B45; }
   #cp .cp-has:hover .cp-car { color: #1a6b36; }
   #cp .cp-car { display: inline-block; color: #238B45; font-size: .8em; margin-left: 5px;
     transition: transform .14s ease; }
@@ -1236,7 +1243,7 @@ body.present .page__content { padding-top: 0 !important; }
   <div class="frame__body" id="am">
 
     <ol class="am-list">
-      <li><span class="am-n">1</span><span class="am-w">Understandable</span></li>
+      <li><span class="am-n">1</span><span class="am-w">Transparent</span></li>
       <li><span class="am-n">2</span><span class="am-w">Replicable</span></li>
       <li><span class="am-n">3</span><span class="am-w">Inexpensive</span></li>
       <li><span class="am-n">4</span><span class="am-w">Modular</span></li>
@@ -1249,18 +1256,18 @@ body.present .page__content { padding-top: 0 !important; }
   #am .am-list { list-style: none; margin: 26px 0 0; padding: 0; max-width: 820px; }
   #am .am-list li {
     display: flex; align-items: baseline; gap: 22px;
-    padding: 18px 0; border-bottom: 1px solid #ececec;
+    padding: 14px 0; border-bottom: 1px solid #ececec;
   }
   #am .am-list li:last-child { border-bottom: 0; }
   #am .am-n {
-    flex: 0 0 auto; width: 1.5em; font-size: 1.5rem; font-weight: 700;
+    flex: 0 0 auto; width: 1.5em; font-size: 1.15rem; font-weight: 700;
     color: #8fc3a4; font-variant-numeric: tabular-nums;
   }
-  #am .am-w { font-size: 2rem; font-weight: 600; color: #1f2429; letter-spacing: -.01em; }
+  #am .am-w { font-size: 1.45rem; font-weight: 600; color: #1f2429; letter-spacing: -.01em; }
 
   @media (max-width: 760px) {
-    #am .am-w { font-size: 1.5rem; }
-    #am .am-n { font-size: 1.2rem; }
+    #am .am-w { font-size: 1.2rem; }
+    #am .am-n { font-size: 1rem; }
   }
 </style>
 
