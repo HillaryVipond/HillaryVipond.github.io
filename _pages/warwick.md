@@ -486,33 +486,33 @@ body.present .page__content { padding-top: 0 !important; }
     + "'taylorest', 'tayloring', 'tayloris', 'tayloriss', 'taylorist', 'taylors', 'tialor', "
     + "'tialoress', 'tilloter', 'tailess'";
 
+  // real strings and their coding, looked up in each occode's taskmap
   var TOPICS = [
-    ["clicker   ", "Cuts the upper leather to pattern; the most skilled cutting job in the trade"],
-    ["laster    ", "Pulls and shapes the upper over the last and fastens it ready for the sole"],
-    ["snob      ", "Slang for a cobbler or shoemaker, recorded as written rather than merged into cobbler or maker"],
-    ["sprigger  ", "Fixes soles or heels with sprigs, small headless nails, by hand or machine; close to nailer"],
-    ["welter    ", "Sews the welt in welted boots"],
-    ["eyeletter ", "Punches eyelets into uppers for laces"],
-    ["socker    ", "Fits socks (inner soles) into finished boots"],
-    ["scourer   ", "Scours, that is sands, heels and bottoms, a finishing operation"],
-    ["flowerer  ", "Ornaments uppers with punched or stitched flower patterns"],
-    ["knot tier ", "Ties off the knots of machine stitching, typically a boy's or girl's job"],
-    ["blocker   ", "Shapes material on a block or form (e.g. blocking uppers or hat bodies)"],
-    ["plaiter   ", "Plaits split straw into plait, the braided strip sold to the hat and bonnet trade (STRAW PLAITER; PLAIT MAKER is the same job, 645). Also used for the cloth plaiter of the cotton finishing trades, who folds cloth (PLAITER DOWN): a different trade, in trade = no in 645"],
-    ["clogger   ", "Makes clogs: wooden-soled shoes, northern England (CLOGGER, 665); the trade word"],
-    ["lather boy", "Lathers customers for the barber (SCHOOL LATHER BOY, 668); the two words, one job [9]"],
-    ["cordwainer", "Traditional term for a shoemaker working in new leather; a craft title rather than a process"]
+    ["CARD WINDER            ", "663", "Boot &amp; shoe     ", "<b>cordwainer</b>                         "],
+    ["CRYDD                  ", "663", "Boot &amp; shoe     ", "<b>maker</b> &middot; shoe                "],
+    ["SHOE WINDER            ", "663", "Boot &amp; shoe     ", "<b>binder</b> &middot; shoe               "],
+    ["STRAW PLASTER          ", "645", "Straw plait         ", "<b>plaiter</b> &middot; plait             "],
+    ["CLAY IRON MAKER        ", "665", "Patten &amp; clog   ", "<b>maker</b> &middot; clog iron           "],
+    ["GLOVE STICHER          ", "661", "Glove               ", "<b>stitcher</b> &middot; glove            "],
+    ["PARASOLE MAKER         ", "669", "Umbrella &amp; stick", "<b>maker</b> &middot; parasol             "],
+    ["HAIREDRESSER           ", "668", "Hairdressers        ", "<b>hairdresser</b> &middot; hair          "],
+    ["MACHINEST SLIPPER WORKS", "664", "Slipper             ", "<b>machinist</b> &middot; slipper         "],
+    ["SLIPPER MAKER (BOOT)   ", "664", "Slipper             ", "<b>maker</b> &middot; slipper             "],
+    ["FANCY APRON MAKER      ", "670", "Accoutrement        ", "<b>maker</b> &middot; apron &middot; fancy"],
+    ["HAB TIE MAKER          ", "670", "Accoutrement        ", "<b>haberdasher</b>; maker &middot; tie    "],
+    ["STEAM HAMMER LABOURER  ", "664", "Slipper             ", "<b>labourer</b> &middot; steam hammer     "]
   ];
 
   function tableTopics(){
-    var h = '<table class="ch-tab ch-wide"><thead><tr><th>Task</th><th>What it is</th>'
-          + '</tr></thead><tbody>';
+    var h = '<table class="ch-tab ch-wide"><thead><tr><th>Industry code</th>'
+          + '<th>Occupation &mdash; original string</th>'
+          + '<th>New variable: &ldquo;Task&rdquo;</th></tr></thead><tbody>';
     TOPICS.forEach(function(r){
-      h += '<tr><td class="ch-code"><b>' + r[0] + '</b></td>'
-         + '<td class="ch-why">' + r[1] + '</td></tr>';
+      h += '<tr><td class="ch-occ">' + r[1] + ' <span>' + r[2] + '</span></td>'
+         + '<td class="ch-raw">' + r[0] + '</td>'
+         + '<td class="ch-code">' + r[3] + '</td></tr>';
     });
-    return h + '</tbody></table>'
-      + '<p class="ch-key">446 labels in the library so far</p>';
+    return h + '</tbody></table>';
   }
 
   // from the Hard Census Strings artifact, section 3
@@ -545,7 +545,7 @@ body.present .page__content { padding-top: 0 !important; }
       lead: "",
       body: tableTopics },
     { n: "2", t: "Entity resolution and spelling",
-      lead: "Every spelling of <strong>tailor</strong> found in the census strings:",
+      lead: "Spellings of <strong>tailor</strong> found in the census strings",
       body: function(){ return '<div class="ch-strings">' + TAILOR + '</div>'
         + '<p class="ch-note">Every task label carries a tail like this.</p>'; } },
     { n: "3", t: "Order of priority when there are two or more tasks",
@@ -608,6 +608,8 @@ body.present .page__content { padding-top: 0 !important; }
   #ch .ch-task2 { color: #4a7c5e; }
   #ch .ch-why { color: #777; font-size: .82rem; line-height: 1.45; }
   #ch .ch-code { white-space: nowrap; font-size: .86rem; color: #444; }
+  #ch .ch-occ { white-space: nowrap; font-size: .84rem; color: #555; }
+  #ch .ch-occ span { color: #9a9a9a; font-size: .92em; }
   #ch .ch-code b { color: #1a6b36; font-weight: 600; }
   #ch .ch-wide { font-size: .88rem; }
   #ch .ch-wide td { padding: 6px 14px 6px 0; vertical-align: top; }
