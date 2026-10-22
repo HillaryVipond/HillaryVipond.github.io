@@ -221,8 +221,8 @@ body.present .page__content { padding-top: 0 !important; }
   <h3>Data: The Integrated Census Microdata Project (ICeM)</h3>
   <div class="frame__body">
     <ul class="in-list in-list--wide">
-      <li>Decennial English census data from 1851 to 1921 (excluding 1871)</li>
-      <li>220 million individual level census records, digitized</li>
+      <li>Decennial English census data from 1851 to 1911 (excluding 1871)</li>
+      <li>160 million individual level census records, digitized</li>
       <li>Occupation: at industry level</li>
     </ul>
     <figure class="in-fig in-fig--full">
@@ -717,7 +717,7 @@ body.present .page__content { padding-top: 0 !important; }
                 <li class="d">draft from the dictionary</li>
               </ul>
             </div>
-            <div class="pl-you"><b>1</b> I decide</div>
+            <div class="pl-you"><b>1</b> Human decision</div>
 
             <div class="pl-blk">
               <div class="pl-bh">Block B</div>
@@ -726,7 +726,7 @@ body.present .page__content { padding-top: 0 !important; }
                 <li class="m">LLM confirms</li>
               </ul>
             </div>
-            <div class="pl-you"><b>2</b> I decide</div>
+            <div class="pl-you"><b>2</b> Human decision</div>
 
             <div class="pl-blk">
               <div class="pl-bh">Block C</div>
@@ -736,7 +736,7 @@ body.present .page__content { padding-top: 0 !important; }
                 <li class="m">residue pass</li>
               </ul>
             </div>
-            <div class="pl-you"><b>3</b> I sign off</div>
+            <div class="pl-you"><b>3</b> Human sign-off</div>
 
             <div class="pl-blk pl-blkf">
               <div class="pl-bh pl-bhf">Final</div>
