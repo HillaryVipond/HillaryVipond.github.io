@@ -486,58 +486,77 @@ body.present .page__content { padding-top: 0 !important; }
     + "'taylorest', 'tayloring', 'tayloris', 'tayloriss', 'taylorist', 'taylors', 'tialor', "
     + "'tialoress', 'tilloter', 'tailess'";
 
-  var STRINGS = [
-    ["CORDWAINER", "Cordwainer"],
-    ["BOOT &amp; SHOE MAKER", "Maker"],
-    ["BOOT AND SHOE BINDER", "Binder"],
-    ["BOOT &amp; SHOE RIVETTER", "Rivetter"],
-    ["SEWING MACHINIST", "Sewing Machinist"],
-    ["HAB", "Haberdasher"]
+  var TOPICS = [
+    ["clicker   ", "Cuts the upper leather to pattern; the most skilled cutting job in the trade"],
+    ["laster    ", "Pulls and shapes the upper over the last and fastens it ready for the sole"],
+    ["snob      ", "Slang for a cobbler or shoemaker, recorded as written rather than merged into cobbler or maker"],
+    ["sprigger  ", "Fixes soles or heels with sprigs, small headless nails, by hand or machine; close to nailer"],
+    ["welter    ", "Sews the welt in welted boots"],
+    ["eyeletter ", "Punches eyelets into uppers for laces"],
+    ["socker    ", "Fits socks (inner soles) into finished boots"],
+    ["scourer   ", "Scours, that is sands, heels and bottoms, a finishing operation"],
+    ["flowerer  ", "Ornaments uppers with punched or stitched flower patterns"],
+    ["knot tier ", "Ties off the knots of machine stitching, typically a boy's or girl's job"],
+    ["blocker   ", "Shapes material on a block or form (e.g. blocking uppers or hat bodies)"],
+    ["plaiter   ", "Plaits split straw into plait, the braided strip sold to the hat and bonnet trade (STRAW PLAITER; PLAIT MAKER is the same job, 645). Also used for the cloth plaiter of the cotton finishing trades, who folds cloth (PLAITER DOWN): a different trade, in trade = no in 645"],
+    ["clogger   ", "Makes clogs: wooden-soled shoes, northern England (CLOGGER, 665); the trade word"],
+    ["lather boy", "Lathers customers for the barber (SCHOOL LATHER BOY, 668); the two words, one job [9]"],
+    ["cordwainer", "Traditional term for a shoemaker working in new leather; a craft title rather than a process"]
   ];
 
-  var PAIRS = [
-    ["BOOT &amp; SHOE MAKER",    "24,391", "bootmaker", "shoemaker", "one trade, two products"],
-    ["BOOT MAKER AND REPAIRER",  "2,199",  "bootmaker", "repairer",  "making or mending?"],
-    ["BOOT AND SHOE DEALER",     "1,164",  "bootdealer", "shoedealer", "selling, not making"],
-    ["SHOE HAND FINISHER",       "1,005",  "hand",      "finisher",  "generic word, specific job"],
-    ["SHOEMAKER RIVETTER",       "536",    "shoemaker", "rivetter",  "no conjunction at all"],
-    ["BOOT MAKER AND DEALER",    "502",    "bootmaker", "dealer",    "maker or seller?"]
-  ];
-
-  function tableStrings(){
-    var h = '<table class="ch-tab"><thead><tr><th>Original string</th>'
-          + '<th>New variable: &ldquo;Task&rdquo;</th></tr></thead><tbody>';
-    STRINGS.forEach(function(r){
-      h += '<tr><td class="ch-raw">' + r[0] + '</td><td class="ch-task">' + r[1] + '</td></tr>';
-    });
-    return h + '</tbody></table>';
-  }
-
-  function tablePairs(){
-    var h = '<table class="ch-tab"><thead><tr><th>Original string</th><th class="ch-n">records</th>'
-          + '<th>task 1</th><th>task 2</th><th>why it is hard</th></tr></thead><tbody>';
-    PAIRS.forEach(function(r){
-      h += '<tr><td class="ch-raw">' + r[0] + '</td><td class="ch-n">' + r[1] + '</td>'
-         + '<td class="ch-task">' + r[2] + '</td><td class="ch-task2">' + r[3] + '</td>'
-         + '<td class="ch-why">' + r[4] + '</td></tr>';
+  function tableTopics(){
+    var h = '<table class="ch-tab ch-wide"><thead><tr><th>Task</th><th>What it is</th>'
+          + '</tr></thead><tbody>';
+    TOPICS.forEach(function(r){
+      h += '<tr><td class="ch-code"><b>' + r[0] + '</b></td>'
+         + '<td class="ch-why">' + r[1] + '</td></tr>';
     });
     return h + '</tbody></table>'
-      + '<p class="ch-note">8,871 of occode 663’s strings name two jobs. Which one is the '
-      + 'person’s own, and which is the employer’s trade, the product, or a second '
-      + 'sideline?</p>';
+      + '<p class="ch-key">446 labels in the library so far</p>';
+  }
+
+  // from the Hard Census Strings artifact, section 3
+  var PRIO = [
+    ["BOOT MAKER AND REPAIRER",     "<b>repairer</b>; maker",            "Specificity: maker is the most generic job, so the specific one leads.", 0],
+    ["CLOGGER SOLE MAKER",          "<b>sole maker</b>; clogger",        "Sole maker is the more precise job inside clogging, so it leads the trade word.", 0],
+    ["CLOG MAKER AND BOOT REPAIRER","<b>maker</b>; repairer",            "Two trades, clogs and boots: the person does both, so string order, even though maker is generic.", 1],
+    ["CLOGGER MAKER AND REPAIRER",  "<b>repairer</b>; clogger",          "One trade: the clogger repairs clogs, so specificity again.", 0],
+    ["CLOGGER SHOP KEEPER",         "<b>shopkeeper</b>; clogger",        "Clogger only names the trade; shopkeeper says what the person does.", 1],
+    ["OUTFITTER SHOPKEEPER",        "<b>outfitter</b>; shopkeeper",      "Two selling words of the same weight: string order.", 0],
+    ["HAIRDRESSER SHOPKEEPER",      "<b>hairdresser</b>; shopkeeper",    "The service says more than the shop does.", 0],
+    ["BOOT MANUFACTURERS MANAGER",  "<b>manager</b>; manufacturer",      "The person&rsquo;s own job first; the employer&rsquo;s trade says what they manage.", 1],
+    ["CASHIER BOOT SHOP",           "<b>cashier</b>; shopman",           "The job first, the place second.", 0],
+    ["HOSIERY WAREHOUSE BOY",       "<b>warehouseman</b>; hosier",       "Beside a trade word the place job leads: the boy works in the warehouse of a hosier.", 0],
+    ["SEWING MACHINIST",            "<b>sewer</b> &middot; machine",     "The job first, the machine as how it is done: one job, not two.", 1],
+    ["FOREMAN MACHINIST",           "<b>foreman</b>; machinist",         "The supervisor always leads.", 0],
+    ["SCHOOL LATHER BOY",           "<b>lather boy</b>; scholar",        "A half-timer who soaped faces at the barber&rsquo;s: scholar is always second.", 0],
+    ["TAILOR &amp; GROCER",         "<b>tailor</b>; grocer",             "Two trades: the first named leads.", 1],
+    ["GROCER AND DRAPER SHOPKEEPER","<b>shopkeeper</b>; grocer; draper", "Three jobs: string order, except that the person&rsquo;s own job comes first.", 0]
+  ];
+
+  function tablePrio(){
+    var h = '<table class="ch-tab ch-wide"><thead><tr><th>String</th><th>Coded as</th>'
+          + '<th>The reasoning</th></tr></thead><tbody>';
+    PRIO.forEach(function(r){
+      h += '<tr' + (r[3] ? ' class="ch-pair"' : '') + '><td class="ch-raw">' + r[0] + '</td>'
+         + '<td class="ch-code">' + r[1] + '</td><td class="ch-why">' + r[2] + '</td></tr>';
+    });
+    return h + '</tbody></table>'
+      + '<p class="ch-key">task 1 in bold &middot; task 2 after a semicolon &middot; '
+      + 'type, material and detail after a dot</p>';
   }
 
   var CH = [
     { n: "1", t: "Topic discovery",
       lead: "",
-      body: tableStrings },
+      body: tableTopics },
     { n: "2", t: "Entity resolution and spelling",
       lead: "Every spelling of <strong>tailor</strong> found in the census strings:",
       body: function(){ return '<div class="ch-strings">' + TAILOR + '</div>'
         + '<p class="ch-note">Every task label carries a tail like this.</p>'; } },
     { n: "3", t: "Order of priority when there are two or more tasks",
-      lead: "When a string names more than one job, which is Task 1?",
-      body: tablePairs }
+      lead: "The more specific job leads; where neither is, the first named leads; the person\u2019s own job leads the shop or firm they work for.",
+      body: tablePrio }
   ];
 
   var list = document.getElementById("ch-list");
@@ -565,9 +584,9 @@ body.present .page__content { padding-top: 0 !important; }
 
 <style>
   #ch .ch-wrap { display: flex; gap: 88px; align-items: flex-start; margin: 18px 0 0;
-    max-width: 1148px; }
+    max-width: 1328px; }
   #ch .ch-list { flex: 0 0 340px; display: flex; flex-direction: column; gap: 12px; }
-  #ch .ch-panel { flex: 1 1 auto; min-width: 0; max-width: 720px; min-height: 420px; }
+  #ch .ch-panel { flex: 1 1 auto; min-width: 0; max-width: 900px; min-height: 420px; }
 
   #ch .ch-item {
     display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start;
@@ -593,7 +612,13 @@ body.present .page__content { padding-top: 0 !important; }
     font-size: .88rem; color: #1f2429; white-space: nowrap; }
   #ch .ch-task { font-weight: 600; color: #1a6b36; }
   #ch .ch-task2 { color: #4a7c5e; }
-  #ch .ch-why { color: #8a8a8a; font-size: .88rem; }
+  #ch .ch-why { color: #777; font-size: .82rem; line-height: 1.45; }
+  #ch .ch-code { white-space: nowrap; font-size: .86rem; color: #444; }
+  #ch .ch-code b { color: #1a6b36; font-weight: 600; }
+  #ch .ch-wide { font-size: .88rem; }
+  #ch .ch-wide td { padding: 6px 14px 6px 0; vertical-align: top; }
+  #ch .ch-pair td { border-top: 2px solid #e2e2e2; }
+  #ch .ch-key { font-size: .74rem; color: #a0a0a0; margin: 12px 0 0; }
   #ch .ch-n { text-align: right; padding-right: 16px; color: #666; }
 
   #ch .ch-strings {
