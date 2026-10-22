@@ -883,30 +883,25 @@ body.present .page__content { padding-top: 0 !important; }
   // every coding beside them is real, from occode 663
   var RECID = ["10418773", "10418897", "10419780", "10420392", "10420595", "10421198",
                "10421482", "10421964", "10422399", "10423020", "10423396", "10424074", "10424305", "10424994",
-               "10425341", "10425531", "10425877", "10426378", "10426793", "10427147"];
+               "10425341", "10425531"];
 
-  // a spread across occodes, every value from crosswalks/<order>/<occode>_*.csv
   var XW = [
-    ["DRESSMAKERS APPRENTICE    ", "657", "dressmaker", "          ", "       ", "          ", "     ", "apprentice", "           ", "          "],
-    ["JOURNEYMAN TAILOR         ", "653", "tailor    ", "          ", "       ", "          ", "     ", "journeyman", "           ", "          "],
-    ["MILLINERS ASSISTANT       ", "650", "milliner  ", "          ", "       ", "          ", "     ", "assistant ", "           ", "          "],
-    ["RETIRED DRESSMAKER        ", "657", "dressmaker", "          ", "       ", "          ", "     ", "retired   ", "           ", "          "],
-    ["BOOT &amp; SHOE MAKER WIFE", "663", "maker     ", "          ", "       ", "boot; shoe", "     ", "wife      ", "           ", "          "],
-    ["TAILOR EMPLOYING 1 MAN    ", "653", "tailor    ", "          ", "       ", "          ", "     ", "          ", "employing  ", "          "],
-    ["DRESSMAKER OWN ACCOUNT    ", "657", "dressmaker", "          ", "       ", "          ", "     ", "          ", "own account", "          "],
-    ["TAILOR MAKER              ", "653", "tailor    ", "maker     ", "       ", "          ", "     ", "          ", "           ", "          "],
-    ["TAILORS CUTTER            ", "654", "cutter    ", "tailor    ", "       ", "          ", "     ", "          ", "           ", "          "],
-    ["GROCER &amp; DRAPER       ", "655", "grocer    ", "draper    ", "       ", "          ", "     ", "          ", "           ", "          "],
-    ["MILLINER &amp; DRESSMAKER ", "650", "milliner  ", "dressmaker", "       ", "          ", "     ", "          ", "           ", "          "],
-    ["SEWING MACHINIST TAILORING", "654", "sewer     ", "tailor    ", "machine", "          ", "     ", "          ", "           ", "          "],
-    ["STRAW PLAITER             ", "645", "plaiter   ", "          ", "       ", "plait     ", "straw", "          ", "           ", "          "],
-    ["STRAW BONNET MAKER        ", "646", "maker     ", "          ", "       ", "bonnet    ", "straw", "          ", "           ", "          "],
-    ["FELT HAT TRIMMER          ", "647", "trimmer   ", "          ", "       ", "hat       ", "felt ", "          ", "           ", "          "],
-    ["PEARL BUTTON MAKER        ", "660", "maker     ", "          ", "       ", "button    ", "pearl", "          ", "           ", "          "],
-    ["SEWING MACHINIST          ", "659", "sewer     ", "          ", "machine", "          ", "     ", "          ", "           ", "          "],
-    ["LADIES TAILOR             ", "653", "tailor    ", "          ", "ladies ", "          ", "     ", "          ", "           ", "          "],
-    ["STRAW WORKER              ", "646", "worker    ", "          ", "       ", "          ", "straw", "          ", "           ", "unverified"],
-    ["JET WORKER (LAPIDARY)     ", "650", "lapidary  ", "          ", "jet    ", "          ", "     ", "          ", "           ", "no        "]
+    ["DRESSMAKERS APPRENTICE    ", "657", "dressmaker", "          ", "       ", "          ", "     ", "apprentice", "           "],
+    ["JOURNEYMAN TAILOR         ", "653", "tailor    ", "          ", "       ", "          ", "     ", "journeyman", "           "],
+    ["MILLINERS ASSISTANT       ", "650", "milliner  ", "          ", "       ", "          ", "     ", "assistant ", "           "],
+    ["RETIRED DRESSMAKER        ", "657", "dressmaker", "          ", "       ", "          ", "     ", "retired   ", "           "],
+    ["BOOT &amp; SHOE MAKER WIFE", "663", "maker     ", "          ", "       ", "boot; shoe", "     ", "wife      ", "           "],
+    ["TAILOR EMPLOYING 1 MAN    ", "653", "tailor    ", "          ", "       ", "          ", "     ", "          ", "employing  "],
+    ["DRESSMAKER OWN ACCOUNT    ", "657", "dressmaker", "          ", "       ", "          ", "     ", "          ", "own account"],
+    ["TAILOR MAKER              ", "653", "tailor    ", "maker     ", "       ", "          ", "     ", "          ", "           "],
+    ["TAILORS CUTTER            ", "654", "cutter    ", "tailor    ", "       ", "          ", "     ", "          ", "           "],
+    ["GROCER &amp; DRAPER       ", "655", "grocer    ", "draper    ", "       ", "          ", "     ", "          ", "           "],
+    ["MILLINER &amp; DRESSMAKER ", "650", "milliner  ", "dressmaker", "       ", "          ", "     ", "          ", "           "],
+    ["SEWING MACHINIST TAILORING", "654", "sewer     ", "tailor    ", "machine", "          ", "     ", "          ", "           "],
+    ["LADIES TAILOR             ", "653", "tailor    ", "          ", "ladies ", "          ", "     ", "          ", "           "],
+    ["STRAW PLAITER             ", "645", "plaiter   ", "          ", "       ", "plait     ", "straw", "          ", "           "],
+    ["FELT HAT TRIMMER          ", "647", "trimmer   ", "          ", "       ", "hat       ", "felt ", "          ", "           "],
+    ["PEARL BUTTON MAKER        ", "660", "maker     ", "          ", "       ", "button    ", "pearl", "          ", "           "]
   ];
 
   var TD = [
@@ -919,9 +914,7 @@ body.present .page__content { padding-top: 0 !important; }
     ["draper    ", "Sells cloth and dress goods in a shop (MILLINER & DRAPER, 650); a dealer's trade, perhaps outside manufacture"],
     ["sewer     ", "Sews by hand (SHOE SEWER); not a machine job unless the string says so"],
     ["plaiter   ", "Plaits split straw into plait, the braided strip sold to the hat and bonnet trade (STRAW PLAITER; PLAIT MAKER is the same job, 645). Also used for the cloth plaiter of the cotton finishing trades, who folds cloth (PLAITER DOWN): a different trade, in trade = no in 645"],
-    ["trimmer   ", "Trims surplus material from the article at an intermediate stage"],
-    ["worker    ", "Named only as working in the trade, with no process given (BOOT HAND, SHOE TRADE, BOOTMAN)"],
-    ["lapidary  ", "Cuts and polishes stones, here jet for ornaments (JET WORKER (LAPIDARY), 650)"]
+    ["trimmer   ", "Trims surplus material from the article at an intermediate stage"]
   ];
 
   function xwTable(){
@@ -2743,14 +2736,17 @@ Promise.all([
         hoverPt.style("display", null).attr("cx", x(d.beta)).attr("cy", y(d.density));
         readout.textContent = d.name + " (code " + d.code + ") · " + fB(d.beta) +
                               " percentage points · " + fP(d.percentile) + suffix(d.percentile) + " percentile";
-        var rect = root.getBoundingClientRect();
+        // measure against .ph-wrap, which is what the tip is positioned inside;
+        // root also holds the readout line above the chart, so using it put the
+        // tip about 34px lower than intended, right on the curve
+        var rect = wrap.getBoundingClientRect();
         tip.innerHTML = "<strong>" + d.name + "</strong>" +
           "<div>Occupation code: " + d.code + "</div>" +
           "<div>DiD: " + fB(d.beta) + " percentage points</div>" +
           "<div>Percentile: " + fP(d.percentile) + "</div>";
         tip.hidden = false;
         var left = Math.max(6, Math.min(rect.width - tip.offsetWidth - 6, event.clientX - rect.left + 14));
-        var top  = Math.max(6, event.clientY - rect.top - tip.offsetHeight - 12);
+        var top  = Math.max(4, event.clientY - rect.top - tip.offsetHeight - 34);
         tip.style.left = left + "px";
         tip.style.top  = top + "px";
       }
