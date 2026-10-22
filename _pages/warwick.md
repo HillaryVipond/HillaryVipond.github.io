@@ -519,19 +519,15 @@ body.present .page__content { padding-top: 0 !important; }
   var PRIO = [
     ["BOOT MAKER AND REPAIRER",     "<b>repairer</b>; maker",            "Specificity: maker is the most generic job, so the specific one leads.", 0],
     ["CLOGGER SOLE MAKER",          "<b>sole maker</b>; clogger",        "Sole maker is the more precise job inside clogging, so it leads the trade word.", 0],
-    ["CLOG MAKER AND BOOT REPAIRER","<b>maker</b>; repairer",            "Two trades, clogs and boots: the person does both, so string order, even though maker is generic.", 1],
-    ["CLOGGER MAKER AND REPAIRER",  "<b>repairer</b>; clogger",          "One trade: the clogger repairs clogs, so specificity again.", 0],
-    ["CLOGGER SHOP KEEPER",         "<b>shopkeeper</b>; clogger",        "Clogger only names the trade; shopkeeper says what the person does.", 1],
+    ["CLOG MAKER AND BOOT REPAIRER","<b>maker</b>; repairer",            "Two trades, clogs and boots: the person does both, so string order, even though maker is generic.", 0],
     ["OUTFITTER SHOPKEEPER",        "<b>outfitter</b>; shopkeeper",      "Two selling words of the same weight: string order.", 0],
     ["HAIRDRESSER SHOPKEEPER",      "<b>hairdresser</b>; shopkeeper",    "The service says more than the shop does.", 0],
-    ["BOOT MANUFACTURERS MANAGER",  "<b>manager</b>; manufacturer",      "The person&rsquo;s own job first; the employer&rsquo;s trade says what they manage.", 1],
-    ["CASHIER BOOT SHOP",           "<b>cashier</b>; shopman",           "The job first, the place second.", 0],
+    ["BOOT MANUFACTURERS MANAGER",  "<b>manager</b>; manufacturer",      "The person&rsquo;s own job first; the employer&rsquo;s trade says what they manage.", 0],
     ["HOSIERY WAREHOUSE BOY",       "<b>warehouseman</b>; hosier",       "Beside a trade word the place job leads: the boy works in the warehouse of a hosier.", 0],
-    ["SEWING MACHINIST",            "<b>sewer</b> &middot; machine",     "The job first, the machine as how it is done: one job, not two.", 1],
+    ["SEWING MACHINIST",            "<b>sewer</b> &middot; machine",     "The job first, the machine as how it is done: one job, not two.", 0],
     ["FOREMAN MACHINIST",           "<b>foreman</b>; machinist",         "The supervisor always leads.", 0],
     ["SCHOOL LATHER BOY",           "<b>lather boy</b>; scholar",        "A half-timer who soaped faces at the barber&rsquo;s: scholar is always second.", 0],
-    ["TAILOR &amp; GROCER",         "<b>tailor</b>; grocer",             "Two trades: the first named leads.", 1],
-    ["GROCER AND DRAPER SHOPKEEPER","<b>shopkeeper</b>; grocer; draper", "Three jobs: string order, except that the person&rsquo;s own job comes first.", 0]
+    ["TAILOR &amp; GROCER",         "<b>tailor</b>; grocer",             "Two trades: the first named leads.", 0]
   ];
 
   function tablePrio(){
@@ -541,9 +537,7 @@ body.present .page__content { padding-top: 0 !important; }
       h += '<tr' + (r[3] ? ' class="ch-pair"' : '') + '><td class="ch-raw">' + r[0] + '</td>'
          + '<td class="ch-code">' + r[1] + '</td><td class="ch-why">' + r[2] + '</td></tr>';
     });
-    return h + '</tbody></table>'
-      + '<p class="ch-key">task 1 in bold &middot; task 2 after a semicolon &middot; '
-      + 'type, material and detail after a dot</p>';
+    return h + '</tbody></table>';
   }
 
   var CH = [
@@ -555,7 +549,7 @@ body.present .page__content { padding-top: 0 !important; }
       body: function(){ return '<div class="ch-strings">' + TAILOR + '</div>'
         + '<p class="ch-note">Every task label carries a tail like this.</p>'; } },
     { n: "3", t: "Order of priority when there are two or more tasks",
-      lead: "The more specific job leads; where neither is, the first named leads; the person\u2019s own job leads the shop or firm they work for.",
+      lead: "",
       body: tablePrio }
   ];
 
