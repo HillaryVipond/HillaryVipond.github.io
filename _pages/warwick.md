@@ -909,6 +909,21 @@ body.present .page__content { padding-top: 0 !important; }
     ["JET WORKER (LAPIDARY)     ", "650", "lapidary  ", "          ", "jet    ", "          ", "     ", "          ", "           ", "no        "]
   ];
 
+  var TD = [
+    ["dressmaker", "Makes women's and children's dresses to order; a trade of its own (657), often beside millinery (MILLINER & DRESSMAKER, 650). DRESSMAKER = DRESS MAKER [1]"],
+    ["tailor    ", "Makes clothes to measure, chiefly men's coats, waistcoats and trousers, cut and sewn by hand or machine (TAILOR, TAILORESS [10], 653); the trade word of 653"],
+    ["milliner  ", "Makes or trims women's hats and bonnets (STRAW HAT MILLINER, 646); the milliners are occodes 650 and 652"],
+    ["maker     ", "Makes the whole article (boot, shoe, slipper); the general craft label, used when no more specific process is named"],
+    ["cutter    ", "Cuts leather or other material to pattern; less specific than clicker"],
+    ["grocer    ", "Sells groceries: tea, sugar, provisions (GROCER & DRAPER, 655); a second trade beside the clothier's"],
+    ["draper    ", "Sells cloth and dress goods in a shop (MILLINER & DRAPER, 650); a dealer's trade, perhaps outside manufacture"],
+    ["sewer     ", "Sews by hand (SHOE SEWER); not a machine job unless the string says so"],
+    ["plaiter   ", "Plaits split straw into plait, the braided strip sold to the hat and bonnet trade (STRAW PLAITER; PLAIT MAKER is the same job, 645). Also used for the cloth plaiter of the cotton finishing trades, who folds cloth (PLAITER DOWN): a different trade, in trade = no in 645"],
+    ["trimmer   ", "Trims surplus material from the article at an intermediate stage"],
+    ["worker    ", "Named only as working in the trade, with no process given (BOOT HAND, SHOE TRADE, BOOTMAN)"],
+    ["lapidary  ", "Cuts and polishes stones, here jet for ornaments (JET WORKER (LAPIDARY), 650)"]
+  ];
+
   function xwTable(){
     var h = '<div class="cp-xwscroll"><table class="cp-xw"><thead><tr>'
           + '<th>RecID</th><th>occode</th><th>OCC</th>'
@@ -1039,6 +1054,12 @@ body.present .page__content { padding-top: 0 !important; }
     flow.appendChild(b);
   });
 
+  // one broken example must not stop a whole block from rendering
+  function cpSafe(fn){
+    try { return fn(); }
+    catch (e) { return '<p class="cp-sd">(example unavailable)</p>'; }
+  }
+
   function show(id){
     var r = RUNS.filter(function(x){ return x.id === id; })[0];
     if (!r) return;
@@ -1059,7 +1080,7 @@ body.present .page__content { padding-top: 0 !important; }
          + '<span class="cp-sb"><span class="cp-st">' + title + '</span>'
          + '<span class="cp-sd">' + s[3] + '</span></span></li>';
       if (s[4] && !link) h += '<li class="cp-exwrap" hidden>'
-                   + (s[4] === "td" ? tdTable() : s[4] === "mag" ? magBlock() : xwTable())
+                   + cpSafe(s[4] === "td" ? tdTable : s[4] === "mag" ? magBlock : xwTable)
                    + '</li>';
     });
     h += '</ol>';
