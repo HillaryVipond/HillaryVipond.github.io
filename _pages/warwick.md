@@ -945,8 +945,7 @@ body.present .page__content { padding-top: 0 !important; }
     TD.forEach(function(r){
       h += '<tr><td class="cp-xwt">' + r[0] + '</td><td>' + r[1] + '</td></tr>';
     });
-    return h + '</tbody></table>'
-      + '<p class="cp-xwn">The labels used above, as the library defines them.</p>';
+    return h + '</tbody></table>';
   }
 
   // The Spelling Magnet, ported from the artifact of the same name
@@ -1228,7 +1227,6 @@ body.present .page__content { padding-top: 0 !important; }
   @media (max-width: 1100px) { #cp .mag-cols { grid-template-columns: 1fr; } }
   #cp .cp-td td { font-size: .76rem; line-height: 1.45; }
   #cp .cp-td td:first-child { white-space: nowrap; vertical-align: top; }
-  #cp .cp-xwn { font-size: .7rem; color: #a0a0a0; margin: 9px 0 0; }
   #cp .cp-st { display: block; font-weight: 600; font-size: .97rem; color: #1f2429; }
   #cp .cp-sd { display: block; font-size: .84rem; line-height: 1.5; color: #555d66; margin-top: 2px; }
 
