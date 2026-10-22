@@ -154,6 +154,7 @@ body.present .page__content { padding-top: 0 !important; }
         <li>New Jobs: have been vital
             <span class="in-cite">(Autor et al, 2025; Kalyani et al 2025)</span></li>
         <li>60% of the jobs that employ Americans today did not exist in the 1950s.</li>
+      <li>Impact of new technology on workers jointly determined by job loss &amp; job creation</li>
       </ul>
       <figure class="in-fig">
         <img src="/assets/images/Tesla.jpg" alt="Tesla's magnifying transmitter generating millions of volts">
