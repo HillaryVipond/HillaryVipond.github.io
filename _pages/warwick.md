@@ -881,68 +881,54 @@ body.present .page__content { padding-top: 0 !important; }
 
   // record identifiers stand in for the linked census records; every string and
   // every coding beside them is real, from occode 663
-  var RECID = ["10418186", "10418698", "10418861", "10419456", "10419851", "10420011", "10420590",
-               "10421082", "10421583", "10421850", "10422380", "10422754", "10423187", "10423434", "10423662",
-               "10423783", "10423870", "10424047", "10424392", "10424890", "10425044", "10425584", "10425791",
-               "10426303", "10426689", "10426914", "10427071"];
+  var RECID = ["10418773", "10418897", "10419780", "10420392", "10420595", "10421198",
+               "10421482", "10421964", "10422399", "10423020", "10423396", "10424074", "10424305", "10424994",
+               "10425341", "10425531", "10425877", "10426378", "10426793", "10427147"];
 
+  // a spread across occodes, every value from crosswalks/<order>/<occode>_*.csv
   var XW = [
-    ["SHOEMAKER                ", "maker       ", "     ", "       ", "shoe", "          ", "         "],
-    ["BOOT MAKER               ", "maker       ", "     ", "       ", "boot", "          ", "         "],
-    ["CORDWAINER               ", "cordwainer  ", "     ", "       ", "    ", "          ", "         "],
-    ["SHOE BINDER              ", "binder      ", "     ", "       ", "shoe", "          ", "         "],
-    ["SHOE FINISHER            ", "finisher    ", "     ", "       ", "shoe", "          ", "         "],
-    ["BOOT CLOSER              ", "closer      ", "     ", "       ", "boot", "          ", "         "],
-    ["SHOE CLICKER             ", "clicker     ", "     ", "       ", "shoe", "          ", "         "],
-    ["BOOT LASTER              ", "laster      ", "     ", "       ", "boot", "          ", "         "],
-    ["BOOT MACHINIST           ", "machinist   ", "     ", "       ", "boot", "          ", "         "],
-    ["BOOT REPAIRER            ", "repairer    ", "     ", "       ", "boot", "          ", "         "],
-    ["CORD WAINER              ", "cordwainer  ", "     ", "       ", "    ", "          ", "         "],
-    ["CORDWINER                ", "cordwainer  ", "     ", "       ", "    ", "          ", "         "],
-    ["CORDWAINDER              ", "cordwainer  ", "     ", "       ", "    ", "          ", "         "],
-    ["COARDWAINER              ", "cordwainer  ", "     ", "       ", "    ", "          ", "         "],
-    ["CORDWANER                ", "cordwainer  ", "     ", "       ", "    ", "          ", "         "],
-    ["BOOT MAKER AND REPAIRER  ", "repairer    ", "maker", "       ", "boot", "          ", "         "],
-    ["SHOEMAKER RIVETTER       ", "riveter     ", "maker", "       ", "shoe", "          ", "         "],
-    ["SHOEMAKER FINISHER       ", "finisher    ", "maker", "       ", "shoe", "          ", "         "],
-    ["BOOT MAKER LASTER        ", "laster      ", "maker", "       ", "boot", "          ", "         "],
-    ["BOOTMAKER CLICKER        ", "clicker     ", "maker", "       ", "boot", "          ", "         "],
-    ["BOOT MAKER AND DEALER    ", "dealer      ", "maker", "       ", "boot", "          ", "         "],
-    ["SHOE MACHINE OPERATOR    ", "operator    ", "     ", "machine", "shoe", "          ", "         "],
-    ["SHOEMAKER JOURNEYMAN     ", "maker       ", "     ", "       ", "shoe", "journeyman", "         "],
-    ["RETIRED SHOEMAKER        ", "maker       ", "     ", "       ", "shoe", "retired   ", "         "],
-    ["BOOTMAKERS ASSISTANT     ", "maker       ", "     ", "       ", "boot", "assistant ", "         "],
-    ["BOOT SHOP MANAGER        ", "shop manager", "     ", "       ", "boot", "manager   ", "         "],
-    ["SHOEMAKER EMPLOYING 1 MAN", "maker       ", "     ", "       ", "shoe", "          ", "employing"]
+    ["DRESSMAKERS APPRENTICE    ", "657", "dressmaker", "          ", "       ", "          ", "     ", "apprentice", "           ", "          "],
+    ["JOURNEYMAN TAILOR         ", "653", "tailor    ", "          ", "       ", "          ", "     ", "journeyman", "           ", "          "],
+    ["MILLINERS ASSISTANT       ", "650", "milliner  ", "          ", "       ", "          ", "     ", "assistant ", "           ", "          "],
+    ["RETIRED DRESSMAKER        ", "657", "dressmaker", "          ", "       ", "          ", "     ", "retired   ", "           ", "          "],
+    ["BOOT &amp; SHOE MAKER WIFE", "663", "maker     ", "          ", "       ", "boot; shoe", "     ", "wife      ", "           ", "          "],
+    ["TAILOR EMPLOYING 1 MAN    ", "653", "tailor    ", "          ", "       ", "          ", "     ", "          ", "employing  ", "          "],
+    ["DRESSMAKER OWN ACCOUNT    ", "657", "dressmaker", "          ", "       ", "          ", "     ", "          ", "own account", "          "],
+    ["TAILOR MAKER              ", "653", "tailor    ", "maker     ", "       ", "          ", "     ", "          ", "           ", "          "],
+    ["TAILORS CUTTER            ", "654", "cutter    ", "tailor    ", "       ", "          ", "     ", "          ", "           ", "          "],
+    ["GROCER &amp; DRAPER       ", "655", "grocer    ", "draper    ", "       ", "          ", "     ", "          ", "           ", "          "],
+    ["MILLINER &amp; DRESSMAKER ", "650", "milliner  ", "dressmaker", "       ", "          ", "     ", "          ", "           ", "          "],
+    ["SEWING MACHINIST TAILORING", "654", "sewer     ", "tailor    ", "machine", "          ", "     ", "          ", "           ", "          "],
+    ["STRAW PLAITER             ", "645", "plaiter   ", "          ", "       ", "plait     ", "straw", "          ", "           ", "          "],
+    ["STRAW BONNET MAKER        ", "646", "maker     ", "          ", "       ", "bonnet    ", "straw", "          ", "           ", "          "],
+    ["FELT HAT TRIMMER          ", "647", "trimmer   ", "          ", "       ", "hat       ", "felt ", "          ", "           ", "          "],
+    ["PEARL BUTTON MAKER        ", "660", "maker     ", "          ", "       ", "button    ", "pearl", "          ", "           ", "          "],
+    ["SEWING MACHINIST          ", "659", "sewer     ", "          ", "machine", "          ", "     ", "          ", "           ", "          "],
+    ["LADIES TAILOR             ", "653", "tailor    ", "          ", "ladies ", "          ", "     ", "          ", "           ", "          "],
+    ["STRAW WORKER              ", "646", "worker    ", "          ", "       ", "          ", "straw", "          ", "           ", "unverified"],
+    ["JET WORKER (LAPIDARY)     ", "650", "lapidary  ", "          ", "jet    ", "          ", "     ", "          ", "           ", "no        "]
   ];
 
-  var TD = [
-    ["maker     ", "Makes the whole article (boot, shoe, slipper); the general craft label, used when no more specific process is named"],
-    ["cordwainer", "Traditional term for a shoemaker working in new leather; a craft title rather than a process"],
-    ["binder    ", "Stitches the upper parts together before they are attached to the sole; in footwear, often women working at home"],
-    ["finisher  ", "Completes the boot after the sole is on: trims, scours, inks and polishes edges and bottoms"],
-    ["closer    ", "Sews the upper together (closes the seams), by hand or machine"],
-    ["clicker   ", "Cuts the upper leather to pattern; the most skilled cutting job in the trade"],
-    ["laster    ", "Pulls and shapes the upper over the last and fastens it ready for the sole"],
-    ["machinist ", "Operates a sewing or other machine on uppers or soles"],
-    ["repairer  ", "Mends worn boots and shoes; also mender"],
-    ["riveter   ", "Fastens soles to uppers with rivets or nails, a mechanised alternative to sewing"],
-    ["dealer    ", "Buys and sells the product without making it"],
-    ["operator  ", "Works a machine; the machine is usually named in the string"]
-  ];
   function xwTable(){
-    var h = '<table class="cp-xw"><thead><tr><th>RecID</th><th>OCC</th>'
-          + '<th>task 1</th><th>task 2</th>'
-          + '<th>product</th><th>material</th><th>qualifiers</th><th>employing</th>'
+    var h = '<div class="cp-xwscroll"><table class="cp-xw"><thead><tr>'
+          + '<th>RecID</th><th>occode</th><th>OCC</th>'
+          + '<th>task 1</th><th>task 2</th><th>detail</th><th>product</th><th>material</th>'
+          + '<th>qualifiers</th><th>employing</th><th>in trade</th>'
           + '</tr></thead><tbody>';
     XW.forEach(function(r, i){
       h += '<tr><td class="cp-xwid">' + RECID[i] + '</td>'
-         + '<td class="cp-xwr">' + r[0] + '</td><td class="cp-xwt">' + r[1] + '</td>'
-         + '<td class="cp-xwt2">' + (r[2] || '&mdash;') + '</td>'
-         + '<td>' + (r[3] || '&mdash;') + '</td><td>' + (r[4] || '&mdash;') + '</td>'
-         + '<td>' + (r[5] || '&mdash;') + '</td><td>' + (r[6] || '&mdash;') + '</td></tr>';
+         + '<td class="cp-xwo">' + r[1] + '</td>'
+         + '<td class="cp-xwr">' + r[0] + '</td>'
+         + '<td class="cp-xwt">' + r[2] + '</td>'
+         + '<td class="cp-xwt2">' + (r[3] || '&mdash;') + '</td>'
+         + '<td>' + (r[4] || '&mdash;') + '</td>'
+         + '<td>' + (r[5] || '&mdash;') + '</td>'
+         + '<td>' + (r[6] || '&mdash;') + '</td>'
+         + '<td>' + (r[7] || '&mdash;') + '</td>'
+         + '<td>' + (r[8] || '&mdash;') + '</td>'
+         + '<td class="cp-xwtr">' + (r[9] || '&mdash;') + '</td></tr>';
     });
-    return h + '</tbody></table>';
+    return h + '</tbody></table></div>';
   }
 
   function tdTable(){
@@ -1103,7 +1089,7 @@ body.present .page__content { padding-top: 0 !important; }
 <style>
   #cp { --sc: #dfe8f3; --sci: #1f4f86; --hu: #ffdf9e; --hui: #7a4300; --mo: #f6cdea; --moi: #8a1462; }
 
-  #cp .cp-top { max-width: 1412px; margin: 4px 0 44px; }
+  #cp .cp-top { max-width: 1488px; margin: 4px 0 44px; }
   /* legend lifted from the pipeline artifact: light fill, thick coloured left
      edge, so each swatch mirrors the step block it stands for */
   #cp .cp-key { gap: 14px; flex-wrap: wrap; font-size: .85rem; color: #5e6670; }
@@ -1117,8 +1103,8 @@ body.present .page__content { padding-top: 0 !important; }
   #cp .cp-stat { font-size: .92rem; color: #555; }
   #cp .cp-stat strong { color: #238B45; }
 
-  #cp .cp-wrap { display: flex; gap: 140px; align-items: flex-start;
-    max-width: 1412px; }
+  #cp .cp-wrap { display: flex; gap: 96px; align-items: flex-start;
+    max-width: 1488px; }
   #cp .cp-left { flex: 0 0 372px; }
   #cp .cp-flow { display: flex; flex-direction: column; }
   /* the legend and the panel heading share a height, so Run A and the panel's
@@ -1141,7 +1127,7 @@ body.present .page__content { padding-top: 0 !important; }
   #cp .cp-blk--fin[aria-current="true"] { box-shadow: 0 0 0 2px #238B45 inset; }
   #cp .cp-bn { font-weight: 700; font-size: 1.3rem; letter-spacing: -.01em; }
 
-  #cp .cp-panel { flex: 1 1 auto; min-width: 0; max-width: 900px; min-height: 430px; }
+  #cp .cp-panel { flex: 1 1 auto; min-width: 0; max-width: 1020px; min-height: 430px; }
   #cp .cp-ph { font-size: 1.1rem; font-weight: 700; color: #1f2429; gap: 7px; }
   #cp .cp-ph span { font-weight: 400; color: #8a8a8a; font-size: .9rem; }
 
@@ -1184,10 +1170,14 @@ body.present .page__content { padding-top: 0 !important; }
   #cp .cp-xw th { text-align: left; font-size: .64rem; letter-spacing: .05em;
     text-transform: uppercase; color: #555; font-weight: 700;
     padding: 0 10px 5px 0; border-bottom: 1px solid #238B45; }
-  #cp .cp-xw td { padding: 4px 10px 4px 0; border-bottom: 1px solid #f2f2f2; color: #444; }
+  #cp .cp-xw td { padding: 4px 10px 4px 0; border-bottom: 1px solid #f2f2f2; color: #444;
+    white-space: nowrap; }
   #cp .cp-xw tr:last-child td { border-bottom: 0; }
+  #cp .cp-xwscroll { overflow-x: auto; }
   #cp .cp-xwid { color: #9a9a9a; font-variant-numeric: tabular-nums; text-align: right;
     padding-right: 14px; }
+  #cp .cp-xwo { color: #1f4f86; font-variant-numeric: tabular-nums; }
+  #cp .cp-xwtr { color: #b06a2c; }
   #cp .cp-xwr { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .74rem;
     color: #1f2429; white-space: nowrap; }
   #cp .cp-xwt { font-weight: 600; color: #1a6b36; }
