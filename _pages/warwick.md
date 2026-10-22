@@ -857,7 +857,7 @@ body.present .page__content { padding-top: 0 !important; }
         ["d", "0", "Leverage lookup dictionary", "the library labels that actually occur in this occode, so the loop searches dozens rather than thousands"],
         ["d", "a", "Deterministic rules", "each label generates its own spellings: joined form, -er to -ing, -man to -men, -woman, -women"],
         ["d", "b", "Search + known pairs", "letters-only substring match, so CORD WAINER and CORDWAINER are the same; where a string names two jobs, the orderings already decided are applied"],
-        ["d", "c", "Magnet", "words still unassigned are matched to the nearest canonical tasks by character similarity, which is what catches misspellings; each keeps its best three candidates for the model"],
+        ["d", "c", "Magnet", "words still unassigned are matched to the nearest canonical tasks by character similarity, which is what catches misspellings; each keeps its best three candidates for the model", "mag"],
         ["m", "d", "LLM confirms", "Haiku filters the magnet results"],
         ["d", "e", "Cluster decisions", "the low-confidence merges and the labels to strike, settled on the standing rules"]
       ],
@@ -956,6 +956,106 @@ body.present .page__content { padding-top: 0 !important; }
       + '<p class="cp-xwn">The labels used above, as the library defines them.</p>';
   }
 
+  // The Spelling Magnet, ported from the artifact of the same name
+  var MAG_DICT = ["riveter","fitter","knitter","finisher","machinist","plaiter","milliner",
+    "clogger","stitcher","seamer","sewer","cutter","closer","laster","binder","tailor",
+    "hatter","maker","worker","dealer","florist","mounter","hosier","glover","seamstress",
+    "dressmaker","shoemaker","bootmaker","polisher","presser","trimmer","clicker"];
+  var MAG_PRESETS = ["RIVITTER","MACHINEST","PLATTER","MILINER","CLOGER","STICHER","TAILER"];
+  var MAG_STEPS = [
+    ["1 &middot; Words left over", "every word in strings the dictionary has not yet coded"],
+    ["2 &middot; Enough of them", "keep words occurring in 10 records or more"],
+    ["3 &middot; Into letter pieces", "cut each word into its 2- and 3-letter pieces"],
+    ["4 &middot; A point in space", "count the pieces: 26&sup2; + 26&sup3; = 18,252 dimensions"],
+    ["5 &middot; Nearest spellings", "cosine against every known spelling; keep 0.5+, best three"],
+    ["6 &middot; The model decides", "it reads the word in its strings and confirms or refuses"]
+  ];
+
+  function magGrams(w, q){ var o = [], i; for (i = 0; i + q <= w.length; i++) o.push(w.slice(i, i + q)); return o; }
+  function magVec(w){
+    var m = {}, gs = magGrams(w, 2).concat(magGrams(w, 3)), i;
+    for (i = 0; i < gs.length; i++) m[gs[i]] = (m[gs[i]] || 0) + 1;
+    return m;
+  }
+  function magCos(a, b){
+    var d = 0, na = 0, nb = 0, k;
+    for (k in a) { na += a[k] * a[k]; if (b[k]) d += a[k] * b[k]; }
+    for (k in b) nb += b[k] * b[k];
+    return na && nb ? d / Math.sqrt(na * nb) : 0;
+  }
+
+  function magBlock(){
+    var h = '<div class="mag">'
+      + '<p class="mag-lede">Census strings are full of misspelt job words. The magnet '
+      + 'finds them by comparing letter patterns with the dictionary&rsquo;s known '
+      + 'spellings; the model then confirms or refuses each match.</p>'
+      + '<div class="mag-steps">';
+    MAG_STEPS.forEach(function(s){
+      h += '<div class="mag-step"><b>' + s[0] + '</b><span>' + s[1] + '</span></div>';
+    });
+    h += '</div><div class="mag-try"><label for="mag-w">Word</label>'
+      + '<input id="mag-w" type="text" value="RIVITTER" autocomplete="off" spellcheck="false">'
+      + '<span class="mag-or">or pick one:</span><span id="mag-presets"></span></div>'
+      + '<div class="mag-cols"><div><div class="mag-h">Its letter pieces</div>'
+      + '<div class="mag-k">2-letter</div><div id="mag-g2" class="mag-grams"></div>'
+      + '<div class="mag-k">3-letter</div><div id="mag-g3" class="mag-grams"></div>'
+      + '<p class="mag-note" id="mag-cosline"></p></div>'
+      + '<div><div class="mag-h">Cosine against the dictionary</div>'
+      + '<p class="mag-note">Dashed line: the 0.5 threshold. Dark bars: the best three, '
+      + 'which go to the model.</p><div class="mag-rank" id="mag-rank"></div>'
+      + '<p class="mag-note" id="mag-verdict"></p></div></div>'
+      + '<p class="mag-why">Letters alone are not enough. RIVITTER, a misspelt riveter, '
+      + 'sits closer to <i>fitter</i> and <i>knitter</i> than to <i>riveter</i>. PLATTER, '
+      + 'the commonest misspelling of plaiter (5,213 records), sits closer to <i>hatter</i>. '
+      + 'So the magnet only proposes; a word refused once is never a spelling again.</p>'
+      + '</div>';
+    return h;
+  }
+
+  function magInit(){
+    var inp = document.getElementById("mag-w");
+    if (!inp) return;
+    var pre = document.getElementById("mag-presets");
+    pre.innerHTML = MAG_PRESETS.map(function(p){
+      return '<button type="button" class="mag-p">' + p + '</button>'; }).join("");
+    pre.addEventListener("click", function(e){
+      if (e.target.tagName === "BUTTON") { inp.value = e.target.textContent; magDraw(); }
+    });
+    inp.addEventListener("input", magDraw);
+    inp.addEventListener("click", function(e){ e.stopPropagation(); });
+    magDraw();
+  }
+
+  function magDraw(){
+    var w = (document.getElementById("mag-w").value || "").toLowerCase().replace(/[^a-z]/g, "");
+    var rank = document.getElementById("mag-rank");
+    if (w.length < 2) { rank.innerHTML = ""; return; }
+    var vw = magVec(w);
+    var scored = MAG_DICT.map(function(d){ return { d: d, c: magCos(vw, magVec(d)) }; })
+      .sort(function(a, b){ return b.c - a.c; }).slice(0, 8);
+    var vb = magVec(scored[0].d);
+    function chip(g){ return '<span class="mag-g' + (vb[g] ? " mag-on" : "") + '">' + g + '</span>'; }
+    document.getElementById("mag-g2").innerHTML = magGrams(w, 2).map(chip).join("");
+    document.getElementById("mag-g3").innerHTML = magGrams(w, 3).map(chip).join("");
+    var shared = 0, k;
+    for (k in vw) if (vb[k]) shared++;
+    document.getElementById("mag-cosline").textContent =
+      shared + " pieces in common with " + scored[0].d + ". Cosine = " + scored[0].c.toFixed(2) + ".";
+    rank.innerHTML = scored.map(function(s, i){
+      var keep = i < 3 && s.c >= 0.5;
+      return '<div class="mag-row' + (keep ? " mag-keep" : "") + '">'
+        + '<span class="mag-lab">' + s.d + '</span>'
+        + '<span class="mag-track"><span class="mag-fill" style="width:' + (s.c * 100).toFixed(1)
+        + '%"></span><span class="mag-thresh"></span></span>'
+        + '<span class="mag-val">' + s.c.toFixed(2) + '</span></div>';
+    }).join("");
+    var kept = scored.filter(function(s, i){ return i < 3 && s.c >= 0.5; })
+      .map(function(s){ return s.d; });
+    document.getElementById("mag-verdict").textContent = kept.length
+      ? "Sent to the model with candidates: " + kept.join(", ") + "."
+      : "Nothing reaches 0.5: the word is not sent to the model.";
+  }
+
   var flow = document.getElementById("cp-flow");
   var panel = document.getElementById("cp-panel");
   if (!flow || !panel) return;
@@ -986,7 +1086,8 @@ body.present .page__content { padding-top: 0 !important; }
          + '<span class="cp-sb"><span class="cp-st">' + s[2] + ex + '</span>'
          + '<span class="cp-sd">' + s[3] + '</span></span></li>';
       if (s[4]) h += '<li class="cp-exwrap" hidden>'
-                   + (s[4] === "td" ? tdTable() : xwTable()) + '</li>';
+                   + (s[4] === "td" ? tdTable() : s[4] === "mag" ? magBlock() : xwTable())
+                   + '</li>';
     });
     h += '</ol>';
     if (r.input) {
@@ -1001,7 +1102,7 @@ body.present .page__content { padding-top: 0 !important; }
         el.setAttribute("aria-expanded", open ? "false" : "true");
         el.nextElementSibling.hidden = open;
       }
-      el.addEventListener("click", toggle);
+      el.addEventListener("click", function(){ toggle(); if (el.getAttribute("data-ex") === "mag") magInit(); });
       el.addEventListener("keydown", function(e){
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
       });
@@ -1101,6 +1202,43 @@ body.present .page__content { padding-top: 0 !important; }
     color: #1f2429; white-space: nowrap; }
   #cp .cp-xwt { font-weight: 600; color: #1a6b36; }
   #cp .cp-xwt2 { color: #4a7c5e; }
+  /* The Spelling Magnet, ported from the artifact */
+  #cp .mag { font-size: .84rem; }
+  #cp .mag-lede { color: #555d66; line-height: 1.5; margin: 2px 0 12px; }
+  #cp .mag-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin-bottom: 14px; }
+  #cp .mag-step { border: 1px solid #e3e3e3; border-radius: 4px; padding: 6px 9px; }
+  #cp .mag-step b { display: block; color: #1f4f86; font-size: .62rem; text-transform: uppercase;
+    letter-spacing: .05em; margin-bottom: 1px; }
+  #cp .mag-step span { font-size: .76rem; color: #555d66; line-height: 1.35; }
+  #cp .mag-try { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 12px; }
+  #cp .mag-try label { font-weight: 600; font-size: .8rem; }
+  #cp .mag-or { color: #9a9a9a; font-size: .76rem; }
+  #cp #mag-w { font: .86rem ui-monospace, Menlo, Consolas, monospace; text-transform: uppercase;
+    padding: 4px 8px; border: 1px solid #d8dbe0; border-radius: 5px; width: 9rem; }
+  #cp .mag-p { font: .74rem ui-monospace, Menlo, Consolas, monospace; padding: 3px 7px;
+    border: 1px solid #e0e0e0; border-radius: 5px; background: #f4f4f2; cursor: pointer; }
+  #cp .mag-p:hover { border-color: #1f4f86; color: #1f4f86; }
+  #cp .mag-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  #cp .mag-h { font-weight: 700; font-size: .8rem; margin-bottom: 3px; }
+  #cp .mag-k { font-size: .66rem; color: #9a9a9a; text-transform: uppercase; letter-spacing: .05em; margin-top: 5px; }
+  #cp .mag-grams { display: flex; flex-wrap: wrap; gap: 3px; margin: 3px 0; }
+  #cp .mag-g { font: .72rem ui-monospace, Menlo, Consolas, monospace; padding: 1px 4px;
+    border-radius: 3px; background: #f2f2f0; border: 1px solid #e4e4e2; color: #555; }
+  #cp .mag-on { border-color: #c2611f; color: #c2611f; font-weight: 600; }
+  #cp .mag-note { font-size: .74rem; color: #8a8a8a; line-height: 1.45; margin: 6px 0 0; }
+  #cp .mag-rank { display: grid; gap: 3px; margin-top: 5px; }
+  #cp .mag-row { display: grid; grid-template-columns: 5rem 1fr 2.1rem; gap: 6px; align-items: center; }
+  #cp .mag-lab { font: .74rem ui-monospace, Menlo, Consolas, monospace; text-align: right; color: #666; }
+  #cp .mag-track { position: relative; height: 11px; }
+  #cp .mag-fill { position: absolute; left: 0; top: 0; height: 100%; border-radius: 0 3px 3px 0;
+    background: #b9cbe0; transition: width .3s ease; }
+  #cp .mag-keep .mag-fill { background: #2f6aa8; }
+  #cp .mag-thresh { position: absolute; top: -3px; bottom: -3px; left: 50%; border-left: 2px dashed #c2611f; }
+  #cp .mag-val { font-size: .74rem; font-variant-numeric: tabular-nums; color: #9a9a9a; }
+  #cp .mag-keep .mag-val { color: #1f2429; font-weight: 600; }
+  #cp .mag-why { font-size: .76rem; color: #666; line-height: 1.5; margin: 14px 0 0; }
+  @media (prefers-reduced-motion: reduce) { #cp .mag-fill { transition: none; } }
+  @media (max-width: 1100px) { #cp .mag-cols, #cp .mag-steps { grid-template-columns: 1fr; } }
   #cp .cp-td td { font-size: .76rem; line-height: 1.45; }
   #cp .cp-td td:first-child { white-space: nowrap; vertical-align: top; }
   #cp .cp-xwn { font-size: .7rem; color: #a0a0a0; margin: 9px 0 0; }
